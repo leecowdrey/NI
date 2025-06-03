@@ -1,0 +1,17 @@
+# Apple OSX hidden/temporary files
+.DS_Store
+._.*
+*.swp
+*.bkp
+# JavaScript
+node_modules/
+package-lock.json
+# IDEs
+.vscode/
+# Log files
+*.log
+# DuckDB
+*.duckdb
+*.wal
+# Microsoft Office
+*.pptx

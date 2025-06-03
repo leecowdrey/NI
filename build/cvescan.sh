@@ -245,6 +245,20 @@ else
   done
 fi
 
+doing "Scanning: alertServer (NodeJS)"
+nodejs_scan "alertServer"
+RETVAL=$?
+if [[ ${RETVAL} -eq 0 ]] ; then
+  success "- ok"
+else
+  CVE_FOUND=1
+  CVEs=()
+  IFS=' ' read -r -a CVEs <<< $(cat src/alertServer/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
+  for CVE in ${CVEs[@]}; do
+    alert "- found ${CVE}"
+  done
+fi
+
 #
 unset CVEs
 popd &>/dev/null

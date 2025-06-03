@@ -1,0 +1,19 @@
+[Unit]
+Description=MNI Alert Server
+After=multi-user.target
+
+[Service]
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=mni
+LimitNOFILE=infinity
+Restart=always
+StandardError=append:/var/log/mni/alertServer.log
+StandardOutput=append:/var/log/mni/alertServer.log
+Type=simple
+User=predict
+WorkingDirectory=/usr/local/mni/alertServer
+
+[Install]
+WantedBy=multi-user.target

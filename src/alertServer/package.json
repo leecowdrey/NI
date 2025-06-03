@@ -18,7 +18,7 @@
   "homepage": "https://www.merkator.com/",
   "license": "Proprietary License",
   "main": "alertServer.mjs",
-  "name": "mni-predict-server",
+  "name": "mni-alert-server",
   "private": true,
   "version": "1.0.0"
 }

@@ -64,7 +64,7 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating environment"
-cp -f ${CLI_PATH}/apiServer.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/apiServer.mjs && chmod 660 ${WORKING_DIRECTORY}/apiServer.mjs && \
+cp -f ${CLI_PATH}/*.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/*.mjs && chmod 660 ${WORKING_DIRECTORY}/*.mjs && \
 cp -f ${CLI_PATH}/package.json ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/package.json && chmod 660 ${WORKING_DIRECTORY}/package.json && \
 cp -f ${CLI_PATH}/mni.yaml ${WORKING_DIRECTORY}/api/ && chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml
 RETVAL=$?

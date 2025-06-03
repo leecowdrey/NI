@@ -392,7 +392,7 @@ async function jobPruneQueues() {
   if (pruneQueuesTimer != null) {
     clearTimeout(pruneQueuesTimer);
   }
-  let tables = ["predictQueue"];
+  let tables = ["predictQueue", "alertQueue"];
   try {
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
       event: "pruneQueues",
@@ -4442,6 +4442,81 @@ await producer.send({
           let point = dayjs().format(dayjsFormat);
           await DDC.run(
             "UPDATE predictQueue SET point = strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'), delete = true WHERE qId = " +
+              req.params.qId
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "qId " + req.params.qId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getNextAlertQueueItem(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT qId,strftime(point,'" +
+            pointFormat +
+            "'),alertType,alertId,callbackAlertId,publishAlertId,notifyAlertId,workflowAlertId FROM alertQueue WHERE delete = false ORDER BY random() LIMIT 1"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          resJson = {
+            qId: toInteger(ddRows[0][0]),
+            point: ddRows[0][1],
+            type: ddRows[0][2],
+            id: ddRows[0][3],
+            callback: ddRows[0][4],
+            publish: ddRows[0][5],
+            notify: ddRows[0][6],
+            workflow: ddRows[0][7],
+          };
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else if (ddRows.length == 0) {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteAlertQueueItem(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT rowid FROM alertQueue WHERE qId = " + req.params.qId
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let point = dayjs().format(dayjsFormat);
+          await DDC.run(
+            "UPDATE alertQueue SET point = strptime('" +
               point +
               "','" +
               pointFormat +
@@ -14093,6 +14168,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             },
             queues: {
               predict: await dbQueueCounts("predictQueue"),
+              alert: await dbQueueCounts("alertQueue"),
             },
             resources: {
               cables: await dbActiveInactiveCounts("cable"),
@@ -15226,6 +15302,34 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     serveUrlPrefix + serveUrlVersion + "/alerts",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleAlerts
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getNextAlertQueueItem
+       exposed Route: /mni/v1/alert/queue
+       HTTP method:   GET
+       OpenID Scope:  read:mni_internal
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/alert/queue",
+    // security("read:mni_internal"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getNextAlertQueueItem
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   deleteAlertQueueItem
+       exposed Route: /mni/v1/alert/queue
+       HTTP method:   DELETE
+       OpenID Scope:  read:mni_internal
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/alert/queue/:qId",
+    // security("read:mni_internal"),
+    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+    deleteAlertQueueItem
   );
 
   /*
@@ -18674,11 +18778,11 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
        operationId:   getNextPredictQueueItem
        exposed Route: /mni/v1/predict/queue
        HTTP method:   GET
-       OpenID Scope:  read:mni_predict
+       OpenID Scope:  read:mni_internal
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/queue",
-    // security("read:mni_predict"),
+    // security("read:mni_internal"),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getNextPredictQueueItem
   );
@@ -18688,11 +18792,11 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
        operationId:   deletePredictQueueItem
        exposed Route: /mni/v1/predict/queue
        HTTP method:   DELETE
-       OpenID Scope:  read:mni_predict
+       OpenID Scope:  read:mni_internal
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/predict/queue/:qId",
-    // security("read:mni_predict"),
+    // security("read:mni_internal"),
     param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
     deletePredictQueueItem
   );

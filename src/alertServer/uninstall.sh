@@ -1,6 +1,6 @@
 #!/bin/bash
 #=====================================================================
-# MarlinDT Network Intelligence (MNI) - Prediction Server Uninstaller
+# MarlinDT Network Intelligence (MNI) - Alert Server Uninstaller
 #
 # Corporate Headquarters:
 # Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
@@ -14,7 +14,7 @@ CLI_NAME="${0##*/}"
 ENV="/etc/mni/mni.ini"
 COMMON="${CLI_PATH}/common.sh"
 source ${COMMON}
-alert "MNI Prediction Server Uninstall"
+alert "MNI Alert Server Uninstall"
 
 [[ $(id -u) -ne 0 ]] && exit 1
 [[ -f "${ENV}" ]] || exit 1
@@ -22,10 +22,10 @@ which npm &> /dev/null || exit 1
 
 CONFIG_DIRECTORY=$(grep -E "^CONFIG_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 GROUP=$(grep -E "^HOST_SERVICE_GROUP=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-HOST_SERVICE=$(grep -E "^PREDICTSERV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-LOG_FILE=$(grep -E "^PREDICTSERV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-USERNAME=$(grep -E "^PREDICTSERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-WORKING_DIRECTORY=$(grep -E "^PREDICTSERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
+HOST_SERVICE=$(grep -E "^ALERTSRV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
+LOG_FILE=$(grep -E "^ALERTSRV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
+USERNAME=$(grep -E "^ALERTSRV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
+WORKING_DIRECTORY=$(grep -E "^ALERTSRV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
 
 #UNINSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 

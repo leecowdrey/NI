@@ -1630,6 +1630,143 @@
         }
       }
     },
+    "/alert/queue/{qId}": {
+      "delete": {
+        "summary": "Remove item from internal alert queue",
+        "security": [
+          {
+            "openId": [
+              "write:mni_internal"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/qId"
+          }
+        ],
+        "operationId": "deleteAlertQueueItem",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/alert/queue": {
+      "get": {
+        "summary": "Returns next item awaiting processing from internal alert queue",
+        "security": [
+          {
+            "openId": [
+              "read:mni_internal"
+            ]
+          }
+        ],
+        "operationId": "getNextAlertQueueItem",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "qId",
+                    "point",
+                    "type",
+                    "id"
+                  ],
+                  "properties": {
+                    "qId": {
+                      "description": "internal queue reference",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "point": {
+                      "$ref": "#/components/schemas/dateTime"
+                    },
+                    "type": {
+                      "description": "alert cateogry",
+                      "type": "string",
+                      "enum": [
+                        "callback",
+                        "publish",
+                        "notify",
+                        "workflow"
+                      ]
+                    },
+                    "id": {
+                      "description": "related alert identifier",
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "callback": {
+                      "description": "optional related callback alert identifier",
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "publish": {
+                      "description": "optional related publish alert identifier",
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "notify": {
+                      "description": "optional elated notify alert identifier",
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "workflow": {
+                      "description": "optional related workflow alert identifier",
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": {
+                      "qId": 1,
+                      "point": "20250603T181900",
+                      "type": "callback",
+                      "id": "ff9bf3a0-682e-43ff-b38c-0ab962ef2fe7",
+                      "callback": "3ffc8917-f24d-4d6d-9665-83ecaf05feee"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/cables": {
       "get": {
         "summary": "Export cables in bulk",
@@ -16706,7 +16843,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_predict"
+              "write:mni_internal"
             ]
           }
         ],
@@ -16741,7 +16878,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_predict"
+              "read:mni_internal"
             ]
           }
         ],
@@ -16756,6 +16893,13 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "qId",
+                    "point",
+                    "resource",
+                    "id",
+                    "state"
+                  ],
                   "properties": {
                     "qId": {
                       "description": "internal queue reference",
@@ -16801,6 +16945,7 @@
                   "sample": {
                     "value": {
                       "qId": 1,
+                      "point": "20250603T181300",
                       "resource": "cable",
                       "id": "5520aca1-4727-431a-aa9c-23f2e54b8a41",
                       "state": "update"

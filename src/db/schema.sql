@@ -43,6 +43,7 @@ LOAD spatial;
 
 CREATE TYPE aggregationUnit AS ENUM ('hour','day','week','month','quarter','half-year','year');
 CREATE TYPE areaType AS ENUM ('residential','rural','industrial','mixed','psz','urban','unclassified');
+CREATE TYPE alertType AS ENUM ('callback','publish','notify','workflow');
 CREATE TYPE callbackAuthentication AS ENUM ('none','basic');
 CREATE TYPE cableCoaxConfigurationFrequency AS ENUM ('MHz','GHz');
 CREATE TYPE cableEthernetConfiguration AS ENUM ('Cat3','Cat4','Cat5','Cat5e','Cat6','Cat6A','Cat7','Cat8');
@@ -92,7 +93,7 @@ CREATE TYPE workflowEngineType AS ENUM ('bpmn','elsa');
 ---
 --- sequences
 ---
-
+CREATE SEQUENCE IF NOT EXISTS seq_alertQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_predictQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_trench;
 CREATE SEQUENCE IF NOT EXISTS seq_trenchCoordinate;
@@ -214,6 +215,7 @@ CREATE TABLE IF NOT EXISTS alert (
     delete BOOLEAN NOT NULL DEFAULT false,
     description VARCHAR NOT NULL
 );
+
 CREATE TABLE IF NOT EXISTS alertCallback (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     alertId VARCHAR NOT NULL,
@@ -266,6 +268,22 @@ CREATE TABLE IF NOT EXISTS alertWorkflow (
     flowName VARCHAR NOT NULL,
     FOREIGN KEY (alertId) REFERENCES alert (id),
     FOREIGN KEY (workflowEngineId) REFERENCES adminWorkflow (id)
+);
+CREATE TABLE IF NOT EXISTS alertQueue (
+    qId INTEGER NOT NULL DEFAULT nextval('seq_alertQueue') PRIMARY KEY,
+    point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
+    delete BOOLEAN NOT NULL DEFAULT false,
+    alertType alertType NOT NULL,
+    alertId VARCHAR NOT NULL,
+    callbackAlertId VARCHAR,
+    publishAlertId VARCHAR,
+    notifyAlertId VARCHAR,
+    workflowAlertId VARCHAR,
+    FOREIGN KEY (alertId) REFERENCES alert (id),
+    FOREIGN KEY (callbackAlertId) REFERENCES alertCallback (id),
+    FOREIGN KEY (publishAlertId) REFERENCES alertPublish (id),
+    FOREIGN KEY (notifyAlertId) REFERENCES alertNotify (id),
+    FOREIGN KEY (workflowAlertId) REFERENCES alertWorkflow (id)
 );
 CREATE TABLE IF NOT EXISTS trench (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,

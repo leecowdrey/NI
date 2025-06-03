@@ -1,6 +1,6 @@
 #!/bin/bash
 #=====================================================================
-# MarlinDT Network Intelligence (MNI) - Prediction Server Upgrade
+# MarlinDT Network Intelligence (MNI) - Alert Server Upgrade
 #
 # Corporate Headquarters:
 # Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
@@ -15,7 +15,7 @@ CLI_PATH=$(dirname -- "$( readlink -f -- "$0"; )";)
 CLI_NAME="${0##*/}"
 ENV="${CLI_PATH}/mni.ini"
 source ${CLI_PATH}/common.sh
-alert "MNI Prediction Server Upgrade"
+alert "MNI Alert Server Upgrade"
 
 # if existing mni.ini deployed use that
 [[ -f "/etc/mni/mni.ini" ]] && ENV="/etc/mni/mni.ini"
@@ -28,10 +28,10 @@ which npm &> /dev/null || exit 1
 
 CONFIG_DIRECTORY=$(grep -E "^CONFIG_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 GROUP=$(grep -E "^HOST_SERVICE_GROUP=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-HOST_SERVICE=$(grep -E "^PREDICTSERV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-LOG_FILE=$(grep -E "^PREDICTSERV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-USERNAME=$(grep -E "^PREDICTSERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-WORKING_DIRECTORY=$(grep -E "^PREDICTSERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+HOST_SERVICE=$(grep -E "^ALERTSRV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+LOG_FILE=$(grep -E "^ALERTSRV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+USERNAME=$(grep -E "^ALERTSRV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+WORKING_DIRECTORY=$(grep -E "^ALERTSRV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -42,14 +42,14 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating environment"
-cp -f ${CLI_PATH}/predictServer.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/predictServer.mjs && chmod 660 ${WORKING_DIRECTORY}/predictServer.mjs && \
+cp -f ${CLI_PATH}/*.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/*.mjs && chmod 660 ${WORKING_DIRECTORY}/*.mjs && \
 cp -f ${CLI_PATH}/oasConstants.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/oasConstants.mjs && chmod 660 ${WORKING_DIRECTORY}/oasConstants.mjs && \
 cp -f ${CLI_PATH}/package.json ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/package.json && chmod 660 ${WORKING_DIRECTORY}/package.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating NodeJS package for target"
-sed -i -e "s|/usr/local/mni/predictServer.mjs|${WORKING_DIRECTORY}/predictServer.mjs|" ${WORKING_DIRECTORY}/package.json && \
+sed -i -e "s|/usr/local/mni/alertServer.mjs|${WORKING_DIRECTORY}/alertServer.mjs|" ${WORKING_DIRECTORY}/package.json && \
 sed -i -e "s|/etc/mni/mni.ini|${CONFIG_DIRECTORY}/mni.ini|" ${WORKING_DIRECTORY}/package.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
