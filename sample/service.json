@@ -1,0 +1,48 @@
+[
+  {
+    "serviceId": "784d5d3d-44cf-41a2-8ef0-24a376b0b296",
+    "point": "20250509T122152",
+    "customer": {
+      "name": "Merkator",
+      "reference": "sample"
+    },
+    "commissioned": "20250509",
+    "reference": "gbr-worc-cg1-merk-sample-0001",
+    "lag": {
+      "group": "LAG1",
+      "members": 2
+    },
+    "link": {
+      "ingress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/0",
+          "cVlanId": 101,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/1",
+          "cVlanId": 101,
+          "member": 2
+        }
+      ],
+      "egress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/0",
+          "sVlanId": 202,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/1",
+          "sVlanId": 202,
+          "member": 1
+        }
+      ]
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

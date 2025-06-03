@@ -1,0 +1,64 @@
+[
+	{
+		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
+		"point": "20250509T165841",
+		"reference": "gbr-worc-cg1-1",
+		"commissioned": "20250509",
+		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+		"coordinate": {
+			"x": 52.314812,
+			"y": -2.17511,
+			"z": 61
+		},
+		"dimensions": {
+			"depth": 600,
+			"height": 1370,
+			"width": 1200,
+			"unit": "mm"
+		},
+		"slots": {
+			"total": 24,
+			"free": 23,
+			"used": 1,
+			"reserved": 0,
+			"faulty": 0
+		},
+		"source": "historical",
+		"delete": false,
+		"floor": 0,
+		"area": "colo",
+		"row": 1,
+		"column": 1
+	},
+	{
+		"rackId": "441f85e4-ef84-424f-ba7a-a0a856445244",
+		"point": "20250509T165842",
+		"reference": "gbr-worc-cg1-2",
+		"commissioned": "20250509",
+		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+		"coordinate": {
+			"x": 52.314812,
+			"y": -2.17511,
+			"z": 61
+		},
+		"dimensions": {
+			"depth": 600,
+			"height": 1370,
+			"width": 1200,
+			"unit": "mm"
+		},
+		"slots": {
+			"total": 24,
+			"free": 0,
+			"used": 0,
+			"reserved": 0,
+			"faulty": 0
+		},
+		"source": "historical",
+		"delete": false,
+		"floor": 0,
+		"area": "colo",
+		"row": 1,
+		"column": 2
+	}
+]

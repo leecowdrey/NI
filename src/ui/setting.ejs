@@ -1,0 +1,247 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>MNI</title>
+    <link rel="stylesheet" href="/mni/css/style.css">
+    <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="img/icon.png">
+    <style>
+        .panel {
+            width: auto;
+            height: 40%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+    </style>
+    <script async src="/mni/js/mni.js"></script>
+</head>
+
+<body>
+    <div class="icon-bar" id="icon-bar">
+        <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
+                width="25%" height="25%"></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+            title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+            title="Cables"><i class="fa fa-plug"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+            title="Ducts"><i class="fa fa-superpowers"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+            title="Poles"><i class="fa fa-arrows-v"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+            title="Network Equipment"><i class="fa fa-server"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+            title="Racks"><i class="fa fa-list-ol"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/site');"
+            title="Sites"><i class="fa fa-building-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/service');"
+            title="Services"><i class="fa fa-tty"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+            title="Trenches"><i class="fa fa-arrows-h"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+            title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
+            title="Providers"><i class="fa fa-handshake-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+            title="Alerts"><i class="fa fa-bullhorn"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Settings"><i class="fa fa-cog"></i></a>
+        <a nohref onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
+            return false;" title="About"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+            title="Help"><i class="fa fa-question-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+                class="fa fa-window-close"></i></a>
+        <a nohref onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;"
+            title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a>
+    </div>
+    <div class="panel">
+        <div class="wrapper">
+            Data
+            <div id="dataHistoricalPanel">
+                <div class="input-select">
+                    <label for="historicalDuration">Historical Duration</label>
+                    <input type="number" min="1" max="365" id="historicalDuration">
+                </div>
+                <div class="input-select">
+                    <label for="historicalUnit">Unit</label>
+                    <select id="historicalUnit"
+                        onchange="if(this.selectedIndex !== undefined) resetMinMax('historical');">
+                        <option value='day'>day</option>
+                        <option value='week'>week</option>
+                        <option value='month'>month</option>
+                        <option value='quarter'>quarter</option>
+                        <option selected='selected' value='year'>year</option>
+                    </select>
+                </div>
+            </div>
+            <div id="dataPredictedPanel">
+                <div class="input-select">
+                    <label for="predictedDuration">Predicted Duration</label>
+                    <input type="number" min="1" max="365" id="predictedDuration">
+                </div>
+                <div class="input-select">
+                    <label for="predictedUnit">Unit</label>
+                    <select id="predictedUnit"
+                        onchange="if(this.selectedIndex !== undefined) resetMinMax('predicted');">
+                        <option value='day'>day</option>
+                        <option value='week'>week</option>
+                        <option selected='selected' value='month'>month</option>
+                        <option value='quarter'>quarter</option>
+                        <option value='year'>year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="wrapper-controls">
+                <input id="saveAdminData" type="button" value="save" onclick="saveAdminData();" /></input>
+                <input id="reloadAdminData" type="button" value="reset" onclick="fetchAdminData();" /></input>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <script>
+        let fadReady = null;
+        let sadReady = null;
+        let retryMs = 1000;
+        function resetMinMax(w) {
+            let u = document.getElementById(w + "Unit");
+            let v = u.options[u.selectedIndex].value;
+            let d = document.getElementById(w + "Duration");
+            switch (v) {
+                case "day":
+                    d.setAttribute("min", "1");
+                    d.setAttribute("max", "31");
+                    break;
+                case "week":
+                    d.setAttribute("min", "1");
+                    d.setAttribute("max", "52");
+                    break;
+                case "month":
+                    d.setAttribute("min", "1");
+                    d.setAttribute("max", "12");
+                    break;
+                case "quarter":
+                    d.setAttribute("min", "1");
+                    d.setAttribute("max", "4");
+                    break;
+                case "year":
+                    d.setAttribute("min", "1");
+                    d.setAttribute("max", "10");
+                    break;
+                default:
+                    u.setAttribute("min", "1");
+                    u.setAttribute("max", "99");
+            }
+        }
+        function saveAdminData() {
+            if (sadReady != null) {
+                clearTimeout(sadReady);
+            }
+            let a = document.getElementById("historicalDuration");
+            let b = document.getElementById("historicalUnit");
+            let c = document.getElementById("predictedDuration");
+            let d = document.getElementById("historicalUnit");
+            let hD = a.value;
+            let hU = b.options[b.selectedIndex].value;
+            let pD = c.value;
+            let pU = d.options[d.selectedIndex].value;
+            let reqJson = {
+                historical: {
+                    duration: toInteger(hD),
+                    unit: hU,
+                },
+                predicted: {
+                    duration: toInteger(pD),
+                    unit: pU,
+                }
+            };
+            fetch("<%=payload.gatewayUrl%>/admin/data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(reqJson)
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        sadReady = setTimeout(saveAdminData, retryMs);
+                    }
+                })
+                .catch((e) => {
+                    sadReady = setTimeout(saveAdminData, retryMs);
+                });
+
+        }
+        function fetchAdminData() {
+            if (fadReady != null) {
+                clearTimeout(fadReady);
+            }
+            fetch("<%=payload.gatewayUrl%>/admin/data", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        fadReady = setTimeout(fetchAdminData, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let hD = 3;
+                    let hU = "month";
+                    let pD = 1;
+                    let pU = "week";
+                    if (data.historical?.duration != null) {
+                        hD = data.historical.duration;
+                    }
+                    if (data.historical?.unit != null) {
+                        hU = data.historical.unit;
+                    }
+                    if (data.predicted?.duration != null) {
+                        pD = data.predicted.duration;
+                    }
+                    if (data.predicted?.unit != null) {
+                        pU = data.predicted.unit;
+                    }
+                    document.getElementById("historicalDuration").value = hD;
+                    document.getElementById("historicalUnit").value = hU;
+                    document.getElementById("predictedDuration").value = pD;
+                    document.getElementById("predictedUnit").value = pU;
+                })
+                .catch((e) => {
+                    fadReady = setTimeout(fetchAdminData, retryMs);
+                });
+
+        }
+        try {
+            resetMinMax("historical");
+            resetMinMax("predicted");
+        } catch (e) {
+        }
+        try {
+            fetchAdminData();
+        } catch (e) {
+            fadReady = setTimeout(fetchAdminData, retryMs);
+        }
+    </script>
+
+    <div class="footer">
+        <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
+    </div>
+</body>
+
+</html>

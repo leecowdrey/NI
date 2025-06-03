@@ -1,0 +1,19 @@
+[Unit]
+Description=Identity and Access Management Server
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+User=iamserver
+Group=mni
+Restart=always
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+WorkingDirectory=/usr/local/mni/iamServer
+StandardOutput=append:/var/log/mni/iamServer.log
+StandardError=append:/var/log/mni/iamServer.log
+ExecStart=/usr/bin/docker-compose start
+ExecStop=/usr/bin/docker-compose stop
+
+[Install]
+WantedBy=multi-user.target

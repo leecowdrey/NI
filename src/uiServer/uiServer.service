@@ -1,0 +1,19 @@
+[Unit]
+Description=MNI UI Server
+After=multi-user.target
+
+[Service]
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=mni
+LimitNOFILE=infinity
+Restart=always
+StandardError=append:/var/log/mni/uiServer.log
+StandardOutput=append:/var/log/mni/uiServer.log
+Type=simple
+User=uiserver
+WorkingDirectory=/usr/local/mni/uiServer
+
+[Install]
+WantedBy=multi-user.target

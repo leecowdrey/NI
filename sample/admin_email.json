@@ -1,0 +1,20 @@
+[
+	{
+		"emailProviderId": "c154c1b3-c0a6-47c3-856d-fed40e9acf19",
+		"vendor": "FastMail",
+		"address": "ni@marlindt.net",
+		"name": "MarlinDT Network Intelligence",
+		"send": {
+			"username": "ni@marlindt.net",
+			"password": "password123&#",
+			"host": "smtp.fastmail.com",
+			"port": 465,
+			"protocol": "smtp",
+			"authentication": "PLAIN",
+			"encryption": {
+				"enabled": true,
+				"starttls": false
+			}
+		}
+	}
+]

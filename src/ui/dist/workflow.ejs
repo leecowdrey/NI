@@ -1,0 +1,264 @@
+<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><link rel="stylesheet" href="/mni/css/style.css"><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><style>.panel {
+            width: 90%;
+            height: 60%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }</style><script async src="/mni/js/mni.js"></script><script defer="defer" src="./js/app.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" class="active" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
+            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="icon-bar" id="subIcon-bar"><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/email');" title="Email Providers"><i class="fa fa-envelope"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/map');" title="Map Providers"><i class="fa fa-map-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/kafka');" title="Kafka Providers"><i class="fa fa-share-alt"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" onclick="return jump('<%=payload.rootUrl%>/workflow');" title="Workflow Engines"><i class="fa fa-sitemap"></i></a></div><div class="wrapper"><div class="provider-select" id="providerList"><label for="provider">Provider</label> <select id="provider" onchange="fetchProvider();" disabled="disabled"></select><div class="wrapper-controls"><a accesskey="f" nohref="nohref" onclick="firstProvider();" onmouseover="" title="first" style="cursor: pointer;"><i class="fa fa-fast-backward"></i></a> <a accesskey="p" nohref="nohref" onclick="previousProvider();" onmouseover="" title="previous" style="cursor: pointer;"><i class="fa fa-backward"></i></a><meter id="meter" value="0" min="0" max="0"></meter><a accesskey="n" nohref="nohref" onclick="nextProvider();" onmouseover="" title="next" style="cursor: pointer;"><i class="fa fa-forward"></i></a> <a accesskey="l" nohref="nohref" onclick="lastProvider();" onmouseover="" title="last" style="cursor: pointer;"><i class="fa fa-fast-forward"></i></a> <a accesskey="-" nohref="nohref" onclick="deleteProvider();" onmouseover="" title="delete" style="cursor: pointer;"><i class="fa fa-minus-square"></i></a> <a accesskey="+" nohref="nohref" onclick="newProvider();" onmouseover="" title="new" style="cursor: pointer;"><i class="fa fa-plus-square"></i></a> <a accesskey="@" nohref="nohref" onclick="fetchProviderList();" onmouseover="" title="refresh" style="cursor: pointer;"><i class="fa fa-refresh"></i></a></div></div></div><hr/><div class="inner-grid"><label for="engineName">Name</label> <input id="engineName" required><div id="engine"><label for="engineUsername">Username</label> <input id="engineUsername"> <label for="enginePassword">Password</label> <input type="password" id="enginePassword"> <label><input type="checkbox" checked="checked" onclick="togglePassword('enginePassword')" name="togglePwd"> <font size="1">show</font></label> <label for="engineUrl">URL</label> <input type="url" id="engineUrl"> <label for="engineType">Engine Type</label> <select id="engineType" required><option value="-1">-- select type --</option><option value="bpmn">BPMN</option><option value="elsa" selected="selected">ELSA</option></select></div><div id="newSaveReset" class="wrapper-controls"><input id="save" type="button" value="save" onclick="saveProvider();"/><input id="reset" type="button" value="reset" onclick="redisplayProvider();"/></div></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>let retryMs = 1000;
+        let refreshMs = 60000;
+        let fpReady = null;
+        let dpReady = null;
+        let spReady = null;
+        let fplReady = null;
+        function firstProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length;
+            if (l > 1) {
+                p.selectedIndex = 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", 1);
+            }
+        }
+        function previousProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i >= 2) {
+                p.selectedIndex = i - 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", i - 1);
+            }
+        }
+        function nextProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l) {
+                p.selectedIndex = i + 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", i + 1);
+            }
+        }
+        function lastProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l && l > 1) {
+                p.selectedIndex = l;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", l);
+            }
+        }
+        function deleteProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null && id != "-1") {
+                fetch("<%=payload.gatewayUrl%>/admin/workflow/engine/" + id, {
+                    method: "DELETE",
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            previousProvider();
+                            fetchProviderList();
+                        } else {
+                            window.alert(`Failed to delete provider ${id}`);
+                        }
+                    })
+                    .catch((e) => {
+                    });
+            }
+        }
+        function redisplayProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id == "-1") {
+                clearProvider();
+            } else {
+                fetchProvider();
+            }
+        }
+        function newProvider() {
+            document.getElementById("provider").value = "-1"
+            clearProvider();
+        }
+        function saveProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (document.getElementById("engineName").value.length > 0) {
+                if (document.getElementById("engineUrl").value.length > 0) {
+                    let eType = document.getElementById("engineType");
+                    let engineType = eType.options[eType.selectedIndex].value;
+                    if (engineType != "-1") {
+                        if (id == "-1") {
+                            // new provider
+                            //
+                            let reqJson = {
+                                name: document.getElementById("engineName").value,
+                                engine: {
+                                    url: document.getElementById("engineUrl").value,
+                                    username: document.getElementById("engineUsername").value,
+                                    password: document.getElementById("enginePassword").value,
+                                    type: engineType
+                                }
+                            };
+                            fetch("<%=payload.gatewayUrl%>/admin/workflow/engine", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json",
+                                },
+                                body: JSON.stringify(reqJson)
+                            })
+                                .then((response) => {
+                                    if (response.ok) {
+                                        fetchProviderList();
+                                        lastProvider();
+                                    }
+                                })
+                                .catch((e) => {
+                                    window.alert(e);
+                                });
+                        } else {
+                            // existing provider
+                            let reqJson = {
+                                workflowEngineId: id,
+                                name: document.getElementById("engineName").value,
+                                engine: {
+                                    url: document.getElementById("engineUrl").value,
+                                    username: document.getElementById("engineUsername").value,
+                                    password: document.getElementById("enginePassword").value,
+                                    type: engineType
+                                }
+                            };
+                            fetch("<%=payload.gatewayUrl%>/admin/workflow/engine/" + id, {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(reqJson)
+                            })
+                                .then((response) => {
+                                    if (!response.ok) {
+                                        window.alert(`Failed to update provider ${id}`);
+                                    }
+                                })
+                                .catch((e) => {
+                                    window.alert(e);
+                                });
+                        }
+                    } else {
+                        window.alert("engine type must be specified");
+                    }
+                } else {
+                    window.alert("engine URL must be specified");
+                }
+            } else {
+                window.alert("name must be specified");
+            }
+        }
+        function clearProvider() {
+            document.getElementById("engineName").value = "";
+            document.getElementById("engineUsername").value = "";
+            document.getElementById("enginePassword").value = "";
+            document.getElementById("engineUrl").value = "";
+            document.getElementById("engineType").value = "-1";
+        }
+        function displayProvider(d) {
+            clearProvider();
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (d !== undefined && d != null) {
+                document.getElementById("engineName").value = d.name;
+                document.getElementById("engineUsername").value = d.engine.username;
+                document.getElementById("enginePassword").value = d.engine.password;
+                document.getElementById("engineUrl").value = d.engine.url;
+                document.getElementById("engineType").value = d.engine.type;
+            }
+        }
+        function fetchProvider() {
+            if (fpReady != null) {
+                clearTimeout(fpReady);
+            }
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null) {
+
+                fetch("<%=payload.gatewayUrl%>/admin/workflow/engine/" + id, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            fpReady = setTimeout(fetchProvider, retryMs);
+                        }
+                    })
+                    .then((data) => {
+                        displayProvider(data);
+                    })
+                    .catch((e) => {
+                        fpReady = setTimeout(fetchProvider, retryMs);
+                    });
+
+            } else {
+                fpReady = setTimeout(fetchProvider, retryMs);
+            }
+        }
+        function fetchProviderList() {
+            if (fplReady != null) {
+                clearTimeout(fplReady);
+            }
+
+            fetch("<%=payload.gatewayUrl%>/admin/workflow/engine", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        fplReady = setTimeout(fetchProviderList, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let Ids = "<option disabled value='-1' selected='selected'> -- new provider -- </option>";
+                    for (var i = 0; i < data.length; i++) {
+                        if (i == 0) {
+                            Ids += "<option value='" + data[i] + "' selected='selected'>" + data[i] + "</option>"
+                        } else {
+                            Ids += "<option value='" + data[i] + "' >" + data[i] + "</option>"
+                        }
+                    }
+                    document.getElementById("provider").innerHTML = Ids;
+                    if (data.length > 0) {
+                        document.getElementById("meter").setAttribute("min", 1);
+                        document.getElementById("meter").setAttribute("value", 1);
+                    }
+                    else {
+                        document.getElementById("meter").setAttribute("value", 0);
+                        document.getElementById("meter").setAttribute("min", 0);
+                    }
+                    document.getElementById("meter").setAttribute("max", data.length);
+                    fetchProvider();
+                })
+                .catch((e) => {
+                    fplReady = setTimeout(fetchProviderList, retryMs);
+                });
+
+        }
+        try {
+            fetchProviderList();
+        } catch (e) {
+            fplReady = setTimeout(fetchProviderList, retryMs);
+        }</script></body></html>

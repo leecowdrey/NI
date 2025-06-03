@@ -1,0 +1,49 @@
+[
+	{
+		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+		"point": "20250508T174124",
+		"reference": "gbr-worc-cg1",
+		"commissioned": "20241010",
+		"area": "rural",
+		"type": "street",
+		"location": {
+			"country": "GBR",
+			"region": "Worcestershire",
+			"town": "Droitwich",
+			"street": "Kidderminster Road",
+			"premisesNameNumber": "1",
+			"postalCode": "WR9 0P.",
+			"coordinate": {
+				"x": 52.314812,
+				"y": -2.17511,
+				"z": 61
+			},
+			"district": "Cutnall Green"
+		},
+		"source": "historical",
+		"delete": false
+	},
+	{
+		"siteId": "07ebecfd-5341-4f02-88f8-4f5330398f69",
+		"point": "20250508T174124",
+		"reference": "bel-zel-m1",
+		"commissioned": "20241010",
+		"area": "urban",
+		"type": "street",
+		"location": {
+			"country": "BEL",
+			"region": "Asse",
+			"town": "Zellix",
+			"street": "Vliegwezenlaan",
+			"premisesNameNumber": "48",
+			"postalCode": "1731",
+			"coordinate": {
+				"x": 50.889512,
+				"y": 4.271829,
+				"z": 56
+			}
+		},
+		"source": "historical",
+		"delete": false
+	}
+]

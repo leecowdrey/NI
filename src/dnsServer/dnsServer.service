@@ -1,0 +1,17 @@
+[Unit]
+Description=MNI DNS Server
+After=multi-user.target
+
+[Service]
+Type=simple
+User=dnsserv
+Group=mni
+Restart=always
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+WorkingDirectory=/usr/local/mni/dnsServer
+StandardOutput=append:/var/log/mni/dnsServer.log
+StandardError=append:/var/log/mni/dnsServer.log
+ExecStart=/usr/local/mni/dnsServer/bin/dnsserv --keep-in-foreground --conf-file=/usr/local/mni/dnsServer/config/dnsServer.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,202 @@
+[
+	{
+		"neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+		"point": "20250508T174124",
+		"host": "gbr-worc-cg1-02",
+		"commissioned": "20250508",
+		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
+		"slotPosition": 2,
+		"mgmtIP": "10.23.72.2",
+		"vendor": "Cisco",
+		"model": "C8300-1N1S-4T2X",
+		"image": "IOS-XE SD-WAN",
+		"version": "17.7.1a",
+		"ports": [
+			{
+				"name": "VDSL 0/0/0",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "VDSL 0/0/1",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "VDSL 0/0/2",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "VDSL 0/0/3",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "GigabitEthernet0/0/0",
+				"technology": "fiber",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps",
+					"mode": "SMOF",
+					"width": 1,
+					"channels": 1
+				}
+			},
+			{
+				"name": "GigabitEthernet0/0/1",
+				"technology": "fiber",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps",
+					"mode": "SMOF",
+					"width": 1,
+					"channels": 1
+				}
+			},
+			{
+				"name": "Loopback0",
+				"technology": "loopback",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps"
+				}
+			},
+			{
+				"name": "Null0",
+				"technology": "virtual",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps"
+				}
+			}
+		],
+		"source": "historical",
+		"delete": false
+	},
+	{
+		"neId": "7a1a6b0c-01ec-41f2-8459-75784228f30d",
+		"point": "20250508T174124",
+		"host": "gbr-worc-cg1-01",
+		"commissioned": "20250508",
+		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
+		"slotPosition": 1,
+		"mgmtIP": "10.23.72.1",
+		"vendor": "Juniper",
+		"model": "MX240",
+		"image": "JUNOS Base OS Boot",
+		"version": "12.3R6.6",
+		"ports": [
+			{
+				"name": "at-0/0/0",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/1",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/2",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/3",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "xe-1/0/0",
+				"technology": "fiber",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps",
+					"mode": "SMOF",
+					"width": 1,
+					"channels": 1
+				}
+			},
+			{
+				"name": "xe-1/0/1",
+				"technology": "fiber",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps",
+					"mode": "SMOF",
+					"width": 1,
+					"channels": 1
+				}
+			},
+			{
+				"name": "lo0",
+				"technology": "loopback",
+				"state": "free",
+				"configuration": {
+					"rate": 10,
+					"unit": "Gbps"
+				}
+			},
+			{
+				"name": "me0",
+				"technology": "virtual",
+				"state": "used",
+				"configuration": {
+					"rate": 1,
+					"unit": "Gbps"
+				}
+			}
+		],
+		"source": "historical",
+		"delete": false
+	}
+]

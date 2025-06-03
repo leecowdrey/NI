@@ -1,0 +1,368 @@
+<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><link rel="stylesheet" href="/mni/css/style.css"><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><style>.panel {
+            width: 95%;
+            height: 40%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 10px;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .graph_container {
+            display: inline-block;
+            margin-left: 10px;
+            width: 90%;
+        }</style><script src="js/color.esm.min.js"></script><script src="js/chart.umd.min.js"></script><script async src="/mni/js/mni.js"></script><script defer="defer" src="./js/app.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
+            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="icon-bar" id="subIcon-bar"><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/callbackalert');" title="Callback"><i class="fa fa-retweet"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/publishalert');" title="publish"><i class="fa fa-share-alt"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/notifyalert');" title="Email"><i class="fa fa-envelope"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/workalert');" title="Workflow"><i class="fa fa-sitemap"></i></a></div><div class="row"><div class="column"><div class="wrapper"><div class="alert-select" id="alertList"><div class="wrapper-controls"><a accesskey="f" nohref="nohref" onclick="firstMasterAlert();" onmouseover="" title="first" style="cursor: pointer;"><i class="fa fa-fast-backward"></i></a> <a accesskey="p" nohref="nohref" onclick="previousMasterAlert();" onmouseover="" title="previous" style="cursor: pointer;"><i class="fa fa-backward"></i></a><meter id="meter" value="0" min="0" max="0"></meter><a accesskey="n" nohref="nohref" onclick="nextMasterAlert();" onmouseover="" title="next" style="cursor: pointer;"><i class="fa fa-forward"></i></a> <a accesskey="l" nohref="nohref" onclick="lastMasterAlert();" onmouseover="" title="last" style="cursor: pointer;"><i class="fa fa-fast-forward"></i></a> <a accesskey="-" nohref="nohref" onclick="deleteMasterAlert();" onmouseover="" title="delete" style="cursor: pointer;"><i class="fa fa-minus-square"></i></a> <a accesskey="+" nohref="nohref" onclick="newMasterAlert();" onmouseover="" title="new" style="cursor: pointer;"><i class="fa fa-plus-square"></i></a> <a accesskey="@" nohref="nohref" onclick="fetchMasterAlertList();" onmouseover="" title="refresh" style="cursor: pointer;"><i class="fa fa-refresh"></i></a> <label for="alert">Alert</label> <select id="alert" onchange="fetchMasterAlert();" disabled="disabled"></select></div><div class="column"><div class="panel"><label for="alertDescription">Description</label> <input id="alertDescription" required><div id="newSaveReset" class="wrapper-controls"><input id="save" type="button" value="save" onclick="saveMasterAlert();"/><input id="reset" type="button" value="reset" onclick="redisplayMasterAlert();"/></div></div></div></div></div></div></div><div class="column"><div class="panel"><a accesskey="@" nohref="nohref" onclick="fetchStats();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a><div class="graph_container" id="alertGraph">Alert Usage<canvas id="alertSummary"></canvas></div></div></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>let ready = null;
+        let retryMs = 5000;
+        let refreshMs = 60000;
+        let chartAlert = null;
+        let availableAlert = 0;
+        let activeCallback = 0;
+        let activePublish = 0;
+        let activeNotify = 0;
+        let activeWorkflow = 0;
+        let fmaReady = null;
+        let fmalReady = null;
+        let umaReady = null;
+        function fetchStats() {
+            if (ready != null) {
+                clearTimeout(ready);
+            }
+
+            fetch("<%=payload.gatewayUrl%>/ui/statistic", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        ready = setTimeout(fetchStats, refreshMs, response.status);
+                    }
+                })
+                .then((data) => {
+                    if (data.alerts != null) {
+                        if (data.alerts?.available != null) {
+                            availableAlert = toInteger(data.alerts.available);
+                        }
+                        if (data.alerts?.active?.callbacks != null) {
+                            activeCallback = toInteger(data.alerts.active.callbacks);
+                        }
+                        if (data.alerts?.active?.publish != null) {
+                            activePublish = toInteger(data.alerts.active.publish);
+                        }
+                        if (data.alerts?.active?.notify != null) {
+                            activeNotify = toInteger(data.alerts.active.notify);
+                        }
+                        if (data.alerts?.active?.workflow != null) {
+                            activeWorkflow = toInteger(data.alerts.active.workflow);
+                        }
+                    }
+                    Chart.defaults.font.family = "Lato";
+                    if (chartAlert != null) {
+                        chartAlert.data.datasets[0].data[0] = availableAlert;
+                        chartAlert.data.datasets[1].data[1] = activeCallback;
+                        chartAlert.data.datasets[1].data[2] = activePublish;
+                        chartAlert.data.datasets[1].data[3] = activeNotify;
+                        chartAlert.data.datasets[1].data[4] = activeWorkflow;
+                        chartAlert.update();
+                    } else {
+                        chartAlert = new Chart("alertSummary", {
+                            type: "bar",
+                            options: {
+                                indexAxis: "y",
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        display: false,
+                                        stacked: true,
+                                        grid: {
+                                            display: false,
+                                        },
+                                        scales: {
+                                            x: {
+                                                display: false,
+                                            },
+                                        },
+                                    },
+                                    y: {
+                                        stacked: true,
+                                        grid: {
+                                            display: false,
+                                        },
+                                    },
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false,
+                                    },
+                                },
+                            },
+                            data: {
+                                labels: [
+                                    "Available",
+                                    ["Active", "Callbacks"],
+                                    ["Active", "Publish"],
+                                    ["Active", "Notify"],
+                                    ["Active", "Workflows"]
+                                ],
+                                datasets: [
+                                    {
+                                        data: [availableAlert, 0, 0, 0, 0],
+                                        backgroundColor: "rgba(0,128,0,1)",
+                                        hoverBackgroundColor: "rgba(10,99,10,1)",
+                                    },
+                                    {
+                                        data: [0, activeCallback, activePublish, activeNotify, activeWorkflow],
+                                        backgroundColor: "rgba(54, 162, 235,1)",
+                                        hoverBackgroundColor: "rgba(26, 122, 186,1)",
+                                    },
+
+                                ],
+                            },
+                        });
+                    }
+                    ready = setTimeout(fetchStats, refreshMs);
+                })
+                .catch((e) => {
+                    ready = setTimeout(fetchStats, refreshMs);
+                });
+        }
+        function firstMasterAlert() {
+            let p = document.getElementById("alert");
+            let i = p.selectedIndex;
+            let l = p.length;
+            if (l > 1) {
+                p.selectedIndex = 1;
+                fetchMasterAlert();
+                document.getElementById("meter").setAttribute("value", 1);
+            }
+        }
+        function previousMasterAlert() {
+            let p = document.getElementById("alert");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i >= 2) {
+                p.selectedIndex = i - 1;
+                fetchMasterAlert();
+                document.getElementById("meter").setAttribute("value", i - 1);
+            }
+        }
+        function nextMasterAlert() {
+            let p = document.getElementById("alert");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l) {
+                p.selectedIndex = i + 1;
+                fetchMasterAlert();
+                document.getElementById("meter").setAttribute("value", i + 1);
+            }
+        }
+        function lastMasterAlert() {
+            let p = document.getElementById("alert");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l && l > 1) {
+                p.selectedIndex = l;
+                fetchMasterAlert();
+                document.getElementById("meter").setAttribute("value", l);
+            }
+        }
+        function updateMasterAlert() {
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (umaReady != null) {
+                clearTimeout(umaReady);
+            }
+        }
+        function deleteMasterAlert() {
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null && id != "-1") {
+                fetch("<%=payload.gatewayUrl%>/alert/" + id, {
+                    method: "DELETE",
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            notify('Deleted');
+                            previousMasterAlert();
+                            fetchMasterAlertList();
+                        } else {
+                            notify('Failed to delete provider');
+                        }
+                    })
+                    .catch((e) => {
+                        notify(e);
+                    });
+            }
+        }
+        function redisplayMasterAlert() {
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (id == "-1") {
+                clearMasterAlert();
+            } else {
+                fetchMasterAlert();
+            }
+        }
+        function newMasterAlert() {
+            document.getElementById("alert").value = "-1"
+            clearMasterAlert();
+        }
+        function saveMasterAlert() {
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (document.getElementById("alertDescription").value.length > 0) {
+                if (id == "-1") {
+                    let reqJson = null;
+                    reqJson = {
+                        description: document.getElementById("alertDescription").value
+                    }
+                    fetch("<%=payload.gatewayUrl%>/alert", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                        },
+                        body: JSON.stringify(reqJson)
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                notify('Saved');
+                                return response.json();
+                            }
+                        })
+                        .then((data) => {
+                            fetchMasterAlertList();
+                            lastMasterAlert();
+                        })
+                        .catch((e) => {
+                            notify(e);
+                        });
+                } else {
+                    let reqJson = null;
+                    reqJson = {
+                        description: document.getElementById("alertDescription").value
+                    }
+                    fetch("<%=payload.gatewayUrl%>/alert/" + id, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(reqJson)
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                notify('Updated');
+                            } else {
+                                notify('Failed to save change');
+                            }
+                        })
+                        .catch((e) => {
+                            notify(e);
+                        });
+                }
+            } else {
+                notify('description must be supplied');
+            }
+        }
+        function clearMasterAlert() {
+            document.getElementById("alertDescription").value = "";
+        }
+        function displayMasterAlert(d) {
+            clearMasterAlert();
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (d !== undefined && d != null) {
+                document.getElementById("alertDescription").value = d.description;
+            }
+        }
+        function fetchMasterAlert() {
+            if (fmaReady != null) {
+                clearTimeout(fmaReady);
+            }
+            let p = document.getElementById("alert");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null && id != "-1") {
+                fetch("<%=payload.gatewayUrl%>/alert/" + id, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            fmaReady = setTimeout(fetchMasterAlert, retryMs);
+                        }
+                    })
+                    .then((data) => {
+                        displayMasterAlert(data);
+                    })
+                    .catch((e) => {
+                        fmaReady = setTimeout(fetchMasterAlert, retryMs);
+                    });
+
+            } else {
+                fmaReady = setTimeout(fetchMasterAlert, retryMs);
+            }
+        }
+        function fetchMasterAlertList() {
+            if (fmalReady != null) {
+                clearTimeout(fmalReady);
+            }
+            fetch("<%=payload.gatewayUrl%>/alert", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        fmalReady = setTimeout(fetchMasterAlertList, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let Ids = "<option disabled value='-1' selected='selected'> -- new provider -- </option>";
+                    for (var i = 0; i < data.length; i++) {
+                        if (i == 0) {
+                            Ids += "<option value='" + data[i] + "' selected='selected'>" + data[i] + "</option>"
+                        } else {
+                            Ids += "<option value='" + data[i] + "' >" + data[i] + "</option>"
+                        }
+                    }
+                    document.getElementById("alert").innerHTML = Ids;
+                    if (data.length > 0) {
+                        document.getElementById("meter").setAttribute("min", 1);
+                        document.getElementById("meter").setAttribute("value", 1);
+                    }
+                    else {
+                        document.getElementById("meter").setAttribute("value", 0);
+                        document.getElementById("meter").setAttribute("min", 0);
+                    }
+                    document.getElementById("meter").setAttribute("max", data.length);
+                    fetchMasterAlert();
+                })
+                .catch((e) => {
+                    fmalReady = setTimeout(fetchMasterAlertList, retryMs);
+                });
+
+        }
+        try {
+            fetchMasterAlertList();
+        } catch (e) {
+            fmalReady = setTimeout(fetchMasterAlertList, retryMs);
+        }
+        try {
+            fetchStats();
+        } catch (e) {
+            ready = setTimeout(fetchStats, refreshMs);
+        }</script></body></html>

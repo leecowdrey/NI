@@ -1,0 +1,16 @@
+[
+	{
+		"cableId": "4f58b5fd-81a9-44d8-a653-22733eba4f21",
+		"technology": "ethernet",
+		"state": "used",
+		"delete": false,
+		"configuration": {
+			"category": "Cat6A",
+			"rate": 10,
+			"unit": "Gbps"
+		},
+		"poleId": "360236fb-15b1-48be-babf-6c433c387ed8",
+		"point": "20250509T113205",
+		"source": "historical"
+	}
+]

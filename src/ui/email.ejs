@@ -1,0 +1,544 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>MNI</title>
+    <link rel="stylesheet" href="/mni/css/style.css">
+    <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="img/icon.png">
+    <style>
+        .panel {
+            width: 90%;
+            height: 60%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 10px;
+            margin-left: 10px;
+            display: inline-block;
+        }
+    </style>
+    <script async src="/mni/js/mni.js"></script>
+</head>
+
+<body>
+    <div class="icon-bar" id="icon-bar">
+        <!-- class="active" nohref -->
+        <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
+                width="25%" height="25%"></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+            title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+            title="Cables"><i class="fa fa-plug"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+            title="Ducts"><i class="fa fa-superpowers"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+            title="Poles"><i class="fa fa-arrows-v"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+            title="Network Equipment"><i class="fa fa-server"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+            title="Racks"><i class="fa fa-list-ol"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/site');"
+            title="Sites"><i class="fa fa-building-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/service');"
+            title="Services"><i class="fa fa-tty"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+            title="Trenches"><i class="fa fa-arrows-h"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+            title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
+            class="active" title="Providers"><i class="fa fa-handshake-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+            title="Alerts"><i class="fa fa-bullhorn"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
+            title="Settings"><i class="fa fa-cog"></i></a>
+        <a nohref onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
+            return false;" title="About"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+            title="Help"><i class="fa fa-question-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+                class="fa fa-window-close"></i></a>
+        <a nohref onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;"
+            title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a>
+    </div>
+    <div class="icon-bar" id="subIcon-bar">
+        <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Email Providers"><i
+                class="fa fa-envelope"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/map');"
+            title="Map Providers"><i class="fa fa-map-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/kafka');"
+            title="Kafka Providers"><i class="fa fa-share-alt"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/workflow');"
+            title="Workflow Engines"><i class="fa fa-sitemap"></i></a>
+    </div>
+    <div class="wrapper">
+        <div class="provider-select" id="providerList">
+            <label for="provider">Provider</label>
+            <select id="provider" onchange="fetchProvider();" disabled></select>
+            <div class="wrapper-controls">
+                <a accesskey="f" nohref onclick="firstProvider();" onmouseover="" title="first"
+                    style="cursor: pointer;"><i class="fa fa-fast-backward"></i></a>
+                <a accesskey="p" nohref onclick="previousProvider();" onmouseover="" title="previous"
+                    style="cursor: pointer;"><i class="fa fa-backward"></i></a>
+                <meter id="meter" value="0" min="0" max="0"></meter>
+                <a accesskey="n" nohref onclick="nextProvider();" onmouseover="" title="next"
+                    style="cursor: pointer;"><i class="fa fa-forward"></i></a>
+                <a accesskey="l" nohref onclick="lastProvider();" onmouseover="" title="last"
+                    style="cursor: pointer;"><i class="fa fa-fast-forward"></i></a>
+                <a accesskey="-" nohref onclick="deleteProvider();" onmouseover="" title="delete"
+                    style="cursor: pointer;"><i class="fa fa-minus-square"></i></a>
+                <a accesskey="+" nohref onclick="newProvider();" onmouseover="" title="new" style="cursor: pointer;"><i
+                        class="fa fa-plus-square"></i></a>
+                <a accesskey="+" nohref onclick="fetchProviderList();" onmouseover="" title="new"
+                    style="cursor: pointer;"><i class="fa fa-refresh"></i></a>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="inner-grid">
+        <label for="vendor">Vendor</label>
+        <input type="text" id="vendor" required>
+        <label for="address">Address</label>
+        <input type="email" id="address" required>
+        <label for="name">Name</label>
+        <input type="text" id="name">
+        <div id="send">
+            <hr />Send
+            <label for="sendUsername">Username</label>
+            <input type="text" id="sendUsername" required>
+            <label for="sendPassword">Password</label>
+            <input type="password" id="sendPassword" required><label><input type="checkbox" checked="checked"
+                    onclick="togglePassword('sendPassword')" name="togglePwd">
+                <font size="1">show</font>
+            </label>
+            <label for="sendHost">Host</label>
+            <input type="text" id="sendHost" required>
+            <label for="sendPort">Port</label>
+            <input type="number" id="sendPort" value="465" min="1" max="65535" required>
+            <label for="sendProtocol">Protocol</label>
+            <select id="sendProtocol" required>
+                <option value='-1'> -- select protcol -- </option>
+                <option value="smtp" selected="selected">SMTP</option>
+            </select>
+            <label for="sendAuthentication">Authentication</label>
+            <select id="sendAuthentication" required>
+                <option value='-1'> -- select authentication scheme -- </option>
+                <option value="PLAIN" selected="selected">PLAIN</option>
+                <option value="AUTH" disabled>AUTH</option>
+                <option value="GSSAPI" disabled>GSSAPI</option>
+                <option value="DIGEST-MD5" disabled>DIGEST-MD5</option>
+                <option value="MD5" disabled>MD5</option>
+                <option value="CRAM-MD5" disabled>CRAM-MD5</option>
+                <option value="OAUTH10A" disabled>OAUTH10A</option>
+                <option value="OAUTHBEARER" disabled>OAUTHBEARER</option>
+                <option value="XOAUTH2" disabled>XOAUTH2</option>
+            </select>
+            <label for="sendEncryptionEnabled">Encryption</label>
+            <input type="checkbox" id="sendEncryptionEnabled" checked="checked">
+            <label for="sendEncryptionStartTls">StartTLS</label>
+            <input type="checkbox" id="sendEncryptionStartTls">
+        </div>
+        <div id="receive">
+            <hr />Receive
+            <label for="receiveUsername">Username</label>
+            <input type="text" id="receiveUsername" required>
+            <label for="receivePassword">Password</label>
+            <input type="password" id="receivePassword" required><label><input type="checkbox" checked="checked"
+                    onclick="togglePassword('receivePassword')" name="togglePwd">
+                <font size="1">show</font>
+            </label>
+            <label for="receiveHost">Host</label>
+            <input type="text" id="receiveHost" required>
+            <label for="receivePort">Port</label>
+            <input type="number" id="receivePort" value="993" min="1" max="65535" required>
+            <label for="receiveProtocol">Protocol</label>
+            <select id="receiveProtocol" required>
+                <option value='-1'> -- select protcol -- </option>
+                <option value="imap4" selected="selected">IMAP4</option>
+            </select>
+            <label for="receiveEncryptionEnabled">Encryption</label>
+            <input type="checkbox" id="receiveEncryptionEnabled" checked="checked">
+            <label for="receiveEncryptionStartTls">StartTLS</label>
+            <input type="checkbox" id="receiveEncryptionStartTls">
+            <hr />Receive Advanced
+            <label for="receiveRootFolder">Root Folder</label>
+            <input type="text" id="receiveRootFolder">
+            <label for="receiveFolderSeparator">Folder Separator</label>
+            <select id="receiveFolderSeparator" required>
+                <option value='-1'> -- select folder separator -- </option>
+                <option value="/" selected="selected">/</option>
+                <option value="." selected="selected">.</option>
+            </select>
+        </div>
+        <hr />
+        <div id="newSaveReset" class="wrapper-controls">
+            <input id="save" type="button" value="save" onclick="saveProvider();" /></input>
+            <input id="reset" type="button" value="reset" onclick="redisplayProvider();" /></input>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
+    </div>
+    <script>
+        let retryMs = 1000;
+        let refreshMs = 60000;
+        let fpReady = null;
+        let dpReady = null;
+        let spReady = null;
+        let fplReady = null;
+        function firstProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length;
+            if (l > 1) {
+                p.selectedIndex = 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", 1);
+            }
+        }
+        function previousProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i >= 2) {
+                p.selectedIndex = i - 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", i - 1);
+            }
+        }
+        function nextProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l) {
+                p.selectedIndex = i + 1;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", i + 1);
+            }
+        }
+        function lastProvider() {
+            let p = document.getElementById("provider");
+            let i = p.selectedIndex;
+            let l = p.length - 1;
+            if (i < l && l > 1) {
+                p.selectedIndex = l;
+                fetchProvider();
+                document.getElementById("meter").setAttribute("value", l);
+            }
+        }
+        function deleteProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null && id != "-1") {
+                fetch("<%=payload.gatewayUrl%>/admin/email/provider/" + id, {
+                    method: "DELETE",
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            previousProvider();
+                            fetchProviderList();
+                        } else {
+                            window.alert(`Failed to delete provider ${id}`);
+                        }
+                    })
+                    .catch((e) => {
+                    });
+            }
+        }
+        function redisplayProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id == "-1") {
+                clearProvider();
+            } else {
+                fetchProvider();
+            }
+        }
+        function newProvider() {
+            document.getElementById("provider").value = "-1"
+            clearProvider();
+        }
+        function saveProvider() {
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            let vendor = document.getElementById("vendor").value;
+            if (vendor != null) {
+                if (document.getElementById("address").value.length > 0) {
+                    if (document.getElementById("sendUsername").value.length > 0) {
+                        if (document.getElementById("sendPassword").value.length > 0) {
+                            if (document.getElementById("sendHost").value.length > 0) {
+                                if (document.getElementById("sendHost").value.length > 0) {
+                                    if (document.getElementById("sendAuthentication").value != "-1") {
+                                        let reqJson = null;
+                                        if (document.getElementById("sendUsername").value.length > 0 && document.getElementById("receiveUsername").value.length > 0) {
+                                            let txP = document.getElementById("sendProtocol");
+                                            let txProtocol = txP.options[txP.selectedIndex].value;
+                                            let txA = document.getElementById("sendAuthentication");
+                                            let txAuthentication = txA.options[txA.selectedIndex].value;
+                                            let rxP = document.getElementById("receiveProtocol");
+                                            let rxProtocol = rxP.options[rxP.selectedIndex].value;
+                                            reqJson = {
+                                                vendor: vendor,
+                                                address: document.getElementById("address").value,
+                                                name: document.getElementById("name").value,
+                                                send: {
+                                                    username: document.getElementById("sendUsername").value,
+                                                    password: document.getElementById("sendPassword").value,
+                                                    host: document.getElementById("sendHost").value,
+                                                    port: toInteger(document.getElementById("sendPort").value),
+                                                    protocol: txProtocol,
+                                                    authentication: txAuthentication,
+                                                    encryption: {
+                                                        enabled: document.getElementById("sendEncryptionEnabled").checked,
+                                                        starttls: document.getElementById("sendEncryptionStartTls").checked
+                                                    }
+                                                },
+                                                receive: {
+                                                    username: document.getElementById("receiveUsername").value,
+                                                    password: document.getElementById("receivePassword").value,
+                                                    host: document.getElementById("receiveHost").value,
+                                                    port: toInteger(document.getElementById("receivePort").value),
+                                                    protocol: rxProtocol,
+                                                    encryption: {
+                                                        enabled: document.getElementById("receiveEncryptionEnabled").checked,
+                                                        starttls: document.getElementById("receiveEncryptionStartTls").checked
+                                                    },
+                                                    rootFolder: document.getElementById("receiveRootFolder").value,
+                                                    folderSeparator: document.getElementById("receiveFolderSeparator").value
+                                                }
+                                            };
+                                        } else if (document.getElementById("sendUsername").value.length > 0 && document.getElementById("receiveUsername").value.length == 0) {
+                                            let txP = document.getElementById("sendProtocol");
+                                            let txProtocol = txP.options[txP.selectedIndex].value;
+                                            let txA = document.getElementById("sendAuthentication");
+                                            let txAuthentication = txA.options[txA.selectedIndex].value;
+                                            reqJson = {
+                                                vendor: vendor,
+                                                address: document.getElementById("address").value,
+                                                name: document.getElementById("name").value,
+                                                send: {
+                                                    username: document.getElementById("sendUsername").value,
+                                                    password: document.getElementById("sendPassword").value,
+                                                    host: document.getElementById("sendHost").value,
+                                                    port: toInteger(document.getElementById("sendPort").value),
+                                                    protocol: txProtocol,
+                                                    authentication: txAuthentication,
+                                                    encryption: {
+                                                        enabled: document.getElementById("sendEncryptionEnabled").checked,
+                                                        starttls: document.getElementById("sendEncryptionStartTls").checked
+                                                    }
+                                                }
+                                            };
+                                        }
+                                        if (id == "-1") {
+                                            // new provider
+                                            //
+                                            fetch("<%=payload.gatewayUrl%>/admin/email/provider", {
+                                                method: "POST",
+                                                headers: {
+                                                    "Content-Type": "application/json",
+                                                    "Accept": "application/json",
+                                                },
+                                                body: JSON.stringify(reqJson)
+                                            })
+                                                .then((response) => {
+                                                    if (response.ok) {
+                                                        fetchProviderList();
+                                                        lastProvider();
+                                                    }
+                                                })
+                                                .catch((e) => {
+                                                    window.alert(e);
+                                                });
+                                        } else {
+                                            // existing provider
+                                            //
+                                            reqJson.emailProviderId = id;
+                                            fetch("<%=payload.gatewayUrl%>/admin/email/provider/" + id, {
+                                                method: "PATCH",
+                                                headers: {
+                                                    "Content-Type": "application/json",
+                                                    "Accept": "application/json",
+                                                },
+                                                body: JSON.stringify(reqJson)
+                                            })
+                                                .then((response) => {
+                                                    if (!response.ok) {
+                                                        window.alert(`Failed to update provider ${id}`);
+                                                    }
+                                                })
+                                                .catch((e) => {
+                                                    window.alert(e);
+                                                });
+                                        }
+                                    }
+                                } else {
+                                    window.alert("Sending authentication scheme must be specified");
+                                }
+                            } else {
+                                window.alert("Sending host must be specified");
+                            }
+                        } else {
+                            window.alert("Sending password must be specified");
+                        }
+                    } else {
+                        window.alert("Sending username must be specified");
+                    }
+                } else {
+                    window.alert("Address must be specified");
+                }
+            } else {
+                window.alert("Vendor must be specified");
+            }
+        }
+        function clearProvider() {
+            document.getElementById("vendor").value = "";
+            document.getElementById("address").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("sendUsername").value = "";
+            document.getElementById("sendPassword").value = "";
+            document.getElementById("sendHost").value = "";
+            document.getElementById("sendPort").value = "465";
+            document.getElementById("sendProtocol").value = "-1";
+            document.getElementById("sendAuthentication").value = "-1";
+            document.getElementById("sendEncryptionEnabled").checked = true;
+            document.getElementById("receiveUsername").value = "";
+            document.getElementById("receivePassword").value = "";
+            document.getElementById("receivePort").value = "993";
+            document.getElementById("receiveProtocol").value = "-1";
+            document.getElementById("receiveRootFolder").value = "";
+            document.getElementById("receiveFolderSeparator").value = "/";
+            document.getElementById("send").style.display = "block";
+            document.getElementById("receive").style.display = "block";
+        }
+        function displayProvider(d) {
+            clearProvider();
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (d !== undefined && d != null) {
+                document.getElementById("vendor").value = d.vendor;
+                document.getElementById("address").value = d.address;
+                document.getElementById("name").value = d.name;
+                if (d?.send != null) {
+                    document.getElementById("send").style.display = "block";
+                    document.getElementById("sendUsername").value = d.send.username;
+                    document.getElementById("sendPassword").value = d.send.password;
+                    document.getElementById("sendHost").value = d.send.host;
+                    document.getElementById("sendPort").value = d.send.port;
+                    document.getElementById("sendProtocol").value = d.send.protocol;
+                    document.getElementById("sendAuthentication").value = d.send.authentication;
+                    document.getElementById("sendEncryptionEnabled").value = d.send.encryption.enabled;
+                    document.getElementById("sendEncryptionStartTls").value = d.send.encryption.starttls;
+                } else {
+                    document.getElementById("send").style.display = "none";
+                }
+                if (d?.receive != null) {
+                    document.getElementById("receive").style.display = "block";
+                    document.getElementById("receiveUsername").value = d.receive.username;
+                    document.getElementById("receivePassword").value = d.receive.password;
+                    document.getElementById("receiveHost").value = d.receive.host;
+                    document.getElementById("receivePort").value = d.receive.port;
+                    document.getElementById("receiveProtocol").value = d.receive.protocol;
+                    document.getElementById("receiveEncryptionEnabled").value = d.receive.encryption.enabled;
+                    document.getElementById("receiveEncryptionStartTls").value = d.receive.encryption.starttls;
+                    document.getElementById("receiveRootFolder").value = d.receive.rootFolder;
+                    document.getElementById("receiveFolderSeparator").value = d.receive.folderSeparator;
+                } else {
+                    document.getElementById("receive").style.display = "none";
+                }
+            }
+        }
+        function fetchProvider() {
+            if (fpReady != null) {
+                clearTimeout(fpReady);
+            }
+            let p = document.getElementById("provider");
+            let id = p.options[p.selectedIndex].value;
+            if (id != null) {
+
+                fetch("<%=payload.gatewayUrl%>/admin/email/provider/" + id, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            fpReady = setTimeout(fetchProvider, retryMs);
+                        }
+                    })
+                    .then((data) => {
+                        displayProvider(data);
+                    })
+                    .catch((e) => {
+                        fpReady = setTimeout(fetchProvider, retryMs);
+                    });
+
+            } else {
+                fpReady = setTimeout(fetchProvider, retryMs);
+            }
+        }
+        function fetchProviderList() {
+            if (fplReady != null) {
+                clearTimeout(fplReady);
+            }
+
+            fetch("<%=payload.gatewayUrl%>/admin/email/provider", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        fplReady = setTimeout(fetchProviderList, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let Ids = "<option disabled value='-1' selected='selected'> -- new provider -- </option>";
+                    for (var i = 0; i < data.length; i++) {
+                        if (i == 0) {
+                            Ids += "<option value='" + data[i] + "' selected='selected'>" + data[i] + "</option>"
+                        } else {
+                            Ids += "<option value='" + data[i] + "' >" + data[i] + "</option>"
+                        }
+                    }
+                    document.getElementById("provider").innerHTML = Ids;
+                    if (data.length > 0) {
+                        document.getElementById("meter").setAttribute("min", 1);
+                        document.getElementById("meter").setAttribute("value", 1);
+                    }
+                    else {
+                        document.getElementById("meter").setAttribute("value", 0);
+                        document.getElementById("meter").setAttribute("min", 0);
+                    }
+                    document.getElementById("meter").setAttribute("max", data.length);
+                    fetchProvider();
+                })
+                .catch((e) => {
+                    fplReady = setTimeout(fetchProviderList, retryMs);
+                });
+
+        }
+        try {
+            fetchProviderList();
+        } catch (e) {
+            fplReady = setTimeout(fetchProviderList, retryMs);
+        }
+    </script>
+
+</body>
+
+</html>

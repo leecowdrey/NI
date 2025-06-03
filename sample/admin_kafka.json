@@ -1,0 +1,22 @@
+[
+	{
+		"kafkaProducerId": "19a20852-35ed-4498-a4a0-fa16bf79ba37",
+		"name": "west",
+		"clientId": "mni",
+		"producer": {
+			"username": "ni@marlindt.net",
+			"password": "password123&#",
+			"host": "10.72.34.16",
+			"port": 9092,
+			"retryDelay": 10000,
+			"retries": 2,
+			"acks": "leader",
+			"linger": 0,
+			"batchSize": 16,
+			"bufferMemory": 32,
+			"maxInFlightRequestsPerConnection": 5,
+			"compressionMethod": "none",
+			"authentication": "none"
+		}
+	}
+]

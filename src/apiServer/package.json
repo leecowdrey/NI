@@ -1,0 +1,31 @@
+{
+  "bugs": {
+    "url": "https://help.marlindt.net/",
+    "email": "support@marlindt.net"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "^1.1.3-alpha.9",
+    "basic-auth-connect": "^1.1.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "express-validator": "^7.2.1",
+    "kafkajs": "^2.2.4",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "serve-favicon": "^2.5.0",
+    "uuid": "^11.0.5"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node -r dotenv/config /usr/local/mni/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini",
+    "dev": "DEBUG=* node -r dotenv/config /usr/local/mni/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini"
+  },
+  "description": "MarlinDT Network Intelligence (MNI) provides analytical and prediction insights for telecommunications infrastructure and services.",
+  "homepage": "https://www.merkator.com/",
+  "license": "Proprietary License",
+  "main": "apiServer.mjs",
+  "name": "mni-api-server",
+  "private": true,
+  "version": "1.0.0"
+}
