@@ -29,6 +29,7 @@ export const aggregationUnit = [
   "half-year",
   "year",
 ];
+export const alertType = ["callback", "publish", "notify", "workflow"];
 export const areaType = [
   "residential",
   "rural",
@@ -640,7 +641,13 @@ export const portTechnology = [
   ,
   "virtual",
 ];
-export const portXdslConfiguration = ["ADSL", "ADSL2", "ADSL2+", "VDSL", "VDSL2"];
+export const portXdslConfiguration = [
+  "ADSL",
+  "ADSL2",
+  "ADSL2+",
+  "VDSL",
+  "VDSL2",
+];
 export const portXdslConfigurationRate = ["Mbps"];
 export const premisesPassed = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const rackSlots = { min: 1, max: 58 };
@@ -656,9 +663,36 @@ export const siteType = [
 ];
 export const sizeUnit = ["cm", "mm", "m", "inch", "feet"];
 export const source = ["historical", "predicted"];
-export const trenchPurpose = ["service/drop", "link", "backhaul", "unclassified"];
+export const trenchPurpose = [
+  "service/drop",
+  "link",
+  "backhaul",
+  "unclassified",
+];
 export const trenchState = ["free", "used", "reserved", "faulty"];
 export const url_protocols = ["http", "https"];
 export const vlanId = { min: 0, max: 4095 };
 export const vxlanId = { min: 4096, max: 16777215 };
 export const workflowEngineType = ["bpmn", "elsa"];
+
+export const bannerGraffti = [
+  32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95,
+  32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+  32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95,
+  95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 10, 124, 32, 32, 92, 47, 32, 32, 124,
+  32, 95, 95, 95, 32, 95, 32, 95, 95, 124, 32, 124, 32, 95, 95, 95, 95, 32, 95,
+  124, 32, 124, 95, 32, 95, 95, 95, 32, 32, 95, 32, 95, 95, 32, 32, 32, 95, 32,
+  95, 95, 95, 95, 32, 32, 32, 95, 95, 47, 32, 47, 95, 95, 32, 32, 95, 95, 32,
+  95, 32, 10, 124, 32, 124, 92, 47, 124, 32, 124, 47, 32, 95, 32, 92, 32, 39,
+  95, 95, 124, 32, 124, 47, 32, 47, 32, 95, 96, 32, 124, 32, 95, 95, 47, 32, 95,
+  32, 92, 124, 32, 39, 95, 95, 124, 32, 124, 32, 39, 95, 32, 92, 32, 92, 32, 47,
+  32, 47, 32, 47, 32, 95, 95, 124, 47, 32, 95, 96, 32, 124, 10, 124, 32, 124,
+  32, 32, 124, 32, 124, 32, 32, 95, 95, 47, 32, 124, 32, 32, 124, 32, 32, 32,
+  60, 32, 40, 95, 124, 32, 124, 32, 124, 124, 32, 40, 95, 41, 32, 124, 32, 124,
+  32, 32, 32, 32, 124, 32, 124, 32, 124, 32, 92, 32, 86, 32, 47, 32, 47, 92, 95,
+  95, 32, 92, 32, 40, 95, 124, 32, 124, 10, 124, 95, 124, 32, 32, 124, 95, 124,
+  92, 95, 95, 95, 124, 95, 124, 32, 32, 124, 95, 124, 92, 95, 92, 95, 95, 44,
+  95, 124, 92, 95, 95, 92, 95, 95, 95, 47, 124, 95, 124, 32, 32, 32, 32, 124,
+  95, 124, 32, 124, 95, 124, 92, 95, 47, 95, 47, 32, 124, 95, 95, 95, 47, 92,
+  95, 95, 44, 95, 124, 10, 10,
+];

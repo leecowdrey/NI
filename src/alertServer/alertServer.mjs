@@ -11,7 +11,9 @@
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";
+import nodemailer from "nodemailer";
 import { MAX, v4 as uuidv4 } from "uuid";
+import { Kafka, CompressionTypes, logLevel } from "kafkajs";
 import { Console } from "node:console";
 import dayjs from "dayjs";
 import os from "os";
@@ -24,8 +26,8 @@ var dayjsDateFormat = "YYYYMMDD";
 var DEBUG = false;
 var ENDPOINT_READY = false;
 var ENDPOINT = null;
-var predictDuplicate = null;
-var predictMethodOne = null;
+var kafka = null;
+var kafkaProducer = null;
 
 //const output = fs.createWriteStream('./stdout.log');
 //const errorOutput = fs.createWriteStream('./stderr.log');
@@ -225,11 +227,12 @@ function quit() {
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "quit",
   });
-  /*
+  if (kafkaProducer != null) {
+    kafkaProducer.disconnect();
+  }
   if (queueDrainTimer != null) {
     clearTimeout(queueDrainTimer);
   }
-    */
   if (endpointTimer != null) {
     clearTimeout(endpointTimer);
   }
@@ -350,6 +353,8 @@ async function queueDrain() {
                 state: data.state,
               };
               //TODO: the alert workers
+
+              //
               deleteQueueItem(q.qId);
             }
           }
@@ -498,6 +503,144 @@ async function checkEndpointReadiness() {
   }
 }
 
+async function sendMail() {
+  // get smtp details from API server
+  let mailHost = "smtp.sendlayer.net";
+  let mailPort = 587;
+  let mailFrom = "paulie@example.com";
+  let mailTo = "recipient@example.com";
+  let mailAuthUser = "your-sendlayer-username";
+  let mailAuthPassword = "your-sendlayer-password";
+  let mailTLS = false;
+  let mailSubect = "MNI: alert";
+  let mailPlainTextBody = "alert X threshold reached";
+  let mailHtmlBody = "<p>alert X <b>threshold reached</b></p>";
+
+  // Create a transporter object using specified SMTP server
+  let transporter = nodemailer.createTransport({
+    host: mailHost,
+    port: mailPort,
+    secure: mailTLS, // true for 465, false for other ports
+    auth: { user: mailAuthUser, pass: mailAuthPassword },
+  });
+
+  // Configure email options
+  let mailOptions = {
+    from: mailFrom, // Sender address
+    to: mailTo, // Recipient address
+    subject: mailSubect, // Subject line
+    text: mailPlainTextBody, // Plain text body
+    html: mailHtmlBody,
+  };
+
+  // Send email
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      LOGGER.error(dayjs().format(dayjsFormat), "error", "sendMail", {
+        host: mailHost + ":" + mailPort,
+        from: mailFrom,
+        to: mailTo,
+        error: err,
+      });
+    } else {
+      if (DEBUG) {
+        LOGGER.debug(dayjs().format(dayjsFormat), "debug", "sendMail", {
+          host: mailHost + ":" + mailPort,
+          from: mailFrom,
+          to: mailTo,
+          messageId: info.messageId,
+          response: info.response,
+        });
+      }
+    }
+  });
+}
+
+  /*
+  kafka = new Kafka({
+    clientId: process.env.KAFKA_CLIENT_ID,
+    brokers: [process.env.KAFKA_BROKER],
+    logLevel: parseInt(process.env.KAFKA_LOGLEVEL),
+    sasl: false,
+    ssl: {
+      rejectUnauthorized: false,
+      ca: [fs.readFileSync(process.env.KAFKA_SSL_CA, "utf-8")],
+      key: fs.readFileSync(process.env.KAFKA_SSL_KEY, "utf-8"),
+      cert: fs.readFileSync(process.env.KAFKA_SSL_CERT, "utf-8"),
+    },
+    requestTimeout: parseInt(process.env.KAFKA_REQUEST_TIMEOUT),
+    sessionTimeout: parseInt(process.env.KAFKA_SESSION_TIMEOUT),
+    enforceRequestTimeout: parseInt(process.env.KAFKA_ENFORCE_REQUEST_TIMEOUT),
+    minBytes: parseInt(process.env.KAFKA_MIN_BYTES),
+    maxBytes: parseInt(process.env.KAFKA_MAX_BYTES),
+    maxWaitTimeInMs: parseInt(process.env.KAFKA_MAX_WAIT_TIMEOUT),
+    retry: {
+      initialRetryTime: parseInt(process.env.KAFKA_INITIAL_RETRY_TIME),
+      retries: parseInt(process.env.KAFKA_RETRIES),
+    },
+  });
+} else if (toBoolean(process.env.KAFKA_SASL)) {
+  kafka = new Kafka({
+    clientId: process.env.KAFKA_CLIENT_ID,
+    brokers: [process.env.KAFKA_BROKER],
+    logLevel: parseInt(process.env.KAFKA_LOGLEVEL),
+    ssl: true,
+    sasl: {
+      mechanism: process.env.KAFKA_SASL_MECHANISM.toLowerCase(), // plain, scram-sha-256 or scram-sha-512
+      username: process.env.KAFKA_USERNAME,
+      password: KAFKA_DECODED_PASSWORD,
+    },
+    requestTimeout: parseInt(process.env.KAFKA_REQUEST_TIMEOUT),
+    sessionTimeout: parseInt(process.env.KAFKA_SESSION_TIMEOUT),
+    enforceRequestTimeout: parseInt(process.env.KAFKA_ENFORCE_REQUEST_TIMEOUT),
+    minBytes: parseInt(process.env.KAFKA_MIN_BYTES),
+    maxBytes: parseInt(process.env.KAFKA_MAX_BYTES),
+    maxWaitTimeInMs: parseInt(process.env.KAFKA_MAX_WAIT_TIMEOUT),
+    retry: {
+      initialRetryTime: parseInt(process.env.KAFKA_INITIAL_RETRY_TIME),
+      retries: parseInt(process.env.KAFKA_RETRIES),
+    },
+  });
+} else {
+  kafka = new Kafka({
+    clientId: process.env.KAFKA_CLIENT_ID,
+    brokers: [process.env.KAFKA_BROKER],
+    logLevel: parseInt(process.env.KAFKA_LOGLEVEL),
+    requestTimeout: parseInt(process.env.KAFKA_REQUEST_TIMEOUT),
+    sessionTimeout: parseInt(process.env.KAFKA_SESSION_TIMEOUT),
+    enforceRequestTimeout: parseInt(process.env.KAFKA_ENFORCE_REQUEST_TIMEOUT),
+    minBytes: parseInt(process.env.KAFKA_MIN_BYTES),
+    maxBytes: parseInt(process.env.KAFKA_MAX_BYTES),
+    maxWaitTimeInMs: parseInt(process.env.KAFKA_MAX_WAIT_TIMEOUT),
+    retry: {
+      initialRetryTime: parseInt(process.env.KAFKA_INITIAL_RETRY_TIME),
+      retries: parseInt(process.env.KAFKA_RETRIES),
+    },
+  });
+}
+  
+kafkaProducer = kafka.producer({ retry: X, maxInFlightRequests: Y });
+
+await producer.send({
+    topic: <String>,
+    messages: <Message[]>,
+    acks: <Number>,
+    timeout: <Number>,
+    compression: <CompressionTypes>,
+})
+
+compression: CompressionTypes.GZIP,
+
+await producer.send({
+    topic: 'topic-name',
+    messages: [
+        { key: 'key1', value: 'hello world' },
+        { key: 'key2', value: 'hey hey!' }
+    ],
+})
+  */
+
+
 //
 var run = async () => {
   // load env
@@ -507,9 +650,7 @@ var run = async () => {
   await dnsSd();
 
   // banner
-  //@formatter:off
-  process.stdout.write( String.fromCharCode( 32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 10, 124, 32, 32, 92, 47, 32, 32, 124, 32, 95, 95, 95, 32, 95, 32, 95, 95, 124, 32, 124, 32, 95, 95, 95, 95, 32, 95, 124, 32, 124, 95, 32, 95, 95, 95, 32, 32, 95, 32, 95, 95, 32, 32, 32, 95, 32, 95, 95, 95, 95, 32, 32, 32, 95, 95, 47, 32, 47, 95, 95, 32, 32, 95, 95, 32, 95, 32, 10, 124, 32, 124, 92, 47, 124, 32, 124, 47, 32, 95, 32, 92, 32, 39, 95, 95, 124, 32, 124, 47, 32, 47, 32, 95, 96, 32, 124, 32, 95, 95, 47, 32, 95, 32, 92, 124, 32, 39, 95, 95, 124, 32, 124, 32, 39, 95, 32, 92, 32, 92, 32, 47, 32, 47, 32, 47, 32, 95, 95, 124, 47, 32, 95, 96, 32, 124, 10, 124, 32, 124, 32, 32, 124, 32, 124, 32, 32, 95, 95, 47, 32, 124, 32, 32, 124, 32, 32, 32, 60, 32, 40, 95, 124, 32, 124, 32, 124, 124, 32, 40, 95, 41, 32, 124, 32, 124, 32, 32, 32, 32, 124, 32, 124, 32, 124, 32, 92, 32, 86, 32, 47, 32, 47, 92, 95, 95, 32, 92, 32, 40, 95, 124, 32, 124, 10, 124, 95, 124, 32, 32, 124, 95, 124, 92, 95, 95, 95, 124, 95, 124, 32, 32, 124, 95, 124, 92, 95, 92, 95, 95, 44, 95, 124, 92, 95, 95, 92, 95, 95, 95, 47, 124, 95, 124, 32, 32, 32, 32, 124, 95, 124, 32, 124, 95, 124, 92, 95, 47, 95, 47, 32, 124, 95, 95, 95, 47, 92, 95, 95, 44, 95, 124, 10, 10 ) );
-  //@formatter:on
+  process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "starting",
