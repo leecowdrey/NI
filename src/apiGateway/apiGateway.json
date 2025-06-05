@@ -1791,14 +1791,14 @@
       "method": "DELETE"
     },
     {
-      "endpoint": "/mni/v1/alert/notify",
+      "endpoint": "/mni/v1/alert/notify/{notificationId}",
       "@comment": "getNotifyAlert",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": ["notificationId"],
       "backend": [
         {
-          "url_pattern": "/mni/v1/alert/notify",
+          "url_pattern": "/mni/v1/alert/notify/{notificationId}",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",

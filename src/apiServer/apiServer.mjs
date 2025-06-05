@@ -3236,7 +3236,7 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = {};
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id,alertId,requestorId,emailProviderId,subject FROM alertNotify WHERE notificationId = '" +
+          "SELECT id,alertId,emailProviderId,subject FROM alertNotify WHERE notificationId = '" +
             req.params.notificationId +
             "'"
         );
@@ -3244,9 +3244,8 @@ var run = async () => {
         if (ddRows.length > 0) {
           resJson = {
             alertId: ddRows[0][1],
-            requestorId: ddRows[0][2],
-            emailProviderId: ddRows[0][3],
-            subject: ddRows[0][4],
+            emailProviderId: ddRows[0][2],
+            subject: ddRows[0][3],
             recipient: [],
           };
 

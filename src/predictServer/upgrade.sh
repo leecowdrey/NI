@@ -39,7 +39,7 @@ doing "Stopping SystemD service"
 systemctl is-active ${HOST_SERVICE} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && (systemctl stop ${HOST_SERVICE} &>/dev/null ; RETVAL=$?)
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
 
 doing "Updating environment"
 cp -f ${CLI_PATH}/predictServer.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/predictServer.mjs && chmod 660 ${WORKING_DIRECTORY}/predictServer.mjs && \
