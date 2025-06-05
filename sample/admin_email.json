@@ -2,11 +2,11 @@
 	{
 		"emailProviderId": "c154c1b3-c0a6-47c3-856d-fed40e9acf19",
 		"vendor": "FastMail",
-		"address": "ni@marlindt.net",
+		"address": "support@marlindt.net",
 		"name": "MarlinDT Network Intelligence",
 		"send": {
-			"username": "ni@marlindt.net",
-			"password": "password123&#",
+			"username": "support@marlindt.net",
+			"password": "2p4j4h9v7n5b2t86",
 			"host": "smtp.fastmail.com",
 			"port": 465,
 			"protocol": "smtp",

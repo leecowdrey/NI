@@ -3230,6 +3230,52 @@ var run = async () => {
     }
   }
 
+  async function getNotifyAlert(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,alertId,requestorId,emailProviderId,subject FROM alertNotify WHERE notificationId = '" +
+            req.params.notificationId +
+            "'"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          resJson = {
+            alertId: ddRows[0][1],
+            requestorId: ddRows[0][2],
+            emailProviderId: ddRows[0][3],
+            subject: ddRows[0][4],
+            recipient: [],
+          };
+
+          let ddRecRead = await DDC.runAndReadAll(
+            "SELECT recipient FROM alertNotifyRecipient WHERE id = '" +
+              ddRows[0][0] +
+              "' AND notificationId = '" +
+              req.params.notificationId +
+              "'"
+          );
+          let ddRecRows = ddRecRead.getRows();
+          if (ddRecRows.length > 0) {
+            for (let idx in ddRecRows) {
+              resJson.recipient.push(ddRecRows[idx][0]);
+            }
+          }
+        }
+        res.contentType(OAS.mimeJSON).status(200).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function notifyAlert(req, res, next) {
     try {
       let result = validationResult(req);
@@ -15332,6 +15378,21 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     query("requestorId").isUUID(4),
     query("notificationId").matches(OAS.csv_uuids),
     unNotifyAlert
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getNotifyAlert
+       exposed Route: /mni/v1/alert/notify
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/alert/notify",
+    // security("read:mni_alert"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("notificationId").isUUID(4),
+    getNotifyAlert
   );
 
   /*

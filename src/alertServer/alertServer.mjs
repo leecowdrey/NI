@@ -348,11 +348,38 @@ async function queueDrain() {
               let q = {
                 qId: toInteger(data.qId),
                 point: data.point,
-                resource: data.resource,
-                id: data.id,
-                state: data.state,
+                type: type,
+                alertId: id,
+                callbackAlertId: null,
+                publishAlertId: null,
+                notifyAlertId: null,
+                workflowAlertId: null
               };
+              if (data.callback != null) {
+                q.callbackAlertId = data.callback;
+              }
+              if (data.publish != null) {
+                q.publishAlertId = data.publish;
+              }
+              if (data.notify != null) {
+                q.notifyAlertId = data.notify;
+              }
+              if (data.workflow != null) {
+                q.workflowAlertId = data.workflow;
+              }
+
               //TODO: the alert workers
+              switch (data.type) {
+                case "callback":
+                  break;
+                case "publish":
+                  break;
+                case "notify":
+                  sendMail(q);
+                  break;
+                case "workflow":
+                  break;
+              }
 
               //
               deleteQueueItem(q.qId);
@@ -503,48 +530,90 @@ async function checkEndpointReadiness() {
   }
 }
 
-async function sendMail() {
+async function sendMail(q) {
   // get smtp details from API server
-  let mailHost = "smtp.sendlayer.net";
-  let mailPort = 587;
-  let mailFrom = "paulie@example.com";
-  let mailTo = "recipient@example.com";
-  let mailAuthUser = "your-sendlayer-username";
-  let mailAuthPassword = "your-sendlayer-password";
-  let mailTLS = false;
+  let mailProtocol = "";
+  let mailHost = "";
+  let mailPort = 465;
+  let mailFrom = "";
+  let mailTo = ""; // '"Name" <address@example.com>'
+  let mailAuthentication = "";
+  let mailAuthUser = "";
+  let mailAuthPassword = "";
+  let mailStartTLS = false;
+  let mailEncryption = true;
   let mailSubect = "MNI: alert";
   let mailPlainTextBody = "alert X threshold reached";
   let mailHtmlBody = "<p>alert X <b>threshold reached</b></p>";
-
-  // Create a transporter object using specified SMTP server
-  let transporter = nodemailer.createTransport({
-    host: mailHost,
-    port: mailPort,
-    secure: mailTLS, // true for 465, false for other ports
-    auth: { user: mailAuthUser, pass: mailAuthPassword },
-  });
-
-  // Configure email options
-  let mailOptions = {
-    from: mailFrom, // Sender address
-    to: mailTo, // Recipient address
-    subject: mailSubect, // Subject line
-    text: mailPlainTextBody, // Plain text body
-    html: mailHtmlBody,
-  };
-
-  // Send email
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", "sendMail", {
-        host: mailHost + ":" + mailPort,
-        from: mailFrom,
-        to: mailTo,
-        error: err,
+  let id = "c154c1b3-c0a6-47c3-856d-fed40e9acf19";
+  
+  try {
+    await fetch(ENDPOINT + "/admin/email/provider/" + q.id, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        } else {
+          return null;
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          mailProtocol = data.send.protocol;
+          mailFrom = '"' + data.name + '" <' + data.address + ">";
+          mailHost = data.send.host;
+          mailPort = toInteger(data.send.port);
+          mailAuthentication = data.send.authentication;
+          mailAuthUser = data.send.username;
+          mailAuthPassword = data.send.password;
+          mailStartTLS = toBoolean(data.send.encryption.starttls);
+          mailEncryption = toBoolean(data.send.encryption.enabled);
+        }
+      })
+      .catch((err) => {
+        throw err;
       });
-    } else {
+  } catch (err) {
+    throw err;
+  }
+
+  if (mailProtocol == "smtp") {
+    // Create a transporter object using specified SMTP server
+    let transporter = nodemailer.createTransport({
+      host: mailHost,
+      port: mailPort,
+      secure: mailEncryption, // true for 465, false for other ports
+      auth: { user: mailAuthUser, pass: mailAuthPassword },
+    });
+    console.debug({
+      host: mailHost,
+      port: mailPort,
+      secure: mailEncryption, // true for 465, false for other ports
+      auth: { user: mailAuthUser.replace(allPrintableRegEx, "*"), pass: mailAuthPassword.replace(allPrintableRegEx, "*") },
+    });
+
+    // Configure email options
+    let mailOptions = {
+      from: mailFrom, // Sender addresses comma separated
+      to: mailTo, // Recipient addresses comma separated
+      subject: mailSubect, // Subject line
+      text: mailPlainTextBody, // Plain text body
+      html: mailHtmlBody,
+    };
+    console.debug(mailOptions);
+    // Send email
+    try {
+      let info = await transporter.sendMail(mailOptions);
       if (DEBUG) {
         LOGGER.debug(dayjs().format(dayjsFormat), "debug", "sendMail", {
+          event: "sent",
           host: mailHost + ":" + mailPort,
           from: mailFrom,
           to: mailTo,
@@ -552,11 +621,18 @@ async function sendMail() {
           response: info.response,
         });
       }
+    } catch (err) {
+      LOGGER.error(dayjs().format(dayjsFormat), "error", "sendMail", {
+        host: mailHost + ":" + mailPort,
+        from: mailFrom,
+        to: mailTo,
+        error: err,
+      });
     }
-  });
+  }
 }
 
-  /*
+/*
   kafka = new Kafka({
     clientId: process.env.KAFKA_CLIENT_ID,
     brokers: [process.env.KAFKA_BROKER],
@@ -640,7 +716,6 @@ await producer.send({
 })
   */
 
-
 //
 var run = async () => {
   // load env
@@ -673,6 +748,8 @@ var run = async () => {
 
   // process a queue item
   await queueDrain();
+
+  await sendMail();
 
   // sleep
   while (true) {

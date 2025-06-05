@@ -180,5 +180,15 @@ if [ ${RETVAL} -eq 0 ] ; then
  fi
 fi
 
+if [[ -d "/Users/lee/drive/projects/MNI-openapi" ]] ; then
+  cp -f api/mni.json /Users/lee/drive/projects/MNI-openapi/mni.json &>/dev/null && \
+  cp -f api/mni.yaml /Users/lee/drive/projects/MNI-openapi/mni.yaml &>/dev/null && \
+  pushd /Users/lee/drive/projects/MNI-openapi &>/dev/null
+  git diff --quiet mni.yaml &>/dev/null || git add -f mni.yaml &>/dev/null
+  git diff --quiet mni.json &>/dev/null || git add -f mni.json &>/dev/null
+  git diff --quiet mni.yaml mni.json &>/dev/null || (git commit -m "publish" &>/dev/null && git push &>/dev/null)
+  popd &>/dev/null
+fi
+
 popd &>/dev/null
 exit ${RETVAL}

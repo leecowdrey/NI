@@ -312,7 +312,7 @@ paths:
                 sample:
                   value:
                     vendor: "Google Maps"
-                    url: "https://maps.googleapis.com/maps/api/js?key=AIzaSyD4TcrXO9vw4fgfggfge3AQqdDyhecJ_j9lw"
+                    url: "https://maps.googleapis.com/maps/api/js?key=googleSuppliedKey"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -810,6 +810,52 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /alert/notify/{notificationId}:
+    get:
+      summary: get one alert definition
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getNotifyAlert
+      tags:
+      - Alerts
+      parameters:
+      - $ref: "#/components/parameters/notificationIdentifier"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alertId:
+                    $ref: "#/components/schemas/alertId"
+                  emailProviderId:
+                    $ref: "#/components/schemas/emailProviderId"
+                  subject:
+                    type: string
+                    minLength: 1
+                    maxLength: 998
+                    pattern: '[ -~]'
+                  recipients:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+                      format: email
+              example:
+                alertId: ff9bf3a0-682e-43ff-b38c-0ab962ef2fe7
+                emailProviderId: 6eafc385-43a1-4b49-9dd9-902a2a12a4ad
+                subject: mni-L23-classifiers alert
+                recipients:
+                - engineer@telsdn.net
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -9777,7 +9823,7 @@ paths:
                   renderUrl: "https://maps.googleapis.com/maps/api/js?key="
                   credentials:
                     identity: "mni"
-                    key: "AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe"
+                    key: "googleSuppliedKey"
               OAuth2:
                 value:
                 - mapProviderId: 09d475ec-96e1-4e9c-848d-06b432df59e7
@@ -10269,7 +10315,7 @@ paths:
                 value:
                   default: true
                   credentials:
-                    key: "AIzaSyDaGmWKa4JsXZ-Hterwdew2Ln_3namBGewQe"
+                    key: "googleSuppliedKey"
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
@@ -13419,6 +13465,15 @@ components:
       schema:
         type: string
         format: uuid
+    notificationIdentifier:
+      name: notificationId
+      in: path
+      required: true
+      description: |
+        single alert notifying identifier
+      schema:
+        type: string
+        format: uuid
     notificationId:
       name: notificationId
       in: query
@@ -13432,6 +13487,15 @@ components:
           format: uuid
       style: form
       explode: false
+    publicationIdentifier:
+      name: publicationId
+      in: path
+      required: true
+      description: |
+        single publishing identifier
+      schema:
+        type: string
+        format: uuid
     publicationId:
       name: publicationId
       in: query
@@ -13453,6 +13517,16 @@ components:
       schema:
         type: string
         format: uuid
+    subscriptionIdentifier:
+      name: subscriptionId
+      in: path
+      required: true
+      description: |
+        single subscription identifier
+      schema:
+        items:
+          type: string
+          format: uuid
     subscriptionId:
       name: subscriptionId
       in: query
@@ -13482,6 +13556,16 @@ components:
       schema:
         type: string
         format: uuid
+    workflowRunnerIdentifier:
+      name: workflowRunnerId
+      in: path
+      required: true
+      description: |
+        single workflow runner identifier
+      schema:
+        items:
+          type: string
+          format: uuid
     workflowRunnerId:
       name: workflowRunnerId
       in: query
