@@ -373,11 +373,11 @@ async function jobUpdatePremisesPassed() {
                     sitesCoordaintes[s].y +
                     "))"
                 );
-                let ddCompareRead = ddCompare.getRows();
-                if (ddCompareRead.length > 0) {
+                let ddCompareRows = ddCompare.getRows(); xxx
+                if (ddCompareRows.length > 0) {
                   if (
-                    toInteger(ddCompareRead[0][0]) <
-                    premisesPassedBoundaryDistance
+                    toDecimal(ddCompareRows[0][0]) <=
+                    toDecimal(premisesPassedBoundaryDistance)
                   ) {
                     sitesCoordaintes[s].used = true;
                     premisesPassed++;
