@@ -25,6 +25,7 @@
         let fltReady = null;
         let ftpReady = null;
         let ftdReady = null;
+        let ftppReady = null;
         let retryMs = 5000;
         let trenchId = null;
         let point = null;
@@ -34,6 +35,36 @@
         let endMarker = null;
         let mapCenter = { lat: 0, lng: 0 };
         let mapRenderUrl = null;
+        function fetchTrenchPremisesPassed(id, p) {
+            if (ftppReady != null) {
+                clearTimeout(ftppReady);
+            }
+
+            fetch("<%=payload.gatewayUrl%>/trench/premisesPassed/" + id + "?point=" + p, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
+                    }
+                })
+                .then((data) => {
+                    if (data != null) {
+                        if (data.passed != null) {
+                            document.getElementById("trenchPremisesPassed").setAttribute("value", data.passed);
+                        }
+                    }
+                })
+                .catch((e) => {
+                    ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id,p);
+                });
+
+        }
         function fetchTrenchDistance(id, p) {
             if (ftdReady != null) {
                 clearTimeout(ftdReady);
@@ -49,7 +80,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        ftdReady = setTimeout(fetchMapRender, retryMs, id);
+                        ftdReady = setTimeout(fetchMapRender, retryMs, id,p );
                     }
                 })
                 .then((data) => {
@@ -60,7 +91,7 @@
                     }
                 })
                 .catch((e) => {
-                    ftdReady = setTimeout(fetchMapRender, retryMs, id);
+                    ftdReady = setTimeout(fetchMapRender, retryMs, id,p);
                 });
 
         }
@@ -219,6 +250,7 @@
                         }
                     }
                     fetchTrenchDistance(trenchId, point);
+                    fetchTrenchPremisesPassed(trenchId, point);
                 })
                 .catch((e) => {
                     ftgReady = setTimeout(fetchTrenchGeometry, retryMs);
@@ -290,4 +322,4 @@
         } catch (e) {
             fltReady = setTimeout(fetchListTrench, retryMs);
         }</script><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="wrapper"><div class="mapVendor-select" id="mapVendorList"><label for="mapVendor">Map Vendor</label> <select id="mapVendor"></select></div><div class="trench-select" id="trenchList"><label for="trenchId">Trench</label> <select id="trenchId" onchange="if(this.selectedIndex !== undefined) fetchTrenchPoints();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListTrench();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="trenchPoint">Point</label> <select id="trenchPoint" onchange="if(this.selectedIndex !== undefined) fetchTrenchGeometry();"></select> <label for="trenchDistance">Length</label> <input id="trenchDistance" disabled="disabled"></div></div><div class="map" id="map"></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div></body></html>
+            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="wrapper"><div class="mapVendor-select" id="mapVendorList"><label for="mapVendor">Map Vendor</label> <select id="mapVendor"></select></div><div class="trench-select" id="trenchList"><label for="trenchId">Trench</label> <select id="trenchId" onchange="if(this.selectedIndex !== undefined) fetchTrenchPoints();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListTrench();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="trenchPoint">Point</label> <select id="trenchPoint" onchange="if(this.selectedIndex !== undefined) fetchTrenchGeometry();"></select> <label for="trenchDistance">Length</label> <input id="trenchDistance" disabled="disabled"> <label for="trenchPremisesPassed">Premises Passed</label> <input id="trenchPremisesPassed" disabled="disabled"></div></div><div class="map" id="map"></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div></body></html>

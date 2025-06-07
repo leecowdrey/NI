@@ -4063,6 +4063,70 @@
       "method": "GET"
     },
     {
+      "endpoint": "/mni/v1/site/onnet",
+      "@comment": "getAllSitesOnNet",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["pageSize", "pageNumber"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/site/onnet",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/site/offnet",
+      "@comment": "getAllSitesOffNet",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["pageSize", "pageNumber"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/site/offnet",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
       "endpoint": "/mni/v1/site",
       "@comment": "addSingleSite",
       "output_encoding": "no-op",
@@ -4839,6 +4903,38 @@
       "backend": [
         {
           "url_pattern": "/mni/v1/pole/timeline/{poleId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/trench/premisesPassed/{trenchId}",
+      "@comment": "getTrenchPremisesPassed",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["trenchId", "point"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/trench/premisesPassed/{trenchId}",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",

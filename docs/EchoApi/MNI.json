@@ -23707,7 +23707,7 @@
 			"parent_id": "374989534b2d8",
 			"target_type": "api",
 			"name": "Export sites in bulk",
-			"version": 204,
+			"version": 384,
 			"sort": 1000,
 			"method": "GET",
 			"url": "/sites",
@@ -24619,7 +24619,7 @@
 			"parent_id": "374989534b2d8",
 			"target_type": "api",
 			"name": "Import sites in bulk",
-			"version": 299,
+			"version": 388,
 			"sort": 2000,
 			"method": "POST",
 			"url": "/sites",
@@ -24729,7 +24729,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "[\n\t{\n\t\t\"siteId\": \"0a3e6803-8d14-4f97-bc0e-947eb1cbfe74\",\n\t\t\"point\": \"20250509T122151\",\n\t\t\"reference\": \"gbr-worc-cg1\",\n\t\t\"commissioned\": \"20241010\",\n\t\t\"area\": \"rural\",\n\t\t\"type\": \"street\",\n\t\t\"location\": {\n\t\t\t\"country\": \"GBR\",\n\t\t\t\"region\": \"Worcestershire\",\n\t\t\t\"town\": \"Droitwich\",\n\t\t\t\"street\": \"Kidderminster Road\",\n\t\t\t\"premisesNameNumber\": \"1\",\n\t\t\t\"postalCode\": \"WR9 0P.\",\n\t\t\t\"coordinate\": {\n\t\t\t\t\"x\": 52.314812,\n\t\t\t\t\"y\": -2.17511,\n\t\t\t\t\"z\": 61\n\t\t\t},\n\t\t\t\"district\": \"Cutnall Green\"\n\t\t},\n\t\t\"source\": \"historical\",\n\t\t\"delete\": false\n\t},\n\t{\n\t\t\"siteId\": \"07ebecfd-5341-4f02-88f8-4f5330398f69\",\n\t\t\"point\": \"20250509T122151\",\n\t\t\"reference\": \"bel-zel-m1\",\n\t\t\"commissioned\": \"20241010\",\n\t\t\"area\": \"urban\",\n\t\t\"type\": \"street\",\n\t\t\"location\": {\n\t\t\t\"country\": \"BEL\",\n\t\t\t\"region\": \"Asse\",\n\t\t\t\"town\": \"Zellix\",\n\t\t\t\"street\": \"Vliegwezenlaan\",\n\t\t\t\"premisesNameNumber\": \"48\",\n\t\t\t\"postalCode\": \"1731\",\n\t\t\t\"coordinate\": {\n\t\t\t\t\"x\": 50.889512,\n\t\t\t\t\"y\": 4.271829,\n\t\t\t\t\"z\": 56\n\t\t\t}\n\t\t},\n\t\t\"source\": \"historical\",\n\t\t\"delete\": false\n\t}\n]",
+					"raw": "[\n  {\n    \"siteId\": \"0a3e6803-8d14-4f97-bc0e-947eb1cbfe74\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"gbr-worc-cg1\",\n    \"commissioned\": \"20241010\",\n    \"onNet\": true,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Kidderminster Road\",\n      \"premisesNameNumber\": \"1\",\n      \"postalCode\": \"WR9 0P.\",\n      \"coordinate\": {\n        \"x\": 52.314812,\n        \"y\": -2.17511,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"07ebecfd-5341-4f02-88f8-4f5330398f69\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"bel-zel-m1\",\n    \"commissioned\": \"20241010\",\n    \"onNet\": true,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"48\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889512,\n        \"y\": 4.271829,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"2f5bd660-be28-4419-a56e-569c7ed0cbfd\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"46 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"46\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889445,\n        \"y\": 4.271573,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"4570193c-13dc-40ec-98b8-077cb2880a44\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"44 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"44\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889373,\n        \"y\": 4.271271,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"e780875e-bc1b-4f80-99fe-01dfc36a327f\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"40 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"40\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889254,\n        \"y\": 4.270722,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"509aaf74-c979-4633-aefe-a2efd27083ae\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"40 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"40\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889254,\n        \"y\": 4.270742,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"5469292d-9b2d-40a7-998e-7dfd6117ba6d\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"29 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"29\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889312,\n        \"y\": 4.272455,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"13e3a087-f4cd-4332-9cde-29593e72a7fe\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"27 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"27\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889256,\n        \"y\": 4.27221,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"942f26a7-9375-40a1-8740-5839262e5861\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"25 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"25\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.88918,\n        \"y\": 4.271901,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"9938da84-51e1-4d5e-9feb-51da767e3bfb\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"23 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"23\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889117,\n        \"y\": 4.271668,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"853d9959-dde0-4b86-8277-fde73ccdc0ac\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"21 Vliegwezenlaan, 1731, BEL\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"urban\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"BEL\",\n      \"region\": \"Asse\",\n      \"town\": \"Zellix\",\n      \"street\": \"Vliegwezenlaan\",\n      \"premisesNameNumber\": \"21\",\n      \"postalCode\": \"1731\",\n      \"coordinate\": {\n        \"x\": 50.889052,\n        \"y\": 4.271449,\n        \"z\": 56\n      }\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"01d6c476-16f8-4c86-9e5b-3caa733b217d\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"1 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"1\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316342,\n        \"y\": -2.1778324,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"011e6732-4500-4c16-808d-671f8b9d98ee\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"1A Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"1A\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.31536,\n        \"y\": -2.177857,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"70b34e9d-d56c-4326-b4e9-6e832952d5f6\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"1B Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"1B\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316092,\n        \"y\": -2.177818,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"ca12b6f9-83c4-45e4-871b-704b7e2ede3b\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"1C Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"1C\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316134,\n        \"y\": -2.177818,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"20632db3-389a-403c-b2a5-faad5d4a894b\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"2 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"2\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316337,\n        \"y\": -2.177831,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"cdc16303-6320-474e-a91a-21ab36cc4cd6\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"3 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"3\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316332,\n        \"y\": -2.177951,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"aca88577-aa0d-4763-8dca-27544600a34c\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"4 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"4\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316334,\n        \"y\": -2.178004,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"2cbd6f42-6c0a-475a-89b1-d73e8878eeaf\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"5 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"5\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316337,\n        \"y\": -2.178233,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"418d4d0c-2855-4658-b440-f2a4a00e8a26\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"6 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"6\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316345,\n        \"y\": -2.178431,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"9a062fc0-d0f5-4bd8-8a89-ca44b0e629db\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"7 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"7\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316342,\n        \"y\": -2.178733,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"b83fe9ed-ddcd-499b-9a7e-e5e2b0bbf4b3\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"8 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"8\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316352,\n        \"y\": -2.178831,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"039c0730-0a32-47b5-af12-e0f31cf94ba7\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"9 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"9\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316371,\n        \"y\": -2.178931,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"7eed9df0-e183-4e26-a9b4-580ac93d7f5f\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"10 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"10\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316373,\n        \"y\": -2.179156,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"4410ee84-2971-456e-8921-edb79e8dce1e\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"11 Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19800101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Lane\",\n      \"premisesNameNumber\": \"11\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316388,\n        \"y\": -2.179337,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"3ae26695-8d17-48bc-bf04-f7e9b6722eea\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"1 The Sherratts, Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19870101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"The Sherratts, Elmley Lane\",\n      \"premisesNameNumber\": \"1\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.315927,\n        \"y\": -2.177535,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"6cc27b98-7909-4dbd-8d4f-2d06e51174f9\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"2 The Sherratts, Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19870101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"The Sherratts, Elmley Lane\",\n      \"premisesNameNumber\": \"2\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316057,\n        \"y\": -2.177301,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"c34be05e-c5eb-4981-af29-108e757f1f47\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"3 The Sherratts, Elmley Lane, WR9 0PN, GBR\",\n    \"commissioned\": \"19870101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"The Sherratts, Elmley Lane\",\n      \"premisesNameNumber\": \"3\",\n      \"postalCode\": \"WR9 0PN\",\n      \"coordinate\": {\n        \"x\": 52.316247,\n        \"y\": -2.177416,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"d4b6c020-b7ab-40b6-9a45-4e6a1f08cd33\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"9 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"9\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.316091,\n        \"y\": -2.179301,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"d8227c86-ef2a-41f2-a09b-0d5cc5eba896\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"10 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"10\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315878,\n        \"y\": -2.17917,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"e399bafb-0997-4a4e-8cec-2e52233774d8\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"11 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"11\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.316302,\n        \"y\": -2.17943,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"cc081888-ca68-4124-8c89-32d1f47dafd8\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"12 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"12\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315641,\n        \"y\": -2.179242,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"64c75fe2-13bc-4352-97d2-998327474d8b\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"13 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"13\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315851,\n        \"y\": -2.178852,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"1ba05906-538e-443d-940c-0b9fff2eb609\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"14 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"14\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31561725085895,\n        \"y\": -2.178256,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"b0b717fe-f74e-464c-a87f-af05b7d83e60\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"15 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"15\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31562,\n        \"y\": -2.178261,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"631ec0d9-b97f-41cd-a6a7-d7bef57df029\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"16 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"16\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.3158325,\n        \"y\": -2.178846,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"15dfd160-be08-4b23-91f0-f756896d8c22\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"17 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"17\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315869,\n        \"y\": -2.178377,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"13bd0a9f-909c-43a2-b761-29addec890ef\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"18 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"18\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315618,\n        \"y\": -2.178305,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"f8575604-1510-4cdb-bbc5-a3bab3b069d3\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"19 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"19\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315609,\n        \"y\": -2.177996,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"124955ea-864d-4b58-b519-02932beb41c5\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"20 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"20\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31562,\n        \"y\": -2.178331,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"19a5afca-f167-41cd-97ef-60ef2f51ead1\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"22 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"22\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31562,\n        \"y\": -2.17834,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"63284c3f-0a28-409b-87fe-69f28c528b54\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"23 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"23\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315614,\n        \"y\": -2.178134,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"cb29ac8b-b240-4fe4-96aa-99c3966c3b79\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"24 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"24\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.316085,\n        \"y\": -2.179377,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"00442949-8c6c-424b-9d61-11c0962d3250\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"25 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"25\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315617,\n        \"y\": -2.178436,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"0303f30d-57d4-4ffc-ba4a-773437efc5ba\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"27 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"27\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31562,\n        \"y\": -2.178651,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"0956a474-37de-49ae-9c2b-7baf6d389e31\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"28 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"28\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31562,\n        \"y\": -2.178805,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"3778956a-f572-410c-bb6e-ca09f39c4117\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"29 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"29\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315628,\n        \"y\": -2.178929,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"4140455c-9a56-428f-b5b6-8baebb4ca3f0\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"30 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"30\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315643,\n        \"y\": -2.179073,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"ad1df9f2-45b7-4fea-8a84-9288c696343e\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"31 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"31\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315626,\n        \"y\": -2.179197,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"dc40da7d-7682-445c-bd2a-70f34bccb9e5\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"32 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"32\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.315647,\n        \"y\": -2.17924,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"siteId\": \"509aaf74-c979-4633-aefe-a2efd27083ae\",\n    \"point\": \"20250508T174124\",\n    \"reference\": \"33 Elmley Close, WR9 0PR, GBR\",\n    \"commissioned\": \"19850101\",\n    \"onNet\": false,\n    \"area\": \"rural\",\n    \"type\": \"street\",\n    \"location\": {\n      \"country\": \"GBR\",\n      \"region\": \"Worcestershire\",\n      \"town\": \"Droitwich\",\n      \"street\": \"Elmley Close\",\n      \"premisesNameNumber\": \"33\",\n      \"postalCode\": \"WR9 0PR\",\n      \"coordinate\": {\n        \"x\": 52.31565,\n        \"y\": -2.179376,\n        \"z\": 61\n      },\n      \"district\": \"Cutnall Green\"\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  }\n]\n",
 					"raw_parameter": [
 						{
 							"param_id": "62ba65e74bbc6",
@@ -50989,10 +50989,10 @@
 			"parent_id": "3749895b4b2fe",
 			"target_type": "api",
 			"name": "Get specified trench",
-			"version": 263,
+			"version": 387,
 			"sort": 8000,
 			"method": "GET",
-			"url": "/trench/dbd487fb-b187-4af2-87e4-76ea53482d7f?point=20250315",
+			"url": "/trench/dbd487fb-b187-4af2-87e4-76ea53482d7f",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -51126,20 +51126,7 @@
 				},
 				"query": {
 					"query_add_equal": 1,
-					"parameter": [
-						{
-							"param_id": "1c95d311774305",
-							"description": "",
-							"field_type": "string",
-							"is_checked": 1,
-							"key": "point",
-							"not_null": 1,
-							"value": "20250315",
-							"schema": {
-								"type": "string"
-							}
-						}
-					]
+					"parameter": []
 				},
 				"cookie": {
 					"cookie_encode": 1,
@@ -68911,6 +68898,518 @@
 			"tags": []
 		},
 		{
+			"target_id": "4546381f3a097",
+			"project_id": "40373eb16402000",
+			"parent_id": "374989534b2d8",
+			"target_type": "api",
+			"name": "List of all known onNet sites",
+			"version": 383,
+			"sort": 12000,
+			"method": "GET",
+			"url": "/site/onnet",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "de568abf6e046",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "[\n\t\"\"\n]",
+						"raw_parameter": [
+							{
+								"param_id": "62ba65e74bbe9",
+								"description": "",
+								"field_type": "array",
+								"is_checked": 1,
+								"key": ".0",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "array"
+								}
+							}
+						],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "OK",
+							"schema": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"$$ref": "62ba668f4b1bb",
+									"format": "uuid",
+									"description": "internal site identifier"
+								}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Not found",
+							"schema": {
+								"type": "object",
+								"description": "specified identifier value was not found"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65e74bbea",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "400",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Bad request",
+							"schema": {
+								"type": "object",
+								"description": "General error message wrapped within HTML webpage"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65e74bbeb",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "401",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Authentication information is missing or invalid",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "492beca73a0c4",
+			"project_id": "40373eb16402000",
+			"parent_id": "374989534b2d8",
+			"target_type": "api",
+			"name": "List of all known offNet sites",
+			"version": 385,
+			"sort": 13000,
+			"method": "GET",
+			"url": "/site/offnet",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "de568abf6e046",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "[\n\t\"\"\n]",
+						"raw_parameter": [
+							{
+								"param_id": "62ba65e74bbe9",
+								"description": "",
+								"field_type": "array",
+								"is_checked": 1,
+								"key": ".0",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "array"
+								}
+							}
+						],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "OK",
+							"schema": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"$$ref": "62ba668f4b1bb",
+									"format": "uuid",
+									"description": "internal site identifier"
+								}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Not found",
+							"schema": {
+								"type": "object",
+								"description": "specified identifier value was not found"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65e74bbea",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "400",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Bad request",
+							"schema": {
+								"type": "object",
+								"description": "General error message wrapped within HTML webpage"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65e74bbeb",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "401",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Authentication information is missing or invalid",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
 			"target_id": "62ba66734b0f9",
 			"project_id": "40373eb16402000",
 			"parent_id": "3749894f4b2b8",
@@ -70889,6 +71388,949 @@
 				"is_check_result": 1
 			},
 			"mock_server_enable": -1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "698c93df3a111",
+			"project_id": "40373eb16402000",
+			"parent_id": "3749895b4b2fe",
+			"target_type": "api",
+			"name": "Get specified trench premises passed",
+			"version": 392,
+			"sort": 16000,
+			"method": "GET",
+			"url": "/trench/premisesPassed/dbd487fb-b187-4af2-87e4-76ea53482d7f?point=20250228T000000",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "3189d56bb6e025",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": [
+						{
+							"param_id": "699526f33a122",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "point",
+							"not_null": 1,
+							"value": "20250228T000000",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "{\n\t\"trenchId\": \"\",\n\t\"purpose\": \"\",\n\t\"construction\": {\n\t\t\"depth\": \"\",\n\t\t\"depthClassifier\": \"\",\n\t\t\"unit\": \"\",\n\t\t\"type\": \"\"\n\t},\n\t\"demographics\": {\n\t\t\"premises\": {\n\t\t\t\"passed\": 0,\n\t\t\t\"area\": \"unclassified\"\n\t\t}\n\t},\n\t\"build\": {\n\t\t\"jobId\": \"\",\n\t\t\"permitId\": \"\",\n\t\t\"planned\": {\n\t\t\t\"start\": \"\",\n\t\t\t\"completion\": \"\",\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"\"\n\t\t},\n\t\t\"actual\": {\n\t\t\t\"start\": \"\",\n\t\t\t\"completion\": \"\",\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"\"\n\t\t}\n\t},\n\t\"state\": \"\",\n\t\"connectsTo\": {\n\t\t\"siteId\": \"\",\n\t\t\"trenchId\": \"\",\n\t\t\"poleId\": \"\"\n\t},\n\t\"coordinates\": [\n\t\t{\n\t\t\t\"x\": \"\",\n\t\t\t\"y\": \"\",\n\t\t\t\"z\": \"\",\n\t\t\t\"m\": \"\"\n\t\t}\n\t],\n\t\"point\": \"\",\n\t\"source\": \"historical\",\n\t\"delete\": \"\"\n}",
+						"raw_parameter": [
+							{
+								"param_id": "62ba664b4b02a",
+								"description": "internal network equipment identifier",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "trenchId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b02b",
+								"description": "intended purpose of the contents of the trench\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "purpose",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b02c",
+								"description": "",
+								"field_type": "number",
+								"is_checked": 1,
+								"key": "construction.depth",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "number"
+								}
+							},
+							{
+								"param_id": "62ba664b4b02d",
+								"description": "summary of depth of the trench",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "construction.depthClassifier",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b02e",
+								"description": "unit of measure of the dimension - `cm` - metric centimetres - `mm` - metric millimetres - `m` - metric metres - `inch` - imperial inches - `feet` - imperial feet",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "construction.unit",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b02f",
+								"description": "type of trench construction",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "construction.type",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b030",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "construction",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b031",
+								"description": "",
+								"field_type": "integer",
+								"is_checked": 1,
+								"key": "demographics.premises.passed",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "integer"
+								}
+							},
+							{
+								"param_id": "62ba664b4b032",
+								"description": "- `residential`\n- `rural`\n- `industrial`\n- `mixed` - combination of residential/industrial/commercial.\n- `psz` - Public Safety Zone\n- `unclassified` - not recorded or known\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "demographics.premises.area",
+								"not_null": -1,
+								"value": "unclassified",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b033",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "demographics.premises",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b034",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "demographics",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b035",
+								"description": "",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.jobId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b036",
+								"description": "",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.permitId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b037",
+								"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.planned.start",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b038",
+								"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.planned.completion",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b039",
+								"description": "",
+								"field_type": "integer",
+								"is_checked": 1,
+								"key": "build.planned.duration",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "integer"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03a",
+								"description": "unit of measure of the duration",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.planned.unit",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03b",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "build.planned",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03c",
+								"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.actual.start",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03d",
+								"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.actual.completion",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03e",
+								"description": "",
+								"field_type": "integer",
+								"is_checked": 1,
+								"key": "build.actual.duration",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "integer"
+								}
+							},
+							{
+								"param_id": "62ba664b4b03f",
+								"description": "unit of measure of the duration",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "build.actual.unit",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b040",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "build.actual",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b041",
+								"description": "",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "build",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b042",
+								"description": "state of trench\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "state",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b043",
+								"description": "internal site identifier",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "connectsTo.siteId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b044",
+								"description": "internal trench identifier",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "connectsTo.trenchId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b045",
+								"description": "internal pole identifier",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "connectsTo.poleId",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b046",
+								"description": "optional site, trench or pole link connection",
+								"field_type": "object",
+								"is_checked": 1,
+								"key": "connectsTo",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "object"
+								}
+							},
+							{
+								"param_id": "62ba664b4b047",
+								"description": "measured along east-west axis",
+								"field_type": "number",
+								"is_checked": 1,
+								"key": "coordinates.x",
+								"not_null": 1,
+								"value": "",
+								"schema": {
+									"type": "number"
+								}
+							},
+							{
+								"param_id": "62ba664b4b048",
+								"description": "measured along north-south axis",
+								"field_type": "number",
+								"is_checked": 1,
+								"key": "coordinates.y",
+								"not_null": 1,
+								"value": "",
+								"schema": {
+									"type": "number"
+								}
+							},
+							{
+								"param_id": "62ba664b4b049",
+								"description": "measured height or elevation",
+								"field_type": "number",
+								"is_checked": 1,
+								"key": "coordinates.z",
+								"not_null": 1,
+								"value": "",
+								"schema": {
+									"type": "number"
+								}
+							},
+							{
+								"param_id": "62ba664b4b04a",
+								"description": "extra axis of information not associated with the cartesian x/y/z space",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "coordinates.m",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b04b",
+								"description": "MNI date format in compressed ISO-8601. (`YYYYMMDDThhmmss`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- literal `T` time start indicator\n- `hh` 2-digit hours (with leading zero if < 10)\n- `mm` 2-diigt minutes (with leading zero if < 10)\n- `ss` 2-digit seconds (with leading zero if < 10)\n- example:\n  - `20241118T150800` 18-NOV-2024 15:08:00\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "point",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b04c",
+								"description": "MNI internal metadata field used to determine if value was supplied or\ngenerated via machine learning predictive algorithms\n- `historical` - value was supplied\n- `predicted` - value was generated\n",
+								"field_type": "string",
+								"is_checked": 1,
+								"key": "source",
+								"not_null": -1,
+								"value": "historical",
+								"schema": {
+									"type": "string"
+								}
+							},
+							{
+								"param_id": "62ba664b4b04d",
+								"description": "MNI internal metadata field to indicate record is marked for deletion\n",
+								"field_type": "boolean",
+								"is_checked": 1,
+								"key": "delete",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "OK",
+							"schema": {
+								"type": "object",
+								"properties": {
+									"build": {
+										"type": "object",
+										"properties": {
+											"jobId": {
+												"type": "string"
+											},
+											"actual": {
+												"type": "object",
+												"properties": {
+													"unit": {
+														"enum": [
+															"second",
+															"minute",
+															"hour",
+															"day",
+															"week",
+															"month",
+															"quarter",
+															"year"
+														],
+														"type": "string",
+														"$$ref": "62ba66834b181",
+														"description": "unit of measure of the duration"
+													},
+													"start": {
+														"type": "string",
+														"$$ref": "62ba66834b17b",
+														"pattern": "^\\d{8}$",
+														"maxLength": 8,
+														"minLength": 8,
+														"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n"
+													},
+													"duration": {
+														"type": "integer",
+														"minimum": 0
+													},
+													"completion": {
+														"type": "string",
+														"$$ref": "62ba66834b17b",
+														"pattern": "^\\d{8}$",
+														"maxLength": 8,
+														"minLength": 8,
+														"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n"
+													}
+												}
+											},
+											"planned": {
+												"type": "object",
+												"properties": {
+													"unit": {
+														"enum": [
+															"second",
+															"minute",
+															"hour",
+															"day",
+															"week",
+															"month",
+															"quarter",
+															"year"
+														],
+														"type": "string",
+														"$$ref": "62ba66834b181",
+														"description": "unit of measure of the duration"
+													},
+													"start": {
+														"type": "string",
+														"$$ref": "62ba66834b17b",
+														"pattern": "^\\d{8}$",
+														"maxLength": 8,
+														"minLength": 8,
+														"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n"
+													},
+													"duration": {
+														"type": "integer",
+														"minimum": 0
+													},
+													"completion": {
+														"type": "string",
+														"$$ref": "62ba66834b17b",
+														"pattern": "^\\d{8}$",
+														"maxLength": 8,
+														"minLength": 8,
+														"description": "MNI date format in compressed ISO-8601. (`YYYYMMDD`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- example:\n  - `20241118` 18-NOV-2024\n"
+													}
+												}
+											},
+											"permitId": {
+												"type": "string"
+											}
+										}
+									},
+									"point": {
+										"type": "string",
+										"$$ref": "62ba66834b17c",
+										"pattern": "^\\d{8}T\\d{6}$",
+										"maxLength": 15,
+										"minLength": 15,
+										"description": "MNI date format in compressed ISO-8601. (`YYYYMMDDThhmmss`)\n- `YYYY` 4-digit year\n- `MM` 2-digit month (with leading zeros < 10)\n- `DD` 2-digit day (with leading zeros if < 10)\n- literal `T` time start indicator\n- `hh` 2-digit hours (with leading zero if < 10)\n- `mm` 2-diigt minutes (with leading zero if < 10)\n- `ss` 2-digit seconds (with leading zero if < 10)\n- example:\n  - `20241118T150800` 18-NOV-2024 15:08:00\n"
+									},
+									"state": {
+										"enum": [
+											"free",
+											"used",
+											"reserved"
+										],
+										"type": "string",
+										"$$ref": "62ba668f4b1c5",
+										"description": "state of trench\n"
+									},
+									"delete": {
+										"type": "boolean",
+										"$$ref": "62ba66874b194",
+										"default": false,
+										"description": "MNI internal metadata field to indicate record is marked for deletion\n"
+									},
+									"source": {
+										"enum": [
+											"historical",
+											"predicted"
+										],
+										"type": "string",
+										"$$ref": "62ba66874b195",
+										"default": "historical",
+										"description": "MNI internal metadata field used to determine if value was supplied or\ngenerated via machine learning predictive algorithms\n- `historical` - value was supplied\n- `predicted` - value was generated\n"
+									},
+									"purpose": {
+										"enum": [
+											"service/drop",
+											"ring",
+											"backhaul"
+										],
+										"type": "string",
+										"$$ref": "62ba668b4b1a9",
+										"description": "intended purpose of the contents of the trench\n"
+									},
+									"trenchId": {
+										"type": "string",
+										"$$ref": "62ba668f4b1c0",
+										"format": "uuid",
+										"description": "internal network equipment identifier"
+									},
+									"connectsTo": {
+										"type": "object",
+										"properties": {
+											"poleId": {
+												"type": "string",
+												"$$ref": "62ba668f4b1bd",
+												"format": "uuid",
+												"description": "internal pole identifier"
+											},
+											"siteId": {
+												"type": "string",
+												"$$ref": "62ba668f4b1bb",
+												"format": "uuid",
+												"description": "internal site identifier"
+											},
+											"trenchId": {
+												"type": "string",
+												"$$ref": "62ba668f4b1c4",
+												"format": "uuid",
+												"description": "internal trench identifier"
+											}
+										},
+										"description": "optional site, trench or pole link connection"
+									},
+									"coordinates": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"$$ref": "62ba66834b179",
+											"required": [
+												"x",
+												"y",
+												"z"
+											],
+											"properties": {
+												"m": {
+													"type": "string",
+													"description": "extra axis of information not associated with the cartesian x/y/z space"
+												},
+												"x": {
+													"type": "number",
+													"format": "float",
+													"default": 0,
+													"description": "measured along east-west axis"
+												},
+												"y": {
+													"type": "number",
+													"format": "float",
+													"default": 0,
+													"description": "measured along north-south axis"
+												},
+												"z": {
+													"type": "number",
+													"format": "float",
+													"default": 0,
+													"description": "measured height or elevation"
+												}
+											},
+											"description": "A geometry is represented using geometric constructs either defined as lists of one or more XY or XYZ points or defined parametrically, for example, as a circular arc. While geometry typically is two- or three-dimensional, it may also contain the measurement dimension (M) to provide the basis for dynamic segments.\n"
+										},
+										"minItems": 1
+									},
+									"construction": {
+										"type": "object",
+										"properties": {
+											"type": {
+												"enum": [
+													"micro",
+													"narrow",
+													"hand-dug",
+													"backhoe",
+													"inline",
+													"portable",
+													"large"
+												],
+												"type": "string",
+												"$$ref": "62ba66834b17a",
+												"description": "type of trench construction"
+											},
+											"unit": {
+												"enum": [
+													"cm",
+													"mm",
+													"m",
+													"inch",
+													"feet"
+												],
+												"type": "string",
+												"$$ref": "62ba668f4b1bc",
+												"description": "unit of measure of the dimension - `cm` - metric centimetres - `mm` - metric millimetres - `m` - metric metres - `inch` - imperial inches - `feet` - imperial feet"
+											},
+											"depth": {
+												"type": "number"
+											},
+											"depthClassifier": {
+												"enum": [
+													"low",
+													"medium",
+													"deep"
+												],
+												"type": "string",
+												"$$ref": "62ba66834b17f",
+												"description": "summary of depth of the trench"
+											}
+										}
+									},
+									"demographics": {
+										"type": "object",
+										"properties": {
+											"premises": {
+												"type": "object",
+												"properties": {
+													"area": {
+														"enum": [
+															"residential",
+															"rural",
+															"industrial",
+															"commercial",
+															"mixed",
+															"psz",
+															"unclassified"
+														],
+														"type": "string",
+														"$$ref": "62ba66874b193",
+														"default": "unclassified",
+														"description": "- `residential`\n- `rural`\n- `industrial`\n- `mixed` - combination of residential/industrial/commercial.\n- `psz` - Public Safety Zone\n- `unclassified` - not recorded or known\n"
+													},
+													"passed": {
+														"type": "integer",
+														"default": 0,
+														"minimum": 0
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Not found",
+							"schema": {
+								"type": "object",
+								"description": "specified identifier value was not found"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba664b4b04e",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "401",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Authentication information is missing or invalid",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
 			"attribute_info": {},
 			"tags": []
 		},

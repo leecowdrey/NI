@@ -493,37 +493,6 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
-          patch:
-            summary: Update aspects of a single alert
-            security:
-            - openId:
-              - write:mni_internal
-            operationId: updateSingleAlert
-            tags:
-            - Alerts
-            parameters:
-            - $ref: "#/components/parameters/alertId"
-            requestBody:
-              required: true
-              content:
-                application/json:
-                  schema:
-                    properties:
-                      description:
-                        type: string
-                  examples:
-                    sample:
-                      value:
-                        description: Alert definition for coordinate creep
-            responses:
-              "204":
-                $ref: "#/components/responses/NoContent"
-              "400":
-                $ref: "#/components/responses/BadRequest"
-              "401":
-                $ref: "#/components/responses/UnauthorizedError"
-              "404":
-                $ref: "#/components/responses/NotFound"
     get:
       summary: Get specified alert details
       security:
@@ -3839,6 +3808,9 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                onNet:
+                  type: boolean
+                  default: false
                 area:
                   $ref: "#/components/schemas/areaType"
                   default: unclassified
@@ -3883,6 +3855,7 @@ paths:
                 value:
                   reference: esp-zar-daro1
                   commissioned: "20241010"
+                  onNet: true
                   area: commercial
                   type: exchange
                   location:
@@ -3916,6 +3889,104 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /site/offnet:
+    get:
+      summary: List of all known off-network (offNet) sites
+      security:
+      - openId:
+        - read:mni_site
+      operationId: getAllSitesOffNet
+      parameters:
+      - $ref: "#/components/parameters/pageSize"
+      - $ref: "#/components/parameters/pageNumber"
+      tags:
+      - Sites
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    siteId:
+                      $ref: "#/components/schemas/siteId"
+                    reference:
+                      type: string
+                    area:
+                      $ref: "#/components/schemas/areaType"
+                    type:
+                      $ref: "#/components/schemas/siteType"
+                    postalCode:
+                      type: string
+                    country:
+                      $ref: "#/components/schemas/countryCode"
+              examples:
+                sample:
+                  value:
+                  - siteId: 01d6c476-16f8-4c86-9e5b-3caa733b217d
+                    reference: "1 Elmley Lane, WR9 0PN"
+                    area: rural
+                    type: street
+                    postalCode: "WR9 0PN"
+                    country: GBR
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /site/onnet:
+    get:
+      summary: List of all known on-network (onNet) sites
+      security:
+      - openId:
+        - read:mni_site
+      operationId: getAllSitesOnNet
+      parameters:
+      - $ref: "#/components/parameters/pageSize"
+      - $ref: "#/components/parameters/pageNumber"
+      tags:
+      - Sites
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    siteId:
+                      $ref: "#/components/schemas/siteId"
+                    reference:
+                      type: string
+                    area:
+                      $ref: "#/components/schemas/areaType"
+                    type:
+                      $ref: "#/components/schemas/siteType"
+                    postalCode:
+                      type: string
+                    country:
+                      $ref: "#/components/schemas/countryCode"
+              examples:
+                sample:
+                  value:
+                  - siteId: 07ebecfd-5341-4f02-88f8-4f5330398f69
+                    reference: "bel-zel-m1"
+                    area: urban
+                    type: street
+                    postalCode: "1731"
+                    country: BEL
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /site/{siteId}:
     patch:
       summary: Update aspects of single site
@@ -3940,6 +4011,9 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                onNet:
+                  type: boolean
+                  default: false
                 area:
                   $ref: "#/components/schemas/areaType"
                 type:
@@ -3948,7 +4022,7 @@ paths:
                   type: object
                   properties:
                     country:
-                      type: string
+                      $ref: "#/components/schemas/countryCode"
                     region:
                       type: string
                     town:
@@ -3975,6 +4049,7 @@ paths:
                   reference: esp-zar-daro1
                   commissioned: "20241010"
                   decommissioned: "20250931"
+                  onNet: true
                   area: commercial
                   type: exchange
                   location:
@@ -4033,6 +4108,9 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                onNet:
+                  type: boolean
+                  default: false
                 area:
                   $ref: "#/components/schemas/areaType"
                 type:
@@ -4048,7 +4126,7 @@ paths:
                   - coordinate
                   properties:
                     country:
-                      type: string
+                      $ref: "#/components/schemas/countryCode"
                     region:
                       type: string
                     town:
@@ -4074,6 +4152,7 @@ paths:
                 value:
                   reference: esp-zar-daro1
                   commissioned: "20241010"
+                  onNet: true
                   area: commercial
                   type: exchange
                   location:
@@ -4146,6 +4225,9 @@ paths:
                     $ref: "#/components/schemas/date"
                   decommissioned:
                     $ref: "#/components/schemas/date"
+                  onNet:
+                    type: boolean
+                    default: false
                   area:
                     $ref: "#/components/schemas/areaType"
                   type:
@@ -4154,7 +4236,7 @@ paths:
                     type: object
                     properties:
                       country:
-                        type: string
+                        $ref: "#/components/schemas/countryCode"
                       region:
                         type: string
                       town:
@@ -4181,6 +4263,7 @@ paths:
                     siteId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                     reference: esp-zar-daro1
                     commissioned: "20241010"
+                    onNet: true
                     area: commercial
                     type: exchange
                     location:
@@ -8588,6 +8671,38 @@ paths:
                   - x: -112.26454
                     y: 36.09748
                     z: 2357
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /trench/premisesPassed/{trenchId}:
+    get:
+      summary: number of premises passed for specified trench
+      security:
+      - openId:
+        - read:mni_trench
+      operationId: getTrenchPremisesPassed
+      parameters:
+      - $ref: "#/components/parameters/trenchId"
+      - $ref: "#/components/parameters/dateTime"
+      tags:
+      - Trenches
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passed:
+                    type: number
+                    format: integer
+                    minimum: 0
+              examples:
+                sample:
+                  value:
+                    passed: 20
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":

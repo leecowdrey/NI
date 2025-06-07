@@ -444,6 +444,7 @@ CREATE TABLE IF NOT EXISTS _site (
     decommissioned TIMESTAMP,
     area areaType NOT NULL DEFAULT 'unclassified',
     type siteType NOT NULL DEFAULT 'unclassified',
+    onNet NOT NULL BOOLEAN DEFAULT false,
     country countryCode NOT NULL,
     region VARCHAR NOT NULL,
     town VARCHAR NOT NULL,

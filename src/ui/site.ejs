@@ -58,12 +58,18 @@
         let endMarker = null;
         let mapCenter = { lat: 0, lng: 0 };
         let mapRenderUrl = null;
+        let urlOnOffNetSuffix = "";
         function fetchListSites() {
             if (fltReady != null) {
                 clearTimeout(fltReady);
             }
+            if (document.getElementById("onNet").checked) {
+                urlOnOffNetSuffix = "onnet";
+            } else {
+                urlOnOffNetSuffix = "offnet";
+            }
 
-            fetch("<%=payload.gatewayUrl%>/site", {
+            fetch("<%=payload.gatewayUrl%>/site/"+urlOnOffNetSuffix, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json",
@@ -79,7 +85,7 @@
                 .then((data) => {
                     let siteIds = "<option disabled value='-1' selected='selected'> -- select a site -- </option>";
                     for (var i = 0; i < data.length; i++) {
-                        siteIds += "<option value='" + data[i] + "' >" + data[i] + "</option>"
+                        siteIds += "<option value='" + data[i].siteId + "' >" + data[i].reference + "</option>"
                     }
                     document.getElementById("siteId").innerHTML = siteIds;
                     document.getElementById("siteArea").setAttribute("value", "");
@@ -249,14 +255,16 @@
             <select id="mapVendor"></select>
         </div>
         <div class="site-select" id="siteList">
-            <label for="siteId">pole</label>
+            <label for="onNet">onNet</label>
+            <input type="checkbox" id="onNet" checked="checked" onchange="fetchListSites();">
+            <label for="siteId">site</label>
             <select id="siteId" onchange="if(this.selectedIndex !== undefined) fetchSite();"></select>
             <a accesskey="@" nohref onclick="fetchListSites();" onmouseover="" title="refresh"
                 style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
             <label for="siteArea">Area</label>
-            <input type="text" id="siteArea" disabled></select>
+            <input type="text" id="siteArea" disabled>
             <label for="siteType">Type</label>
-            <input type="text" id="siteType" disabled></select>
+            <input type="text" id="siteType" disabled>
         </div>
     </div>
     <div class="map" id="map"></div>

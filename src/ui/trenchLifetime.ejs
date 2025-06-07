@@ -49,6 +49,7 @@
         let fltReady = null;
         let ftpReady = null;
         let ftdReady = null;
+        let ftppReady = null;
         let retryMs = 5000;
         let trenchId = null;
         let mapVendor = null;
@@ -60,6 +61,36 @@
         let endMarker = [];
         let mapCenter = { lat: 0, lng: 0 };
         let mapRenderUrl = null;
+        function fetchTrenchPremisesPassed(id, p) {
+            if (ftppReady != null) {
+                clearTimeout(ftppReady);
+            }
+
+            fetch("<%=payload.gatewayUrl%>/trench/premisesPassed/" + id + "?point=" + p, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
+                    }
+                })
+                .then((data) => {
+                    if (data != null) {
+                        if (data.passed != null) {
+                            document.getElementById("trenchPremisesPassed").setAttribute("value", data.passed);
+                        }
+                    }
+                })
+                .catch((e) => {
+                    ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id,p);
+                });
+
+        }
         function fetchTrenchDistance(id, p) {
             if (ftdReady != null) {
                 clearTimeout(ftdReady);
@@ -75,7 +106,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        ftdReady = setTimeout(fetchMapRender, retryMs, id);
+                        ftdReady = setTimeout(fetchMapRender, retryMs, id,p);
                     }
                 })
                 .then((data) => {
@@ -86,7 +117,7 @@
                     }
                 })
                 .catch((e) => {
-                    ftdReady = setTimeout(fetchMapRender, retryMs, id);
+                    ftdReady = setTimeout(fetchMapRender, retryMs, id,p);
                 });
 
         }
@@ -228,6 +259,7 @@
                         }
                         if (trenchLastHistoricalPoint != null) {
                             fetchTrenchDistance(trenchId, trenchLastHistoricalPoint);
+                            fetchTrenchPremisesPassed(trenchId, trenchLastHistoricalPoint);
                         }
                     }
                     tPath[tSet].push({ lat: trenchCoordinates[tSet][c].x, lng: trenchCoordinates[tSet][c].y });
@@ -373,6 +405,8 @@
                 style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
             <label for="trenchDistance">Length</label>
             <input type="text" id="trenchDistance" disabled></select>
+            <label for="trenchPremisesPassed">Premises Passed</label>
+            <input type="text" id="trenchPremisesPassed" disabled></select>
         </div>
     </div>
     <div class="map" id="map"></div>

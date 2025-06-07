@@ -69,6 +69,8 @@ var backupCron = null;
 var backupCronTime = null;
 var updateGeometryTimer = null;
 var updateGeometryIntervalMs = 300000; // 5 minutes
+var updatePremisesPassedTimer = null;
+var updatePremisesPassedIntervalMs = 300000; // 5 minutes
 var pruneTimer = null;
 var pruneIntervalMs = 300000; // 5 minutes
 var pruneQueuesTimer = null;
@@ -96,6 +98,7 @@ var configDirectory = null;
 var serviceUsername = null;
 var serviceKey = null;
 var server = null;
+var premisesPassedBoundaryDistance = 10;
 
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
@@ -302,6 +305,117 @@ async function jobUpdateGeometry() {
     });
   }
   updateGeometryTimer = setTimeout(jobUpdateGeometry, updateGeometryIntervalMs);
+}
+
+async function jobUpdatePremisesPassed() {
+  // checks for premises within 50metres of any a trench
+  if (updatePremisesPassedTimer != null) {
+    clearTimeout(updatePremisesPassedTimer);
+  }
+
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "updatePremisesPassed",
+      state: "start",
+    });
+    // initially get list of historical sites coordinates
+    let sitesCoordaintes = [];
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT x,y FROM _site,site WHERE _site.siteId = site.id AND _site.tsId = site.historicalTsId AND delete = false"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        sitesCoordaintes.push({
+          x: ddRows[idx][0],
+          y: ddRows[idx][1],
+          used: false,
+        });
+      }
+    }
+
+    // process all (historical and predicted) trench point variants where premised passed is zero
+    let trenches = [];
+    ddRead = await DDC.runAndReadAll(
+      "SELECT _trench.tsId,trench.id,_trench.source,strftime(_trench.point,'" +
+        pointFormat +
+        "') FROM trench, _trench WHERE _trench.trenchId = trench.id AND _trench.premisesPassed = 0 AND delete = false"
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+            event: "updatePremisesPassed",
+            trench: ddRows[idx][1],
+            source: ddRows[idx][2],
+            point: ddRows[idx][3],
+          });
+        }
+        let ddTcRead = await DDC.runAndReadAll(
+          "SELECT x,y FROM _trenchCoordinate WHERE trenchTsId = " +
+            ddRows[idx][0]
+        );
+        let ddTcRows = ddTcRead.getRows();
+        if (ddTcRows.length > 0) {
+          let premisesPassed = 0;
+          for (let tdx in ddTcRows) {
+            for (let s = 0; s < sitesCoordaintes.length; s++) {
+              if (sitesCoordaintes[s].used == false) {
+                let ddCompare = await DDC.runAndReadAll(
+                  "SELECT st_distance_spheroid( st_point(" +
+                    ddTcRows[tdx][0] +
+                    "," +
+                    ddTcRows[tdx][1] +
+                    "), st_point(" +
+                    sitesCoordaintes[s].x +
+                    "," +
+                    sitesCoordaintes[s].y +
+                    "))"
+                );
+                let ddCompareRead = ddCompare.getRows();
+                if (ddCompareRead.length > 0) {
+                  if (
+                    toInteger(ddCompareRead[0][0]) <
+                    premisesPassedBoundaryDistance
+                  ) {
+                    sitesCoordaintes[s].used = true;
+                    premisesPassed++;
+                  }
+                }
+              }
+            }
+            for (let s = 0; s < sitesCoordaintes.length; s++) {
+              sitesCoordaintes[s].used = false;
+            }
+            if (premisesPassed > 0) {
+              await DDC.run(
+                "UPDATE _trench SET premisesPassed = " +
+                  toInteger(premisesPassed) +
+                  " WHERE tsId = " +
+                  ddRows[idx][0]
+              );
+            }
+          }
+        }
+      }
+    }
+    //
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "updatePremisesPassed",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "updatePremisesPassed",
+      state: "failed",
+      error: e,
+    });
+  }
+  updatePremisesPassedTimer = setTimeout(
+    jobUpdatePremisesPassed,
+    updatePremisesPassedIntervalMs
+  );
 }
 
 async function jobPredictQueueFill() {
@@ -830,6 +944,8 @@ function loadEnv() {
   jobBackupEnabled = toBoolean(process.env.APISERV_DUCKDB_BACKUP || false);
   backupCronTime = process.env.APISERV_DUCKDB_BACKUP_CRONTIME || "0 2 * * 0";
   backupDirectory = path.resolve(process.env.APISERV_BACKUP_DIRECTORY);
+  premisesPassedBoundaryDistance =
+    toInteger(process.env.APISERV_PREMISES_PASSED_BOUNDARY_DISTANCE) || 10;
   serveHost = process.env.DNSSERV_HOST || "mni";
   serveDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
   //serveAddress and servePort can be overridden through DNS SD
@@ -861,6 +977,9 @@ function quit() {
 
   if (backupCron != null) {
     backupCron.stop();
+  }
+  if (updatePremisesPassedTimer != null) {
+    clearTimeout(updatePremisesPassedTimer);
   }
   if (updateGeometryTimer != null) {
     clearTimeout(updateGeometryTimer);
@@ -11343,6 +11462,86 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     }
   }
 
+  async function getAllSitesOnNet(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = true AND delete = false AND _site.tsId = site.historicalTsId"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push({
+              siteId: ddRows[idx][0],
+              reference: ddRows[idx][1],
+              area: ddRows[idx][2],
+              type: ddRows[idx][3],
+              postalCode: ddRows[idx][4],
+              country: ddRows[idx][5],
+            });
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllSitesOffNet(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = false AND delete = false AND _site.tsId = site.historicalTsId"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push({
+              siteId: ddRows[idx][0],
+              reference: ddRows[idx][1],
+              area: ddRows[idx][2],
+              type: ddRows[idx][3],
+              postalCode: ddRows[idx][4],
+              country: ddRows[idx][5],
+            });
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getSitesSimpleStatistics(req, res, next) {
     try {
       let result = validationResult(req);
@@ -11407,7 +11606,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+          "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -11449,6 +11648,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             OAS.Z_precision
           )
         );
+        ddp.bindBoolean(20, toBoolean(req.body.onNet));
         await ddp.run();
 
         if (req.body.location.district != null) {
@@ -11558,7 +11758,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                   break;
               }
               let ddClone = await DDC.prepare(
-                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m FROM _site WHERE tsId = $4"
+                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m FROM _site WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -11624,7 +11824,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,strftime(point,'" +
             pointFormat +
-            "') FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
+            "'),onNet FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
             datePoint +
             " ORDER BY _site.point DESC LIMIT 1"
         );
@@ -11637,6 +11837,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[0][23],
             reference: ddRows[0][7],
             commissioned: ddRows[0][8],
+            onNet: ddRows[0][24],
             area: ddRows[0][10],
             type: ddRows[0][11],
             location: {
@@ -11736,7 +11937,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),strftime(decommissioned,'" +
             dateFormat +
-            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
+            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.siteId);
         let ddSite = await ddp.runAndReadAll();
@@ -11747,6 +11948,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[0][5],
             reference: ddRows[0][7],
             commissioned: ddRows[0][8],
+            onNet: toBoolean(ddRows[0][23]),
             area: ddRows[0][10],
             type: ddRows[0][11],
             location: {
@@ -11830,7 +12032,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -11872,6 +12074,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               OAS.Z_precision
             )
           );
+          ddp.bindBoolean(20, toBoolean(req.body.onNet));
           await ddp.run();
 
           if (req.body.location.district != null) {
@@ -11936,7 +12139,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           dateFormat +
           "'),strftime(decommissioned,'" +
           dateFormat +
-          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
+          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
       );
       let ddRows = ddSite.getRows();
       if (ddRows.length > 0) {
@@ -11946,6 +12149,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[idx][5],
             reference: ddRows[idx][7],
             commissioned: ddRows[idx][8],
+            onNet: ddRows[idx][23],
             area: ddRows[idx][10],
             type: ddRows[idx][11],
             location: {
@@ -11970,8 +12174,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           if (ddRows[idx][15] != null) {
             resObj.location.district = ddRows[idx][15];
           }
-          if (ddRows[idx][9] != null) {
-            resObj.location.coordinate.m = ddRows[idx][9];
+          if (ddRows[idx][22] != null) {
+            resObj.location.coordinate.m = ddRows[idx][22];
           }
           resJson.push(resObj);
         }
@@ -12046,7 +12250,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -12088,6 +12292,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               OAS.Z_precision
             )
           );
+          ddp.bindBoolean(20, toBoolean(req.body[i].onNet));
           await ddp.run();
 
           if (req.body[i].location.district != null) {
@@ -12789,6 +12994,57 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             }
           }
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "trenchId " + req.params.trenchId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getTrenchPremisesPassed(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddp = await DDC.prepare(
+          "SELECT id,strftime(point,'" +
+            pointFormat +
+            "') FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.trenchId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddq = await DDC.prepare(
+            "SELECT premisesPassed FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
+          );
+          ddq.bindVarchar(1, req.params.trenchId);
+          ddq.bindVarchar(2, pointFormat);
+          if (req.query?.point != null) {
+            ddq.bindVarchar(3, req.query.point);
+          } else {
+            ddq.bindVarchar(3, ddRows[0][1]);
+          }
+          let ddPremises = await ddq.runAndReadAll();
+          let ddPremisesRows = ddPremises.getRows();
+          if (ddPremisesRows.length > 0) {
+            resJson = { passed: toInteger(ddPremisesRows[0][0]) };
+            res.contentType(OAS.mimeJSON).status(200).json(resJson);
+          } else {
+            res.sendStatus(204);
+          }
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -13711,7 +13967,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           let ddRows = ddRead.getRows();
           if (ddRows.length > 0) {
             ddRead = await DDC.runAndReadAll(
-              "SELECT id from _trenchCoordinate WHERE trenchId = '" +
+              "SELECT rowid from _trenchCoordinate WHERE trenchId = '" +
                 req.body[i].trenchId +
                 "'"
             );
@@ -13724,7 +13980,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               );
             }
             ddRead = await DDC.runAndReadAll(
-              "SELECT id from _trench WHERE trenchId = '" +
+              "SELECT rowid from _trench WHERE trenchId = '" +
                 req.body[i].trenchId +
                 "'"
             );
@@ -17947,6 +18203,38 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
   /*
        Tag:           Sites
+       operationId:   getAllSitesOnNet
+       exposed Route: /mni/v1/site/onnet
+       HTTP method:   GET
+       OpenID Scope:  read:mni_site
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/site/onnet",
+    // security("read:mni_site"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllSitesOnNet
+  );
+
+  /*
+       Tag:           Sites
+       operationId:   getAllSitesOffNet
+       exposed Route: /mni/v1/site/offnet
+       HTTP method:   GET
+       OpenID Scope:  read:mni_site
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/site/offnet",
+    // security("read:mni_site"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllSitesOffNet
+  );
+
+  /*
+       Tag:           Sites
        operationId:   getSitesSimpleStatistics
        exposed Route: /mni/v1/sites/state
        HTTP method:   GET
@@ -17975,6 +18263,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("onNet").default(false).isBoolean({ strict: true }),
     body("area").default("unclassified").isIn(OAS.areaType),
     body("type").default("unclassified").isIn(OAS.siteType),
     body("location").isObject(),
@@ -18059,6 +18348,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("onNet").optional().isBoolean({ strict: true }),
     body("area").optional().isIn(OAS.areaType),
     body("type").optional().isIn(OAS.siteType),
     body("location").optional().isObject(),
@@ -18096,6 +18386,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("onNet").default(false).isBoolean({ strict: true }),
     body("area").default("unclassified").isIn(OAS.areaType),
     body("type").default("unclassified").isIn(OAS.siteType),
     body("location").isObject(),
@@ -18148,6 +18439,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.reference").isString().trim(),
     body("*.commissioned").matches(OAS.datePeriodYearMonthDay),
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("*.onNet").default(false).isBoolean({ strict: true }),
     body("*.area").default("unclassified").isIn(OAS.areaType),
     body("*.type").default("unclassified").isIn(OAS.siteType),
     body("*.location").isObject(),
@@ -18353,6 +18645,22 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleTrench
+  );
+
+  /*
+       Tag:           Trenches
+       operationId:   getTrenchPremisesPassed
+       exposed Route: /mni/v1/trench/premises/:trenchId
+       HTTP method:   GET
+       OpenID Scope:  read:mni_trench
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/trench/premisesPassed/:trenchId",
+    // security("read:mni_trench"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("trenchId").isUUID(4),
+    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    getTrenchPremisesPassed
   );
 
   /*
@@ -18824,6 +19132,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       tickInterval: tickIntervalMs,
       timestamp: dayjsFormat,
     },
+    geometry: {
+      premisesPassedBoundaryDistance: premisesPassedBoundaryDistance,
+    },
     ssl: {
       key: sslKey,
       cert: sslCert,
@@ -18869,10 +19180,20 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     );
   }
   // timer jobs
-  await jobUpdateGeometry();
+  updateGeometryTimer = setTimeout(
+    jobUpdateGeometry,
+    updateGeometryIntervalMs * Math.floor(Math.random() * 5)
+  );
+  updatePremisesPassedTimer = setTimeout(
+    jobUpdatePremisesPassed,
+    updatePremisesPassedIntervalMs * Math.floor(Math.random() * 5)
+  );
+  predictQueueTimer = setTimeout(
+    jobPredictQueueFill,
+    predictQueueIntervalMs * Math.floor(Math.random() * 5)
+  );
   await jobPrune();
   await jobPruneQueues();
-  await jobPredictQueueFill();
 
   // Standup and process requests
   if (
