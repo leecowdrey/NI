@@ -825,7 +825,7 @@ INSERT INTO alert (id,description) VALUES ('3ef7ae9e-44a6-447c-9763-b6886748b5d4
 INSERT INTO alert (id,description) VALUES ('c7284f1f-6b73-4eec-ab27-49337043679c','Data Quality - missing connectedTo','jobAlertDqMissingConnectedTo();');
 INSERT INTO alert (id,description) VALUES ('4f726282-3328-421d-bd5c-2d2ba5f23f95','Data Quality - trench','jobAlertDqTrench();');
 INSERT INTO alert (id,description) VALUES ('e2a65c2b-7b88-4500-bdd7-3d648b42aa94','Data Quality - cable','jobAlertDqCable();');
-INSERT INTO alert (id,description) VALUES ('ed0cf860-4a8f-4b05-aa70-b4071fca9a40','Data Quality - duck','jobAlertDqDuck();');
+INSERT INTO alert (id,description) VALUES ('ed0cf860-4a8f-4b05-aa70-b4071fca9a40','Data Quality - duct','jobAlertDqDuct();');
 INSERT INTO alert (id,description) VALUES ('e2a4a205-29fa-417a-a6d0-b3c39ac7877e','Data Quality - pole','jobAlertDqPole();');
 INSERT INTO alert (id,description) VALUES ('52ae75e2-036d-4a99-813f-de6ba328fce9','Data Quality - NE','jobAlertDqNe();');
 INSERT INTO alert (id,description) VALUES ('126a7d5a-77af-4e99-9b6e-31b1945d5365','Data Quality - service','jobAlertDqService();');
