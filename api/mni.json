@@ -623,7 +623,9 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "description"
+                  "description",
+                  "delete",
+                  "function"
                 ],
                 "properties": {
                   "description": {
@@ -631,6 +633,10 @@
                   },
                   "delete": {
                     "$ref": "#/components/schemas/delete"
+                  },
+                  "function": {
+                    "type": "string",
+                    "default": "noop();"
                   }
                 }
               },
@@ -638,7 +644,8 @@
                 "sample": {
                   "value": {
                     "description": "Switching/Routing Classifiers",
-                    "delete": false
+                    "delete": false,
+                    "function": "noop();"
                   }
                 }
               }
@@ -739,13 +746,20 @@
                 "properties": {
                   "description": {
                     "type": "string"
+                  },
+                  "delete": {
+                    "$ref": "#/components/schemas/delete"
+                  },
+                  "function": {
+                    "type": "string",
+                    "default": "noop();"
                   }
                 }
               },
               "examples": {
                 "sample": {
                   "value": {
-                    "description": "Alert definition for coordinate creep"
+                    "function": "jobAlertNePortUtil75();"
                   }
                 }
               }

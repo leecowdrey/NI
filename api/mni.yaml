@@ -413,16 +413,22 @@ paths:
               type: object
               required:
               - description
+              - delete
+              - function
               properties:
                 description:
                   type: string
                 delete:
                   $ref: "#/components/schemas/delete"
+                function:
+                  type: string
+                  default: "noop();"
             examples:
               sample:
                 value:
                   description: "Switching/Routing Classifiers"
                   delete: false
+                  function: noop();
       responses:
         "200":
           description: OK
@@ -480,10 +486,15 @@ paths:
               properties:
                 description:
                   type: string
+                delete:
+                  $ref: "#/components/schemas/delete"
+                function:
+                  type: string
+                  default: "noop();"
             examples:
               sample:
                 value:
-                  description: Alert definition for coordinate creep
+                  function: "jobAlertNePortUtil75();"
       responses:
         "204":
           $ref: "#/components/responses/NoContent"

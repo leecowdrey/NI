@@ -100,6 +100,8 @@ var serviceKey = null;
 var server = null;
 var premisesPassedBoundaryDistance = 10;
 
+function noop() {}
+
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
 }
@@ -3117,7 +3119,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddRead = await DDC.runAndReadAll(
-        "SELECT id,delete,description FROM alert ORDER BY description"
+        "SELECT id,delete,description,function FROM alert ORDER BY description"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -3126,6 +3128,7 @@ var run = async () => {
             alertId: ddRows[idx][0],
             description: ddRows[idx][2],
             delete: ddRows[idx][1],
+            function: ddRows[idx][3],
           });
         }
         resJson = jsonSortByMultiKeys(resJson, ["description"]);
@@ -3170,12 +3173,13 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddp = await DDC.prepare(
-          "INSERT INTO alert (id, description, delete) VALUES ($1,$2,$3)"
+          "INSERT INTO alert (id, description, delete, function) VALUES ($1,$2,$3,$4)"
         );
         let alertId = uuidv4();
         ddp.bindVarchar(1, alertId);
         ddp.bindVarchar(2, req.body.description);
         ddp.bindBoolean(3, toBoolean(req.body.delete));
+        ddp.bindVarchar(4, req.body.function);
         await ddp.run();
         res.contentType(OAS.mimeJSON).status(200).json({ alertId: alertId });
       } else {
@@ -3656,7 +3660,8 @@ var run = async () => {
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let ddSql = "SELECT description,delete FROM alert WHERE id = $1";
+          let ddSql =
+            "SELECT description,delete,function FROM alert WHERE id = $1";
           let ddp = await DDC.prepare(ddSql);
           ddp.bindVarchar(1, req.params.alertId);
           let ddRead = await ddp.runAndReadAll();
@@ -3666,6 +3671,7 @@ var run = async () => {
               alertId: req.params.alertId,
               description: ddRows[0][0],
               delete: toBoolean(ddRows[0][1]),
+              function: ddRows[0][2],
             };
             res.contentType(OAS.mimeJSON).status(200).json(resJson);
           } else {
@@ -3729,6 +3735,12 @@ var run = async () => {
           ddp.bindVarchar(1, req.params.alertId);
           ddp.bindVarchar(2, req.body.description);
           await ddp.run();
+          if (req.body.function != null) {
+            await DDC.run("UPDATE alert SET function = '"+req.body.function+"' WHERE id = '"+req.params.alertId+"'");
+          }
+          if (req.body.delete != null) {
+            await DDC.run("UPDATE alert SET delete = "+toBoolean(req.body.delete)+" WHERE id = '"+req.params.alertId+"'");
+          }
           res.sendStatus(204);
         } else {
           res
@@ -15572,6 +15584,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("description").isString().trim(),
     body("delete").default(false).isBoolean({ strict: true }),
+    body("funtion").default("noop();").isString().trim(),
     addSingleAlert
   );
 
@@ -15782,6 +15795,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("alertId").isUUID(4),
     body("description").isString().trim(),
+    body("delete").optional().isBoolean({ strict: true }),
+    body("funtion").optional().isString().trim(),
     updateSingleAlert
   );
 

@@ -112,6 +112,8 @@
                         <div class="panel">
                             <label for="alertDescription">Description</label>
                             <input type="text" id="alertDescription" required>
+                            <label for="alertFunction">Function</label>
+                            <input type="text" id="alertFunction" required placeholder="noop();">
                             <div id="newSaveReset" class="wrapper-controls">
                                 <input id="save" type="button" value="save" onclick="saveMasterAlert();" /></input>
                                 <input id="reset" type="button" value="reset"
@@ -338,11 +340,12 @@
         function saveMasterAlert() {
             let p = document.getElementById("alert");
             let id = p.options[p.selectedIndex].value;
-            if (document.getElementById("alertDescription").value.length > 0) {
+            if (document.getElementById("alertDescription").value.length > 0 && document.getElementById("alertFunction").value.length > 0) {
                 if (id == "-1") {
                     let reqJson = null;
                     reqJson = {
-                        description: document.getElementById("alertDescription").value
+                        description: document.getElementById("alertDescription").value,
+                        function: document.getElementById("alertFunction").value
                     }
                     fetch("<%=payload.gatewayUrl%>/alert", {
                         method: "POST",
@@ -368,7 +371,8 @@
                 } else {
                     let reqJson = null;
                     reqJson = {
-                        description: document.getElementById("alertDescription").value
+                        description: document.getElementById("alertDescription").value,
+                        function: document.getElementById("alertFunction").value,
                     }
                     fetch("<%=payload.gatewayUrl%>/alert/" + id, {
                         method: "PATCH",
@@ -394,6 +398,7 @@
         }
         function clearMasterAlert() {
             document.getElementById("alertDescription").value = "";
+            document.getElementById("alertFunction").value = "";
         }
         function displayMasterAlert(d) {
             clearMasterAlert();
@@ -401,6 +406,7 @@
             let id = p.options[p.selectedIndex].value;
             if (d !== undefined && d != null) {
                 document.getElementById("alertDescription").value = d.description;
+                document.getElementById("alertFunction").value = d.function;
             }
         }
         function fetchMasterAlert() {
