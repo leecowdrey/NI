@@ -793,6 +793,437 @@ async function jobPrune() {
   pruneTimer = setTimeout(jobPrune, pruneIntervalMs);
 }
 
+async function jobAlertTrenchUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertTrenchUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertTrenchUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertTrenchUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDuctUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDuctUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDuctUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDuctUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertCableUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertCableUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertCableUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertCableUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertPoleUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertPoleUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertPoleUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertPoleUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertRackUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertRackUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertRackUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertRackUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertNePortUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNePortUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNePortUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertNePortUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertTransmissionUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertTransmissionUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertTransmissionUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertTransmissionUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertServiceBandwidth(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertServiceBandwidth",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertServiceBandwidth",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertServiceBandwidth",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertNeErrorRates(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeErrorRates",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeErrorRates",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertNeErrorRates",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertNeClassifierUtil(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeClassifierUtil",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeClassifierUtil",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertNeClassifierUtil",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertWpEfficiency(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertWpEfficiency",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertWpEfficiency",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertWpEfficiency",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqGeometryAlignment() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqGeometryAlignment",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqGeometryAlignment",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqGeometryAlignment",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqMissingConnectedTo() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqMissingConnectedTo",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqMissingConnectedTo",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqMissingConnectedTo",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqTrench() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqTrench",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqMissingConnectedTo",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqMissingConnectedTo",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqCable() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqCable",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqCable",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqCable",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqDuct() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqDuct",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqDuct",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqDuct",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqPole() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqPole",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqPole",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqPole",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqNe() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqNe",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqNe",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqNe",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqService() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqService",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqService",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqService",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqSite() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqSite",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqSite",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqSite",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobAlertDqOffNetPAF() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqOffNetPAF",
+      state: "start",
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertDqOffNetPAF",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertDqOffNetPAF",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
 async function dbAddPredictQueueItem(resource, id, state) {
   let ddq = await DDC.prepare(
     "SELECT rowid FROM predictQueue WHERE resource = $1 AND id = $2 AND state = $3"
@@ -3736,10 +4167,22 @@ var run = async () => {
           ddp.bindVarchar(2, req.body.description);
           await ddp.run();
           if (req.body.function != null) {
-            await DDC.run("UPDATE alert SET function = '"+req.body.function+"' WHERE id = '"+req.params.alertId+"'");
+            await DDC.run(
+              "UPDATE alert SET function = '" +
+                req.body.function +
+                "' WHERE id = '" +
+                req.params.alertId +
+                "'"
+            );
           }
           if (req.body.delete != null) {
-            await DDC.run("UPDATE alert SET delete = "+toBoolean(req.body.delete)+" WHERE id = '"+req.params.alertId+"'");
+            await DDC.run(
+              "UPDATE alert SET delete = " +
+                toBoolean(req.body.delete) +
+                " WHERE id = '" +
+                req.params.alertId +
+                "'"
+            );
           }
           res.sendStatus(204);
         } else {
