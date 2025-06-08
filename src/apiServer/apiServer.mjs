@@ -373,7 +373,7 @@ async function jobUpdatePremisesPassed() {
                     sitesCoordaintes[s].y +
                     "))"
                 );
-                let ddCompareRows = ddCompare.getRows(); xxx
+                let ddCompareRows = ddCompare.getRows();
                 if (ddCompareRows.length > 0) {
                   if (
                     toDecimal(ddCompareRows[0][0]) <=
