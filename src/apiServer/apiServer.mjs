@@ -3117,17 +3117,16 @@ var run = async () => {
     try {
       let resJson = [];
       let ddRead = await DDC.runAndReadAll(
-        "SELECT id,delete,description FROM alert"
+        "SELECT id,delete,description FROM alert ORDER BY description"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
         for (let idx in ddRows) {
-          let resObj = {
+          resJson.push({
             alertId: ddRows[idx][0],
             description: ddRows[idx][2],
             delete: ddRows[idx][1],
-          };
-          resJson.push(resObj);
+          });
         }
         resJson = jsonSortByMultiKeys(resJson, ["description"]);
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
