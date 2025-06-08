@@ -56,7 +56,6 @@
         let trenchCoordinates = {};
         let trenchColor = "#8B0000";
         let trenchOpacity = 1.0;
-        let trenchLastHistoricalPoint = "";
         let startMarker = [];
         let endMarker = [];
         let mapCenter = { lat: 0, lng: 0 };
@@ -76,7 +75,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
+                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
                     }
                 })
                 .then((data) => {
@@ -203,9 +202,12 @@
             endMarker.splice(0, endMarker.length);
             tPoly.splice(0, tPoly.length);
             tPath.splice(0, tPath.length);
-            trenchLastHistoricalPoint = "";
         }
         async function drawOnMap() {
+            if (trenchCoordinates.sets.length > 0) {
+                fetchTrenchPremisesPassed(trenchId, trenchCoordinates.sets[trenchCoordinates.sets.length - 1].point);
+                fetchTrenchDistance(trenchId, trenchCoordinates.sets[trenchCoordinates.sets.length - 1].point);
+            }
             for (let s = 0; s < trenchCoordinates.sets.length; s++) {
                 let tSet = trenchCoordinates.sets[s].point;
                 if (trenchCoordinates.sets[s].source == "predicted") {
@@ -216,7 +218,6 @@
                         trenchColor = "#CCCC00";
                     }
                 } else {
-                    trenchLastHistoricalPoint = tSet;
                     trenchOpacity = 1.0;
                     if (s % 2 == 0) {
                         trenchColor = "#8B0000";
@@ -256,10 +257,6 @@
                                 map: map,
                                 title: tSet
                             });
-                        }
-                        if (trenchLastHistoricalPoint != null) {
-                            fetchTrenchDistance(trenchId, trenchLastHistoricalPoint);
-                            fetchTrenchPremisesPassed(trenchId, trenchLastHistoricalPoint);
                         }
                     }
                     tPath[tSet].push({ lat: trenchCoordinates[tSet][c].x, lng: trenchCoordinates[tSet][c].y });

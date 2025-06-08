@@ -34,7 +34,7 @@
         let trenchCoordinates = {};
         let trenchColor = "#8B0000";
         let trenchOpacity = 1.0;
-        let trenchLastHistoricalPoint = "";
+        let trenchLastPoint = "";
         let startMarker = [];
         let endMarker = [];
         let mapCenter = { lat: 0, lng: 0 };
@@ -54,7 +54,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
+                        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
                     }
                 })
                 .then((data) => {
@@ -181,11 +181,12 @@
             endMarker.splice(0, endMarker.length);
             tPoly.splice(0, tPoly.length);
             tPath.splice(0, tPath.length);
-            trenchLastHistoricalPoint = "";
+            trenchLastPoint = "";
         }
         async function drawOnMap() {
             for (let s = 0; s < trenchCoordinates.sets.length; s++) {
                 let tSet = trenchCoordinates.sets[s].point;
+                trenchLastPoint = tSet;
                 if (trenchCoordinates.sets[s].source == "predicted") {
                     trenchOpacity = 0;
                     if (s % 2 == 0) {
@@ -194,7 +195,6 @@
                         trenchColor = "#CCCC00";
                     }
                 } else {
-                    trenchLastHistoricalPoint = tSet;
                     trenchOpacity = 1.0;
                     if (s % 2 == 0) {
                         trenchColor = "#8B0000";
@@ -235,9 +235,9 @@
                                 title: tSet
                             });
                         }
-                        if (trenchLastHistoricalPoint != null) {
-                            fetchTrenchDistance(trenchId, trenchLastHistoricalPoint);
-                            fetchTrenchPremisesPassed(trenchId, trenchLastHistoricalPoint);
+                        if (trenchLastPoint != null) {
+                            fetchTrenchDistance(trenchId, trenchLastPoint);
+                            fetchTrenchPremisesPassed(trenchId, trenchLastPoint);
                         }
                     }
                     tPath[tSet].push({ lat: trenchCoordinates[tSet][c].x, lng: trenchCoordinates[tSet][c].y });
