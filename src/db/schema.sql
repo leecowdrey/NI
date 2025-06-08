@@ -829,7 +829,6 @@ INSERT INTO alert (id,description) VALUES ('e2a4a205-29fa-417a-a6d0-b3c39ac7877e
 INSERT INTO alert (id,description) VALUES ('52ae75e2-036d-4a99-813f-de6ba328fce9','Data Quality - NE');
 INSERT INTO alert (id,description) VALUES ('126a7d5a-77af-4e99-9b6e-31b1945d5365','Data Quality - service');
 INSERT INTO alert (id,description) VALUES ('c54f88d9-d355-46e0-8fb2-9fa6ccdc4083','Data Quality - site');
-INSERT INTO alert (id,description) VALUES ('b034d9e8-da77-4b8c-8f44-d6eb6b6076a5','Data Quality - trench');
 INSERT INTO alert (id,description) VALUES ('b034d9e8-da77-4b8c-8f44-d6eb6b6076a5','Data Quality - offNet Postal Addresses');
 
 --
