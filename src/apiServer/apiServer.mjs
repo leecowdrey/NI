@@ -102,6 +102,7 @@ var server = null;
 var cveScan = null;
 var cveRepoCron = null;
 var cveDirectory = null;
+var cveRepoPullCronTime = null;
 var premisesPassedBoundaryDistance = 10;
 
 function noop() {}
@@ -1475,6 +1476,7 @@ function loadEnv() {
   configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
   cveScan = toBoolean(process.env.APISERV_CVE_SCAN || false);
   cveDirectory = path.resolve(process.env.APISERV_CVE_DIRECTORY) || "/usr/local/mni/cvelistV5";
+  cveRepoPullCronTime = process.env.APISERV_CVE_PULL_CRONTIME || "00 20 * * *";
   if (duckdb != null) {
     duckDbVerison = duckdb.version();
   }
@@ -19646,6 +19648,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     cveScan: {
       enabled: cveScan,
       directory: cveDirectory,
+      pull: cveRepoPullCronTime,
     },
     duckdb: {
       version: duckDbVerison,
@@ -19724,7 +19727,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   // cron jobs - cve repository daily pull
   if (cveScan) {
     cveRepoCron = cron.schedule(
-      "00 20 * * *",
+      cveRepoPullCronTime,
       () => {
         jobCveRepoPull(cveDirectory);
       },
