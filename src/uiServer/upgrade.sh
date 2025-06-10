@@ -59,7 +59,7 @@ rm -R -f ${DIST_DIRECTORY}/* &>/dev/null
 cp -f ${CLI_PATH}/uiServer.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/uiServer.mjs && chmod 660 ${WORKING_DIRECTORY}/uiServer.mjs && \
 cp -f ${CLI_PATH}/package.json ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/package.json && chmod 660 ${WORKING_DIRECTORY}/package.json && \
 cp -f ${CLI_PATH}/favicon.ico ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/favicon.ico && chmod 660 ${WORKING_DIRECTORY}/favicon.ico && \
-cp -Rf ${CLI_PATH}/dist/* ${DIST_DIRECTORY}/ && chown -R ${USERNAME}:${GROUP} ${DIST_DIRECTORY}/* && chmod 770 ${DIST_DIRECTORY} && find ${DIST_DIRECTORY} -type d -exec chmod 550 {} \; &>/dev/null && find ${DIST_DIRECTORY} -type f -exec chmod 440 {} \; &>/dev/null
+cp -Rf ${CLI_PATH}/dist/* ${DIST_DIRECTORY}/ && chown -hR ${USERNAME}:${GROUP} ${DIST_DIRECTORY}/* && chmod 770 ${DIST_DIRECTORY} && find ${DIST_DIRECTORY} -type d -exec chmod 550 {} \; &>/dev/null && find ${DIST_DIRECTORY} -type f -exec chmod 440 {} \; &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

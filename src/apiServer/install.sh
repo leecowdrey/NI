@@ -269,7 +269,8 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
   git clean -xdf &>/dev/null && \
   git reset --hard &>/dev/null && \
   git pull &>/dev/null && \
-  chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
+  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
+  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
   popd &>/dev/null
   RETVAL=$?
  else
@@ -277,7 +278,8 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
   mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
   git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
   git config --global --add safe.directory ${CVE_DIRECTORY} && \
-  chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null
+  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
+  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null
   RETVAL=$?
  fi
 else

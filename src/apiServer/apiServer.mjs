@@ -34,6 +34,7 @@ import { Console } from "node:console";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
+import simpleGit from "simple-git";
 
 const allPrintableRegEx = /[ -~]/gi;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -99,7 +100,8 @@ var serviceUsername = null;
 var serviceKey = null;
 var server = null;
 var cveScan = null;
-var cveScanDirectory = null;
+var cveRepoCron = null;
+var cveDirectory = null;
 var premisesPassedBoundaryDistance = 10;
 
 function noop() {}
@@ -258,6 +260,57 @@ async function jobBackup(target) {
   } catch (e) {
     LOGGER.error(dayjs().format(dayjsFormat), "error", {
       event: "backup",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobCveRepoPull(target) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "cveRepoPull",
+      state: "start",
+      target: target,
+    });
+    if (fs.existsSync(target)) {
+      if (fs.lstatSync(target).isDirectory()) {
+        try {
+          let git = simpleGit(target);
+          await git.addConfig("safe.directory", target, false, "global");
+          await git.clean("xdf");
+          await git.reset("hard");
+          await git.pull();
+        } catch (e) {
+          LOGGER.error(dayjs().format(dayjsFormat), "error", {
+            event: "cveRepoPull",
+            state: "failed",
+            error: e,
+          });
+        }
+        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+          event: "cveRepoPull",
+          state: "stop",
+        });
+      } else {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", {
+          event: "cveRepoPull",
+          state: "failed",
+          target: target,
+          error: "is not a directory",
+        });
+      }
+    } else {
+      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+        event: "cveRepoPull",
+        state: "failed",
+        target: target,
+        error: "does not exist",
+      });
+    }
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "cveRepoPull",
       state: "failed",
       error: e,
     });
@@ -1420,8 +1473,8 @@ function loadEnv() {
     path.resolve(process.env.APISERV_API_DIRECTORY) ||
     path.join(__dirname, "api");
   configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
-  cveScan = toBoolean(process.env.CVE_SCAN || false);
-  cveScanDirectory = path.resolve(process.env.CVE_SCAN_DIRECTORY);
+  cveScan = toBoolean(process.env.APISERV_CVE_SCAN || false);
+  cveDirectory = path.resolve(process.env.APISERV_CVE_DIRECTORY) || "/usr/local/mni/cvelistV5";
   if (duckdb != null) {
     duckDbVerison = duckdb.version();
   }
@@ -1435,6 +1488,9 @@ function quit() {
 
   if (backupCron != null) {
     backupCron.stop();
+  }
+  if (cveRepoCron != null) {
+    cveRepoCron.stop();
   }
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
@@ -19589,7 +19645,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     },
     cveScan: {
       enabled: cveScan,
-      directory: cveScanDirectory,
+      directory: cveDirectory,
     },
     duckdb: {
       version: duckDbVerison,
@@ -19665,6 +19721,21 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       }
     );
   }
+  // cron jobs - cve repository daily pull
+  if (cveScan) {
+    cveRepoCron = cron.schedule(
+      "00 20 * * *",
+      () => {
+        jobCveRepoPull(cveDirectory);
+      },
+      {
+        scheduled: true,
+        recoverMissedExecutions: false,
+        name: "cveRepoPull",
+      }
+    );
+  }
+
   // timer jobs
   updateGeometryTimer = setTimeout(
     jobUpdateGeometry,
