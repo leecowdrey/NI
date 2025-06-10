@@ -122,7 +122,9 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
  if [[ -d "${CVE_DIRECTORY}" ]] ; then
   doing "Pulling CVE List V5 repository"
   pushd ${CVE_DIRECTORY} &>/dev/null && \
-  git pull --rebase &>/dev/null && \
+  git clean -xdf &>/dev/null && \
+  git reset --hard &>/dev/null && \
+  git pull &>/dev/null && \
   chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
   popd &>/dev/null
   RETVAL=$?
@@ -130,6 +132,7 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
   doing "Cloning CVE List V5 repository"
   mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
   git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
+  git config --global --add safe.directory ${CVE_DIRECTORY} && \
   chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null
   RETVAL=$?
  fi
