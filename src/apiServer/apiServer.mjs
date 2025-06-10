@@ -98,6 +98,8 @@ var configDirectory = null;
 var serviceUsername = null;
 var serviceKey = null;
 var server = null;
+var cveScan = null;
+var cveScanDirectory = null;
 var premisesPassedBoundaryDistance = 10;
 
 function noop() {}
@@ -1003,6 +1005,27 @@ async function jobAlertNeClassifierUtil(threshold = 100) {
   }
 }
 
+async function jobAlertNeCveScan(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertNeCveScan",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
 async function jobAlertWpEfficiency(threshold = 100) {
   try {
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
@@ -1397,6 +1420,8 @@ function loadEnv() {
     path.resolve(process.env.APISERV_API_DIRECTORY) ||
     path.join(__dirname, "api");
   configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
+  cveScan = toBoolean(process.env.CVE_SCAN || false);
+  cveScanDirectory = path.resolve(process.env.CVE_SCAN_DIRECTORY);
   if (duckdb != null) {
     duckDbVerison = duckdb.version();
   }
@@ -19561,6 +19586,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     credentials: {
       username: serviceUsername.replace(allPrintableRegEx, "*"),
       key: serviceKey.replace(allPrintableRegEx, "*"),
+    },
+    cveScan: {
+      enabled: cveScan,
+      directory: cveScanDirectory,
     },
     duckdb: {
       version: duckDbVerison,

@@ -26,6 +26,7 @@ alert "MNI API Server Upgrade"
 which curl &> /dev/null || exit 1
 which openssl &> /dev/null || exit 1
 which unzip &> /dev/null || exit 1
+which git &> /dev/null || exit 1
 which node &> /dev/null || exit 1
 which npm &> /dev/null || exit 1
 
@@ -54,6 +55,8 @@ USERNAME=$(grep -E "^APISERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cu
 WORKING_DIRECTORY=$(grep -E "^APISERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+CVE_SCAN=$(grep -E "^APISERV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+CVE_DIRECTORY=$(grep -E "^APISERV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -113,6 +116,26 @@ if [ "${API_DIRECTORY}/mni.yaml" ] ; then
  rm -f ./yq &>/dev/null
 fi
 RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+if [[ "${CVE_SCAN,,}" == "true" ]] ; then
+ if [[ -d "${CVE_DIRECTORY}" ]] ; then
+  doing "Pulling CVE List V5 repository"
+  pushd ${CVE_DIRECTORY} &>/dev/null && \
+  git pull --rebase &>/dev/null && \
+  chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
+  popd &>/dev/null
+  RETVAL=$?
+ else
+  doing "Cloning CVE List V5 repository"
+  mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
+  git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
+  chown -R ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null
+  RETVAL=$?
+ fi
+else
+ RETVAL=0
+fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating & Restarting SystemD service"
