@@ -3039,6 +3039,38 @@
       "method": "GET"
     },
     {
+      "endpoint": "/mni/v1/nes/vendors",
+      "@comment": "getAllNesVendors",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["pageSize", "pageNumber", "point"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/nes/vendors",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
       "endpoint": "/mni/v1/nes",
       "@comment": "getMultipleNe",
       "output_encoding": "no-op",

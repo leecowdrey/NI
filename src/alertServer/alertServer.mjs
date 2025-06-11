@@ -12,11 +12,18 @@ import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";
 import nodemailer from "nodemailer";
+import cron from "node-cron";
 import { MAX, v4 as uuidv4 } from "uuid";
 import { Kafka, CompressionTypes, logLevel } from "kafkajs";
 import { Console } from "node:console";
 import dayjs from "dayjs";
 import os from "os";
+import path from "path";
+import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import simpleGit from "simple-git";
+import { exec } from "node:child_process";
 
 const allPrintableRegEx = /[ -~]/gi;
 
@@ -51,6 +58,12 @@ var endPointUrlVersion = null;
 var appName = null;
 var appVersion = null;
 var appBuild = null;
+var cveScan = null;
+var cveRepoCron = null;
+var cveDirectory = null;
+var cveRepoPullCronTime = null;
+var cveListBuild = null;
+var cveListBuildTimer = null;
 
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
@@ -214,6 +227,11 @@ function loadEnv() {
     toInteger(process.env.ALERTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS) || 60000;
   endPointUrlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
   endPointUrlVersion = process.env.APISERV_URL_VERSION || "/v1";
+  cveScan = toBoolean(process.env.ALERTSRV_CVE_SCAN || false);
+  cveDirectory =
+    path.resolve(process.env.ALERTSRV_CVE_DIRECTORY) ||
+    "/usr/local/mni/cvelistV5";
+  cveRepoPullCronTime = process.env.ALERTSRV_CVE_PULL_CRONTIME || "00 20 * * *";
   tlsSslVerification = toBoolean(
     process.env.ALERTSRV_TLS_INSECURE_CONNECTIONS || false
   );
@@ -227,6 +245,9 @@ function quit() {
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "quit",
   });
+  if (cveRepoCron != null) {
+    cveRepoCron.stop();
+  }
   if (kafkaProducer != null) {
     kafkaProducer.disconnect();
   }
@@ -297,6 +318,250 @@ async function dnsSd() {
   }
 }
 
+async function jobAlertNeCveScan(threshold = 100) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "alertNeCveScan",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobCveRepoPull(target) {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "cveRepoPull",
+      state: "start",
+      target: target,
+    });
+    if (fs.existsSync(target)) {
+      if (fs.lstatSync(target).isDirectory()) {
+        try {
+          let git = simpleGit(target);
+          await git.addConfig("safe.directory", target, false, "global");
+          await git.clean("xdf");
+          //await git.reset("hard");
+          await git.pull("origin", "main");
+          //await jobCveListBuild();
+        } catch (e) {
+          LOGGER.error(dayjs().format(dayjsFormat), "error", {
+            event: "cveRepoPull",
+            state: "failed",
+            error: e,
+          });
+        }
+        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+          event: "cveRepoPull",
+          state: "stop",
+        });
+      } else {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", {
+          event: "cveRepoPull",
+          state: "failed",
+          target: target,
+          error: "is not a directory",
+        });
+      }
+    } else {
+      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+        event: "cveRepoPull",
+        state: "failed",
+        target: target,
+        error: "does not exist",
+      });
+    }
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "cveRepoPull",
+      state: "failed",
+      error: e,
+    });
+  }
+}
+
+async function jobCveListBuild() {
+  let neMap = [];
+  try {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url = ENDPOINT + "/nes/vendors";
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (
+            response.status == 200 &&
+            toInteger(response.headers.get("Content-Length")) > 0
+          ) {
+            return response.json();
+          } else if (response.status == 204) {
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(dayjsFormat),
+                "debug",
+                "jobCveListBuild",
+                {
+                  state: "empty",
+                }
+              );
+            }
+          } else {
+            LOGGER.error(
+              dayjs().format(dayjsFormat),
+              "error",
+              "jobCveListBuild",
+              {
+                state: "unknown",
+                status: response.status,
+                statusText: response.statusText,
+              }
+            );
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          for (let n = 0; n < data.length; n++) {
+            exec(
+              "find " +
+                cveDirectory +
+                ' -name CVE-*.json -exec grep -l -i -e "' +
+                data[n].vendor +
+                '" -e "' +data[n].model +
+                '" -e "' +data[n].image +
+                '" {} \\;',
+              (err, stdout, stderr) => {
+                if (err) {
+                  LOGGER.error(dayjs().format(dayjsFormat), "error", {
+                    event: "jobCveListBuild",
+                    vendor: data[n].vendor,
+                    model: data[n].model,
+                    image: data[n].image,
+                    error: err,
+                  });
+                  return;
+                }
+                if (stderr) {
+                  LOGGER.error(dayjs().format(dayjsFormat), "error", {
+                    event: "jobCveListBuild",
+                    vendor: data[n].vendor,
+                    model: data[n].model,
+                    image: data[n].image,
+                    stderr: err,
+                  });
+                  return;
+                }
+                let cveFiles = stdout.split(/[\r\n|\n|\r]/);
+                if (DEBUG) {
+                  LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+                    event: "jobCveListBuild",
+                    vendor: data[n].vendor,
+                    model: data[n].model,
+                    image: data[n].image,
+                    cveFiles: cveFiles,
+                  });
+                  //TODO: now scan the vendor CVE list for specific models, images etc.
+                }
+              }
+            );
+          }
+        }
+      });
+  } catch (err) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", "jobCveListBuild", {
+      error: err,
+    });
+  }
+
+  /*
+    if (neMap.length > 0) {
+      if (fs.existsSync(cveDirectory)) {
+        if (fs.lstatSync(cveDirectory).isDirectory()) {
+          try {
+            // TODO:
+            let cveFiles = await glob(
+              cveDirectory + path.sep + "**" + path.sep + "CVE*.json"
+            );
+
+            if (cveFiles.length > 0) {
+              for (let f = 0; f < cveFiles.length; f++) {
+                try {
+                  LOGGER.debug("file=" + cveFiles[f]);
+                  fs.readFile(cveFiles[f], "utf-8", (err, cve) => {
+                    if (err) {
+                      throw err;
+                    }
+                    vendorCve.push({
+                      cve: cve.cveMetadata.cveId,
+                      file: cveFiles[f],
+                      affected: cve.containers.cna.affected,
+                    });
+                  });
+                } catch (err) {
+                  LOGGER.error(dayjs().format(dayjsFormat), "error", {
+                    event: "jobCveListBuild",
+                    cveFile: cveFiles[f],
+                    error: err,
+                  });
+                }
+              }
+            }
+            if (vendorCve.length > 0) {
+              for (let av = 0; av < vendorCve.length; av++) {
+                if (DEBUG) {
+                  LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+                    event: "jobCveListBuild",
+                    file: vendorCve[av].file,
+                    affected: vendorCve[av].affected,
+                  });
+                }
+              }
+            }
+          } catch (err) {
+            LOGGER.error(dayjs().format(dayjsFormat), "error", {
+              event: "jobCveListBuild",
+              state: "failed",
+              error: err,
+            });
+          }
+        } else {
+          LOGGER.error(dayjs().format(dayjsFormat), "error", {
+            event: "jobCveListBuild",
+            state: "failed",
+            target: cveDirectory,
+            error: "is not a directory",
+          });
+        }
+      } else {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", {
+          event: "cveRepoPull",
+          state: "failed",
+          target: cveDirectory,
+          error: "does not exist",
+        });
+      }
+    }
+      */
+}
+
 async function queueDrain() {
   let queueEmpty = false;
   do {
@@ -353,7 +618,7 @@ async function queueDrain() {
                 callbackAlertId: null,
                 publishAlertId: null,
                 notifyAlertId: null,
-                workflowAlertId: null
+                workflowAlertId: null,
               };
               if (data.callback != null) {
                 q.callbackAlertId = data.callback;
@@ -546,7 +811,7 @@ async function sendMail(q) {
   let mailPlainTextBody = "alert X threshold reached";
   let mailHtmlBody = "<p>alert X <b>threshold reached</b></p>";
   let id = "c154c1b3-c0a6-47c3-856d-fed40e9acf19";
-  
+
   try {
     await fetch(ENDPOINT + "/admin/email/provider/" + q.id, {
       method: "GET",
@@ -596,7 +861,10 @@ async function sendMail(q) {
       host: mailHost,
       port: mailPort,
       secure: mailEncryption, // true for 465, false for other ports
-      auth: { user: mailAuthUser.replace(allPrintableRegEx, "*"), pass: mailAuthPassword.replace(allPrintableRegEx, "*") },
+      auth: {
+        user: mailAuthUser.replace(allPrintableRegEx, "*"),
+        pass: mailAuthPassword.replace(allPrintableRegEx, "*"),
+      },
     });
 
     // Configure email options
@@ -734,6 +1002,11 @@ var run = async () => {
       version: appVersion,
       build: appBuild,
     },
+    cveScan: {
+      enabled: cveScan,
+      directory: cveDirectory,
+      pull: cveRepoPullCronTime,
+    },
     endpoint: {
       fqdn: ENDPOINT,
       ready: ENDPOINT_READY,
@@ -746,10 +1019,24 @@ var run = async () => {
     },
   });
 
+  // cron jobs - cve repository daily pull
+  // jobCveRepoPull will also call jobCveListBuild to narrow the CVE list to known vendors etc.
+  if (cveScan) {
+    cveRepoCron = cron.schedule(
+      cveRepoPullCronTime,
+      () => {
+        jobCveRepoPull(cveDirectory);
+      },
+      {
+        scheduled: true,
+        recoverMissedExecutions: false,
+        name: "cveRepoPull",
+      }
+    );
+  }
+
   // process a queue item
   await queueDrain();
-
-  await sendMail();
 
   // sleep
   while (true) {

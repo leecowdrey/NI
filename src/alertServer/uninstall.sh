@@ -26,6 +26,7 @@ HOST_SERVICE=$(grep -E "^ALERTSRV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2
 LOG_FILE=$(grep -E "^ALERTSRV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
 USERNAME=$(grep -E "^ALERTSRV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
 WORKING_DIRECTORY=$(grep -E "^ALERTSRV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
+CVE_DIRECTORY=$(grep -E "^ALERTSRV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #UNINSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -58,6 +59,13 @@ else
   RETVAL=0
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
+
+if [[ -d "${CVE_DIRECTORY}" ]] ; then
+ doing "Remoing CVE List V5 repository"
+ rm -R -f ${CVE_DIRECTORY} &>/dev/null
+ RETVAL=$?
+ [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
+fi
 
 # tidy
 clean_tmp_files

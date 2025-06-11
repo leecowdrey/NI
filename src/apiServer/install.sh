@@ -55,8 +55,6 @@ USERNAME=$(grep -E "^APISERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cu
 WORKING_DIRECTORY=$(grep -E "^APISERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-CVE_SCAN=$(grep -E "^APISERV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-CVE_DIRECTORY=$(grep -E "^APISERV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -261,31 +259,6 @@ if [[ -z "${SERVICE_KEY}" ]] ; then
   RETVAL=$?
   [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 fi
-
-if [[ "${CVE_SCAN,,}" == "true" ]] ; then
- if [[ -d "${CVE_DIRECTORY}" ]] ; then
-  doing "Pulling CVE List V5 repository"
-  pushd ${CVE_DIRECTORY} &>/dev/null && \
-  git clean -xdf &>/dev/null && \
-  git reset --hard &>/dev/null && \
-  git pull &>/dev/null && \
-  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
-  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
-  popd &>/dev/null
-  RETVAL=$?
- else
-  doing "Cloning CVE List V5 repository"
-  mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
-  git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
-  git config --global --add safe.directory ${CVE_DIRECTORY} && \
-  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
-  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null
-  RETVAL=$?
- fi
-else
- RETVAL=0
-fi
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Adding SystemD service"
 cp -f ${CLI_PATH}/${HOST_SERVICE} /etc/systemd/system/${HOST_SERVICE} && \

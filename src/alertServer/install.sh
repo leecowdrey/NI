@@ -33,6 +33,8 @@ HOST_SERVICE=$(grep -E "^ALERTSRV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2
 LOG_FILE=$(grep -E "^ALERTSRV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 USERNAME=$(grep -E "^ALERTSRV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 WORKING_DIRECTORY=$(grep -E "^ALERTSRV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+CVE_SCAN=$(grep -E "^ALERTSRV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+CVE_DIRECTORY=$(grep -E "^ALERTSRV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -111,6 +113,44 @@ RETVAL=$?
 doing "Adding service log file"
 touch ${LOG_FILE} && chown ${USERNAME}:${GROUP} ${LOG_FILE} && chmod 660 ${LOG_FILE}
 RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+if [[ "${CVE_SCAN,,}" == "true" ]] ; then
+ if [[ -d "${CVE_DIRECTORY}" ]] ; then
+  doing "Pulling CVE List V5 repository"
+  pushd ${CVE_DIRECTORY} &>/dev/null && \
+  git clean -xdf &>/dev/null && \
+  git reset --hard &>/dev/null && \
+  git pull &>/dev/null && \
+  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
+  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
+  popd &>/dev/null
+  RETVAL=$?
+ else
+  doing "Cloning CVE List V5 repository"
+  mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
+  pushd ${CVE_DIRECTORY} &>/dev/null && \
+  git init &>/dev/null && \
+  git remote add -f origin https://github.com/CVEProject/cvelistV5.git &>/dev/null && \
+  git config core.sparseCheckout true &>/dev/null && \
+  echo "README.md" >> .git/info/sparse-checkout && \
+  echo ".gitignore" >> .git/info/sparse-checkout && \
+  echo ".gitattributes" >> .git/info/sparse-checkout && \
+  echo "cves/202?/" >> .git/info/sparse-checkout && \
+  echo "cves/203?/" >> .git/info/sparse-checkout && \
+  echo "cves/delta.json" >> .git/info/sparse-checkout && \
+  echo "cves/deltaLog.json" >> .git/info/sparse-checkout && \
+  git pull origin main &>/dev/null && \
+  # git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
+  git config --global --add safe.directory ${CVE_DIRECTORY} && \
+  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
+  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
+  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/.git* &>/dev/null
+  RETVAL=$?
+ fi
+else
+ RETVAL=0
+fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Adding SystemD service"

@@ -8495,6 +8495,80 @@
         }
       }
     },
+    "/nes/vendors": {
+      "get": {
+        "summary": "Unique list of all known network vendors with model,image,version",
+        "security": [
+          {
+            "openId": [
+              "read:mni_ne"
+            ]
+          }
+        ],
+        "operationId": "getAllNesVendors",
+        "tags": [
+          "Network Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "vendor": {
+                        "type": "string"
+                      },
+                      "model": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "description": "software firmware/image name",
+                        "type": "string"
+                      },
+                      "version": {
+                        "description": "software firmware/image version",
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "simple": {
+                    "value": [
+                      {
+                        "vendor": "Cisco Systems",
+                        "model": "C8300-1N1S-4T2X",
+                        "image": "IOS-XE SD-WAN",
+                        "version": "17.7.1a"
+                      },
+                      {
+                        "vendor": "Juniper Networks",
+                        "model": "MX240",
+                        "image": "JUNOS Base OS Boot",
+                        "version": "12.3R6.6"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/ne": {
       "get": {
         "summary": "List of all known network equipment",

@@ -34,7 +34,6 @@ import { Console } from "node:console";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
-import simpleGit from "simple-git";
 
 const allPrintableRegEx = /[ -~]/gi;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -99,10 +98,6 @@ var configDirectory = null;
 var serviceUsername = null;
 var serviceKey = null;
 var server = null;
-var cveScan = null;
-var cveRepoCron = null;
-var cveDirectory = null;
-var cveRepoPullCronTime = null;
 var premisesPassedBoundaryDistance = 10;
 
 function noop() {}
@@ -261,57 +256,6 @@ async function jobBackup(target) {
   } catch (e) {
     LOGGER.error(dayjs().format(dayjsFormat), "error", {
       event: "backup",
-      state: "failed",
-      error: e,
-    });
-  }
-}
-
-async function jobCveRepoPull(target) {
-  try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
-      event: "cveRepoPull",
-      state: "start",
-      target: target,
-    });
-    if (fs.existsSync(target)) {
-      if (fs.lstatSync(target).isDirectory()) {
-        try {
-          let git = simpleGit(target);
-          await git.addConfig("safe.directory", target, false, "global");
-          await git.clean("xdf");
-          await git.reset("hard");
-          await git.pull();
-        } catch (e) {
-          LOGGER.error(dayjs().format(dayjsFormat), "error", {
-            event: "cveRepoPull",
-            state: "failed",
-            error: e,
-          });
-        }
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
-          event: "cveRepoPull",
-          state: "stop",
-        });
-      } else {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", {
-          event: "cveRepoPull",
-          state: "failed",
-          target: target,
-          error: "is not a directory",
-        });
-      }
-    } else {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
-        event: "cveRepoPull",
-        state: "failed",
-        target: target,
-        error: "does not exist",
-      });
-    }
-  } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
-      event: "cveRepoPull",
       state: "failed",
       error: e,
     });
@@ -1059,27 +1003,6 @@ async function jobAlertNeClassifierUtil(threshold = 100) {
   }
 }
 
-async function jobAlertNeCveScan(threshold = 100) {
-  try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
-      event: "alertNeCveScan",
-      state: "start",
-      threshold: threshold,
-    });
-    // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
-      event: "alertNeCveScan",
-      state: "stop",
-    });
-  } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
-      event: "alertNeCveScan",
-      state: "failed",
-      error: e,
-    });
-  }
-}
-
 async function jobAlertWpEfficiency(threshold = 100) {
   try {
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
@@ -1474,9 +1397,6 @@ function loadEnv() {
     path.resolve(process.env.APISERV_API_DIRECTORY) ||
     path.join(__dirname, "api");
   configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
-  cveScan = toBoolean(process.env.APISERV_CVE_SCAN || false);
-  cveDirectory = path.resolve(process.env.APISERV_CVE_DIRECTORY) || "/usr/local/mni/cvelistV5";
-  cveRepoPullCronTime = process.env.APISERV_CVE_PULL_CRONTIME || "00 20 * * *";
   if (duckdb != null) {
     duckDbVerison = duckdb.version();
   }
@@ -1490,9 +1410,6 @@ function quit() {
 
   if (backupCron != null) {
     backupCron.stop();
-  }
-  if (cveRepoCron != null) {
-    cveRepoCron.stop();
   }
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
@@ -6801,6 +6718,35 @@ var run = async () => {
           .map(JSON.parse)
           .sort();
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllNesVendors(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT DISTINCT vendor,model,image,version FROM _ne,ne WHERE _ne.neId = ne.id AND _ne.tsId = ne.historicalTsId AND delete = false"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push({vendor: ddRows[idx][0], model: ddRows[idx][1], image: ddRows[idx][2], version: ddRows[idx][3]});
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -17176,6 +17122,20 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
   /*
        Tag:           Network Equipment
+       operationId:   getAllNesVendors
+       exposed Route: /mni/v1/nes/vendors
+       HTTP method:   GET
+       OpenID Scope:  read:mni_ne
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/nes/vendors",
+    // security("read:mni_ne"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getAllNesVendors
+  );
+
+  /*
+       Tag:           Network Equipment
        operationId:   addSingleNe
        exposed Route: /mni/v1/ne
        HTTP method:   POST
@@ -19645,11 +19605,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       username: serviceUsername.replace(allPrintableRegEx, "*"),
       key: serviceKey.replace(allPrintableRegEx, "*"),
     },
-    cveScan: {
-      enabled: cveScan,
-      directory: cveDirectory,
-      pull: cveRepoPullCronTime,
-    },
     duckdb: {
       version: duckDbVerison,
       //config: duckdb.configurationOptionDescriptions(),
@@ -19699,6 +19654,48 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         state: "install",
       });
     }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
+    if (DEBUG) {
+      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+        event: "extension",
+        extension: duckDbExtensions[i],
+        state: "install",
+      });
+    }
     await DDC.run("INSTALL " + duckDbExtensions[i]);
     if (DEBUG) {
       LOGGER.info(dayjs().format(dayjsFormat), "debug", {
@@ -19724,21 +19721,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       }
     );
   }
-  // cron jobs - cve repository daily pull
-  if (cveScan) {
-    cveRepoCron = cron.schedule(
-      cveRepoPullCronTime,
-      () => {
-        jobCveRepoPull(cveDirectory);
-      },
-      {
-        scheduled: true,
-        recoverMissedExecutions: false,
-        name: "cveRepoPull",
-      }
-    );
-  }
-
   // timer jobs
   updateGeometryTimer = setTimeout(
     jobUpdateGeometry,

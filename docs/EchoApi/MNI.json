@@ -73,15 +73,15 @@
 			}
 		],
 		"global_vars": {
-			"APISERV_SERVICE_USERNAME": {
-				"value": "364912b2af3d4da4275ef6b9886380f6caf274b5aacb812e",
-				"current_value": null,
-				"description": "Backend Basic Auth Username"
-			},
 			"APISERV_SERVICE_KEY": {
 				"value": "veOtGzA5y75a6I8MhSW97iEKIGVwt2NFZbbqGBJBprG6ndA7kR3xVpZy/mp26MKtTJjb+O86TCYFWkW",
 				"current_value": null,
 				"description": "Backend Basic Auth Password"
+			},
+			"APISERV_SERVICE_USERNAME": {
+				"value": "364912b2af3d4da4275ef6b9886380f6caf274b5aacb812e",
+				"current_value": null,
+				"description": "Backend Basic Auth Username"
 			}
 		},
 		"global_param": {
@@ -72310,6 +72310,262 @@
 					},
 					{
 						"example_id": "62ba664b4b04e",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "401",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Authentication information is missing or invalid",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "acaeb3af3a177",
+			"project_id": "40373eb16402000",
+			"parent_id": "374989574b2eb",
+			"target_type": "api",
+			"name": "List of all known network vendors with model,image,version",
+			"version": 395,
+			"sort": 11000,
+			"method": "GET",
+			"url": "/nes/vendors",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "1854cf2736e13e",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "[\n\t\"\"\n]",
+						"raw_parameter": [
+							{
+								"param_id": "62ba65fb4bd92",
+								"description": "",
+								"field_type": "array",
+								"is_checked": 1,
+								"key": ".0",
+								"not_null": -1,
+								"value": "",
+								"schema": {
+									"type": "array"
+								}
+							}
+						],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "OK",
+							"schema": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"$$ref": "62ba668f4b1c0",
+									"format": "uuid",
+									"description": "internal network equipment identifier"
+								}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Not found",
+							"schema": {
+								"type": "object",
+								"description": "specified identifier value was not found"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65fb4bd93",
+						"raw": "{}",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "400",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Bad request",
+							"schema": {
+								"type": "object",
+								"description": "General error message wrapped within HTML webpage"
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "62ba65fb4bd94",
 						"raw": "",
 						"raw_parameter": [],
 						"headers": [],
