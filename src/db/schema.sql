@@ -93,6 +93,8 @@ CREATE TYPE workflowEngineType AS ENUM ('bpmn','elsa');
 ---
 --- sequences
 ---
+CREATE SEQUENCE IF NOT EXISTS seq_cvePlatforms;
+CREATE SEQUENCE IF NOT EXISTS seq_cveVersions;
 CREATE SEQUENCE IF NOT EXISTS seq_alertQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_predictQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_trench;
@@ -122,6 +124,32 @@ CREATE SEQUENCE IF NOT EXISTS seq_serviceEgress;
 ---
 --- parent referential tables
 ---
+
+CREATE TABLE IF NOT EXISTS cve (
+    id VARCHAR NOT NULL PRIMARY KEY,
+    published TIMESTAMP NOT NULL DEFAULT now()::timestamp,
+    updated TIMESTAMP,
+    vendor VARCHAR NOT NULL,
+    uri VARCHAR NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS cvePlatforms (
+    id INTEGER NOT NULL DEFAULT nextval('seq_cvePlatforms') PRIMARY KEY,
+    cveId VARCHAR NOT NULL,
+    platform VARCHAR NOT NULL,
+    FOREIGN KEY (cveId) REFERENCES cve (id)
+);
+
+CREATE TABLE IF NOT EXISTS cveVersions (
+    id INTEGER NOT NULL DEFAULT nextval('seq_cveVersions') PRIMARY KEY,
+    cveId VARCHAR NOT NULL,
+    lessThan VARCHAR,
+    status VARCHAR,
+    version VARCHAR,
+    versionType VARCHAR,
+    FOREIGN KEY (cveId) REFERENCES cve (id)
+);
+
 CREATE TABLE IF NOT EXISTS predictQueue (
     qId INTEGER NOT NULL DEFAULT nextval('seq_predictQueue') PRIMARY KEY,
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,

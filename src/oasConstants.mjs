@@ -77,6 +77,7 @@ export const coordinate_x = { min: -180, max: 180 };
 export const coordinate_y = { min: -90, max: 90 };
 export const coordinate_z = { min: Number.MIN_VALUE, max: Number.MAX_VALUE };
 export const channels = { min: 1, max: 512 };
+export const cveId = "CVE-[0-9]{4}-[0-9]{4}";
 export const csv_uuids =
   "(()?([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})+(,[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})?())?";
 export const constructionType = [

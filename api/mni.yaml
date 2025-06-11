@@ -399,7 +399,6 @@ paths:
     post:
       summary: Add single alert
       security:
-      - basicAuth: []
       - openId:
         - write:mni_internal
       operationId: addSingleAlert
@@ -451,7 +450,6 @@ paths:
     delete:
       summary: Remove single alert
       security:
-      - basicAuth: []
       - openId:
         - write:mni_internal
       parameters:
@@ -534,6 +532,220 @@ paths:
                     alertId: ff9bf3a0-682e-43ff-b38c-0ab962ef2fe7
                     description: Switching/Routing Classifiers
                     delete: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /alert/cve/{cveId}:
+    get:
+      summary: List single CVE details
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getSingleCve
+      parameters:
+      - $ref: "#/components/parameters/cveId"
+      tags:
+      - Alerts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cveId:
+                    $ref: "#/components/schemas/cveId"
+                  published:
+                    $ref: "#/components/schemas/dateTime"
+                  unpdated:
+                    $ref: "#/components/schemas/dateTime"
+                  vendor:
+                    type: string
+                  uri:
+                    type: string
+                    format: url
+                  platforms:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+                  versions:
+                    type: array
+                    minItems: 1
+                    required:
+                    - lessThan
+                    - status
+                    - version
+                    - type
+                    items:
+                      type: object
+                      properties:
+                        lessThan:
+                          type: string
+                        status:
+                          type: string
+                        version:
+                          type: string
+                        versionType:
+                          type: string
+              examples:
+                sample:
+                  value:
+                    cveId: CVE-2025-5516
+                    published: 20250516T181900
+                    vendor: Merkator nv/sa
+                    uri: 2025/5xxx/CVE-2025-5516.json
+                    platforms:
+                    - MNI
+                    versions:
+                    - lessThan: "1.0"
+                      status: affected
+                      version: "0"
+                      versionType: semver
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: Remove single CVE
+      security:
+      - openId:
+        - write:mni_internal
+      parameters:
+      - $ref: "#/components/parameters/cveId"
+      operationId: deleteSingleCve
+      tags:
+      - Alerts
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /alert/cve:
+    get:
+      summary: List all CVE for known vendors
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getAllCve
+      parameters:
+      - $ref: "#/components/parameters/pageSize"
+      - $ref: "#/components/parameters/pageNumber"
+      tags:
+      - Alerts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/cveId"
+              examples:
+                sample:
+                  value:
+                  - CVE-2025-5880
+                  - CVE-2025-5881
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Add single CVE
+      security:
+      - openId:
+        - write:mni_internal
+      operationId: addSingleCve
+      tags:
+      - Alerts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - cveId
+              - published
+              - vendor
+              - uri
+              - platforms
+              - versions
+              properties:
+                cveId:
+                  $ref: "#/components/schemas/cveId"
+                published:
+                  $ref: "#/components/schemas/dateTime"
+                unpdated:
+                  $ref: "#/components/schemas/dateTime"
+                vendor:
+                  type: string
+                uri:
+                  type: string
+                  format: url
+                platforms:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                versions:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required:
+                    - lessThan
+                    - status
+                    - version
+                    - type
+                    properties:
+                      lessThan:
+                        type: string
+                      status:
+                        type: string
+                      version:
+                        type: string
+                      versionType:
+                        type: string
+            examples:
+              sample:
+                value:
+                  cveId: CVE-2025-5516
+                  published: 20250516T181900
+                  vendor: Merkator nv/sa
+                  uri: 2025/5xxx/CVE-2025-5516.json
+                  platforms:
+                  - MNI
+                  versions:
+                  - lessThan: "1.0"
+                    status: affected
+                    version: "0"
+                    versionType: semver
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cveId:
+                    $ref: "#/components/schemas/cveId"
+              example:
+                cveId: CVE-2025-5516
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -13055,6 +13267,10 @@ components:
       description: internal alert identifier
       type: string
       format: uuid
+    cveId:
+      description: external CVE identifier
+      type: string
+      pattern: 'CVE-[0-9]{4}-[0-9]{4}'
     ductId:
       description: internal duct identifier
       type: string
@@ -13557,6 +13773,14 @@ components:
       schema:
         type: string
         format: uuid
+    cveId:
+      name: cveId
+      description: external CVE identifier
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: 'CVE-[0-9]{4}-[0-9]{4}'
     ductId:
       name: ductId
       description: internal duct identifier

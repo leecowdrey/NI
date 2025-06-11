@@ -4204,6 +4204,254 @@ var run = async () => {
     }
   }
 
+  async function addSingleCve(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddp = await DDC.prepare("SELECT id FROM cve WHERE id = $1");
+        ddp.bindVarchar(1, req.body.cveId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length == 0) {
+          ddp = await DDC.prepare(
+            "INSERT INTO cve (id, published, vendor, uri) VALUES ($1,strptime($2,$3),$4,$5)"
+          );
+          ddp.bindVarchar(1, req.body.cveId);
+          ddp.bindVarchar(2, req.body.published);
+          ddp.bindVarchar(3, pointFormat);
+          ddp.bindVarchar(4, req.body.vendor);
+          ddp.bindVarchar(5, req.body.uri);
+          await ddp.run();
+          if (req.body.updated != null) {
+            await DDC.run(
+              "UPDATE cve SET updated = strptime('" +
+                req.body.updated +
+                "','" +
+                pointFormat +
+                "') WHERE id = '" +
+                req.body.cveId +
+                "'"
+            );
+          }
+          if (req.body.platforms?.length > 0) {
+            for (let p = 0; p < req.body.platforms.length; p++) {
+              let pId = await getSeqNextValue("seq_cvePlatforms");
+              ddp = await DDC.prepare(
+                "INSERT INTO cvePlatforms (id,cveId, platform) VALUES ($1,$2,$3)"
+              );
+              ddp.bindInteger(1, pId);
+              ddp.bindVarchar(2, req.body.cveId);
+              ddp.bindVarchar(3, req.body.platforms[p]);
+              await ddp.run();
+            }
+          }
+          if (req.body.versions?.length > 0) {
+            for (let p = 0; p < req.body.platforms.length; p++) {
+              let vId = await getSeqNextValue("seq_cveVersions");
+              ddp = await DDC.prepare(
+                "INSERT INTO cveVersions (id,cveId) VALUES ($1,$2)"
+              );
+              ddp.bindInteger(1, vId);
+              ddp.bindVarchar(2, req.body.cveId);
+              await ddp.run();
+              if (req.body.versions[p].lessThan != null) {
+                await DDC.run(
+                  "UPDATE cveVersions SET lessThan = '" +
+                    req.body.versions[p].lessThan +
+                    "' WHERE id = " +
+                    vId
+                );
+              }
+              if (req.body.versions[p].status != null) {
+                await DDC.run(
+                  "UPDATE cveVersions SET status = '" +
+                    req.body.versions[p].status +
+                    "' WHERE id = " +
+                    vId
+                );
+              }
+              if (req.body.versions[p].version != null) {
+                await DDC.run(
+                  "UPDATE cveVersions SET version = '" +
+                    req.body.versions[p].version +
+                    "' WHERE id = " +
+                    vId
+                );
+              }
+              if (req.body.versions[p].versionType != null) {
+                await DDC.run(
+                  "UPDATE cveVersions SET versionType = '" +
+                    req.body.versions[p].versionType +
+                    "' WHERE id = " +
+                    vId
+                );
+              }
+            }
+          }
+          res
+            .contentType(OAS.mimeJSON)
+            .status(200)
+            .json({ cveId: req.body.cveId });
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "cveId " + req.body.cveId + " already exists",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteSingleCve(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await dbIdExists(req.params.cveId, "cve")) {
+          await DDC.run(
+            "DELETE FROM cveVersions WHERE cveId = '" + req.params.cveId + "'"
+          );
+          await DDC.run(
+            "DELETE FROM cvePlatforms WHERE cveId = '" + req.params.cveId + "'"
+          );
+          await DDC.run(
+            "DELETE FROM cve WHERE id = '" + req.params.cveId + "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "cveId " + req.params.cveId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllCve(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let ddRead = await DDC.runAndReadAll("SELECT id FROM cve");
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        for (let idx in ddRows) {
+          resJson.push(ddRows[idx][0]);
+        }
+        resJson.sort();
+        res.contentType(OAS.mimeJSON).status(200).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getSingleCve(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddp = await DDC.prepare("SELECT id FROM cve WHERE id = $1");
+        ddp.bindVarchar(1, req.params.cveId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddp = await DDC.prepare(
+            "SELECT strftime(published,$2),strftime(updated,$3),vendor,uri FROM cve WHERE id = $1"
+          );
+          ddp.bindVarchar(1, req.params.cveId);
+          ddp.bindVarchar(2, pointFormat);
+          ddp.bindVarchar(3, pointFormat);
+          let ddRead = await ddp.runAndReadAll();
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson = {
+              cveId: req.params.cveId,
+              published: ddRows[0][0],
+              vendor: ddRows[0][2],
+              uri: ddRows[0][3],
+              platforms: [],
+              versions: [],
+            };
+            if (ddRows[0][1] != null) {
+              resJson.updated = ddRows[0][1];
+            }
+            ddp = await DDC.prepare(
+              "SELECT platform FROM cvePlatforms WHERE cveId = $1"
+            );
+            ddp.bindVarchar(1, req.params.cveId);
+            ddRead = await ddp.runAndReadAll();
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              for (let idx in ddRows) {
+                resJson.platforms.push(ddRows[idx][0]);
+              }
+            }
+            ddp = await DDC.prepare(
+              "SELECT lessThan,status,version,versionType FROM cveVersions WHERE cveId = $1"
+            );
+            ddp.bindVarchar(1, req.params.cveId);
+            ddRead = await ddp.runAndReadAll();
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              for (let idx in ddRows) {
+                resJson.versions.push({
+                  lessThan: ddRows[idx][0],
+                  status: ddRows[idx][1],
+                  version: ddRows[idx][2],
+                  versionType: ddRows[idx][3],
+                });
+              }
+            }
+            res.contentType(OAS.mimeJSON).status(200).json(resJson);
+          } else {
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "cveId " + req.params.cveId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getAllCables(req, res, next) {
     try {
       let result = validationResult(req);
@@ -6740,7 +6988,12 @@ var run = async () => {
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
           for (let idx in ddRows) {
-            resJson.push({vendor: ddRows[idx][0], model: ddRows[idx][1], image: ddRows[idx][2], version: ddRows[idx][3]});
+            resJson.push({
+              vendor: ddRows[idx][0],
+              model: ddRows[idx][1],
+              image: ddRows[idx][2],
+              version: ddRows[idx][3],
+            });
           }
           resJson.sort();
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -16223,6 +16476,77 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("alerts.*.workflowEngineId").isUUID(4),
     body("alerts.*.flowName").isString().trim(),
     workflowAlertAssign
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getAllCve
+       exposed Route: /mni/v1/alert/cve
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    // security("read:mni_alert"),
+    serveUrlPrefix + serveUrlVersion + "/alert/cve",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllCve
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getSingleCve
+       exposed Route: /mni/v1/alert/cve
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    // security("read:mni_alert"),
+    serveUrlPrefix + serveUrlVersion + "/alert/cve/:cveId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("cveId").matches(OAS.cveId),
+    getSingleCve
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   addSingleCve
+       exposed Route: /mni/v1/alert/cve
+       HTTP method:   POST
+       OpenID Scope:  write:mni_internal
+    */
+  app.post(
+    // security("write:mni_internal"),
+    serveUrlPrefix + serveUrlVersion + "/alert/cve",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("cveId").matches(OAS.cveId),
+    body("published").matches(OAS.datePeriodYearMonthDay),
+    body("updated").optional().matches(OAS.datePeriodYearMonthDay),
+    body("vendor").isString().trim(),
+    body("uri").isString().trim(),
+    body("platforms").isArray({ min: 1 }),
+    body("versions").isArray({ min: 1 }),
+    body("versions.*.lessThan").isString().trim(),
+    body("versions.*.status").isString().trim(),
+    body("versions.*.version").isString().trim(),
+    body("versions.*.versionType").isString().trim(),
+    addSingleCve
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   deleteSingleCve
+       exposed Route: /mni/v1/alert/cve
+       HTTP method:   DELETE
+       OpenID Scope:  read:mni_internal
+    */
+  app.delete(
+    // security("write:mni_internal"),
+    serveUrlPrefix + serveUrlVersion + "/alert/cve/:cveId",
+    param("cveId").matches(OAS.cveId),
+    deleteSingleCve
   );
 
   /*
