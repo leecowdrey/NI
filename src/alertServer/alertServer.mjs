@@ -20,10 +20,8 @@ import dayjs from "dayjs";
 import os from "os";
 import path from "path";
 import fs from "fs";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import simpleGit from "simple-git";
-import { exec } from "node:child_process";
+import { glob } from "glob";
 
 const allPrintableRegEx = /[ -~]/gi;
 
@@ -354,7 +352,7 @@ async function jobCveRepoPull(target) {
           await git.clean("xdf");
           //await git.reset("hard");
           await git.pull("origin", "main");
-          //await jobCveListBuild();
+          await jobCveListBuild(target);
         } catch (e) {
           LOGGER.error(dayjs().format(dayjsFormat), "error", {
             event: "cveRepoPull",
@@ -387,6 +385,220 @@ async function jobCveRepoPull(target) {
       event: "cveRepoPull",
       state: "failed",
       error: e,
+    });
+  }
+}
+
+async function jobCveListBuild(target = cveDirectory) {
+  let neMap = [];
+  try {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let cveFiles = await glob(target + path.sep + "**/CVE-*.json");
+    let url = ENDPOINT + "/nes/vendors";
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (
+            response.status == 200 &&
+            toInteger(response.headers.get("Content-Length")) > 0
+          ) {
+            return response.json();
+          } else if (response.status == 204) {
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(dayjsFormat),
+                "debug",
+                "jobCveListBuild",
+                {
+                  state: "empty",
+                }
+              );
+            }
+          } else {
+            LOGGER.error(
+              dayjs().format(dayjsFormat),
+              "error",
+              "jobCveListBuild",
+              {
+                state: "unknown",
+                status: response.status,
+                statusText: response.statusText,
+              }
+            );
+          }
+        }
+      })
+      .then(async (data) => {
+        if (data != null) {
+          for (let n = 0; n < data.length; n++) {
+            cveFiles.forEach((cveFile) => {
+              let cveId = null;
+              let cvePublished = null;
+              let cveUpdated = null;
+              let cvePlatforms = [];
+              let cveVersions = [];
+              try {
+                fs.readFile(cveFile, "utf-8", function (err, cve) {
+                  if (err) throw err;
+                  if (cve.includes(data[n].vendor)) {
+                    if (cve.includes(data[n].model)) {
+                      try {
+                        let cveObj = JSON.parse(cve);
+                        cveId = cveObj.cveMetadata.cveId;
+                        cvePublished = dayjs(
+                          cveObj.cveMetadata.datePublished
+                        ).format(dayjsFormat);
+                        if (cveObj.cveMetadata?.dateUpdated != null) {
+                          cveUpdated = dayjs(
+                            cveObj.cveMetadata.dateUpdated
+                          ).format(dayjsFormat);
+                        }
+                        if (
+                          cveObj.containers?.cna?.affected[0]?.platforms
+                            .length > 0
+                        ) {
+                          for (
+                            let p = 0;
+                            p <
+                            cveObj.containers.cna.affected[0].platforms.length;
+                            p++
+                          ) {
+                            cvePlatforms.push(
+                              cveObj.containers.cna.affected[0].platforms[p]
+                            );
+                          }
+                        }
+                        if (
+                          cveObj.containers?.cna?.affected[0]?.versions.length >
+                          0
+                        ) {
+                          for (
+                            let v = 0;
+                            v <
+                            cveObj.containers.cna.affected[0].versions.length;
+                            v++
+                          ) {
+                            cveVersions.push(
+                              cveObj.containers.cna.affected[0].versions[v]
+                            );
+                          }
+                        }
+                        try {
+                          fetch(ENDPOINT + "/alert/cve", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": OAS.mimeJSON,
+                              Accept: OAS.mimeJSON,
+                            },
+                            body: JSON.stringify({
+                              cveId: cveId,
+                              published: cvePublished,
+                              vendor: data[n].vendor,
+                              uri: cveFile.replace(target + path.sep, ""),
+                              platforms: cvePlatforms,
+                              versions: cveVersions,
+                            }),
+                          })
+                            .then((response) => {
+                              if (response.ok) {
+                                if (DEBUG) {
+                                  LOGGER.debug(
+                                    dayjs().format(dayjsFormat),
+                                    "debug",
+                                    "jobCveListBuild",
+                                    {
+                                      file: cveFile,
+                                      cveId: cveId,
+                                      published: cvePublished,
+                                      vendor: data[n].vendor,
+                                      model: data[n].model,
+                                      status: response.status,
+                                      statusText: response.statusText,
+                                    }
+                                  );
+                                }
+                              } else {
+                                LOGGER.error(
+                                  dayjs().format(dayjsFormat),
+                                  "error",
+                                  "jobCveListBuild",
+                                  {
+                                    file: cveFile,
+                                    cveId: cveId,
+                                    published: cvePublished,
+                                    vendor: data[n].vendor,
+                                    model: data[n].model,
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                  }
+                                );
+                              }
+                            })
+                            .catch((err) => {
+                              LOGGER.error(
+                                dayjs().format(dayjsFormat),
+                                "error",
+                                "jobCveListBuild",
+                                {
+                                  file: cveFile,
+                                  cveId: cveId,
+                                  published: cvePublished,
+                                  vendor: data[n].vendor,
+                                  model: data[n].model,
+                                  error: err,
+                                }
+                              );
+                            });
+                        } catch (err) {
+                          LOGGER.error(
+                            dayjs().format(dayjsFormat),
+                            "error",
+                            "jobCveListBuild",
+                            {
+                              error: err,
+                            }
+                          );
+                        }
+                      } catch (err) {
+                        // bad JSON
+                        LOGGER.debug(
+                          "cveFile=" + cveFile,
+                          "vendor=" + data[n].vendor,
+                          "model=" + data[n].model,
+                          "bad JSON=" + err
+                        );
+                      }
+                    }
+                  }
+                });
+              } catch (err) {
+                LOGGER.error(
+                  dayjs().format(dayjsFormat),
+                  "error",
+                  "jobCveListBuild",
+                  {
+                    file: cveFile,
+                    vendor: data[n].vendor,
+                    model: data[n].model,
+                    error: err,
+                  }
+                );
+              }
+            });
+          }
+        }
+      });
+  } catch (err) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", "jobCveListBuild", {
+      error: err,
     });
   }
 }
@@ -849,6 +1061,7 @@ var run = async () => {
   });
 
   // cron jobs - cve repository daily pull
+  // jobCveRepoPull will also call jobCveListBuild to narrow the CVE list to known vendors etc.
   if (cveScan) {
     cveRepoCron = cron.schedule(
       cveRepoPullCronTime,

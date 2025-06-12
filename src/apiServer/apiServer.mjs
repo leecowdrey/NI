@@ -4295,7 +4295,7 @@ var run = async () => {
         } else {
           res
             .contentType(OAS.mimeJSON)
-            .status(404)
+            .status(202)
             .json({
               errors: "cveId " + req.body.cveId + " already exists",
             });

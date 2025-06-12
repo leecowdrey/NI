@@ -1162,6 +1162,9 @@
               }
             }
           },
+          "202": {
+            "description": "OK but CVE already existed and was not updated"
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
@@ -19310,7 +19313,7 @@
       "cveId": {
         "description": "external CVE identifier",
         "type": "string",
-        "pattern": "CVE-[0-9]{4}-[0-9]{4}"
+        "pattern": "CVE-[0-9]{4}-[0-9]{4,}"
       },
       "ductId": {
         "description": "internal duct identifier",

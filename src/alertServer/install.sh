@@ -136,8 +136,11 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
   echo "README.md" >> .git/info/sparse-checkout && \
   echo ".gitignore" >> .git/info/sparse-checkout && \
   echo ".gitattributes" >> .git/info/sparse-checkout && \
-  echo "cves/202?/" >> .git/info/sparse-checkout && \
-  echo "cves/203?/" >> .git/info/sparse-checkout && \
+  echo "cves/2025/" >> .git/info/sparse-checkout && \
+  echo "cves/2026/" >> .git/info/sparse-checkout && \
+  echo "cves/2027/" >> .git/info/sparse-checkout && \
+  echo "cves/2028/" >> .git/info/sparse-checkout && \
+  echo "cves/2029/" >> .git/info/sparse-checkout && \
   echo "cves/delta.json" >> .git/info/sparse-checkout && \
   echo "cves/deltaLog.json" >> .git/info/sparse-checkout && \
   git pull origin main &>/dev/null && \
