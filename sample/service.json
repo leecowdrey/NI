@@ -8,6 +8,8 @@
     },
     "commissioned": "20250509",
     "reference": "gbr-worc-cg1-merk-sample-0001",
+    "rate": 1,
+    "unit": "Gbps",
     "lag": {
       "group": "LAG1",
       "members": 2

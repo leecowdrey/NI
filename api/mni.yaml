@@ -3304,6 +3304,20 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                rate:
+                  description: maximum service rate
+                  type: integer
+                  minimum: 0
+                  maximum: 200
+                  default: 0
+                unit:
+                  description: unit of service rate
+                  type: string
+                  enum:
+                  - Mbps
+                  - Gbps
+                  - Tbps
+                  default: Gbps
                 lag:
                   description: Link Aggregation Group for bundling multiple connection points
                   type: object
@@ -3458,6 +3472,18 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                rate:
+                  description: maximum service rate
+                  type: integer
+                  minimum: 0
+                  maximum: 200
+                unit:
+                  description: unit of service rate
+                  type: string
+                  enum:
+                  - Mbps
+                  - Gbps
+                  - Tbps
                 lag:
                   description: Link Aggregation Group for bundling multiple connection points
                   type: object
@@ -3573,6 +3599,20 @@ paths:
                   $ref: "#/components/schemas/date"
                 decommissioned:
                   $ref: "#/components/schemas/date"
+                rate:
+                  description: maximum service rate
+                  type: integer
+                  minimum: 0
+                  maximum: 200
+                  default: 0
+                unit:
+                  description: unit of service rate
+                  type: string
+                  enum:
+                  - Mbps
+                  - Gbps
+                  - Tbps
+                  default: Gbps
                 lag:
                   description: Link Aggregation Group for bundling multiple connection points
                   type: object
@@ -3656,6 +3696,8 @@ paths:
                     name: Bluevia
                     reference: sample
                   commissioned: "20241010"
+                  rate: 1
+                  unit: Gbps
                   lag:
                     group: LAG1
                     members: 2
@@ -3746,6 +3788,20 @@ paths:
                     $ref: "#/components/schemas/date"
                   decommissioned:
                     $ref: "#/components/schemas/date"
+                  rate:
+                    description: maximum service rate
+                    type: integer
+                    minimum: 0
+                    maximum: 200
+                    default: 0
+                  unit:
+                    description: unit of service rate
+                    type: string
+                    enum:
+                    - Mbps
+                    - Gbps
+                    - Tbps
+                    default: Gbps
                   lag:
                     description: Link Aggregation Group for bundling multiple connection points
                     type: object
@@ -3817,6 +3873,8 @@ paths:
                       name: Bluevia
                       reference: sample
                     commissioned: "20241010"
+                    rate: 1
+                    unit: Gbps
                     lag:
                       group: LAG1
                       members: 2

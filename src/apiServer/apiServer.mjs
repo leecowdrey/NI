@@ -10818,7 +10818,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _service (tsId,point,source,serviceId,commissioned) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7))"
+          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -10827,6 +10827,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         ddp.bindVarchar(5, serviceId);
         ddp.bindVarchar(6, req.body.commissioned);
         ddp.bindVarchar(7, dateFormat);
+        ddp.bindInteger(8, req.body.rate);
+        ddp.bindVarchar(9, req.body.unit);
         await ddp.run();
 
         if (req.body.reference != null) {
@@ -11109,7 +11111,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               }
 
               let ddp = await DDC.prepare(
-                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers FROM _service WHERE tsId = $4"
+                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit FROM _service WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -11217,7 +11219,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "') FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
+            "'),rate,unit FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
             datePoint +
             " AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
@@ -11230,6 +11232,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[0][13],
             customer: {},
             commissioned: ddRows[0][9],
+            rate: toInteger(ddRows[0][14]),
+            unit: ddRows[0][15],
             link: { ingress: [], egress: [] },
             source: ddRows[0][5],
             delete: toBoolean(ddRows[0][1]),
@@ -11385,7 +11389,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),tsId FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
+            "'),tsId,rate,unit FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.serviceId);
         let ddRead = await ddp.runAndReadAll();
@@ -11396,6 +11400,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[0][13],
             customer: {},
             commissioned: ddRows[0][9],
+            rate: toInteger(ddRows[0][15]),
+            unit: ddRows[0][16],
             link: { ingress: [], egress: [] },
             source: ddRows[0][5],
             delete: toBoolean(ddRows[0][1]),
@@ -11603,7 +11609,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7))"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -11612,6 +11618,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           ddp.bindVarchar(5, req.params.serviceId);
           ddp.bindVarchar(6, req.body.commissioned);
           ddp.bindVarchar(7, dateFormat);
+          ddp.bindInteger(8, req.body.rate);
+          ddp.bindVarchar(9, req.body.unit);
           await ddp.run();
 
           if (req.body.reference != null) {
@@ -11836,7 +11844,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           dateFormat +
           "'),lagGroup,lagMembers,strftime(point,'" +
           pointFormat +
-          "'),tsId FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
+          "'),tsId,rate,unit FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -11846,6 +11854,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             point: ddRows[idx][13],
             customer: {},
             commissioned: ddRows[idx][9],
+            rate: toInteger(ddRows[idx][15]),
+            unit: ddRows[idx][16],
             link: { ingress: [], egress: [] },
             source: ddRows[idx][5],
             delete: toBoolean(ddRows[idx][1]),
@@ -12088,7 +12098,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7))"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -12097,6 +12107,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           ddp.bindVarchar(5, req.body[i].serviceId);
           ddp.bindVarchar(6, req.body[i].commissioned);
           ddp.bindVarchar(7, dateFormat);
+          ddp.bindInteger(8, req.body[i].rate);
+          ddp.bindVarchar(9, req.body[i].unit);
           await ddp.run();
 
           if (req.body[i].reference != null) {
@@ -19018,6 +19030,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
+    body("unit").default("Gbps").isIn(OAS.cableEthernetConfigurationRate),
     body("lag").optional().isObject(),
     body("lag.group").optional().isString().trim(),
     body("lag.members").optional().isInt(OAS.lag_members),
@@ -19103,6 +19117,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("rate").optional().isInt(OAS.cableConfiguration_ethernet_rate),
+    body("unit").optional().isIn(OAS.cableEthernetConfigurationRate),
     body("lag").optional().isObject(),
     body("lag.group").optional().isString().trim(),
     body("lag.members").optional().isInt(OAS.lag_members),
@@ -19141,6 +19157,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
+    body("unit").default("Gbps").isIn(OAS.cableEthernetConfigurationRate),
     body("lag").optional().isObject(),
     body("lag.group").optional().isString().trim(),
     body("lag.members").optional().isInt(OAS.lag_members),
@@ -19194,6 +19212,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.reference").isString().trim(),
     body("*.commissioned").matches(OAS.datePeriodYearMonthDay),
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("*.rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
+    body("*.unit").default("Gbps").isIn(OAS.cableEthernetConfigurationRate),
     body("*.lag").optional().isObject(),
     body("*.lag.group").optional().isString().trim(),
     body("*.lag.members").optional().isInt(OAS.lag_members),

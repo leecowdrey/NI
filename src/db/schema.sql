@@ -774,6 +774,8 @@ CREATE TABLE IF NOT EXISTS _service (
     customerReference VARCHAR,
     commissioned TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     decommissioned TIMESTAMP,
+    rate INTEGER NOT NULL DEFAULT 0 CHECK (rate >= 0 AND rate <= 200),
+    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     lagGroup VARCHAR,
     lagMembers INTEGER DEFAULT 0 CHECK (lagMembers >= 0 AND lagMembers <= 256),
     FOREIGN KEY (serviceId) REFERENCES service (id)
