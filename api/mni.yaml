@@ -538,7 +538,135 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
-  /alert/cve/{cveId}:
+  /alert/content/{alertContentId}:
+    get:
+      summary: List single alert content details
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getSingleAlertContent
+      parameters:
+      - $ref: "#/components/parameters/alertContentId"
+      tags:
+      - Alerts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alertContentId:
+                    $ref: "#/components/schemas/alertContentId"
+                  alertId:
+                    $ref: "#/components/schemas/alertId"
+                  point:
+                    $ref: "#/components/schemas/dateTime"
+                  content:
+                    type: string
+                    minLength: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: Remove single alert content
+      security:
+      - openId:
+        - write:mni_internal
+      parameters:
+      - $ref: "#/components/parameters/alertContentId"
+      operationId: deleteSingleAlertContent
+      tags:
+      - Alerts
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /alert/content:
+    get:
+      summary: List all alert content
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getAllAlertContent
+      parameters:
+      - $ref: "#/components/parameters/pageSize"
+      - $ref: "#/components/parameters/pageNumber"
+      tags:
+      - Alerts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/alertContentId"
+              examples:
+                sample:
+                  value:
+                  - 312bd231-f52b-41eb-af17-d3caa730c209
+                  - e60f9712-dda3-4537-9538-17e96e87bd0d
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Add single alert content
+      security:
+      - openId:
+        - write:mni_internal
+      operationId: addSingleAlertContent
+      tags:
+      - Alerts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - alertId
+              - content
+              properties:
+                alertId:
+                  $ref: "#/components/schemas/alertId"
+                point:
+                  $ref: "#/components/schemas/dateTime"
+                content:
+                  type: string
+                  minLength: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alertContentId:
+                    $ref: "#/components/schemas/alertContentId"
+              example:
+                alertContentId: e60f9712-dda3-4537-9538-17e96e87bd0d
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /cve/{cveId}:
     get:
       summary: List single CVE details
       security:
@@ -631,7 +759,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
-  /alert/cve:
+  /cve:
     get:
       summary: List all CVE for known vendors
       security:
@@ -13269,6 +13397,10 @@ components:
       description: internal alert identifier
       type: string
       format: uuid
+    alertContentId:
+      description: internal alert content identifier
+      type: string
+      format: uuid
     cveId:
       description: external CVE identifier
       type: string
@@ -13770,6 +13902,14 @@ components:
     alertId:
       name: alertId
       description: internal alert identifier
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    alertContentId:
+      name: alertContentId
+      description: internal alert content identifier
       in: path
       required: true
       schema:

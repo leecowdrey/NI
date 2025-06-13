@@ -1695,14 +1695,14 @@
       "method": "POST"
     },
     {
-      "endpoint": "/mni/v1/alert/cve",
-      "@comment": "getAllCve",
+      "endpoint": "/mni/v1/alert/content",
+      "@comment": "getAllAlertContent",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": ["pageSize", "pageNumber"],
       "backend": [
         {
-          "url_pattern": "/mni/v1/alert/cve",
+          "url_pattern": "/mni/v1/alert/content",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",
@@ -1727,14 +1727,14 @@
       "method": "GET"
     },
     {
-      "endpoint": "/mni/v1/alert/cve/{cveId}",
-      "@comment": "getSingleCve",
+      "endpoint": "/mni/v1/alert/content/{alertContentId}",
+      "@comment": "getSingleAlertContent",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
       "backend": [
         {
-          "url_pattern": "/mni/v1/alert/cve/{cveId}",
+          "url_pattern": "/mni/v1/alert/content/{alertContentId}",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",
@@ -1759,14 +1759,14 @@
       "method": "GET"
     },
     {
-      "endpoint": "/mni/v1/alert/cve/{cveId}",
-      "@comment": "deleteSingleAlert",
+      "endpoint": "/mni/v1/alert/content/{alertContentId}",
+      "@comment": "deleteSingleAlertContent",
       "output_encoding": "no-op",
       "input_headers": [],
       "input_query_strings": [],
       "backend": [
         {
-          "url_pattern": "/mni/v1/alert/cve/{cveId}",
+          "url_pattern": "/mni/v1/alert/content/{alertContentId}",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",
@@ -1791,14 +1791,142 @@
       "method": "DELETE"
     },
     {
-      "endpoint": "/mni/v1/alert/cve",
+      "endpoint": "/mni/v1/alert/content",
+      "@comment": "addSingleAlertContent",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type", "Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/alert/content",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cve",
+      "@comment": "getAllCve",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["pageSize", "pageNumber"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cve",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cve/{cveId}",
+      "@comment": "getSingleCve",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cve/{cveId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cve/{cveId}",
+      "@comment": "deleteSingleAlert",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cve/{cveId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cve",
       "@comment": "addSingleCve",
       "output_encoding": "no-op",
       "input_headers": ["Content-Type", "Accept"],
       "input_query_strings": [],
       "backend": [
         {
-          "url_pattern": "/mni/v1/alert/cve",
+          "url_pattern": "/mni/v1/cve",
           "encoding": "no-op",
           "sd": "dns",
           "sd_scheme": "https",

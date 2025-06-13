@@ -1244,10 +1244,16 @@ async function dbAddPredictQueueItem(resource, id, state) {
   }
 }
 
-async function dbIdExists(id, table) {
+async function dbIdExists(id, table, fieldName = "id") {
   let exists = false;
   let ddi = await DDC.runAndReadAll(
-    "SELECT id FROM " + table + " WHERE id = '" + id + "' LIMIT 1"
+    "SELECT id FROM " +
+      table +
+      " WHERE " +
+      fieldName +
+      " = '" +
+      id +
+      "' LIMIT 1"
   );
   let ddId = ddi.getRows();
   if (ddId.length > 0) {
@@ -4191,6 +4197,147 @@ var run = async () => {
             .status(404)
             .json({
               errors: "alertId " + req.params.alertId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addSingleAlertContent(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let alertContentId = uuidv4();
+        let ddp = await DDC.prepare(
+          "INSERT INTO alertContent (id, point, alertId, content) VALUES ($1,strptime($2,$3),$4,$5)"
+        );
+        ddp.bindVarchar(1, alertContentId);
+        ddp.bindVarchar(2, req.body.point);
+        ddp.bindVarchar(3, pointFormat);
+        ddp.bindVarchar(4, req.body.alertId);
+        ddp.bindVarchar(5, req.body.content);
+        await ddp.run();
+        res
+          .contentType(OAS.mimeJSON)
+          .status(200)
+          .json({ alertContentId: alertContentId });
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteSingleAlertContent(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await dbIdExists(req.params.alertContentId, "alertContent")) {
+          await DDC.run(
+            "DELETE FROM alertContent WHERE id = '" +
+              req.params.alertContentId +
+              "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "alertContentId " +
+                req.params.alertContentId +
+                " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllAlertContent(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let ddRead = await DDC.runAndReadAll("SELECT id FROM alertContent");
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        for (let idx in ddRows) {
+          resJson.push(ddRows[idx][0]);
+        }
+        resJson.sort();
+        res.contentType(OAS.mimeJSON).status(200).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getSingleAlertContent(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddp = await DDC.prepare(
+          "SELECT id FROM alertContent WHERE id = $1"
+        );
+        ddp.bindVarchar(1, req.params.alertContentId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddp = await DDC.prepare(
+            "SELECT strftime(point,$2),alertId,content FROM alertContent WHERE id = $1"
+          );
+          ddp.bindVarchar(1, req.params.alertContentId);
+          ddp.bindVarchar(2, pointFormat);
+          let ddRead = await ddp.runAndReadAll();
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson = {
+              alertContentId: req.params.alertContentId,
+              point: ddRows[0][0],
+              alertId: ddRows[0][1],
+              content: ddRows[0][2],
+            };
+            res.contentType(OAS.mimeJSON).status(200).json(resJson);
+          } else {
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "alertContentId " +
+                req.params.alertContentId +
+                " does not exist",
             });
         }
       } else {
@@ -16480,14 +16627,77 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
   /*
        Tag:           Alerts
-       operationId:   getAllCve
-       exposed Route: /mni/v1/alert/cve
+       operationId:   getAllAlertContent
+       exposed Route: /mni/v1/alert/content
        HTTP method:   GET
        OpenID Scope:  read:mni_alert
     */
   app.get(
     // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert/cve",
+    serveUrlPrefix + serveUrlVersion + "/alert/content",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllAlertContent
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getSingleAlertContent
+       exposed Route: /mni/v1/alert/content
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    // security("read:mni_alert"),
+    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("alertContentId").isUUID(4),
+    getSingleAlertContent
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   addSingleAlertContent
+       exposed Route: /mni/v1/alert/content
+       HTTP method:   POST
+       OpenID Scope:  write:mni_internal
+    */
+  app.post(
+    // security("write:mni_internal"),
+    serveUrlPrefix + serveUrlVersion + "/alert/content",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("alertId").isUUID(4),
+    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("content").isString().trim(),
+    addSingleAlertContent
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   deleteSingleAlertContent
+       exposed Route: /mni/v1/alert/content
+       HTTP method:   DELETE
+       OpenID Scope:  read:mni_internal
+    */
+  app.delete(
+    // security("write:mni_internal"),
+    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+    param("alertContentId").isUUID(4),
+    deleteSingleAlertContent
+  );
+
+  /*
+       Tag:           Alerts
+       operationId:   getAllCve
+       exposed Route: /mni/v1/cve
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    // security("read:mni_alert"),
+    serveUrlPrefix + serveUrlVersion + "/cve",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -16497,13 +16707,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   /*
        Tag:           Alerts
        operationId:   getSingleCve
-       exposed Route: /mni/v1/alert/cve
+       exposed Route: /mni/v1/cve
        HTTP method:   GET
        OpenID Scope:  read:mni_alert
     */
   app.get(
     // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert/cve/:cveId",
+    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cveId").matches(OAS.cveId),
     getSingleCve
@@ -16512,13 +16722,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   /*
        Tag:           Alerts
        operationId:   addSingleCve
-       exposed Route: /mni/v1/alert/cve
+       exposed Route: /mni/v1/cve
        HTTP method:   POST
        OpenID Scope:  write:mni_internal
     */
   app.post(
     // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/alert/cve",
+    serveUrlPrefix + serveUrlVersion + "/cve",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("cveId").matches(OAS.cveId),
@@ -16538,13 +16748,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   /*
        Tag:           Alerts
        operationId:   deleteSingleCve
-       exposed Route: /mni/v1/alert/cve
+       exposed Route: /mni/v1/cve
        HTTP method:   DELETE
        OpenID Scope:  read:mni_internal
     */
   app.delete(
     // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/alert/cve/:cveId",
+    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     param("cveId").matches(OAS.cveId),
     deleteSingleCve
   );
