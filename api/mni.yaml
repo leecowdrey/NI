@@ -3399,6 +3399,8 @@ paths:
                     name: Bluevia
                     reference: sample
                   commissioned: "20241010"
+                  rate: 1
+                  unit: Gbps
                   lag:
                     group: LAG1
                     members: 2
