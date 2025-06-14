@@ -105,7 +105,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        ftdReady = setTimeout(fetchMapRender, retryMs, id,p);
+                        ftdReady = setTimeout(fetchTrenchDistance, retryMs, id,p);
                     }
                 })
                 .then((data) => {
@@ -116,7 +116,7 @@
                     }
                 })
                 .catch((e) => {
-                    ftdReady = setTimeout(fetchMapRender, retryMs, id,p);
+                    ftdReady = setTimeout(fetchTrenchDistance, retryMs, id,p);
                 });
 
         }
@@ -135,7 +135,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        fltReady = setTimeout(fetchMapRender, retryMs);
+                        fltReady = setTimeout(fetchListTrench, retryMs);
                     }
                 })
                 .then((data) => {
@@ -147,7 +147,7 @@
                     document.getElementById("trenchDistance").setAttribute("value", "");
                 })
                 .catch((e) => {
-                    fltReady = setTimeout(fetchMapRender, retryMs);
+                    fltReady = setTimeout(fetchListTrench, retryMs);
                 });
 
         }

@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="img/icon.png">
     <style>
         .panel {
-            width: 30%;
+            width: 45%;
             height: 40%;
             border-radius: 10px;
             background-color: #b3b3b3;
@@ -23,6 +23,26 @@
             margin-top: 20px;
             margin-left: 20px;
             display: inline-block;
+        }
+
+        a:link {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        a:active {
+            color: white;
+            text-decoration: underline;
         }
 
         .rack-panel {
@@ -42,17 +62,19 @@
         }
 
         .slotFree {
-            border: 1px solid black;
-            background-color: white;
+            border: 1px solid white;
+            background-color: green;
+            font-family: monospace, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
-            color: black;
+            color: white;
         }
 
         .slotUsed {
-            border: 1px solid black;
+            border: 1px solid white;
             background-color: black;
+            font-family: monospace, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
@@ -60,23 +82,36 @@
         }
 
         .slotReserved {
-            border: 1px solid black;
-            background-color: darkgray;
+            border: 1px solid white;
+            background-color: #808080;
+            font-family: monospace, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
-            color: black;
+            color: white;
+        }
+
+        .slotFaulty {
+            border: 1px solid white;
+            background-color: red;
+            font-family: monospace, monospace;
+            text-align: left;
+            font-size: 0.50em;
+            text-indent: 1em;
+            color: white;
         }
 
         .slotPredicted {
-            border: 1px solid black;
-            background: repeating-linear-gradient(135deg, #000000 0, #000000 10%, transparent 0, transparent 50%);
+            border: 1px solid white;
+            background-color: black;
+            font-family: monospace, monospace;
+            background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
-            color: black;
+            color: white;
         }
     </style>
     <script async src="/mni/js/mni.js"></script>
@@ -103,7 +138,7 @@
             title="Services"><i class="fa fa-tty"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rackLifetime');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
@@ -127,41 +162,176 @@
             <a accesskey="@" nohref onclick="fetchListRack();" onmouseover="" title="refresh"
                 style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
             <label for="rackPoint">Point</label>
-            <select id="rackPoint" onchange="if(this.selectedIndex !== undefined) fetchRackProps();"></select>
+            <select id="rackPoint" onchange="if(this.selectedIndex !== undefined) fetchRack();"></select>
         </div>
     </div>
-    <div class="rack-panel" id="rackPanel"><div class="grid" id="rackGrid"></div></div>
+    <div class="rack-panel" id="rackPanel">
+        <div class="grid" id="rackGrid"></div>
+    </div>
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>
     <script>
-        var maxSlots = 42;
-        const grid = document.querySelector(".grid");
-        grid.style.setProperty("--max-rack-slots", maxSlots);
-        for (let j = 0; j < maxSlots; j++) {
-            let cell = document.createElement("div");
-            cell.setAttribute("class", "slotFree");
-            cell.setAttribute("id", "slot" + (maxSlots - j));
-            if (j > Math.floor(maxSlots / 2)) {
-                if (j % 2 == 0) {
-                    cell.setAttribute("class", "slotUsed");
-                    cell.setAttribute("title", maxSlots - j + ": used");
-                } else {
-                    cell.setAttribute("class", "slotReserved");
-                    cell.setAttribute("title", maxSlots - j + ": reserved");
-                }
-            } else {
-                if (j == 41) {
-                    cell.setAttribute("class", "slotPredicted");
-                    cell.setAttribute("title", maxSlots - j + ": predicted");
-                } else {
-                    cell.setAttribute("class", "slotFree");
-                    cell.setAttribute("title", maxSlots - j + ": free");
-                }
+        let flrReady = null;
+        let frpReady = null;
+        let frReady = null;
+        let retryMs = 5000;
+        let rackId = null;
+        let point = null;
+        function fetchListRack() {
+            if (flrReady != null) {
+                clearTimeout(flrReady);
             }
-            cell.classList.add("cell");
-            grid.appendChild(cell);
-            document.getElementById("slot" + (maxSlots - j)).innerHTML = (maxSlots - j);
+            fetch("<%=payload.gatewayUrl%>/rack", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        flrReady = setTimeout(fetchListRack, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let rackIds = "<option disabled value='-1' selected='selected'> -- select a rack -- </option>";
+                    for (var i = 0; i < data.length; i++) {
+                        rackIds += "<option value='" + data[i] + "' >" + data[i] + "</option>"
+                    }
+                    document.getElementById("rackId").innerHTML = rackIds;
+                })
+                .catch((e) => {
+                    console.error(e);
+                    flrReady = setTimeout(fetchListRack, retryMs);
+                });
+        }
+        function fetchRack() {
+            if (frReady != null) {
+                clearTimeout(flrReady);
+            }
+            let r = document.getElementById("rackId");
+            rackId = r.options[r.selectedIndex].value;
+            let p = document.getElementById("rackPoint");
+            point = p.options[p.selectedIndex].value;
+            let grid = document.querySelector(".grid");
+            while (grid.firstChild) {
+                grid.removeChild(grid.firstChild)
+            }
+            fetch("<%=payload.gatewayUrl%>/rack/" + rackId + "?point=" + point, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        flrReady = setTimeout(fetchRack, retryMs);
+                    }
+                })
+                .then((data) => {
+                    let rackSlotsTotal = data.slots.total;
+                    let rackSlotsFree = data.slots.free;
+                    let rackSlotsUsed = data.slots.used;
+                    let rackSlotsReserved = data.slots.reserved;
+                    let rackSlotsFaulty = data.slots.faulty;
+                    let rackReference = data.reference;
+                    let rackSiteId = data.siteId;
+                    let rackHeight = data.dimensions.height;
+                    let rackDepth = data.dimensions.depth;
+                    let rackWidth = data.dimensions.width;
+                    let rackUnit = data.dimensions.unit;
+                    let rackFloor = data.floor;
+                    let rackArea = data.area;
+                    let rackRow = data.row;
+                    let rackColumn = data.column;
+                    let rackCoordinateX = data.coordinate.x;
+                    let rackCoordinateY = data.coordinate.y;
+                    let rackCoordinateM = data.coordinate.m;
+                    let rackCommissioned = data.commissioned;
+                    let slotUsageTypes = ["free", "used", "reserved", "faulty", "predicted"];
+                    grid.style.setProperty("--max-rack-slots", rackSlotsTotal);
+                    for (let j = 0; j < rackSlotsTotal; j++) {
+                        let slotUsage = slotUsageTypes[Math.floor(Math.random() * slotUsageTypes.length)];
+                        let cell = document.createElement("div");
+                        cell.setAttribute("id", "slot" + (rackSlotsTotal - j));
+                        cell.setAttribute("title", rackSlotsTotal - j + ": " + slotUsage);
+                        switch (slotUsage) {
+                            case "free":
+                                cell.setAttribute("class", "slotFree");
+                                break;
+                            case "used":
+                                cell.setAttribute("class", "slotUsed");
+                                break;
+                            case "reserved":
+                                cell.setAttribute("class", "slotReserved");
+                                break;
+                            case "faulty":
+                                cell.setAttribute("class", "slotFaulty");
+                                break;
+                            case "predicted":
+                                cell.setAttribute("class", "slotPredicted");
+                                break;
+                        }
+                        cell.classList.add("cell");
+                        grid.appendChild(cell);
+                        let cellHTML = "";
+                        switch (slotUsage) {
+                            case "used":
+                                cellHTML = '<a href="about:blank" target="_blank" rel="noopener noreferrer">'+(rackSlotsTotal - j)+'</a>';
+                                break;
+                            default:
+                                cellHTML = (rackSlotsTotal - j);
+                        }
+                        document.getElementById("slot" + (rackSlotsTotal - j)).innerHTML = cellHTML;
+                    }
+                })
+                .catch((e) => {
+                    console.error(e);
+                    frReady = setTimeout(fetchRack, retryMs);
+                });
+        }
+        function fetchRackPoints() {
+            if (frpReady != null) {
+                clearTimeout(frpReady);
+            }
+            let r = document.getElementById("rackId");
+            rackId = r.options[r.selectedIndex].value;
+            if (rackId != "-1") {
+                fetch("<%=payload.gatewayUrl%>/rack/timeline/" + rackId, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            frpReady = setTimeout(fetchRackPoints, retryMs);
+                        }
+                    })
+                    .then((data) => {
+                        let rackPoints = "<option disabled value='-1' selected='selected'> -- select a date/time -- </option>";
+                        for (var i = 0; i < data.length; i++) {
+                            rackPoints += "<option value='" + data[i].point + "' >" + data[i].point + "</option>"
+                        }
+                        document.getElementById("rackPoint").innerHTML = rackPoints;
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                        frpReady = setTimeout(fetchRackPoints, retryMs);
+                    });
+            }
+        }
+        try {
+            fetchListRack();
+        } catch (e) {
+            console.error(e);
+            flrReady = setTimeout(fetchListRack, retryMs);
         }
     </script>
 </body>

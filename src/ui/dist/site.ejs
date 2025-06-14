@@ -55,7 +55,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        fltReady = setTimeout(fetchMapRender, retryMs);
+                        fltReady = setTimeout(fetchListSites, retryMs);
                     }
                 })
                 .then((data) => {
@@ -68,7 +68,7 @@
                     document.getElementById("siteType").setAttribute("value", "");
                 })
                 .catch((e) => {
-                    fltReady = setTimeout(fetchMapRender, retryMs);
+                    fltReady = setTimeout(fetchListSites, retryMs);
                 });
 
         }
