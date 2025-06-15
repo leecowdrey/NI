@@ -8701,9 +8701,8 @@
                         "format": "uuid"
                       },
                       "slotPosition": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "maximum": 58
+                        "type": "string",
+                        "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                       },
                       "mgmtIP": {
                         "type": "string",
@@ -8767,7 +8766,7 @@
                         "commissioned": "20241010",
                         "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                         "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
-                        "slotPosition": 1,
+                        "slotPosition": "1,2",
                         "mgmtIP": "10.23.72.4",
                         "vendor": "Juniper",
                         "model": "MX240",
@@ -9020,9 +9019,8 @@
                       "format": "uuid"
                     },
                     "slotPosition": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 58
+                      "type": "string",
+                      "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                     },
                     "mgmtIP": {
                       "type": "string",
@@ -9092,7 +9090,7 @@
                       "commissioned": "20241010",
                       "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                       "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
-                      "slotPosition": 1,
+                      "slotPosition": "1",
                       "mgmtIP": "10.23.72.4",
                       "vendor": "Juniper",
                       "model": "MX240",
@@ -9564,9 +9562,8 @@
                     "format": "uuid"
                   },
                   "slotPosition": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 58
+                    "type": "string",
+                    "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                   },
                   "mgmtIP": {
                     "type": "string",
@@ -9635,7 +9632,7 @@
                     "commissioned": "20241010",
                     "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                     "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
-                    "slotPosition": 1,
+                    "slotPosition": "2,3",
                     "mgmtIP": "10.23.72.4",
                     "vendor": "Juniper",
                     "model": "MX240",
@@ -9937,9 +9934,8 @@
                       "format": "uuid"
                     },
                     "slotPosition": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 58
+                      "type": "string",
+                      "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                     },
                     "mgmtIP": {
                       "type": "string",
@@ -10009,7 +10005,7 @@
                       "commissioned": "20241010",
                       "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                       "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
-                      "slotPosition": 1,
+                      "slotPosition": "1",
                       "mgmtIP": "10.23.72.4",
                       "vendor": "Juniper",
                       "model": "MX240",
@@ -10252,9 +10248,8 @@
                     "format": "uuid"
                   },
                   "slotPosition": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 58
+                    "type": "string",
+                    "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                   },
                   "mgmtIP": {
                     "type": "string",
@@ -10323,7 +10318,7 @@
                     "commissioned": "20241010",
                     "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                     "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
-                    "slotPosition": 1,
+                    "slotPosition": "2,3",
                     "mgmtIP": "10.23.72.4",
                     "vendor": "Juniper",
                     "model": "MX240",
@@ -10557,9 +10552,8 @@
                     "format": "uuid"
                   },
                   "slotPosition": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 58
+                    "type": "string",
+                    "pattern": "([1-9]|[1-4][0-9]|5[0-8])"
                   },
                   "mgmtIP": {
                     "type": "string",

@@ -694,7 +694,7 @@ CREATE TABLE IF NOT EXISTS _ne (
     decommissioned TIMESTAMP,
     siteId VARCHAR NOT NULL,
     rackId VARCHAR NOT NULL,
-    slotPosition INTEGER NOT NULL CHECK (slotPosition >= 1 AND slotPosition <= 50),
+    slotPosition VARCHAR NOT NULL CHECK (regexp_full_match(slotPosition,'([1-9]|[1-4][0-9]|5[0-8])')),
     FOREIGN KEY (neId) REFERENCES ne (id),
     FOREIGN KEY (siteId) REFERENCES site (id),
     FOREIGN KEY (rackId) REFERENCES rack (id)

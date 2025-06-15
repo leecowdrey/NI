@@ -7250,7 +7250,6 @@ var run = async () => {
       ddp.bindVarchar(3, neId);
       await ddp.run();
     }
-
     let ddp = await DDC.prepare(
       "INSERT INTO _ne (tsId,point,neId,source,host,mgmtIP,vendor,model,image,version,commissioned,siteId,rackid,slotPosition) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,strptime($12,$13),$14,$15,$16)"
     );
@@ -7269,7 +7268,7 @@ var run = async () => {
     ddp.bindVarchar(13, dateFormat);
     ddp.bindVarchar(14, body.siteId);
     ddp.bindVarchar(15, body.rackId);
-    ddp.bindInteger(16, toInteger(body.slotPosition));
+    ddp.bindInteger(16, body.slotPosition);
     await ddp.run();
 
     if (body.decommissioned != null) {
@@ -7868,7 +7867,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         commissioned: ddRows[0][14],
         siteId: ddRows[0][16],
         rackId: ddRows[0][17],
-        slotPosition: toInteger(ddRows[0][18]),
+        slotPosition: ddRows[0][18],
         mgmtIP: ddRows[0][9],
         vendor: ddRows[0][10],
         model: ddRows[0][11],
@@ -17391,7 +17390,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
     body("rackId").isUUID(4),
-    body("slotPosition").isInt(OAS.rackSlots),
+    body("slotPosition").matches(OAS.rackSlotPosition),
     body("mgmtIP").isIP(),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
@@ -17570,7 +17569,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").optional().isUUID(4),
     body("rackId").optional().isUUID(4),
-    body("slotPosition").optional().isInt(OAS.rackSlots),
+    body("slotPosition").optional().matches(OAS.rackSlotPosition),
     body("mgmtIP").optional().isIP(),
     body("vendor").optional().isString().trim(),
     body("model").optional().isString().trim(),
@@ -17701,7 +17700,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
     body("rackId").isUUID(4),
-    body("slotPosition").isInt(OAS.rackSlots),
+    body("slotPosition").matches(OAS.rackSlotPosition),
     body("mgmtIP").isIP(),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
@@ -17843,7 +17842,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("*.siteId").isUUID(4),
     body("*.rackId").isUUID(4),
-    body("*.slotPosition").isInt({ min: 1, max: 58 }),
+    body("*.slotPosition").matches(OAS.rackSlotPosition),
     body("*.mgmtIP").isIP(),
     body("*.vendor").isString().trim(),
     body("*.model").isString().trim(),

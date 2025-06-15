@@ -159,11 +159,7 @@
                     }
                 })
                 .then((data) => {
-                    let rackSlotsTotal = data.slots.total;
-                    let rackSlotsFree = data.slots.free;
-                    let rackSlotsUsed = data.slots.used;
-                    let rackSlotsReserved = data.slots.reserved;
-                    let rackSlotsFaulty = data.slots.faulty;
+                    let rackSlots = data.slots;
                     let rackReference = data.reference;
                     let rackSiteId = data.siteId;
                     let rackHeight = data.dimensions.height;
@@ -179,12 +175,12 @@
                     let rackCoordinateM = data.coordinate.m;
                     let rackCommissioned = data.commissioned;
                     let slotUsageTypes = ["free", "used", "reserved", "faulty", "predicted"];
-                    grid.style.setProperty("--max-rack-slots", rackSlotsTotal);
-                    for (let j = 0; j < rackSlotsTotal; j++) {
+                    grid.style.setProperty("--max-rack-slots", rackSlots);
+                    for (let j = 0; j < rackSlots; j++) {
                         let slotUsage = slotUsageTypes[Math.floor(Math.random() * slotUsageTypes.length)];
                         let cell = document.createElement("div");
-                        cell.setAttribute("id", "slot" + (rackSlotsTotal - j));
-                        cell.setAttribute("title", rackSlotsTotal - j + ": " + slotUsage);
+                        cell.setAttribute("id", "slot" + (rackSlots - j));
+                        cell.setAttribute("title", rackSlots - j + ": " + slotUsage);
                         switch (slotUsage) {
                             case "free":
                                 cell.setAttribute("class", "slotFree");
@@ -207,12 +203,12 @@
                         let cellHTML = "";
                         switch (slotUsage) {
                             case "used":
-                                cellHTML = '&emsp;<a href="<%=payload.rootUrl%>/ne/{neId}" target="_blank" rel="noopener noreferrer">'+(rackSlotsTotal - j)+'</a>&emsp;{neRef}';
+                                cellHTML = '&emsp;<a href="<%=payload.rootUrl%>/ne/{neId}" target="_blank" rel="noopener noreferrer">'+(rackSlots - j)+'</a>&emsp;{neRef}';
                                 break;
                             default:
-                                cellHTML = '&emsp;'+(rackSlotsTotal - j)+'&emsp;';
+                                cellHTML = '&emsp;'+(rackSlots - j)+'&emsp;';
                         }
-                        document.getElementById("slot" + (rackSlotsTotal - j)).innerHTML = cellHTML;
+                        document.getElementById("slot" + (rackSlots - j)).innerHTML = cellHTML;
                     }
                 })
                 .catch((e) => {
