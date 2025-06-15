@@ -106,7 +106,7 @@
 		"commissioned": "20250508",
 		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
 		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
-		"slotPosition": 1,
+		"slotPosition": 3,
 		"mgmtIP": "10.23.72.1",
 		"vendor": "Juniper Networks",
 		"model": "MX240",

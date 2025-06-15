@@ -652,7 +652,7 @@ export const portXdslConfiguration = [
 export const portXdslConfigurationRate = ["Mbps"];
 export const premisesPassed = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const rackSlots = { min: 1, max: 58 };
-export const rackSlots_u = { min: 0, max: 58 };
+export const rackSlotState = ["free", "used", "reserved", "faulty"];
 export const ribbons = { min: 1, max: 36 };
 export const siteType = [
   "street",

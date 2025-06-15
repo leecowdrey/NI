@@ -85,6 +85,7 @@ CREATE TYPE predictResourceType AS ENUM ('cable','duct','ne','pole','rack','serv
 CREATE TYPE predictResourceStateType AS ENUM ('create','delete','update','undelete','read');
 CREATE TYPE siteType AS ENUM ('street','exchange','pop','dc','colo','unclassified');
 CREATE TYPE sizeUnit AS ENUM ('cm','mm','m','inch','feet');
+CREATE TYPE slotState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE source AS ENUM ('historical','predicted');
 CREATE TYPE trenchPurpose AS ENUM ('service/drop','link','backhaul','unclassified');
 CREATE TYPE trenchState AS ENUM ('free','used','reserved','faulty');
@@ -114,6 +115,7 @@ CREATE SEQUENCE IF NOT EXISTS seq_nePortXdsl;
 CREATE SEQUENCE IF NOT EXISTS seq_pole;
 CREATE SEQUENCE IF NOT EXISTS seq_predictQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_rack;
+CREATE SEQUENCE IF NOT EXISTS seq_rackSlot;
 CREATE SEQUENCE IF NOT EXISTS seq_service;
 CREATE SEQUENCE IF NOT EXISTS seq_serviceEgress;
 CREATE SEQUENCE IF NOT EXISTS seq_serviceIngress;
@@ -367,6 +369,15 @@ CREATE TABLE IF NOT EXISTS rack (
     historicalTsId INTEGER,
     predictedTsId INTEGER,
     geometry GEOMETRY
+);
+CREATE TABLE IF NOT EXISTS rackSlot (
+    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
+    delete BOOLEAN NOT NULL DEFAULT false,
+    tsPoint TIMESTAMP,
+    rackId VARCHAR NOT NULL,
+    historicalTsId INTEGER,
+    predictedTsId INTEGER,
+    FOREIGN KEY (rackId) REFERENCES rack (id)
 );
 CREATE TABLE IF NOT EXISTS ne (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
@@ -647,13 +658,23 @@ CREATE TABLE IF NOT EXISTS _rack (
     height DECIMAL(6,2) NOT NULL DEFAULT 2000 CHECK (height >= 0),
     width DECIMAL(6,2) NOT NULL DEFAULT 600 CHECK (width >= 0),
     unit sizeUnit NOT NULL DEFAULT 'mm',
-    slotsTotal INTEGER NOT NULL DEFAULT 42 CHECK (slotsTotal >= 1 AND slotsTotal <= 50),
-    slotsFree INTEGER NOT NULL DEFAULT 42 CHECK (slotsFree >= 0 AND slotsFree <= slotsTotal),
-    slotsUsed INTEGER NOT NULL DEFAULT 0 CHECK (slotsUsed >= 0 AND slotsUsed <= slotsTotal),
-    slotsReserved INTEGER NOT NULL DEFAULT 0 CHECK (slotsReserved >= 0 AND slotsReserved <= slotsTotal),
-    slotsFaulty INTEGER NOT NULL DEFAULT 0 CHECK (slotsFaulty >= 0 AND slotsFaulty <= slotsTotal),
+    slots INTEGER NOT NULL DEFAULT 42 CHECK (slotsTotal >= 1 AND slotsTotal <= 58),
     FOREIGN KEY (rackId) REFERENCES rack (id),
     FOREIGN KEY (siteId) REFERENCES site (id)
+);
+
+CREATE TABLE IF NOT EXISTS _rackSlot (
+    tsId INTEGER NOT NULL DEFAULT nextval('seq_rackSlot') PRIMARY KEY,
+    point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
+    source source NOT NULL DEFAULT 'historical',
+    rackSlotId VARCHAR NOT NULL,
+    rackId VARCHAR NOT NULL,
+    slot INTEGER NOT NULL CHECK (slotsTotal >= 1 AND slotsTotal <= 58), 
+    state slotState DEFAULT 'free',
+    neId VARCHAR,
+    FOREIGN KEY (rackSlotId) REFERENCES rackSlot (id),
+    FOREIGN KEY (rackId) REFERENCES rack (id),
+    FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
 ---

@@ -207,10 +207,10 @@
                         let cellHTML = "";
                         switch (slotUsage) {
                             case "used":
-                                cellHTML = '<a href="about:blank" target="_blank" rel="noopener noreferrer">'+(rackSlotsTotal - j)+'</a>';
+                                cellHTML = '&emsp;<a href="<%=payload.rootUrl%>/ne/{neId}" target="_blank" rel="noopener noreferrer">'+(rackSlotsTotal - j)+'</a>&emsp;{neRef}';
                                 break;
                             default:
-                                cellHTML = (rackSlotsTotal - j);
+                                cellHTML = '&emsp;'+(rackSlotsTotal - j)+'&emsp;';
                         }
                         document.getElementById("slot" + (rackSlotsTotal - j)).innerHTML = cellHTML;
                     }

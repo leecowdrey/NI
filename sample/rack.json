@@ -16,13 +16,16 @@
 			"width": 1200,
 			"unit": "mm"
 		},
-		"slots": {
-			"total": 24,
-			"free": 23,
-			"used": 1,
-			"reserved": 0,
-			"faulty": 0
-		},
+		"slots": 24,
+		"slotUsage": [
+			{"slot": 1, "usage": "reserved"},
+			{"slot": 2, "usage": "used"},
+			{"slot": 3, "usage": "used"},
+			{"slot": 12, "usage": "used"},
+			{"slot": 13, "usage": "used"},
+			{"slot": 23, "usage": "faulty"},
+			{"slot": 24, "usage": "reserved"}
+		],
 		"source": "historical",
 		"delete": false,
 		"floor": 0,
@@ -47,13 +50,22 @@
 			"width": 1200,
 			"unit": "mm"
 		},
-		"slots": {
-			"total": 24,
-			"free": 0,
-			"used": 0,
-			"reserved": 0,
-			"faulty": 0
-		},
+		"slots": 42,
+		"slotUsage": [
+			{"slot": 1, "usage": "reserved"},
+			{"slot": 2, "usage": "used"},
+			{"slot": 3, "usage": "used"},
+			{"slot": 4, "usage": "used"},
+			{"slot": 5, "usage": "used"},
+			{"slot": 6, "usage": "used"},
+			{"slot": 7, "usage": "used"},
+			{"slot": 8, "usage": "used"},
+			{"slot": 9, "usage": "used"},
+			{"slot": 10, "usage": "used"},
+			{"slot": 11, "usage": "used"},
+			{"slot": 41, "usage": "faulty"},
+			{"slot": 42, "usage": "reserved"}
+		],
 		"source": "historical",
 		"delete": false,
 		"floor": 0,

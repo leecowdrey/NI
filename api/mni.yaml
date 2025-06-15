@@ -704,13 +704,13 @@ paths:
                   versions:
                     type: array
                     minItems: 1
-                    required:
-                    - lessThan
-                    - status
-                    - version
-                    - type
                     items:
                       type: object
+                      required:
+                      - lessThan
+                      - status
+                      - version
+                      - type
                       properties:
                         lessThan:
                           type: string
@@ -5010,6 +5010,19 @@ paths:
                   $ref: "#/components/schemas/dimensions"
                 slots:
                   $ref: "#/components/schemas/rackSlots"
+                slotUsage:
+                  description: slot usage is considered free unless indicated otherwise
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - slot
+                    - usage
+                    properties:
+                      slot:
+                        $ref: "#/components/schemas/rackSlots"
+                      usage:
+                        $ref: "#/components/schemas/slotState"
                 point:
                   $ref: "#/components/schemas/dateTime"
                 source:
@@ -5035,12 +5048,12 @@ paths:
                     height: 2000
                     width: 600
                     unit: mm
-                  slots:
-                    total: 42
-                    free: 42
-                    used: 0
-                    reserved: 0
-                    faulty: 0
+                  slots: 42
+                  slotUsage:
+                  - slot: 1
+                    usage: reserved
+                  - slot: 2
+                    usage: used
                   source: historical
                   delete: false
       responses:
@@ -5107,6 +5120,19 @@ paths:
                   $ref: "#/components/schemas/dimensions"
                 slots:
                   $ref: "#/components/schemas/rackSlots"
+                slotUsage:
+                  description: slot usage is considered free unless indicated otherwise
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - slot
+                    - usage
+                    properties:
+                      slot:
+                        $ref: "#/components/schemas/rackSlots"
+                      usage:
+                        $ref: "#/components/schemas/slotState"
                 point:
                   $ref: "#/components/schemas/dateTime"
                 source:
@@ -5116,12 +5142,9 @@ paths:
             examples:
               single:
                 value:
-                  slots:
-                    total: 42
-                    free: 38
-                    used: 4
-                    reserved: 0
-                    faulty: 0
+                  slotUsage:
+                  - slot: 3
+                    usage: used
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
@@ -5178,6 +5201,19 @@ paths:
                   $ref: "#/components/schemas/dimensions"
                 slots:
                   $ref: "#/components/schemas/rackSlots"
+                slotUsage:
+                  description: slot usage is considered free unless indicated otherwise
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - slot
+                    - usage
+                    properties:
+                      slot:
+                        $ref: "#/components/schemas/rackSlots"
+                      usage:
+                        $ref: "#/components/schemas/slotState"
                 point:
                   $ref: "#/components/schemas/dateTime"
                 source:
@@ -5203,12 +5239,14 @@ paths:
                     height: 2000
                     width: 600
                     unit: mm
-                  slots:
-                    total: 42
-                    free: 38
-                    used: 4
-                    reserved: 0
-                    faulty: 0
+                  slots: 42
+                  slotUsage:
+                  - slot: 1
+                    usage: reserved
+                  - slot: 2
+                    usage: used
+                  - slot: 3
+                    usage: used
                   source: historical
                   delete: false
       responses:
@@ -5288,6 +5326,19 @@ paths:
                     $ref: "#/components/schemas/dimensions"
                   slots:
                     $ref: "#/components/schemas/rackSlots"
+                  slotUsage:
+                    description: slot usage is considered free unless indicated otherwise
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - slot
+                      - usage
+                      properties:
+                        slot:
+                          $ref: "#/components/schemas/rackSlots"
+                        usage:
+                          $ref: "#/components/schemas/slotState"
                   point:
                     $ref: "#/components/schemas/dateTime"
                   source:
@@ -5314,12 +5365,92 @@ paths:
                       height: 2000
                       width: 600
                       unit: mm
-                    slots:
-                      total: 42
-                      free: 42
-                      used: 0
-                      reserved: 0
-                      faulty: 0
+                    slots: 42
+                    slotUsage:
+                    - slot: 1
+                      usage: reserved
+                    - slot: 2
+                      usage: used
+                    - slot: 3
+                      usage: used
+                    - slot: 4
+                      usage: free
+                    - slot: 5
+                      usage: free
+                    - slot: 6
+                      usage: free
+                    - slot: 7
+                      usage: free
+                    - slot: 8
+                      usage: free
+                    - slot: 9
+                      usage: free
+                    - slot: 10
+                      usage: free
+                    - slot: 11
+                      usage: free
+                    - slot: 12
+                      usage: free
+                    - slot: 13
+                      usage: free
+                    - slot: 14
+                      usage: free
+                    - slot: 15
+                      usage: free
+                    - slot: 16
+                      usage: free
+                    - slot: 17
+                      usage: free
+                    - slot: 18
+                      usage: free
+                    - slot: 19
+                      usage: free
+                    - slot: 20
+                      usage: free
+                    - slot: 21
+                      usage: free
+                    - slot: 22
+                      usage: free
+                    - slot: 23
+                      usage: free
+                    - slot: 24
+                      usage: free
+                    - slot: 25
+                      usage: free
+                    - slot: 26
+                      usage: free
+                    - slot: 27
+                      usage: free
+                    - slot: 28
+                      usage: free
+                    - slot: 29
+                      usage: free
+                    - slot: 30
+                      usage: free
+                    - slot: 31
+                      usage: free
+                    - slot: 32
+                      usage: free
+                    - slot: 33
+                      usage: free
+                    - slot: 34
+                      usage: free
+                    - slot: 35
+                      usage: free
+                    - slot: 36
+                      usage: free
+                    - slot: 37
+                      usage: free
+                    - slot: 38
+                      usage: free
+                    - slot: 39
+                      usage: free
+                    - slot: 40
+                      usage: free
+                    - slot: 41
+                      usage: free
+                    - slot: 42
+                      usage: free
                     source: historical
                     delete: false
         "400":
@@ -13419,40 +13550,19 @@ components:
       - unclassified
     rackSlots:
       description: |
-        quantity and availability of slots (slot = 1U) in specified rack
-      type: object
-      required:
-      - total
+        number of physical slots in the rack, 1=1U, 42=42U etc.
+      type: integer
+      minimum: 1
+      maximum: 58
+      default: 42
+    slotState:
+      description: usage of specific rack slot
+      type: string
+      enum:
       - free
       - used
       - reserved
       - faulty
-      properties:
-        total:
-          type: integer
-          minimum: 1
-          maximum: 58
-          default: 42
-        free:
-          type: integer
-          minimum: 0
-          maximum: 58
-          default: 42
-        used:
-          type: integer
-          minimum: 0
-          maximum: 58
-          default: 0
-        reserved:
-          type: integer
-          minimum: 0
-          maximum: 58
-          default: 0
-        faulty:
-          type: integer
-          minimum: 0
-          maximum: 58
-          default: 0
     alertId:
       description: internal alert identifier
       type: string

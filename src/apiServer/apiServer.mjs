@@ -9578,95 +9578,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               });
           }
         }
-        if (req.body.slots.free != null) {
-          if (
-            toInteger(req.body.slots.free) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots free " +
-                  req.body.slots.free +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.used != null) {
-          if (
-            toInteger(req.body.slots.used) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots used " +
-                  req.body.slots.used +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.reserved != null) {
-          if (
-            toInteger(req.body.slots.reserved) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots reserved " +
-                  req.body.slots.reserved +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.faulty != null) {
-          if (
-            toInteger(req.body.slots.faulty) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots faulty " +
-                  req.body.slots.faulty +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        let slotsConsumed =
-          toInteger(req.body.slots.free) +
-          toInteger(req.body.slots.used) +
-          toInteger(req.body.slots.reserved) +
-          toInteger(req.body.slots.faulty);
-        if (slotsConsumed > toInteger(req.body.slots.total)) {
-          return res
-            .contentType(OAS.mimeJSON)
-            .status(404)
-            .json({
-              errors:
-                "slots consumed (free,used,reserved,faulty) " +
-                slotsConsumed +
-                " can not be greater than total slots " +
-                req.body.slots.total,
-            });
-        }
-        let slotsFree =
-          toInteger(req.body.slots.total) -
-          (toInteger(req.body.slots.used) +
-            toInteger(req.body.slots.reserved) +
-            toInteger(req.body.slots.faulty));
-        if (slotsFree > toInteger(req.body.slots.free)) {
-          req.body.slots.free = slotsFree;
-        }
 
         let rackId = uuidv4();
         let tsId = await getSeqNextValue("seq_rack");
@@ -9696,7 +9607,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+          "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -9723,11 +9634,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         ddp.bindFloat(14, toDecimal(req.body.dimensions.height));
         ddp.bindFloat(15, toDecimal(req.body.dimensions.width));
         ddp.bindVarchar(16, req.body.dimensions.unit);
-        ddp.bindInteger(17, toInteger(req.body.slots.total));
-        ddp.bindInteger(18, toInteger(req.body.slots.free));
-        ddp.bindInteger(19, toInteger(req.body.slots.used));
-        ddp.bindInteger(20, toInteger(req.body.slots.reserved));
-        ddp.bindInteger(21, toInteger(req.body.slots.faulty));
+        ddp.bindInteger(17, toInteger(req.body.slots));
         await ddp.run();
         if (req.body.decommissioned != null) {
           await DDC.run(
@@ -9857,8 +9764,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                   tsCol = "predictedTsId";
                   break;
               }
+              // TODO: rackSlot
               let ddClone = await DDC.prepare(
-                "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty) SELECT $1,strptime($2,$3),rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty FROM _rack WHERE tsId = $4"
+                "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots) SELECT $1,strptime($2,$3),rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM _rack WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -9922,13 +9830,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),strftime(decommissioned,'" +
             dateFormat +
-            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
             datePoint +
             " ORDER BY _rack.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
+        //TODO: expand rackSlot
         if (ddRows.length > 0) {
           resJson = {
             rackId: req.params.rackId,
@@ -9947,13 +9856,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               width: toDecimal(ddRows[0][22]),
               unit: ddRows[0][23],
             },
-            slots: {
-              total: toInteger(ddRows[0][24]),
-              free: toInteger(ddRows[0][25]),
-              used: toInteger(ddRows[0][26]),
-              reserved: toInteger(ddRows[0][27]),
-              faulty: toInteger(ddRows[0][28]),
-            },
+            slots: toInteger(ddRows[0][24]),
             source: ddRows[0][7],
             delete: toBoolean(ddRows[0][1]),
           };
@@ -10007,11 +9910,12 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             dateFormat +
             "'),strftime(decommissioned,'" +
             dateFormat +
-            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty FROM rack, _rack WHERE id = $1 AND _rack.rackId = rack.id AND tsId = historicalTsId AND rack.delete = false LIMIT 1"
+            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE id = $1 AND _rack.rackId = rack.id AND tsId = historicalTsId AND rack.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
+        //TODO: expand rackSlot
         if (ddRows.length > 0) {
           resJson = {
             rackId: req.params.rackId,
@@ -10030,13 +9934,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               width: toDecimal(ddRows[0][22]),
               unit: ddRows[0][23],
             },
-            slots: {
-              total: toInteger(ddRows[0][24]),
-              free: toInteger(ddRows[0][25]),
-              used: toInteger(ddRows[0][26]),
-              reserved: toInteger(ddRows[0][27]),
-              faulty: toInteger(ddRows[0][28]),
-            },
+            slots: toInteger(ddRows[0][24]),
             source: ddRows[0][7],
             delete: toBoolean(ddRows[0][1]),
           };
@@ -10094,96 +9992,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               });
           }
         }
-        if (req.body.slots.free != null) {
-          if (
-            toInteger(req.body.slots.free) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots free " +
-                  req.body.slots.free +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.used != null) {
-          if (
-            toInteger(req.body.slots.used) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots used " +
-                  req.body.slots.used +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.reserved != null) {
-          if (
-            toInteger(req.body.slots.reserved) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots reserved " +
-                  req.body.slots.reserved +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        if (req.body.slots.faulty != null) {
-          if (
-            toInteger(req.body.slots.faulty) > toInteger(req.body.slots.total)
-          ) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "slots faulty " +
-                  req.body.slots.faulty +
-                  " can not be greater than total slots " +
-                  req.body.slots.total,
-              });
-          }
-        }
-        let slotsConsumed =
-          toInteger(req.body.slots.free) +
-          toInteger(req.body.slots.used) +
-          toInteger(req.body.slots.reserved) +
-          toInteger(req.body.slots.faulty);
-        if (slotsConsumed > toInteger(req.body.slots.total)) {
-          return res
-            .contentType(OAS.mimeJSON)
-            .status(404)
-            .json({
-              errors:
-                "slots consumed (free,used,reserved,faulty) " +
-                slotsConsumed +
-                " can not be greater than total slots " +
-                req.body.slots.total,
-            });
-        }
-        let slotsFree =
-          toInteger(req.body.slots.total) -
-          (toInteger(req.body.slots.used) +
-            toInteger(req.body.slots.reserved) +
-            toInteger(req.body.slots.faulty));
-        if (slotsFree > toInteger(req.body.slots.free)) {
-          req.body.slots.free = slotsFree;
-        }
-
         let ddp = await DDC.prepare(
           "SELECT id FROM rack WHERE id = $1 AND delete = false LIMIT 1"
         );
@@ -10212,8 +10020,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           ddp.bindVarchar(3, pointFormat);
           ddp.bindVarchar(4, req.params.rackId);
           await ddp.run();
+          //TODO: expand rackSlot
           ddp = await DDC.prepare(
-            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -10240,11 +10049,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           ddp.bindFloat(14, toDecimal(req.body.dimensions.height));
           ddp.bindFloat(15, toDecimal(req.body.dimensions.width));
           ddp.bindVarchar(16, req.body.dimensions.unit);
-          ddp.bindInteger(17, toInteger(req.body.slots.total));
-          ddp.bindInteger(18, toInteger(req.body.slots.free));
-          ddp.bindInteger(19, toInteger(req.body.slots.used));
-          ddp.bindInteger(20, toInteger(req.body.slots.reserved));
-          ddp.bindInteger(21, toInteger(req.body.slots.faulty));
+          ddp.bindInteger(17, toInteger(req.body.slots));
           await ddp.run();
           if (req.body.decommissioned != null) {
             await DDC.run(
@@ -10330,11 +10135,12 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           dateFormat +
           "'),strftime(decommissioned,'" +
           dateFormat +
-          "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty FROM rack, _rack WHERE _rack.rackId = rack.id ORDER BY _rack.point"
+          "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE _rack.rackId = rack.id ORDER BY _rack.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
         for (let idx in ddRows) {
+          //TODO: expand rackSlot
           let resObj = {
             rackId: ddRows[idx][0],
             point: ddRows[idx][5],
@@ -10352,13 +10158,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               width: toDecimal(ddRows[idx][22]),
               unit: ddRows[idx][23],
             },
-            slots: {
-              total: toInteger(ddRows[idx][24]),
-              free: toInteger(ddRows[idx][25]),
-              used: toInteger(ddRows[idx][26]),
-              reserved: toInteger(ddRows[idx][27]),
-              faulty: toInteger(ddRows[idx][28]),
-            },
+            slots: toInteger(ddRows[idx][24]),
             source: ddRows[idx][7],
             delete: toBoolean(ddRows[idx][1]),
           };
@@ -10428,109 +10228,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                   " does not exist",
               });
           }
-          if (req.body[i].slots.free != null) {
-            if (
-              toInteger(req.body[i].slots.free) >
-              toInteger(req.body[i].slots.total)
-            ) {
-              return res
-                .contentType(OAS.mimeJSON)
-                .status(404)
-                .json({
-                  errors:
-                    "[" +
-                    i +
-                    "] slots free " +
-                    req.body[i].slots.free +
-                    " can not be greater than total slots " +
-                    req.body[i].slots.total,
-                });
-            }
-          }
-          if (req.body[i].slots.used != null) {
-            if (
-              toInteger(req.body[i].slots.used) >
-              toInteger(req.body[i].slots.total)
-            ) {
-              return res
-                .contentType(OAS.mimeJSON)
-                .status(404)
-                .json({
-                  errors:
-                    "[" +
-                    i +
-                    "] slots used " +
-                    req.body[i].slots.used +
-                    " can not be greater than total slots " +
-                    req.body[i].slots.total,
-                });
-            }
-          }
-          if (req.body[i].slots.reserved != null) {
-            if (
-              toInteger(req.body[i].slots.reserved) >
-              toInteger(req.body[i].slots.total)
-            ) {
-              return res
-                .contentType(OAS.mimeJSON)
-                .status(404)
-                .json({
-                  errors:
-                    "[" +
-                    i +
-                    "] slots reserved " +
-                    req.body[i].slots.reserved +
-                    " can not be greater than total slots " +
-                    req.body[i].slots.total,
-                });
-            }
-          }
-          if (req.body[i].slots.faulty != null) {
-            if (
-              toInteger(req.body[i].slots.faulty) >
-              toInteger(req.body[i].slots.total)
-            ) {
-              return res
-                .contentType(OAS.mimeJSON)
-                .status(404)
-                .json({
-                  errors:
-                    "[" +
-                    i +
-                    "] slots faulty " +
-                    req.body[i].slots.faulty +
-                    " can not be greater than total slots " +
-                    req.body[i].slots.total,
-                });
-            }
-          }
-          let slotsConsumed =
-            toInteger(req.body[i].slots.free) +
-            toInteger(req.body[i].slots.used) +
-            toInteger(req.body[i].slots.reserved) +
-            toInteger(req.body[i].slots.faulty);
-          if (slotsConsumed > toInteger(req.body[i].slots.total)) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors:
-                  "[" +
-                  i +
-                  "] slots consumed (free,used,reserved,faulty) " +
-                  slotsConsumed +
-                  " can not be greater than total slots " +
-                  req.body[i].slots.total,
-              });
-          }
-          let slotsFree =
-            toInteger(req.body[i].slots.total) -
-            (toInteger(req.body[i].slots.used) +
-              toInteger(req.body[i].slots.reserved) +
-              toInteger(req.body[i].slots.faulty));
-          if (slotsFree > toInteger(req.body[i].slots.free)) {
-            req.body[i].slots.free = slotsFree;
-          }
           let tsId = await getSeqNextValue("seq_rack");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -10566,8 +10263,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             ddp.bindVarchar(3, req.body[i].rackId);
             await ddp.run();
           }
+          //TODO: expand rackSlot
           let ddp = await DDC.prepare(
-            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slotsTotal,slotsFree,slotsUsed,slotsReserved,slotsFaulty) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -10594,11 +10292,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           ddp.bindFloat(14, toDecimal(req.body[i].dimensions.height));
           ddp.bindFloat(15, toDecimal(req.body[i].dimensions.width));
           ddp.bindVarchar(16, req.body[i].dimensions.unit);
-          ddp.bindInteger(17, toInteger(req.body[i].slots.total));
-          ddp.bindInteger(18, toInteger(req.body[i].slots.free));
-          ddp.bindInteger(19, toInteger(req.body[i].slots.used));
-          ddp.bindInteger(20, toInteger(req.body[i].slots.reserved));
-          ddp.bindInteger(21, toInteger(req.body[i].slots.faulty));
+          ddp.bindInteger(17, toInteger(req.body[i].slots));
           await ddp.run();
           if (req.body[i].decommissioned != null) {
             await DDC.run(
@@ -18795,12 +18489,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("dimensions.height").default(2000).isFloat(OAS.rack_dimension),
     body("dimensions.width").default(600).isFloat(OAS.rack_dimension),
     body("dimensions.unit").default("mm").isIn(OAS.sizeUnit),
-    body("slots").isObject(),
-    body("slots.total").default(42).isInt(OAS.rackSlots),
-    body("slots.free").default(0).isInt(OAS.rackSlots_u),
-    body("slots.used").default(0).isInt(OAS.rackSlots_u),
-    body("slots.reserved").default(0).isInt(OAS.rackSlots_u),
-    body("slots.faulty").default(0).isInt(OAS.rackSlots_u),
+    body("slots").default(42).isInt(OAS.rackSlots),
+    body("slotUsage").optional().isArray(),
+    body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
     body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
@@ -18870,12 +18562,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("dimensions.height").optional().isFloat(OAS.rack_dimension),
     body("dimensions.width").optional().isFloat(OAS.rack_dimension),
     body("dimensions.unit").optional().isIn(OAS.sizeUnit),
-    body("slots").optional().isObject(),
-    body("slots.total").optional().isInt(OAS.rackSlots),
-    body("slots.free").optional().isInt(OAS.rackSlots_u),
-    body("slots.used").optional().isInt(OAS.rackSlots_u),
-    body("slots.reserved").optional().isInt(OAS.rackSlots_u),
-    body("slots.faulty").optional().isInt(OAS.rackSlots_u),
+    body("slots").default(42).isInt(OAS.rackSlots),
+    body("slotUsage").optional().isArray(),
+    body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
     body("point").optional().matches(OAS.dateTime),
     body("source").optional().isIn(OAS.source),
     body("delete").optional().isBoolean({ strict: true }),
@@ -18913,12 +18603,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("dimensions.height").default(2000).isFloat(OAS.rack_dimension),
     body("dimensions.width").default(600).isFloat(OAS.rack_dimension),
     body("dimensions.unit").default("mm").isIn(OAS.sizeUnit),
-    body("slots").isObject(),
-    body("slots.total").default(42).isInt(OAS.rackSlots),
-    body("slots.free").default(0).isInt(OAS.rackSlots_u),
-    body("slots.used").default(0).isInt(OAS.rackSlots_u),
-    body("slots.reserved").default(0).isInt(OAS.rackSlots_u),
-    body("slots.faulty").default(0).isInt(OAS.rackSlots_u),
+    body("slots").default(42).isInt(OAS.rackSlots),
+    body("slotUsage").optional().isArray(),
+    body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
     body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
@@ -18971,12 +18659,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.dimensions.height").default(2000).isFloat(OAS.rack_dimension),
     body("*.dimensions.width").default(600).isFloat(OAS.rack_dimension),
     body("*.dimensions.unit").default("mm").isIn(OAS.sizeUnit),
-    body("*.slots").isObject(),
-    body("*.slots.total").default(42).isInt(OAS.rackSlots),
-    body("*.slots.free").default(0).isInt(OAS.rackSlots_u),
-    body("*.slots.used").default(0).isInt(OAS.rackSlots_u),
-    body("*.slots.reserved").default(0).isInt(OAS.rackSlots_u),
-    body("*.slots.faulty").default(0).isInt(OAS.rackSlots_u),
+    body("*.slots").default(42).isInt(OAS.rackSlots),
+    body("*.slotUsage").optional().isArray(),
+    body("*.slotUsage.*.slot").optional().isInt(OAS.rackSlots),
+    body("*.slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
     body("*.point")
       .default(dayjs().format(dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
