@@ -658,7 +658,7 @@ CREATE TABLE IF NOT EXISTS _rack (
     height DECIMAL(6,2) NOT NULL DEFAULT 2000 CHECK (height >= 0),
     width DECIMAL(6,2) NOT NULL DEFAULT 600 CHECK (width >= 0),
     unit sizeUnit NOT NULL DEFAULT 'mm',
-    slots INTEGER NOT NULL DEFAULT 42 CHECK (slotsTotal >= 1 AND slotsTotal <= 58),
+    slots INTEGER NOT NULL DEFAULT 42 CHECK (slotsTotal >= 1 AND slotsTotal <= 59),
     FOREIGN KEY (rackId) REFERENCES rack (id),
     FOREIGN KEY (siteId) REFERENCES site (id)
 );
@@ -669,7 +669,7 @@ CREATE TABLE IF NOT EXISTS _rackSlot (
     source source NOT NULL DEFAULT 'historical',
     rackSlotId VARCHAR NOT NULL,
     rackId VARCHAR NOT NULL,
-    slot INTEGER NOT NULL CHECK (slotsTotal >= 1 AND slotsTotal <= 58), 
+    slot INTEGER NOT NULL CHECK (slotsTotal >= 1 AND slotsTotal <= 59), 
     state slotState DEFAULT 'free',
     neId VARCHAR,
     FOREIGN KEY (rackSlotId) REFERENCES rackSlot (id),
@@ -694,7 +694,7 @@ CREATE TABLE IF NOT EXISTS _ne (
     decommissioned TIMESTAMP,
     siteId VARCHAR NOT NULL,
     rackId VARCHAR NOT NULL,
-    slotPosition VARCHAR NOT NULL CHECK (regexp_full_match(slotPosition,'([1-9]|[1-4][0-9]|5[0-8])')),
+    slotPosition VARCHAR NOT NULL CHECK (regexp_full_match(slotPosition,'([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?')),
     FOREIGN KEY (neId) REFERENCES ne (id),
     FOREIGN KEY (siteId) REFERENCES site (id),
     FOREIGN KEY (rackId) REFERENCES rack (id)

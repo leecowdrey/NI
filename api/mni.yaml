@@ -5540,8 +5540,7 @@ paths:
                       type: string
                       format: uuid
                     slotPosition:
-                      type: string
-                      pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                      $ref: "#/components/schemas/rackSlotPosition"
                     mgmtIP:
                       type: string
                       description: |
@@ -5768,8 +5767,7 @@ paths:
                     type: string
                     format: uuid
                   slotPosition:
-                    type: string
-                    pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                    $ref: "#/components/schemas/rackSlotPosition"
                   mgmtIP:
                     type: string
                     description: |
@@ -6133,8 +6131,7 @@ paths:
                   type: string
                   format: uuid
                 slotPosition:
-                  type: string
-                  pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                  $ref: "#/components/schemas/rackSlotPosition"
                 mgmtIP:
                   type: string
                   description: |
@@ -6383,8 +6380,7 @@ paths:
                     type: string
                     format: uuid
                   slotPosition:
-                    type: string
-                    pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                    $ref: "#/components/schemas/rackSlotPosition"
                   mgmtIP:
                     type: string
                     description: |
@@ -6605,8 +6601,7 @@ paths:
                   type: string
                   format: uuid
                 slotPosition:
-                  type: string
-                  pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                  $ref: "#/components/schemas/rackSlotPosition"
                 mgmtIP:
                   type: string
                   description: |
@@ -6817,8 +6812,7 @@ paths:
                   type: string
                   format: uuid
                 slotPosition:
-                  type: string
-                  pattern: '([1-9]|[1-4][0-9]|5[0-8])'
+                  $ref: "#/components/schemas/rackSlotPosition"
                 mgmtIP:
                   type: string
                   description: |
@@ -13757,6 +13751,10 @@ components:
       description: internal (telegraph) pole identifier
       type: string
       format: uuid
+    rackSlotPosition:
+      description: comma separated rack slot number in the range 1..58
+      type: string
+      pattern: '([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?'
     neId:
       description: internal network equipment identifier
       type: string
