@@ -46,16 +46,30 @@
         }
 
         .rack-panel {
-            width: 100%;
+            width: 45%;
             height: calc(70vh - 10px);
             margin-top: 20px;
+            margin-left: 20px;
             display: grid;
+        }
+
+        .metadata-panel {
+            width: 45%;
+            height: calc(70vh - 10px);
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            font-family:'Courier New', Courier, monospace;
+            color: #000000;
+            text-align: left;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
         }
 
         .grid {
             --max-rack-slots=42;
             display: grid;
-            grid-template-rows: repeat(var(--max-rack-slots), 1fr);
+            grid-template-rows: 16px repeat(var(--max-rack-slots), 16px) 16px;
             grid-template-columns: repeat(1, 1fr);
             width: 200px;
             height: calc(75vh - 20px);
@@ -64,7 +78,7 @@
         .slotFree {
             border: 1px solid white;
             background-color: green;
-            font-family: monospace, monospace;
+            font-family:'Courier New', Courier, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
@@ -74,7 +88,7 @@
         .slotUsed {
             border: 1px solid white;
             background-color: black;
-            font-family: monospace, monospace;
+            font-family:'Courier New', Courier, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
@@ -84,7 +98,7 @@
         .slotReserved {
             border: 1px solid white;
             background-color: #808080;
-            font-family: monospace, monospace;
+            font-family:'Courier New', Courier, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
@@ -94,7 +108,7 @@
         .slotFaulty {
             border: 1px solid white;
             background-color: red;
-            font-family: monospace, monospace;
+            font-family:'Courier New', Courier, monospace;
             text-align: left;
             font-size: 0.50em;
             text-indent: 1em;
@@ -104,7 +118,7 @@
         .slotPredicted {
             border: 1px solid white;
             background-color: black;
-            font-family: monospace, monospace;
+            font-family:'Courier New', Courier, monospace;
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
@@ -165,8 +179,15 @@
             <select id="rackPoint" onchange="if(this.selectedIndex !== undefined) fetchRack();"></select>
         </div>
     </div>
-    <div class="rack-panel" id="rackPanel">
-        <div class="grid" id="rackGrid"></div>
+    <div id="view-panel" style="width: 80%;">
+        <div id="left-rack-display" style="float:left; width: 45%">
+            <div class="rack-panel" id="rackPanel">
+                <div class="grid" id="rackGrid"></div>
+            </div>
+        </div>
+        <div id="right-rack-metadata" style="float:right; width: 55%">
+            <div class="metadata-panel" id="metadataPanel"></div>
+        </div>
     </div>
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
@@ -234,56 +255,76 @@
                 })
                 .then((data) => {
                     let rackSlots = data.slots;
-                    let rackReference = data.reference;
-                    let rackSiteId = data.siteId;
-                    let rackHeight = data.dimensions.height;
-                    let rackDepth = data.dimensions.depth;
-                    let rackWidth = data.dimensions.width;
-                    let rackUnit = data.dimensions.unit;
-                    let rackFloor = data.floor;
-                    let rackArea = data.area;
-                    let rackRow = data.row;
-                    let rackColumn = data.column;
-                    let rackCoordinateX = data.coordinate.x;
-                    let rackCoordinateY = data.coordinate.y;
-                    let rackCoordinateM = data.coordinate.m;
-                    let rackCommissioned = data.commissioned;
-                    let slotUsageTypes = ["free", "used", "reserved", "faulty", "predicted"];
+                    let slotUsed = 0;
+                    let slotFree = 0;
+                    let slotReserved = 0;
+                    let slotFaulty = 0;
+                    let slotPredicted = 0;
+                    let slotUsage = data.slotUsage.reverse();
                     grid.style.setProperty("--max-rack-slots", rackSlots);
-                    for (let j = 0; j < rackSlots; j++) {
-                        let slotUsage = slotUsageTypes[Math.floor(Math.random() * slotUsageTypes.length)];
+                    for (let j = 0; j < slotUsage.length; j++) {
                         let cell = document.createElement("div");
                         cell.setAttribute("id", "slot" + (rackSlots - j));
-                        cell.setAttribute("title", rackSlots - j + ": " + slotUsage);
-                        switch (slotUsage) {
+                        cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
+                        switch (slotUsage[j].usage) {
                             case "free":
                                 cell.setAttribute("class", "slotFree");
+                                slotFree = slotFree + 1;
                                 break;
                             case "used":
                                 cell.setAttribute("class", "slotUsed");
+                                slotUsed = slotUsed + 1;
                                 break;
                             case "reserved":
                                 cell.setAttribute("class", "slotReserved");
+                                slotReserved = slotReserved + 1;
                                 break;
                             case "faulty":
                                 cell.setAttribute("class", "slotFaulty");
+                                slotFaulty = slotFaulty + 1;
                                 break;
                             case "predicted":
                                 cell.setAttribute("class", "slotPredicted");
+                                slotPredicted = slotPredicted + 1;
                                 break;
                         }
                         cell.classList.add("cell");
                         grid.appendChild(cell);
                         let cellHTML = "";
-                        switch (slotUsage) {
+                        switch (slotUsage[j].usage) {
                             case "used":
-                                cellHTML = '&emsp;<a href="<%=payload.rootUrl%>/ne/{neId}" target="_blank" rel="noopener noreferrer">'+(rackSlots - j)+'</a>&emsp;{neRef}';
+                                if (slotUsage[j].neId != null) {
+                                    cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;' + slotUsage[j].host + '&emsp;(' + slotUsage[j].mgmtIP + ')';
+                                } else {
+                                    cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;';
+                                }
                                 break;
                             default:
-                                cellHTML = '&emsp;'+(rackSlots - j)+'&emsp;';
+                                cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;';
                         }
                         document.getElementById("slot" + (rackSlots - j)).innerHTML = cellHTML;
                     }
+                    if (data?.decommissioned == undefined) {
+                        data.decommissioned = "";
+                    }
+                    let metadata = '<small><b>Reference</b>:&emsp;' + data.reference + '<br>( ' + rackId + ' )<br>' +
+                        '<br>Commissioned:&emsp;&emsp;' + data.commissioned + '<br>' +
+                        'Decommissioned:&emsp;' + data.decommissioned + '<br>' +
+                        '<br><b>Dimensions</b>:<br>'+
+                        'H/W/D:&emsp;' + data.dimensions.height + ' / ' + data.dimensions.width + ' / ' + data.dimensions.depth + ' ' + data.dimensions.unit + '<br>' +
+                        'Slots:&emsp;&emsp;' + data.slots + '<br>' +
+                        '<br><b>Location</b>:<br>'+
+                        'X,Y,Z:&emsp;&emsp;' + data.coordinate.x + ' , ' + data.coordinate.y + ' , ' + data.coordinate.z + '<br>' +
+                        'Area:&emsp;&emsp;' + data.area + '<br>' +
+                        'Floor:&emsp;&emsp;' + data.floor + '<br>' +
+                        'Row:&emsp;&emsp;' + data.row + '<br>' +
+                        '<br><b>Usage Summary:</b><br>' +
+                        'Free:&emsp;&emsp;&emsp;&emsp;' + slotFree + '<br>' +
+                        'Used:&emsp;&emsp;&emsp;&emsp;' + slotUsed + '<br>' +
+                        'Reserved:&emsp;&emsp;' + slotReserved + '<br>' +
+                        'Faulty:&emsp;&emsp;&emsp;' + slotFaulty + '<br>' +
+                        'Predicted:&emsp;&emsp;' + slotPredicted + '<br></small>';
+                    document.getElementById("metadataPanel").innerHTML = metadata;
                 })
                 .catch((e) => {
                     console.error(e);

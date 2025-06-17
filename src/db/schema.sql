@@ -370,15 +370,6 @@ CREATE TABLE IF NOT EXISTS rack (
     predictedTsId INTEGER,
     geometry GEOMETRY
 );
-CREATE TABLE IF NOT EXISTS rackSlot (
-    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
-    delete BOOLEAN NOT NULL DEFAULT false,
-    tsPoint TIMESTAMP,
-    rackId VARCHAR NOT NULL,
-    historicalTsId INTEGER,
-    predictedTsId INTEGER,
-    FOREIGN KEY (rackId) REFERENCES rack (id)
-);
 CREATE TABLE IF NOT EXISTS ne (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     delete BOOLEAN NOT NULL DEFAULT false,
@@ -493,7 +484,7 @@ CREATE TABLE IF NOT EXISTS _site (
     decommissioned TIMESTAMP,
     area areaType NOT NULL DEFAULT 'unclassified',
     type siteType NOT NULL DEFAULT 'unclassified',
-    onNet NOT NULL BOOLEAN DEFAULT false,
+    onNet BOOLEAN NOT NULL DEFAULT false,
     country countryCode NOT NULL,
     region VARCHAR NOT NULL,
     town VARCHAR NOT NULL,
@@ -658,23 +649,23 @@ CREATE TABLE IF NOT EXISTS _rack (
     height DECIMAL(6,2) NOT NULL DEFAULT 2000 CHECK (height >= 0),
     width DECIMAL(6,2) NOT NULL DEFAULT 600 CHECK (width >= 0),
     unit sizeUnit NOT NULL DEFAULT 'mm',
-    slots INTEGER NOT NULL DEFAULT 42 CHECK (slotsTotal >= 1 AND slotsTotal <= 59),
+    slots INTEGER NOT NULL DEFAULT 42 CHECK (slots >= 1 AND slots <= 59),
     FOREIGN KEY (rackId) REFERENCES rack (id),
     FOREIGN KEY (siteId) REFERENCES site (id)
 );
+
+---
 
 CREATE TABLE IF NOT EXISTS _rackSlot (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_rackSlot') PRIMARY KEY,
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     source source NOT NULL DEFAULT 'historical',
-    rackSlotId VARCHAR NOT NULL,
     rackId VARCHAR NOT NULL,
-    slot INTEGER NOT NULL CHECK (slotsTotal >= 1 AND slotsTotal <= 59), 
-    state slotState DEFAULT 'free',
-    neId VARCHAR,
-    FOREIGN KEY (rackSlotId) REFERENCES rackSlot (id),
+    rackTsId INTEGER NOT NULL,
+    slot INTEGER NOT NULL CHECK (slot >= 1 AND slot <= 59), 
+    usage slotState DEFAULT 'free',
     FOREIGN KEY (rackId) REFERENCES rack (id),
-    FOREIGN KEY (neId) REFERENCES ne (id)
+    FOREIGN KEY (rackTsId) REFERENCES _rack (tsId)
 );
 
 ---

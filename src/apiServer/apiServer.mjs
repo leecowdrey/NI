@@ -7243,11 +7243,15 @@ var run = async () => {
       await ddp.run();
     } else {
       let ddp = await DDC.prepare(
-        "UPDATE ne SET delete = $1, " + tsCol + " = $2 WHERE id = $3"
+        "UPDATE ne SET delete = $1, " +
+          tsCol +
+          " = $2, tsPoint = strptime($3,$4) WHERE id = $5"
       );
       ddp.bindBoolean(1, toBoolean(body.delete));
       ddp.bindInteger(2, tsId);
-      ddp.bindVarchar(3, neId);
+      ddp.bindVarchar(3, body.point || point);
+      ddp.bindVarchar(4, pointFormat);
+      ddp.bindVarchar(5, neId);
       await ddp.run();
     }
     let ddp = await DDC.prepare(
@@ -7268,7 +7272,7 @@ var run = async () => {
     ddp.bindVarchar(13, dateFormat);
     ddp.bindVarchar(14, body.siteId);
     ddp.bindVarchar(15, body.rackId);
-    ddp.bindInteger(16, body.slotPosition);
+    ddp.bindVarchar(16, body.slotPosition);
     await ddp.run();
 
     if (body.decommissioned != null) {
@@ -7282,6 +7286,7 @@ var run = async () => {
       );
     }
 
+    // add ports
     for (let p = 0; p < body.ports.length; p++) {
       let nePortTsId = uuidv4();
       let tsPortId = await getSeqNextValue("seq_nePort");
@@ -7405,6 +7410,40 @@ var run = async () => {
           ddp.bindVarchar(3, body.ports[p].configuration.unit);
           await ddp.run();
           break;
+      }
+    }
+
+    // update rack slot usage
+    if (body.rackId != null) {
+      let rackId = body.rackId;
+      let slots = body.slots;
+      let rackPoint = body.point || point;
+      let slotPosition = body.slotPosition;
+      let slotUsage = slotPosition.split(",").sort();
+      if (slotUsage.length > 0) {
+        let { status, body } = await getRack(rackId);
+        if (status == 200 && body != null) {
+          body.point = rackPoint;
+          for (let s = 0; s < body.slotUsage.length; s++) {
+            for (let u = 0; u < slotUsage.length; u++) {
+              if (body.slotUsage[s].slot == slotUsage[u]) {
+                body.slotUsage[s].usage = "used";
+                break;
+              }
+            }
+          }
+          status = await addRack(rackId, body);
+          if (status != 200) {
+            LOGGER.error(dayjs().format(dayjsFormat), "error", "addNe", {
+              rackId: rackId,
+              slots: slots,
+              slotPosition: slotPosition,
+              slotUsage: resSlots,
+              error: err,
+            });
+            return 400;
+          }
+        }
       }
     }
     return 200;
@@ -8292,7 +8331,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               .contentType(OAS.mimeJSON)
               .status(status)
               .json({
-                errors: "neId " + req.params.neId,
+                errors: "neId " + req.body[i].neId,
               });
           }
         }
@@ -9563,6 +9602,490 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     }
   }
 
+  async function getRackSlots(
+    rackId,
+    { point = null, tsId = null, source = "historical" } = {}
+  ) {
+    // optional source = historical|predicted
+    // optional point = 20250508T174124
+    let tsCol = "historicalTsId";
+
+    switch (source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+      default:
+        tsCol = "historicalTsId";
+    }
+
+    let datePoint =
+      "AND _rack.tsId = rack." +
+      tsCol +
+      " AND _rackSlot.rackTsId = rack." +
+      tsCol +
+      " ";
+    if (point != null) {
+      datePoint =
+        "AND strftime(_rackSlot.point,'" + pointFormat + "') = '" + point + "'";
+    }
+    if (tsId != null) {
+      datePoint = "AND _rack.tsId = "+tsId;
+    }
+    let resJson = [];
+    let ddp = await DDC.prepare(
+      "SELECT slot,usage FROM rack,_rack, _rackSlot WHERE rack.id = $1 AND _rack.rackId = rack.id AND _rackSlot.rackId = rack.id AND _rackSlot.rackTsId = _rack.tsId AND rack.delete = false " +
+        datePoint +
+        " ORDER BY _rackSlot.slot"
+    );
+    ddp.bindVarchar(1, rackId);
+    let ddRead = await ddp.runAndReadAll();
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        let resObj = { slot: ddRows[idx][0], usage: ddRows[idx][1] };
+        if (ddRows[idx][1] == "used") {
+          let ddn = await DDC.prepare(
+            "SELECT DISTINCT id,slotPosition FROM ne, _ne WHERE rackId = $1 AND _ne.neId = ne.id AND delete = false"
+          );
+          ddn.bindVarchar(1, rackId);
+          let ddNeRead = await ddn.runAndReadAll();
+          let ddNeRows = ddNeRead.getRows();
+          if (ddNeRows.length > 0) {
+            for (let ndx in ddNeRows) {
+              let neSlotUsage = ddNeRows[ndx][1].split(",");
+              if (neSlotUsage.includes(ddRows[idx][0].toString())) {
+                let { status, body } = await getNe(ddNeRows[ndx][0]);
+                if (status == 200 && body != null) {
+                  resObj.neId = ddNeRows[ndx][0];
+                  resObj.host = body.host;
+                  resObj.mgmtIP = body.mgmtIP;
+                }
+              }
+            }
+          }
+        }
+        resJson.push(resObj);
+      }
+      return { status: 200, body: resJson };
+    } else {
+      return { status: 404, body: null };
+    }
+  }
+
+  async function addRackSlots(rackId, rackTsId, body) {
+    try {
+      let point = dayjs().format(dayjsFormat);
+      for (let r = 1; r <= body.slots; r++) {
+        let tsId = await getSeqNextValue("seq_rackSlot");
+        let ddp = await DDC.prepare(
+          "INSERT INTO _rackSlot (tsId,point,source,rackTsId,rackId,slot,usage) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+        );
+        ddp.bindInteger(1, tsId);
+        ddp.bindVarchar(2, body.point || point);
+        ddp.bindVarchar(3, pointFormat);
+        ddp.bindVarchar(4, body.source);
+        ddp.bindInteger(5, rackTsId);
+        ddp.bindVarchar(6, rackId);
+        ddp.bindInteger(7, r);
+        let usage = "free";
+        let neId = null;
+        if (body.slotUsage.length > 0) {
+          for (let u = 0; u < body.slotUsage.length; u++) {
+            if (body.slotUsage[u].slot == r) {
+              usage = body.slotUsage[u].usage;
+            }
+          }
+        }
+        ddp.bindVarchar(8, usage);
+        await ddp.run();
+      }
+      return 200;
+    } catch (err) {
+      LOGGER.error(dayjs().format(dayjsFormat), "error", "addRackSlots", {
+        rackId: rackId,
+        slots: body.slots,
+        slotUsage: body.slotUsage,
+        error: err,
+      });
+      return 400;
+    }
+  }
+
+  async function undeleteRackSlots(rackId) {
+    let point = dayjs().format(dayjsFormat);
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT id FROM rackSlot,_rackSlot WHERE id = '" +
+        req.params.rackId +
+        "' AND _rackSlot.rackSlotId = rackSlot.id AND _rackSlot.source = 'historical' AND rackSlot.delete = true LIMIT 1"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      await DDC.run(
+        "UPDATE rackSlot SET tsPoint = strptime('" +
+          point +
+          "','" +
+          pointFormat +
+          "'), delete = false WHERE id = '" +
+          req.params.rackId +
+          "'"
+      );
+      return 204;
+    } else {
+      return 404;
+    }
+  }
+
+  async function deleteRackSlots(
+    rackId,
+    {
+      point = null,
+      source = "historical",
+      predicted = null,
+      expunge = false,
+    } = {}
+  ) {
+    if (expunge) {
+      let ddd = await DDC.runAndReadAll(
+        "SELECT id FROM rackSlot WHERE id = '" + rackId + "'"
+      );
+      let dddRows = ddd.getRows();
+      if (dddRows.length > 0) {
+        await DDC.run(
+          "DELETE FROM _rackSlot WHERE rackSlotId = '" + rackId + "'"
+        );
+        await DDC.run("DELETE FROM rackSlot WHERE id = '" + rackId + "'");
+        return 204;
+      }
+    } else {
+      let ddp = await DDC.prepare(
+        "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM rackSlot,_rackSlot WHERE rackSlot.id = $1 AND _rackSlot.tsId = rackSlot.historicalTsId AND rackSlot.delete = false"
+      );
+      ddp.bindVarchar(1, neId);
+      let ddRead = await ddp.runAndReadAll();
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        if (predicted != null) {
+          await DDC.run(
+            "DELETE FROM _rackSlot WHERE rackSlotId = '" +
+              rackId +
+              "' AND _rackSlot.source = 'predicted'"
+          );
+          await DDC.run(
+            "UPDATE rackSlot SET predictedTsId = NULL WHERE id = '" +
+              rackId +
+              "'"
+          );
+          return 204;
+        } else {
+          let { status, body } = await getRackSlots(rackId);
+          if (status == 200) {
+            status = await addRackSlots(
+              rackId,
+              jsonDeepMerge(body, { point: point, delete: "true" })
+            );
+          }
+          return status;
+        }
+      } else {
+        return 400;
+      }
+    }
+  }
+
+  async function getRack(rackId, { point = null, source = "historical" } = {}) {
+    // optional source = historical|predicted
+    // optional point = 20250508T174124
+    let datePoint = "AND _rack.tsId = rack.historicalTsId";
+    if (point != null) {
+      datePoint =
+        "AND strftime(_rack.point,'" + pointFormat + "') = '" + point + "'";
+    }
+    let resJson = {};
+    let ddp = await DDC.prepare(
+      "SELECT id,delete,historicalTsId,predictedTsId,tsId,strftime(point,'" +
+        pointFormat +
+        "'),rackId,source,reference,strftime(commissioned,'" +
+        dateFormat +
+        "'),strftime(decommissioned,'" +
+        dateFormat +
+        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots,tsId FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+        datePoint +
+        " ORDER BY _rack.point DESC LIMIT 1"
+    );
+    ddp.bindVarchar(1, rackId);
+    let ddRead = await ddp.runAndReadAll();
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      resJson = {
+        rackId: rackId,
+        point: ddRows[0][5],
+        reference: ddRows[0][8],
+        commissioned: ddRows[0][9],
+        siteId: ddRows[0][11],
+        coordinate: {
+          x: toDecimal(ddRows[0][16], OAS.X_scale, OAS.XY_precision),
+          y: toDecimal(ddRows[0][17], OAS.Y_scale, OAS.XY_precision),
+          z: toDecimal(ddRows[0][18], OAS.Z_scale, OAS.Z_precision),
+        },
+        dimensions: {
+          depth: toDecimal(ddRows[0][20]),
+          height: toDecimal(ddRows[0][21]),
+          width: toDecimal(ddRows[0][22]),
+          unit: ddRows[0][23],
+        },
+        slots: toInteger(ddRows[0][24]),
+        source: ddRows[0][7],
+        delete: toBoolean(ddRows[0][1]),
+      };
+      if (ddRows[0][10] != null) {
+        resJson.decommissioned = ddRows[0][10];
+      }
+      if (ddRows[0][12] != null) {
+        resJson.floor = ddRows[0][12];
+      }
+      if (ddRows[0][13] != null) {
+        resJson.area = ddRows[0][13];
+      }
+      if (ddRows[0][14] != null) {
+        resJson.row = ddRows[0][14];
+      }
+      if (ddRows[0][15] != null) {
+        resJson.column = ddRows[0][15];
+      }
+      if (ddRows[0][19] != null) {
+        resJson.coordinate.m = ddRows[0][19];
+      }
+      let { status, body } = await getRackSlots(rackId, {
+        tsId: toInteger(ddRows[0][25])
+      });
+      if (status == 200) {
+        resJson.slotUsage = body;
+      }
+      return { status: 200, body: resJson };
+    } else {
+      return { status: 404, body: null };
+    }
+  }
+
+  async function addRack(rackId, body) {
+    let tsId = await getSeqNextValue("seq_rack");
+    let tsCol = "historicalTsId";
+
+    switch (body.source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+      default:
+        tsCol = "historicalTsId";
+    }
+
+    let ddq = await DDC.runAndReadAll(
+      "SELECT id FROM rack WHERE id = '" + rackId + "'"
+    );
+    let ddqRows = ddq.getRows();
+    if (ddqRows.length == 0) {
+      let ddp = await DDC.prepare(
+        "INSERT INTO rack (id,delete," +
+          tsCol +
+          ",tsPoint) VALUES ($1,$2,$3,strptime($4,$5))"
+      );
+      ddp.bindVarchar(1, rackId);
+      ddp.bindBoolean(2, toBoolean(body.delete));
+      ddp.bindInteger(3, tsId);
+      ddp.bindVarchar(4, body.point);
+      ddp.bindVarchar(5, pointFormat);
+      await ddp.run();
+    } else {
+      let ddp = await DDC.prepare(
+        "UPDATE rack SET delete = $1, " +
+          tsCol +
+          " = $2, tsPoint = strptime($3,$4) WHERE id = $5"
+      );
+      ddp.bindBoolean(1, toBoolean(body.delete));
+      ddp.bindInteger(2, tsId);
+      ddp.bindVarchar(3, body.point || point);
+      ddp.bindVarchar(4, pointFormat);
+      ddp.bindVarchar(5, rackId);
+      await ddp.run();
+    }
+
+    let ddp = await DDC.prepare(
+      "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
+    );
+    ddp.bindInteger(1, tsId);
+    ddp.bindVarchar(2, body.point);
+    ddp.bindVarchar(3, pointFormat);
+    ddp.bindVarchar(4, rackId);
+    ddp.bindVarchar(5, body.source);
+    ddp.bindVarchar(6, body.reference);
+    ddp.bindVarchar(7, body.commissioned);
+    ddp.bindVarchar(8, dateFormat);
+    ddp.bindVarchar(9, body.siteId);
+    ddp.bindFloat(
+      10,
+      toDecimal(body.coordinate.x, OAS.X_scale, OAS.XY_precision)
+    );
+    ddp.bindFloat(
+      11,
+      toDecimal(body.coordinate.y, OAS.Y_scale, OAS.XY_precision)
+    );
+    ddp.bindFloat(
+      12,
+      toDecimal(body.coordinate.z, OAS.Z_scale, OAS.Z_precision)
+    );
+    ddp.bindFloat(13, toDecimal(body.dimensions.depth));
+    ddp.bindFloat(14, toDecimal(body.dimensions.height));
+    ddp.bindFloat(15, toDecimal(body.dimensions.width));
+    ddp.bindVarchar(16, body.dimensions.unit);
+    ddp.bindInteger(17, toInteger(body.slots));
+    await ddp.run();
+    if (body.decommissioned != null) {
+      await DDC.run(
+        "UPDATE _rack SET decommissioned = strptime('" +
+          body.decommissioned +
+          "','" +
+          dateFormat +
+          "')" +
+          " WHERE tsId = " +
+          tsId
+      );
+    }
+    if (body.floor != null) {
+      await DDC.run(
+        "UPDATE _rack SET floor = " +
+          toInteger(body.floor) +
+          " WHERE tsId = " +
+          tsId
+      );
+    }
+    if (body.area != null) {
+      await DDC.run(
+        "UPDATE _rack SET floorArea = '" + body.area + "' WHERE tsId = " + tsId
+      );
+    }
+    if (body.row != null) {
+      await DDC.run(
+        "UPDATE _rack SET floorRow = " +
+          toInteger(body.row) +
+          " WHERE tsId = " +
+          tsId
+      );
+    }
+    if (body.column != null) {
+      await DDC.run(
+        "UPDATE _rack SET floorColumn = " +
+          toInteger(body.column) +
+          " WHERE tsId = " +
+          tsId
+      );
+    }
+    if (body.coordinate?.m != null) {
+      await DDC.run(
+        "UPDATE _rack SET m = '" + body.coordinate.m + "' WHERE tsId = " + tsId
+      );
+    }
+
+    let status = await addRackSlots(rackId, tsId, body);
+    return status;
+  }
+
+  async function undeleteRack(rackId) {
+    let point = dayjs().format(dayjsFormat);
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT rack.id FROM rack,_rack WHERE rack.id = '" +
+        req.params.rackId +
+        "' AND _rack.rackId = rack.id AND _rack.source = 'historical' AND rack.delete = true LIMIT 1"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      let status = await undeleteRackSlots(req.params.rackId);
+      await DDC.run(
+        "UPDATE rack SET tsPoint = strptime('" +
+          point +
+          "','" +
+          pointFormat +
+          "'), delete = false WHERE id = '" +
+          req.params.rackId +
+          "'"
+      );
+      await dbAddPredictQueueItem("rack", req.params.rackId, "undelete");
+      return 204;
+    } else {
+      return 404;
+    }
+  }
+
+  async function deleteRack(
+    rackId,
+    {
+      point = null,
+      source = "historical",
+      predicted = null,
+      expunge = false,
+    } = {}
+  ) {
+    if (expunge) {
+      let ddd = await DDC.runAndReadAll(
+        "SELECT id FROM rack WHERE id = '" + rackId + "'"
+      );
+      let dddRows = ddd.getRows();
+      if (dddRows.length > 0) {
+        let { status } = await deleteRackSlots(rackId, {
+          point: point,
+          source: source,
+          predicted: predicted,
+          expunge: expunge,
+        });
+
+        await DDC.run(
+          "DELETE FROM _rackSlot WHERE rackSlotId = '" + rackId + "'"
+        );
+        await DDC.run("DELETE FROM rackSlot WHERE id = '" + rackId + "'");
+        return 204;
+      }
+    } else {
+      let ddp = await DDC.prepare(
+        "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM rack,_rack WHERE rack.id = $1 AND _rack.tsId = rack.historicalTsId AND rack.delete = false"
+      );
+      ddp.bindVarchar(1, req.params.rackId);
+      let ddRead = await ddp.runAndReadAll();
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        if (predicted != null) {
+          await DDC.run(
+            "DELETE FROM _rack WHERE rackId = '" +
+              req.params.rackId +
+              "' and source = 'predicted'"
+          );
+          await DDC.run(
+            "UPDATE rack SET predictedTsId = NULL WHERE id = '" +
+              req.params.rackId +
+              "'"
+          );
+          let status = await deleteRackSlots(rackId, { predicted: true });
+          return 204;
+        } else {
+          let { status, body } = await getRackSlots(rackId);
+          if (status == 200) {
+            status = await addRack(
+              rackId,
+              jsonDeepMerge(body, { point: point, delete: "true" })
+            );
+          }
+          return status;
+        }
+      } else {
+        return 400;
+      }
+    }
+  }
+
   async function addSingleRack(req, res, next) {
     try {
       let result = validationResult(req);
@@ -9579,114 +10102,11 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         }
 
         let rackId = uuidv4();
-        let tsId = await getSeqNextValue("seq_rack");
-        let tsCol = "historicalTsId";
-
-        switch (req.body.source) {
-          case "historical":
-            tsCol = "historicalTsId";
-            break;
-          case "predicted":
-            tsCol = "predictedTsId";
-            break;
-          default:
-            tsCol = "historicalTsId";
-        }
-
-        let ddp = await DDC.prepare(
-          "INSERT INTO rack (id,delete," +
-            tsCol +
-            ",tsPoint) VALUES ($1,$2,$3,strptime($4,$5))"
-        );
-        ddp.bindVarchar(1, rackId);
-        ddp.bindBoolean(2, toBoolean(req.body.delete));
-        ddp.bindInteger(3, tsId);
-        ddp.bindVarchar(4, req.body.point);
-        ddp.bindVarchar(5, pointFormat);
-        await ddp.run();
-
-        ddp = await DDC.prepare(
-          "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
-        );
-        ddp.bindInteger(1, tsId);
-        ddp.bindVarchar(2, req.body.point);
-        ddp.bindVarchar(3, pointFormat);
-        ddp.bindVarchar(4, rackId);
-        ddp.bindVarchar(5, req.body.source);
-        ddp.bindVarchar(6, req.body.reference);
-        ddp.bindVarchar(7, req.body.commissioned);
-        ddp.bindVarchar(8, dateFormat);
-        ddp.bindVarchar(9, req.body.siteId);
-        ddp.bindFloat(
-          10,
-          toDecimal(req.body.coordinate.x, OAS.X_scale, OAS.XY_precision)
-        );
-        ddp.bindFloat(
-          11,
-          toDecimal(req.body.coordinate.y, OAS.Y_scale, OAS.XY_precision)
-        );
-        ddp.bindFloat(
-          12,
-          toDecimal(req.body.coordinate.z, OAS.Z_scale, OAS.Z_precision)
-        );
-        ddp.bindFloat(13, toDecimal(req.body.dimensions.depth));
-        ddp.bindFloat(14, toDecimal(req.body.dimensions.height));
-        ddp.bindFloat(15, toDecimal(req.body.dimensions.width));
-        ddp.bindVarchar(16, req.body.dimensions.unit);
-        ddp.bindInteger(17, toInteger(req.body.slots));
-        await ddp.run();
-        if (req.body.decommissioned != null) {
-          await DDC.run(
-            "UPDATE _rack SET decommissioned = strptime('" +
-              req.body.decommissioned +
-              "','" +
-              dateFormat +
-              "')" +
-              " WHERE tsId = " +
-              tsId
-          );
-        }
-        if (req.body.floor != null) {
-          await DDC.run(
-            "UPDATE _rack SET floor = " +
-              toInteger(req.body.floor) +
-              " WHERE tsId = " +
-              tsId
-          );
-        }
-        if (req.body.area != null) {
-          await DDC.run(
-            "UPDATE _rack SET floorArea = '" +
-              req.body.area +
-              "' WHERE tsId = " +
-              tsId
-          );
-        }
-        if (req.body.row != null) {
-          await DDC.run(
-            "UPDATE _rack SET floorRow = " +
-              toInteger(req.body.row) +
-              " WHERE tsId = " +
-              tsId
-          );
-        }
-        if (req.body.column != null) {
-          await DDC.run(
-            "UPDATE _rack SET floorColumn = " +
-              toInteger(req.body.column) +
-              " WHERE tsId = " +
-              tsId
-          );
-        }
-        if (req.body.coordinate?.m != null) {
-          await DDC.run(
-            "UPDATE _rack SET m = '" +
-              req.body.coordinate.m +
-              "' WHERE tsId = " +
-              tsId
-          );
-        }
-        res.contentType(OAS.mimeJSON).status(200).json({ rackId: rackId });
+        let status = await addRack(rackId, req.body);
+        res
+          .contentType(OAS.mimeJSON)
+          .status(toInteger(status))
+          .json({ rackId: rackId });
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -9704,97 +10124,28 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rack.id FROM rack,_rack WHERE rack.id = '" +
-              req.params.rackId +
-              "' AND _rack.rackId = rack.id AND _rack.source = 'historical' AND rack.delete = true LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            await DDC.run(
-              "UPDATE rack SET tsPoint = strptime('" +
-                point +
-                "','" +
-                pointFormat +
-                "'), delete = false WHERE id = '" +
-                req.params.rackId +
-                "'"
-            );
-            await dbAddPredictQueueItem("rack", req.params.rackId, "undelete");
-            res.sendStatus(204);
-          } else {
+          let status = await undeleteRack(req.params.rackId);
+          await dbAddPredictQueueItem("rack", req.params.rackId, "undelete");
+          return res.sendStatus(status);
+        } else if (req.query?.predicted != null) {
+          let status = await deleteRack(req.params.rackId, {
+            predicted: req.query?.predicted,
+          });
+          return res.sendStatus(status);
+        } else {
+          let status = await deleteRack(req.params.rackId);
+          await dbAddPredictQueueItem("rack", req.params.rackId, "delete");
+          if (status == 204) {
+            return res.sendStatus(status);
+          } else if (status == 404) {
             return res
               .contentType(OAS.mimeJSON)
-              .status(404)
+              .status(status)
               .json({
                 errors: "rackId " + req.params.rackId + " does not exist",
               });
-          }
-        } else {
-          let ddp = await DDC.prepare(
-            "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM rack,_rack WHERE rack.id = $1 AND _rack.tsId = rack.historicalTsId AND rack.delete = false"
-          );
-          ddp.bindVarchar(1, req.params.rackId);
-          let ddRead = await ddp.runAndReadAll();
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            if (req.query?.predicted != null) {
-              await DDC.run(
-                "DELETE FROM _rack WHERE rackId = '" +
-                  req.params.rackId +
-                  "' and source = 'predicted'"
-              );
-              await DDC.run(
-                "UPDATE duct SET predictedTsId = NULL WHERE id = '" +
-                  req.params.rackId +
-                  "'"
-              );
-              res.sendStatus(204);
-            } else {
-              let point = dayjs().format(dayjsFormat);
-              let tsId = await getSeqNextValue("seq_rack");
-              let tsCol = "historicalTsId";
-              switch (ddRows[0][4]) {
-                case "historical":
-                  tsCol = "historicalTsId";
-                  break;
-                case "predicted":
-                  tsCol = "predictedTsId";
-                  break;
-              }
-              // TODO: rackSlot
-              let ddClone = await DDC.prepare(
-                "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots) SELECT $1,strptime($2,$3),rackId,source,reference,commissioned,decommissioned,siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM _rack WHERE tsId = $4"
-              );
-              ddClone.bindInteger(1, tsId);
-              ddClone.bindVarchar(2, point);
-              ddClone.bindVarchar(3, pointFormat);
-              ddClone.bindInteger(4, ddRows[0][2]);
-              await ddClone.run();
-              await DDC.run(
-                "UPDATE rack SET " +
-                  tsCol +
-                  " = " +
-                  tsId +
-                  ", tsPoint = strptime('" +
-                  point +
-                  "','" +
-                  pointFormat +
-                  "'), delete = true WHERE id = '" +
-                  req.params.rackId +
-                  "'"
-              );
-              await dbAddPredictQueueItem("rack", req.params.rackId, "delete");
-              res.sendStatus(204);
-            }
           } else {
-            res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "rackId " + req.params.rackId + " does not exist",
-              });
+            return res.sendStatus(status);
           }
         }
       } else {
@@ -9808,7 +10159,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     }
   }
 
-  async function getSingleRack(req, res, next) {
+  async function getSingleRackSlots(req, res, next) {
     let datePoint = "AND _rack.tsId = rack.historicalTsId";
     try {
       let result = validationResult(req);
@@ -9821,63 +10172,19 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             req.query.point +
             "'";
         }
-        let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT id,delete,historicalTsId,predictedTsId,tsId,strftime(point,'" +
-            pointFormat +
-            "'),rackId,source,reference,strftime(commissioned,'" +
-            dateFormat +
-            "'),strftime(decommissioned,'" +
-            dateFormat +
-            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+          "SELECT id FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
             datePoint +
             " ORDER BY _rack.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
-        //TODO: expand rackSlot
         if (ddRows.length > 0) {
-          resJson = {
-            rackId: req.params.rackId,
-            point: ddRows[0][5],
-            reference: ddRows[0][8],
-            commissioned: ddRows[0][9],
-            siteId: ddRows[0][11],
-            coordinate: {
-              x: toDecimal(ddRows[0][16], OAS.X_scale, OAS.XY_precision),
-              y: toDecimal(ddRows[0][17], OAS.Y_scale, OAS.XY_precision),
-              z: toDecimal(ddRows[0][18], OAS.Z_scale, OAS.Z_precision),
-            },
-            dimensions: {
-              depth: toDecimal(ddRows[0][20]),
-              height: toDecimal(ddRows[0][21]),
-              width: toDecimal(ddRows[0][22]),
-              unit: ddRows[0][23],
-            },
-            slots: toInteger(ddRows[0][24]),
-            source: ddRows[0][7],
-            delete: toBoolean(ddRows[0][1]),
-          };
-          if (ddRows[0][10] != null) {
-            resJson.decommissioned = ddRows[0][10];
-          }
-          if (ddRows[0][12] != null) {
-            resJson.floor = ddRows[0][12];
-          }
-          if (ddRows[0][13] != null) {
-            resJson.area = ddRows[0][13];
-          }
-          if (ddRows[0][14] != null) {
-            resJson.row = ddRows[0][14];
-          }
-          if (ddRows[0][15] != null) {
-            resJson.column = ddRows[0][15];
-          }
-          if (ddRows[0][19] != null) {
-            resJson.coordinate.m = ddRows[0][19];
-          }
-          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+          let { status, body } = await getRackSlots(req.params.rackId, {
+            point: req.query?.point,
+          });
+          res.contentType(OAS.mimeJSON).status(200).json(body);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9897,68 +10204,119 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     }
   }
 
-  async function updateSingleRack(req, res, next) {
+  async function getSingleRackSlotUsage(req, res, next) {
+    let datePoint = "AND _rack.tsId = rack.historicalTsId";
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        let resJson = {};
-        let ddp = await DDC.prepare(
-          "SELECT id,delete,historicalTsId,predictedTsId,tsId,strftime(point,'" +
+        if (req.query?.point != null) {
+          datePoint =
+            "AND strftime(_rack.point,'" +
             pointFormat +
-            "'),rackId,source,reference,strftime(commissioned,'" +
-            dateFormat +
-            "'),strftime(decommissioned,'" +
-            dateFormat +
-            "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE id = $1 AND _rack.rackId = rack.id AND tsId = historicalTsId AND rack.delete = false LIMIT 1"
+            "') = '" +
+            req.query.point +
+            "'";
+        }
+        let ddp = await DDC.prepare(
+          "SELECT id,slots FROM rack, _rack,_rackSlot WHERE rack.id = $1 AND _rack.rackId = rack.id AND _rackSlot.rackId = rack.id AND _rackSlot.rackTsId = _rack.tsId AND rack.delete = false " +
+            datePoint +
+            " AND _rackSlot.slot = " +
+            req.params.slot +
+            " LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
-        //TODO: expand rackSlot
         if (ddRows.length > 0) {
-          resJson = {
-            rackId: req.params.rackId,
-            point: ddRows[0][5],
-            reference: ddRows[0][8],
-            commissioned: ddRows[0][9],
-            siteId: ddRows[0][11],
-            coordinate: {
-              x: toDecimal(ddRows[0][16], OAS.X_scale, OAS.XY_precision),
-              y: toDecimal(ddRows[0][17], OAS.Y_scale, OAS.XY_precision),
-              z: toDecimal(ddRows[0][18], OAS.Z_scale, OAS.Z_precision),
-            },
-            dimensions: {
-              depth: toDecimal(ddRows[0][20]),
-              height: toDecimal(ddRows[0][21]),
-              width: toDecimal(ddRows[0][22]),
-              unit: ddRows[0][23],
-            },
-            slots: toInteger(ddRows[0][24]),
-            source: ddRows[0][7],
-            delete: toBoolean(ddRows[0][1]),
-          };
-          if (ddRows[0][10] != null) {
-            resJson.decommissioned = ddRows[0][10];
+          let { status, body } = await getRackSlots(req.params.rackId, {
+            point: req.query?.point,
+          });
+          let usage = "";
+          if (body != null) {
+            for (let s = 0; s < body.length; s++) {
+              if (body[s].slot == toInteger(req.params.slot)) {
+                usage = body[s].usage;
+                break;
+              }
+            }
           }
-          if (ddRows[0][12] != null) {
-            resJson.floor = ddRows[0][12];
-          }
-          if (ddRows[0][13] != null) {
-            resJson.area = ddRows[0][13];
-          }
-          if (ddRows[0][14] != null) {
-            resJson.row = ddRows[0][14];
-          }
-          if (ddRows[0][15] != null) {
-            resJson.column = ddRows[0][15];
-          }
-          if (ddRows[0][19] != null) {
-            resJson.coordinate.m = ddRows[0][19];
-          }
-          // pass to replace to regenerate the record
-          req.body = jsonDeepMerge(resJson, req.body);
-          return next();
+          res.contentType(OAS.mimeJSON).status(200).json({ usage: usage });
         } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "rackId " +
+                req.params.rackId +
+                " or slot " +
+                req.params.slot +
+                " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getSingleRack(req, res, next) {
+    let datePoint = "AND _rack.tsId = rack.historicalTsId";
+    try {
+      let result = validationResult(req);
+      let options = { source: "historical", point: null };
+      if (result.isEmpty()) {
+        if (req.query?.point != null) {
+          options.point = req.query.point;
+        }
+        let { status, body } = await getRack(req.params.rackId, options);
+        if (status == 200) {
+          res.contentType(OAS.mimeJSON).status(status).json(body);
+        } else if (status == 404) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(status)
+            .json({
+              errors: "rackId " + req.params.rackId + " does not exist",
+            });
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(status)
+            .json({
+              errors: "rackid " + req.params.rackId,
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function updateSingleRack(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { status, body } = await getRack(req.params.rackId);
+        if (status == 200 && body != null) {
+          let point = dayjs().format(dayjsFormat);
+          if (req.body?.point != null) {
+            point = req.body.point;
+          }
+          req.body = jsonDeepMerge(req.body, { point: point });
+          req.body = jsonDeepMerge(body, req.body);
+          return next();
+        } else if (status == 404) {
           res
             .contentType(OAS.mimeJSON)
             .status(404)
@@ -9998,113 +10356,15 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
-          let tsId = await getSeqNextValue("seq_rack");
-          let tsCol = "historicalTsId";
-          switch (req.body.source) {
-            case "historical":
-              tsCol = "historicalTsId";
-              break;
-            case "predicted":
-              tsCol = "predictedTsId";
-              break;
+          let status = await addRack(req.params.rackId, req.body);
+          if (status == 200) {
+            if (req.body.source == "historical") {
+              await dbAddPredictQueueItem("rack", req.params.rackId, "update");
+            }
+            return res.sendStatus(204);
+          } else {
+            res.sendStatus(status);
           }
-          let ddp = await DDC.prepare(
-            "UPDATE rack SET " +
-              tsCol +
-              " = $1, tsPoint = strptime($2,$3) WHERE id = $4"
-          );
-          ddp.bindInteger(1, tsId);
-          ddp.bindVarchar(2, req.body.point);
-          ddp.bindVarchar(3, pointFormat);
-          ddp.bindVarchar(4, req.params.rackId);
-          await ddp.run();
-          //TODO: expand rackSlot
-          ddp = await DDC.prepare(
-            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
-          );
-          ddp.bindInteger(1, tsId);
-          ddp.bindVarchar(2, req.body.point);
-          ddp.bindVarchar(3, pointFormat);
-          ddp.bindVarchar(4, req.body.rackId);
-          ddp.bindVarchar(5, req.body.source);
-          ddp.bindVarchar(6, req.body.reference);
-          ddp.bindVarchar(7, req.body.commissioned);
-          ddp.bindVarchar(8, dateFormat);
-          ddp.bindVarchar(9, req.body.siteId);
-          ddp.bindFloat(
-            10,
-            toDecimal(req.body.coordinate.x, OAS.X_scale, OAS.XY_precision)
-          );
-          ddp.bindFloat(
-            11,
-            toDecimal(req.body.coordinate.y, OAS.Y_scale, OAS.XY_precision)
-          );
-          ddp.bindFloat(
-            12,
-            toDecimal(req.body.coordinate.z, OAS.Z_scale, OAS.Z_precision)
-          );
-          ddp.bindFloat(13, toDecimal(req.body.dimensions.depth));
-          ddp.bindFloat(14, toDecimal(req.body.dimensions.height));
-          ddp.bindFloat(15, toDecimal(req.body.dimensions.width));
-          ddp.bindVarchar(16, req.body.dimensions.unit);
-          ddp.bindInteger(17, toInteger(req.body.slots));
-          await ddp.run();
-          if (req.body.decommissioned != null) {
-            await DDC.run(
-              "UPDATE _rack SET decommissioned = strptime('" +
-                req.body.decommissioned +
-                "','" +
-                dateFormat +
-                "')" +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.floor != null) {
-            await DDC.run(
-              "UPDATE _rack SET floor = " +
-                toInteger(req.body.floor) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.area != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorArea = '" +
-                req.body.area +
-                "' WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.row != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorRow = " +
-                toInteger(req.body.row) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.column != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorColumn = " +
-                toInteger(req.body.column) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.coordinate?.m != null) {
-            await DDC.run(
-              "UPDATE _rack SET m = '" +
-                req.body.coordinate.m +
-                "' WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body.source == "historical") {
-            await dbAddPredictQueueItem("rack", req.params.rackId, "update");
-          }
-          res.sendStatus(204);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -10128,58 +10388,20 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     try {
       let resJson = [];
       let ddp = await DDC.runAndReadAll(
-        "SELECT id,delete,historicalTsId,predictedTsId,tsId,strftime(point,'" +
+        "SELECT id,strftime(point,'" +
           pointFormat +
-          "'),rackId,source,reference,strftime(commissioned,'" +
-          dateFormat +
-          "'),strftime(decommissioned,'" +
-          dateFormat +
-          "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE _rack.rackId = rack.id ORDER BY _rack.point"
+          "'),source FROM rack, _rack WHERE _rack.rackId = rack.id ORDER BY _rack.point DESC"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
         for (let idx in ddRows) {
-          //TODO: expand rackSlot
-          let resObj = {
-            rackId: ddRows[idx][0],
-            point: ddRows[idx][5],
-            reference: ddRows[idx][8],
-            commissioned: ddRows[idx][9],
-            siteId: ddRows[idx][11],
-            coordinate: {
-              x: toDecimal(ddRows[idx][16], OAS.X_scale, OAS.XY_precision),
-              y: toDecimal(ddRows[idx][17], OAS.Y_scale, OAS.XY_precision),
-              z: toDecimal(ddRows[idx][18], OAS.Z_scale, OAS.Z_precision),
-            },
-            dimensions: {
-              depth: toDecimal(ddRows[idx][20]),
-              height: toDecimal(ddRows[idx][21]),
-              width: toDecimal(ddRows[idx][22]),
-              unit: ddRows[idx][23],
-            },
-            slots: toInteger(ddRows[idx][24]),
-            source: ddRows[idx][7],
-            delete: toBoolean(ddRows[idx][1]),
-          };
-          if (ddRows[idx][10] != null) {
-            resObj.decommissioned = ddRows[idx][10];
+          let { status, body } = await getRack(ddRows[idx][0], {
+            point: ddRows[idx][1],
+            source: ddRows[idx][2],
+          });
+          if (status == 200) {
+            resJson.push(body);
           }
-          if (ddRows[idx][12] != null) {
-            resObj.floor = ddRows[idx][12];
-          }
-          if (ddRows[idx][13] != null) {
-            resObj.area = ddRows[idx][13];
-          }
-          if (ddRows[idx][14] != null) {
-            resObj.row = ddRows[idx][14];
-          }
-          if (ddRows[idx][15] != null) {
-            resObj.column = ddRows[idx][15];
-          }
-          if (ddRows[idx][19] != null) {
-            resObj.coordinate.m = ddRows[idx][19];
-          }
-          resJson.push(resObj);
         }
         resJson = jsonSortByMultiKeys(resJson, ["point", "source"]);
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -10194,160 +10416,25 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   async function addMultipleRacks(req, res, next) {
     try {
       let result = validationResult(req);
+      let resJson = [];
       if (result.isEmpty()) {
         req.body = jsonSortByMultiKeys(req.body, ["point", "source"]);
-        let resJson = [];
         for (let i = 0; i < req.body.length; i++) {
-          let ddd = await DDC.runAndReadAll(
-            "SELECT id FROM rack WHERE id = '" + req.body[i].rackId + "'"
-          );
-          let dddRows = ddd.getRows();
-          if (dddRows.length > 0) {
-            await DDC.run(
-              "DELETE FROM _rack WHERE rackId = '" + req.body[i].rackId + "'"
-            );
-            await DDC.run(
-              "UPDATE rack SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
-                req.body[i].rackId +
-                "'"
-            );
-          }
-        }
-        for (let i = 0; i < req.body.length; i++) {
-          if (!(await dbIdExists(req.body[i].siteId, "site"))) {
+          let status = await deleteRack(req.body[i].rackId, { expunge: true });
+          status = await addRack(req.body[i].rackId, req.body[i]);
+          if (status == 200) {
+            if (req.body[i].source == "historical") {
+              await dbAddPredictQueueItem("rack", req.body[i].rackId, "create");
+            }
+            resJson.push(req.body[i].rackId);
+          } else {
             return res
               .contentType(OAS.mimeJSON)
-              .status(404)
+              .status(status)
               .json({
-                errors:
-                  "[" +
-                  i +
-                  "] siteId " +
-                  req.body[i].siteId +
-                  " does not exist",
+                errors: "rackId " + req.body[i].rackId,
               });
           }
-          let tsId = await getSeqNextValue("seq_rack");
-          let tsCol = "historicalTsId";
-          switch (req.body.source) {
-            case "historical":
-              tsCol = "historicalTsId";
-              break;
-            case "predicted":
-              tsCol = "predictedTsId";
-              break;
-          }
-          let ddq = await DDC.runAndReadAll(
-            "SELECT id FROM rack WHERE id = '" + req.body[i].rackId + "'"
-          );
-          let ddqRows = ddq.getRows();
-          if (ddqRows.length == 0) {
-            let ddp = await DDC.prepare(
-              "INSERT INTO rack (id,delete," +
-                tsCol +
-                ",tsPoint) VALUES ($1,$2,$3,strptime($4,$5))"
-            );
-            ddp.bindVarchar(1, req.body[i].rackId);
-            ddp.bindBoolean(2, toBoolean(req.body[i].delete));
-            ddp.bindInteger(3, tsId);
-            ddp.bindVarchar(4, req.body[i].point);
-            ddp.bindVarchar(5, pointFormat);
-            await ddp.run();
-          } else {
-            let ddp = await DDC.prepare(
-              "UPDATE rack SET delete = $1, " + tsCol + " = $2 WHERE id = $3"
-            );
-            ddp.bindBoolean(1, toBoolean(req.body[i].delete));
-            ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, req.body[i].rackId);
-            await ddp.run();
-          }
-          //TODO: expand rackSlot
-          let ddp = await DDC.prepare(
-            "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
-          );
-          ddp.bindInteger(1, tsId);
-          ddp.bindVarchar(2, req.body[i].point);
-          ddp.bindVarchar(3, pointFormat);
-          ddp.bindVarchar(4, req.body[i].rackId);
-          ddp.bindVarchar(5, req.body[i].source);
-          ddp.bindVarchar(6, req.body[i].reference);
-          ddp.bindVarchar(7, req.body[i].commissioned);
-          ddp.bindVarchar(8, dateFormat);
-          ddp.bindVarchar(9, req.body[i].siteId);
-          ddp.bindFloat(
-            10,
-            toDecimal(req.body[i].coordinate.x, OAS.X_scale, OAS.XY_precision)
-          );
-          ddp.bindFloat(
-            11,
-            toDecimal(req.body[i].coordinate.y, OAS.Y_scale, OAS.XY_precision)
-          );
-          ddp.bindFloat(
-            12,
-            toDecimal(req.body[i].coordinate.z, OAS.Z_scale, OAS.Z_precision)
-          );
-          ddp.bindFloat(13, toDecimal(req.body[i].dimensions.depth));
-          ddp.bindFloat(14, toDecimal(req.body[i].dimensions.height));
-          ddp.bindFloat(15, toDecimal(req.body[i].dimensions.width));
-          ddp.bindVarchar(16, req.body[i].dimensions.unit);
-          ddp.bindInteger(17, toInteger(req.body[i].slots));
-          await ddp.run();
-          if (req.body[i].decommissioned != null) {
-            await DDC.run(
-              "UPDATE _rack SET decommissioned = strptime('" +
-                req.body[i].decommissioned +
-                "','" +
-                dateFormat +
-                "')" +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].floor != null) {
-            await DDC.run(
-              "UPDATE _rack SET floor = " +
-                toInteger(req.body[i].floor) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].area != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorArea = '" +
-                req.body[i].area +
-                "' WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].row != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorRow = " +
-                toInteger(req.body[i].row) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].column != null) {
-            await DDC.run(
-              "UPDATE _rack SET floorColumn = " +
-                toInteger(req.body[i].column) +
-                " WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].coordinate?.m != null) {
-            await DDC.run(
-              "UPDATE _rack SET m = '" +
-                req.body[i].coordinate.m +
-                "' WHERE tsId = " +
-                tsId
-            );
-          }
-          if (req.body[i].source == "historical") {
-            await dbAddPredictQueueItem("rack", req.body[i].rackId, "create");
-          }
-          resJson.push(req.body[i].rackId);
         }
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
@@ -17390,7 +17477,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
     body("rackId").isUUID(4),
-    body("slotPosition").matches(OAS.rackSlotPosition),
+    body("slotPosition").isString().trim().matches(OAS.rackSlotPosition),
     body("mgmtIP").isIP(),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
@@ -17569,7 +17656,11 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").optional().isUUID(4),
     body("rackId").optional().isUUID(4),
-    body("slotPosition").optional().matches(OAS.rackSlotPosition),
+    body("slotPosition")
+      .optional()
+      .isString()
+      .trim()
+      .matches(OAS.rackSlotPosition),
     body("mgmtIP").optional().isIP(),
     body("vendor").optional().isString().trim(),
     body("model").optional().isString().trim(),
@@ -17700,7 +17791,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
     body("rackId").isUUID(4),
-    body("slotPosition").matches(OAS.rackSlotPosition),
+    body("slotPosition").isString().trim().matches(OAS.rackSlotPosition),
     body("mgmtIP").isIP(),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
@@ -17842,7 +17933,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("*.siteId").isUUID(4),
     body("*.rackId").isUUID(4),
-    body("*.slotPosition").matches(OAS.rackSlotPosition),
+    body("*.slotPosition").isString().trim().matches(OAS.rackSlotPosition),
     body("*.mgmtIP").isIP(),
     body("*.vendor").isString().trim(),
     body("*.model").isString().trim(),
@@ -18460,46 +18551,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
   /*
        Tag:           Racks
-       operationId:   addSingleRack
-       exposed Route: /mni/v1/rack
-       HTTP method:   POST
-       OpenID Scope:  write:mni_rack
-    */
-  app.post(
-    serveUrlPrefix + serveUrlVersion + "/rack",
-    // security("write:mni_rack"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    body("reference").isString().trim(),
-    body("commissioned").matches(OAS.datePeriodYearMonthDay),
-    body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
-    body("siteId").isUUID(4),
-    body("floor").optional().isInt(OAS.rack_floor),
-    body("area").optional().isString().trim(),
-    body("row").optional().isInt(OAS.rack_row),
-    body("column").optional().isInt(OAS.rack_column),
-    body("coordinate").isObject(),
-    body("coordinate.x").default(0).isFloat(OAS.coordinate_x),
-    body("coordinate.y").default(0).isFloat(OAS.coordinate_y),
-    body("coordinate.z").default(0).isFloat(OAS.coordinate_z),
-    body("coordinate.m").optional().isString().trim(),
-    body("dimensions").isObject(),
-    body("dimensions.depth").default(914.4).isFloat(OAS.rack_dimension),
-    body("dimensions.height").default(2000).isFloat(OAS.rack_dimension),
-    body("dimensions.width").default(600).isFloat(OAS.rack_dimension),
-    body("dimensions.unit").default("mm").isIn(OAS.sizeUnit),
-    body("slots").default(42).isInt(OAS.rackSlots),
-    body("slotUsage").optional().isArray(),
-    body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
-    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
-    body("source").default("historical").isIn(OAS.source),
-    body("delete").default(false).isBoolean({ strict: true }),
-    addSingleRack
-  );
-
-  /*
-       Tag:           Racks
        operationId:   deleteSingleRack
        exposed Route: /mni/v1/rack/:rackId
        HTTP method:   DELETE
@@ -18564,7 +18615,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("slots").default(42).isInt(OAS.rackSlots),
     body("slotUsage").optional().isArray(),
     body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
-    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
     body("point").optional().matches(OAS.dateTime),
     body("source").optional().isIn(OAS.source),
     body("delete").optional().isBoolean({ strict: true }),
@@ -18605,11 +18656,51 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("slots").default(42).isInt(OAS.rackSlots),
     body("slotUsage").optional().isArray(),
     body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
-    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
     body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleRack
+  );
+
+  /*
+       Tag:           Racks
+       operationId:   addSingleRack
+       exposed Route: /mni/v1/rack
+       HTTP method:   POST
+       OpenID Scope:  write:mni_rack
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/rack",
+    // security("write:mni_rack"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("reference").isString().trim(),
+    body("commissioned").matches(OAS.datePeriodYearMonthDay),
+    body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
+    body("siteId").isUUID(4),
+    body("floor").optional().isInt(OAS.rack_floor),
+    body("area").optional().isString().trim(),
+    body("row").optional().isInt(OAS.rack_row),
+    body("column").optional().isInt(OAS.rack_column),
+    body("coordinate").isObject(),
+    body("coordinate.x").default(0).isFloat(OAS.coordinate_x),
+    body("coordinate.y").default(0).isFloat(OAS.coordinate_y),
+    body("coordinate.z").default(0).isFloat(OAS.coordinate_z),
+    body("coordinate.m").optional().isString().trim(),
+    body("dimensions").isObject(),
+    body("dimensions.depth").default(914.4).isFloat(OAS.rack_dimension),
+    body("dimensions.height").default(2000).isFloat(OAS.rack_dimension),
+    body("dimensions.width").default(600).isFloat(OAS.rack_dimension),
+    body("dimensions.unit").default("mm").isIn(OAS.sizeUnit),
+    body("slots").default(42).isInt(OAS.rackSlots),
+    body("slotUsage").optional().isArray(),
+    body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
+    body("slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
+    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("source").default("historical").isIn(OAS.source),
+    body("delete").default(false).isBoolean({ strict: true }),
+    addSingleRack
   );
 
   /*
@@ -18661,13 +18752,46 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.slots").default(42).isInt(OAS.rackSlots),
     body("*.slotUsage").optional().isArray(),
     body("*.slotUsage.*.slot").optional().isInt(OAS.rackSlots),
-    body("*.slotUsage.*.usage").optional().isIn(OAS.rackSlotState),
+    body("*.slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
     body("*.point")
       .default(dayjs().format(dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleRacks
+  );
+
+  /*
+       Tag:           Racks
+       operationId:   getSingleRackSlots
+       exposed Route: /mni/v1/rack/slots/:rackId
+       HTTP method:   GET
+       OpenID Scope:  read:mni_rack
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId",
+    // security("read:mni_rack"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("rackId").isUUID(4),
+    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    getSingleRackSlots
+  );
+
+  /*
+       Tag:           Racks
+       operationId:   getSingleRackSlotUsage
+       exposed Route: /mni/v1/rack/slots/:rackId/:slot
+       HTTP method:   GET
+       OpenID Scope:  read:mni_rack
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId/:slot",
+    // security("read:mni_rack"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("rackId").isUUID(4),
+    param("slot").isInt(OAS.rackSlots),
+    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    getSingleRackSlotUsage
   );
 
   /*
@@ -19886,48 +20010,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   // Install non-auto DuckDB extensions
   // DuckDB will ignore the LOAD command if extension already loaded etc.
   for (let i = 0; i < duckDbExtensions.length; i++) {
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
-    if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
-        event: "extension",
-        extension: duckDbExtensions[i],
-        state: "install",
-      });
-    }
     if (DEBUG) {
       LOGGER.info(dayjs().format(dayjsFormat), "debug", {
         event: "extension",

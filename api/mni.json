@@ -7852,7 +7852,7 @@
                           "$ref": "#/components/schemas/rackSlots"
                         },
                         "usage": {
-                          "$ref": "#/components/schemas/slotState"
+                          "$ref": "#/components/schemas/rackSlotUsage"
                         }
                       }
                     }
@@ -8020,7 +8020,7 @@
                           "$ref": "#/components/schemas/rackSlots"
                         },
                         "usage": {
-                          "$ref": "#/components/schemas/slotState"
+                          "$ref": "#/components/schemas/rackSlotUsage"
                         }
                       }
                     }
@@ -8147,7 +8147,7 @@
                           "$ref": "#/components/schemas/rackSlots"
                         },
                         "usage": {
-                          "$ref": "#/components/schemas/slotState"
+                          "$ref": "#/components/schemas/rackSlotUsage"
                         }
                       }
                     }
@@ -8344,7 +8344,7 @@
                             "$ref": "#/components/schemas/rackSlots"
                           },
                           "usage": {
-                            "$ref": "#/components/schemas/slotState"
+                            "$ref": "#/components/schemas/rackSlotUsage"
                           }
                         }
                       }
@@ -8555,6 +8555,140 @@
                       ],
                       "source": "historical",
                       "delete": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/rack/slots/{rackId}": {
+      "get": {
+        "summary": "slot usage for specified rack",
+        "security": [
+          {
+            "openId": [
+              "read:mni_rack"
+            ]
+          }
+        ],
+        "operationId": "getSingleRackSlots",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rackId"
+          }
+        ],
+        "tags": [
+          "Racks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "slot": {
+                        "$ref": "#/components/schemas/rackSlots"
+                      },
+                      "usage": {
+                        "$ref": "#/components/schemas/rackSlotUsage"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "slot": "1",
+                        "usage": "reserved"
+                      },
+                      {
+                        "slot": "2",
+                        "usage": "used"
+                      },
+                      {
+                        "slot": "3",
+                        "usage": "free"
+                      },
+                      {
+                        "slot": "4",
+                        "usage": "free"
+                      },
+                      {
+                        "slot": "5",
+                        "usage": "faulty"
+                      },
+                      {
+                        "slot": "6",
+                        "usage": "predicted"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/rack/slots/{rackId}/{slot}": {
+      "get": {
+        "summary": "usage for specified rack slot",
+        "security": [
+          {
+            "openId": [
+              "read:mni_rack"
+            ]
+          }
+        ],
+        "operationId": "getSingleRackSlotUsage",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/rackId"
+          },
+          {
+            "$ref": "#/components/parameters/rackSlot"
+          }
+        ],
+        "tags": [
+          "Racks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "slot usage is considered free unless indicated otherwise",
+                  "type": "object",
+                  "properties": {
+                    "usage": {
+                      "$ref": "#/components/schemas/rackSlotUsage"
                     }
                   }
                 }
@@ -19795,7 +19929,7 @@
         "maximum": 58,
         "default": 42
       },
-      "slotState": {
+      "rackSlotUsage": {
         "description": "usage of specific rack slot",
         "type": "string",
         "enum": [
@@ -20487,6 +20621,17 @@
         "schema": {
           "type": "string",
           "format": "uuid"
+        }
+      },
+      "rackSlot": {
+        "name": "slot",
+        "description": "number of physical slots in the rack, 1=1U, 42=42U etc.\n",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 58
         }
       },
       "neId": {
