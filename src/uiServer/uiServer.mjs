@@ -526,6 +526,25 @@ var run = async () => {
     res.render("dashboard", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/cable/:cableId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      cableId: cableId,
+      point: point,
+    };
+    res.render("cable", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/cable", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -539,6 +558,25 @@ var run = async () => {
     res.render("cable", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/duct/:ductId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      ductId: ductId,
+      point: point,
+    };
+    res.render("duct", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/duct", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -550,6 +588,25 @@ var run = async () => {
       gatewayUrlDns: apiGatewayDns,
     };
     res.render("duct", { payload: payload });
+  });
+
+  app.get(serveUrlPrefix + "/pole/:poleId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      poleId: poleId,
+      point: point,
+    };
+    res.render("pole", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/pole", function (req, res, next) {
@@ -584,7 +641,6 @@ var run = async () => {
     res.render("ne", { payload: payload });
   });
 
-
   app.get(serveUrlPrefix + "/ne", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -596,6 +652,26 @@ var run = async () => {
       gatewayUrlDns: apiGatewayDns,
     };
     res.render("ne", { payload: payload });
+  });
+
+  app.get(serveUrlPrefix + "/rack/:rackId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      rackId: rackId,
+      point: point,
+    };
+    res.render("rack", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/rack", function (req, res, next) {
@@ -611,6 +687,26 @@ var run = async () => {
     res.render("rack", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/site/:siteId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      siteId: siteId,
+      point: point,
+    };
+    res.render("site", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/site", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -622,6 +718,26 @@ var run = async () => {
       gatewayUrlDns: apiGatewayDns,
     };
     res.render("site", { payload: payload });
+  });
+
+  app.get(serveUrlPrefix + "/service/:serviceId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      serviceId: serviceId,
+      point: point,
+    };
+    res.render("service", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/service", function (req, res, next) {
@@ -637,6 +753,26 @@ var run = async () => {
     res.render("service", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/trench/:trenchId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      trenchId: trenchId,
+      point: point,
+    };
+    res.render("trench", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/trench", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -650,6 +786,29 @@ var run = async () => {
     res.render("trench", { payload: payload });
   });
 
+  app.get(
+    serveUrlPrefix + "/trenchLifetime/:trenchId",
+    function (req, res, next) {
+      let point = null;
+      if (req.query?.point != null) {
+        point = req.query.point;
+      }
+
+      let payload = {
+        appName: appName,
+        appVersion: appVersion,
+        appBuild: appBuild,
+        rootUrl: serveUrlPrefix,
+        gatewayUrl: apiGatewayDns,
+        gatewayUrlIp: apiGatewayIp,
+        gatewayUrlDns: apiGatewayDns,
+        trenchId: trenchId,
+        point: point,
+      };
+      res.render("trenchLifetime", { payload: payload });
+    }
+  );
+
   app.get(serveUrlPrefix + "/trenchLifetime", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -661,32 +820,6 @@ var run = async () => {
       gatewayUrlDns: apiGatewayDns,
     };
     res.render("trenchLifetime", { payload: payload });
-  });
-
-  app.get(serveUrlPrefix + "/provider", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("provider", { payload: payload });
-  });
-
-  app.get(serveUrlPrefix + "/provider", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("provider", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/email", function (req, res, next) {
