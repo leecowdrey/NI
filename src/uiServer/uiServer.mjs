@@ -565,6 +565,26 @@ var run = async () => {
     res.render("pole", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/ne/:neId", function (req, res, next) {
+    let point = null;
+    if (req.query?.point != null) {
+      point = req.query.point;
+    }
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+      neId: req.params.neId,
+      point: point,
+    };
+    res.render("ne", { payload: payload });
+  });
+
+
   app.get(serveUrlPrefix + "/ne", function (req, res, next) {
     let payload = {
       appName: appName,

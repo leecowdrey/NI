@@ -28,21 +28,25 @@
         a:link {
             color: white;
             text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         a:visited {
             color: white;
             text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         a:hover {
             color: white;
             text-decoration: underline;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         a:active {
             color: white;
             text-decoration: underline;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .rack-panel {
@@ -58,7 +62,7 @@
             height: calc(70vh - 10px);
             border-radius: 10px;
             background-color: #b3b3b3;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             color: #000000;
             text-align: left;
             margin-top: 20px;
@@ -71,16 +75,16 @@
             display: grid;
             grid-template-rows: 16px repeat(var(--max-rack-slots), 16px) 16px;
             grid-template-columns: repeat(1, 1fr);
-            width: 200px;
+            width: 300px;
             height: calc(75vh - 20px);
         }
 
         .slotFree {
             border: 1px solid white;
             background-color: green;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             text-align: left;
-            font-size: 0.50em;
+            font-size: 0.7em;
             text-indent: 1em;
             color: white;
         }
@@ -88,9 +92,9 @@
         .slotUsed {
             border: 1px solid white;
             background-color: black;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             text-align: left;
-            font-size: 0.50em;
+            font-size: 0.7em;
             text-indent: 1em;
             color: white;
         }
@@ -98,9 +102,9 @@
         .slotReserved {
             border: 1px solid white;
             background-color: #808080;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             text-align: left;
-            font-size: 0.50em;
+            font-size: 0.7em;
             text-indent: 1em;
             color: white;
         }
@@ -108,9 +112,9 @@
         .slotFaulty {
             border: 1px solid white;
             background-color: red;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             text-align: left;
-            font-size: 0.50em;
+            font-size: 0.7em;
             text-indent: 1em;
             color: white;
         }
@@ -118,12 +122,12 @@
         .slotPredicted {
             border: 1px solid white;
             background-color: black;
-            font-family:'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
             text-align: left;
-            font-size: 0.50em;
+            font-size: 0.7em;
             text-indent: 1em;
             color: white;
         }
@@ -265,25 +269,29 @@
                     for (let j = 0; j < slotUsage.length; j++) {
                         let cell = document.createElement("div");
                         cell.setAttribute("id", "slot" + (rackSlots - j));
-                        cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
                         switch (slotUsage[j].usage) {
                             case "free":
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
                                 cell.setAttribute("class", "slotFree");
                                 slotFree = slotFree + 1;
                                 break;
                             case "used":
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage+" "+slotUsage[j].host+" "+slotUsage[j].mgmtIP);
                                 cell.setAttribute("class", "slotUsed");
                                 slotUsed = slotUsed + 1;
                                 break;
                             case "reserved":
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
                                 cell.setAttribute("class", "slotReserved");
                                 slotReserved = slotReserved + 1;
                                 break;
                             case "faulty":
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
                                 cell.setAttribute("class", "slotFaulty");
                                 slotFaulty = slotFaulty + 1;
                                 break;
                             case "predicted":
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
                                 cell.setAttribute("class", "slotPredicted");
                                 slotPredicted = slotPredicted + 1;
                                 break;
@@ -294,26 +302,26 @@
                         switch (slotUsage[j].usage) {
                             case "used":
                                 if (slotUsage[j].neId != null) {
-                                    cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;' + slotUsage[j].host + '&emsp;(' + slotUsage[j].mgmtIP + ')';
+                                    cellHTML = '&emsp;' + (rackSlots - j) + ' <a href="<%=payload.rootUrl%>/ne/' + slotUsage[j].neId + '" rel="noopener noreferrer" target="_blank">+</a>&emsp;' + slotUsage[j].host;
                                 } else {
-                                    cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;';
+                                    cellHTML = '&emsp;' + (rackSlots - j);
                                 }
                                 break;
                             default:
-                                cellHTML = '&emsp;' + (rackSlots - j) + '&emsp;';
+                                cellHTML = '&emsp;' + (rackSlots - j);
                         }
                         document.getElementById("slot" + (rackSlots - j)).innerHTML = cellHTML;
                     }
                     if (data?.decommissioned == undefined) {
                         data.decommissioned = "";
                     }
-                    let metadata = '<small><b>Reference</b>:&emsp;' + data.reference + '<br>( ' + rackId + ' )<br>' +
+                    let metadata = '<small><b>Reference</b>:&emsp;' + data.reference + '<br>' +
                         '<br>Commissioned:&emsp;&emsp;' + data.commissioned + '<br>' +
                         'Decommissioned:&emsp;' + data.decommissioned + '<br>' +
-                        '<br><b>Dimensions</b>:<br>'+
+                        '<br><b>Dimensions</b>:<br>' +
                         'H/W/D:&emsp;' + data.dimensions.height + ' / ' + data.dimensions.width + ' / ' + data.dimensions.depth + ' ' + data.dimensions.unit + '<br>' +
                         'Slots:&emsp;&emsp;' + data.slots + '<br>' +
-                        '<br><b>Location</b>:<br>'+
+                        '<br><b>Location</b>:<br>' +
                         'X,Y,Z:&emsp;&emsp;' + data.coordinate.x + ' , ' + data.coordinate.y + ' , ' + data.coordinate.z + '<br>' +
                         'Area:&emsp;&emsp;' + data.area + '<br>' +
                         'Floor:&emsp;&emsp;' + data.floor + '<br>' +
