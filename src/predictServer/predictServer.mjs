@@ -28,7 +28,6 @@ var dayjsDateFormat = "YYYYMMDD";
 var DEBUG = false;
 var ENDPOINT_READY = false;
 var ENDPOINT = null;
-var predictDuplicate = null;
 var predictMethodOne = null;
 
 //const output = fs.createWriteStream('./stdout.log');
@@ -57,6 +56,8 @@ var historicalDuration = 1;
 var historicalUnit = "year";
 var predictedDuration = 6;
 var predictedUnit = "month";
+
+function noop() {}
 
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
@@ -234,9 +235,6 @@ function quit() {
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "quit",
   });
-  if (predictDuplicate != null) {
-    predictDuplicate.terminate({ force: true, timeout: endpointRetryMs });
-  }
   if (predictMethodOne != null) {
     predictMethodOne.terminate({ force: true, timeout: endpointRetryMs });
   }
@@ -416,6 +414,105 @@ async function getDateBoundary() {
   dateBoundaryTimer = setTimeout(getDateBoundary, dateBoundaryIntervalMs);
 }
 
+async function duplicate(bundle) {
+  try {
+    // get the resource
+    let body = {};
+    let url =
+      bundle.endpoint +
+      "/" +
+      bundle.resource +
+      "/" +
+      bundle.id +
+      "?point=" +
+      bundle.point;
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        body = data;
+      });
+
+    // delete all predicted variants of the specified resource
+    url =
+      bundle.endpoint + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+    await fetch(url, {
+      method: "DELETE",
+      signal: AbortSignal.timeout(bundle.abortMs),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return false;
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+          event: "deletePredicted",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+
+    let predictedPoint = dayjs(bundle.point, dayjsFormat).add(
+      bundle.predicted.duration,
+      bundle.predicted.unit
+    );
+    // move the predicted point back 1 second from the predicted boundary
+    predictedPoint = predictedPoint.subtract(1, "s");
+
+    // update original
+    if (body.point != null) {
+      body.point = predictedPoint.format(dayjsFormat);
+    }
+    if (body.source != null) {
+      body.source = "predicted";
+    }
+    url = bundle.endpoint + "/" + bundle.resource + "/" + bundle.id;
+    await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": OAS.mimeJSON,
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(bundle.abortMs),
+    })
+      .then((response) => {
+        return response.ok;
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+  } catch (err) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+      qId: bundle.qId,
+      resource: bundle.resource,
+      id: bundle.id,
+      error: err,
+    });
+  }
+}
+
 async function queueDrain() {
   let queueEmpty = false;
   do {
@@ -481,87 +578,89 @@ async function queueDrain() {
                   },
                   signal: AbortSignal.timeout(endpointRetryMs),
                 })
-                  .then((response) => {
-                    if (response.ok) {
+                  .then((timelineResponse) => {
+                    if (timelineResponse.ok) {
                       if (
-                        toInteger(response.headers.get("Content-Length")) > 0
+                        toInteger(
+                          timelineResponse.headers.get("Content-Length")
+                        ) > 0
                       ) {
-                        return response.json();
+                        return timelineResponse.json();
                       }
                     }
                   })
-                  .then((data) => {
-                    if (data != null) {
-                      if (Array.isArray(data)) {
-                        if (data.length > 0) {
+                  .then((timelineData) => {
+                    if (timelineData != null) {
+                      if (Array.isArray(timelineData)) {
+                        if (timelineData.length > 0) {
                           let historicalTimeline = [];
                           let predictedTimeline = [];
-                          for (let p = 0; p < data.length; p++) {
+                          for (let p = 0; p < timelineData.length; p++) {
                             // only use most recent historical resource incarnation for prediction
-                            if (data[p].source === "historical") {
-                              historicalTimeline.push(data[p].point);
-                            } else if (data[p].source === "predicted") {
-                              predictedTimeline.push(data[p].point);
+                            if (timelineData[p].source == "historical") {
+                              historicalTimeline.push(timelineData[p].point);
+                            } else if (timelineData[p].source == "predicted") {
+                              predictedTimeline.push(timelineData[p].point);
                             }
                           }
-                          LOGGER.debug("id:"+q.id,"historicalPoints:"+historicalTimeline.length,"predictedPoints:"+predictedTimeline.length);
-                          if (historicalTimeline.length > 0 && predictedTimeline.length == 0) {
+                          if (historicalTimeline.length > 0) {
                             historicalTimeline = Array.from(
                               new Set(historicalTimeline.map(JSON.stringify))
                             )
                               .map(JSON.parse)
                               .sort();
-                            if (historicalTimeline.length == 1) {
-                              // if only single incarnation of resource exists then simply duplicate
-                              if (DEBUG) {
-                                LOGGER.debug(
-                                  dayjs().format(dayjsFormat),
-                                  "debug",
-                                  "queueDrain",
-                                  {
-                                    resource: q.resource,
-                                    id: q.id,
-                                    state: q.state,
-                                    method: "duplicate",
-                                  }
-                                );
-                              }
-                              predictDuplicate
-                                .exec("runMethod", [
-                                  {
-                                    endpoint: ENDPOINT,
-                                    abortMs: endpointRetryMs,
-                                    predicted: {
-                                      duration: predictedDuration,
-                                      unit: predictedUnit,
-                                    },
-                                    historical: {
-                                      duration: historicalDuration,
-                                      unit: historicalUnit,
-                                    },
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                    point: historicalTimeline[0],
-                                  },
-                                ])
-                                .then((qId) => {
-                                  deleteQueueItem(qId);
-                                })
-                                .catch((err) => {
-                                  LOGGER.error(
-                                    dayjs().format(dayjsFormat),
-                                    "error",
-                                    "resourcesDrain",
-                                    {
-                                      method: "duplicate",
-                                      qId: err.qId,
-                                      status: err.status,
-                                      error: err.statusText,
-                                    }
-                                  );
-                                });
-                            } else if (historicalTimeline.length > 1 && predictedTimeline.length == 0) {
+                          }
+                          if (predictedTimeline.length > 0) {
+                            predictedTimeline = Array.from(
+                              new Set(predictedTimeline.map(JSON.stringify))
+                            )
+                              .map(JSON.parse)
+                              .sort();
+                          }
+                          if (
+                            historicalTimeline.length > 0 &&
+                            predictedTimeline.length == 0
+                          ) {
+                            // if only single incarnation of resource exists then simply duplicate
+                            if (DEBUG) {
+                              LOGGER.debug(
+                                dayjs().format(dayjsFormat),
+                                "debug",
+                                "queueDrain",
+                                {
+                                  resource: q.resource,
+                                  qId: q.qId,
+                                  id: q.id,
+                                  state: q.state,
+                                  method: "duplicate",
+                                }
+                              );
+                            }
+
+                            let duplicateStatus = duplicate({
+                              endpoint: ENDPOINT,
+                              abortMs: endpointRetryMs,
+                              predicted: {
+                                duration: predictedDuration,
+                                unit: predictedUnit,
+                              },
+                              historical: {
+                                duration: historicalDuration,
+                                unit: historicalUnit,
+                              },
+                              qId: q.qId,
+                              resource: q.resource,
+                              id: q.id,
+                              point: historicalTimeline[ historicalTimeline.length - 1 ],
+                            });
+                            //if (duplicateStatus) {
+                            deleteQueueItem(q.qId);
+                            //}
+                            /*
+                            } else if (
+                              historicalTimeline.length > 1 &&
+                              predictedTimeline.length > 0
+                            ) {
                               // multiple incarnations of historical resource exists so use most recent
                               if (DEBUG) {
                                 LOGGER.debug(
@@ -576,6 +675,7 @@ async function queueDrain() {
                                   }
                                 );
                               }
+                              /*
                               predictMethodOne
                                 .exec("runMethod", [
                                   {
@@ -592,7 +692,6 @@ async function queueDrain() {
                                     qId: q.qId,
                                     resource: q.resource,
                                     id: q.id,
-                                    point: historicalTimeline[historicalTimeline.length - 1],
                                   },
                                 ])
                                 .then((qId) => {
@@ -606,12 +705,12 @@ async function queueDrain() {
                                     {
                                       method: "methodOne",
                                       qId: err.qId,
-                                      status: err.status,
-                                      error: err.statusText,
                                     }
                                   );
                                 });
+                              deleteQueueItem(q.qId);
                             }
+                            */
                           } else {
                             deleteQueueItem(q.qId);
                           }
@@ -796,12 +895,7 @@ var run = async () => {
   // discover endpoint via DNS
   await dnsSd();
 
-  // establish worker pools
-  predictDuplicate = workerpool.pool("./predictDuplicate.mjs", {
-    minWorkers: 1,
-    maxWorkers: threadsDuplicate,
-    workerType: "thread",
-  });
+  // establish worker pools (not for simple duplicate)
   predictMethodOne = workerpool.pool("./predictMethodOne.mjs", {
     minWorkers: 1,
     maxWorkers: threadsPredictMethodOne,
@@ -809,7 +903,7 @@ var run = async () => {
   });
 
   // banner
-  process.stdout.write( String.fromCharCode.apply(null,OAS.bannerGraffti) );
+  process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "starting",
@@ -830,7 +924,6 @@ var run = async () => {
     },
     workerPoolsThreads: {
       max: maxParallelism,
-      duplicate: threadsDuplicate,
       methodOne: threadsPredictMethodOne,
     },
   });

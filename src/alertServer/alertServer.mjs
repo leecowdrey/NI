@@ -1076,7 +1076,7 @@ var run = async () => {
       },
       {
         scheduled: true,
-        recoverMissedExecutions: true,
+        recoverMissedExecutions: false,
         name: "cveRepoPull",
       }
     );
@@ -1087,11 +1087,15 @@ var run = async () => {
       },
       {
         scheduled: true,
-        recoverMissedExecutions: true,
+        recoverMissedExecutions: false,
         name: "cveListBuild",
       }
     );
   }
+
+  // 
+  await jobCveRepoPull(cveDirectory);
+  await jobCveListBuild(cveDirectory)
 
   // process a queue item
   await queueDrain();

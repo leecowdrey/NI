@@ -48,6 +48,66 @@ if [[ ${RETVAL} -eq 0 ]] ; then
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+doing "Adding bulk email providers"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/email" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/admin_email.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding bulk kafka providers"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/kafka" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/admin_kafka.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding bulk map providers"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/map" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/admin_map.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding bulk workflow engines"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/workflow" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/admin_workflow.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding NE sample CVE: CVE-2025-21601"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/cve" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/CVE-2025-21601.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding NE sample CVE: CVE-2025-30649"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/cve" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @sample/CVE-2025-30649.json &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
 doing "Adding bulk sites"
 curl --silent --insecure --connect-timeout 5 \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/sites" \
@@ -125,46 +185,6 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/service.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding bulk email providers"
-curl --silent --insecure --connect-timeout 5 \
-     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/email" \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/admin_email.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding bulk kafka providers"
-curl --silent --insecure --connect-timeout 5 \
-     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/kafka" \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/admin_kafka.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding bulk map providers"
-curl --silent --insecure --connect-timeout 5 \
-     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/map" \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/admin_map.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding bulk workflow engines"
-curl --silent --insecure --connect-timeout 5 \
-     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/workflow" \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/admin_workflow.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

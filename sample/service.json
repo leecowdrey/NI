@@ -1,12 +1,12 @@
 [
   {
     "serviceId": "784d5d3d-44cf-41a2-8ef0-24a376b0b296",
-    "point": "20250509T122152",
+    "point": "20250512T122152",
     "customer": {
       "name": "Merkator",
       "reference": "sample"
     },
-    "commissioned": "20250509",
+    "commissioned": "20250512",
     "reference": "gbr-worc-cg1-merk-sample-0001",
     "rate": 1,
     "unit": "Gbps",

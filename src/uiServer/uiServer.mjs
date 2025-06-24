@@ -848,6 +848,32 @@ var run = async () => {
     res.render("map", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/map", function (req, res, next) {
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+    };
+    res.render("map", { payload: payload });
+  });
+
+  app.get(serveUrlPrefix + "/provider", function (req, res, next) {
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+    };
+    res.render("provider", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/kafka", function (req, res, next) {
     let payload = {
       appName: appName,

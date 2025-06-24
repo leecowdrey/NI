@@ -676,7 +676,6 @@ export const url_protocols = ["http", "https"];
 export const vlanId = { min: 0, max: 4095 };
 export const vxlanId = { min: 4096, max: 16777215 };
 export const workflowEngineType = ["bpmn", "elsa"];
-
 export const bannerGraffti = [
   32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95,
   32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32,

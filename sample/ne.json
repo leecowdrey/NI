@@ -1,9 +1,9 @@
 [
 	{
 		"neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
-		"point": "20250508T174124",
+		"point": "20250510T165841",
 		"host": "gbr-worc-cg1-02",
-		"commissioned": "20250508",
+		"commissioned": "20250510",
 		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
 		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
 		"slotPosition": "2",
@@ -101,9 +101,9 @@
 	},
 	{
 		"neId": "7a1a6b0c-01ec-41f2-8459-75784228f30d",
-		"point": "20250508T174124",
+		"point": "20250510T174124",
 		"host": "gbr-worc-cg1-01",
-		"commissioned": "20250508",
+		"commissioned": "20250510",
 		"siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
 		"rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
 		"slotPosition": "4,5",
@@ -145,6 +145,126 @@
 			},
 			{
 				"name": "at-0/0/3",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/4",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/5",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/6",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/0/7",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/0",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/1",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/2",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/3",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/4",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/5",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/6",
+				"technology": "xdsl",
+				"state": "free",
+				"configuration": {
+					"category": "VDSL2",
+					"rate": 100,
+					"unit": "Mbps"
+				}
+			},
+			{
+				"name": "at-0/1/7",
 				"technology": "xdsl",
 				"state": "free",
 				"configuration": {

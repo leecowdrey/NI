@@ -1,10 +1,20 @@
 <!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><link rel="stylesheet" href="/mni/css/style.css"><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><style>.panel {
-            width: 50%;
+            width: 85%;
             height: 40%;
             border-radius: 10px;
             background-color: #b3b3b3;
             color: #000000;
             text-align: center;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        .metadata-panel {
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffffff;
+            text-align: left;
             margin-top: 20px;
             margin-left: 20px;
             display: inline-block;
@@ -35,34 +45,21 @@
         }
 
         .ne-panel {
-            width: 50%;
-            height: auto;
+            width: 45%;
+            height: calc(40vh - 10px);
             margin-top: 20px;
             margin-left: 20px;
             display: grid;
-        }
-
-        .metadata-panel {
-            width: 50%;
-            height: auto;
-            border-radius: 10px;
-            background-color: #b3b3b3;
-            font-family: 'Courier New', Courier, monospace;
-            color: #000000;
-            text-align: left;
-            margin-top: 20px;
-            margin-left: 20px;
-            display: inline-block;
         }
 
         .grid {
-            --max-ne-ports=24;
-            --max-ne-rows=2;
+            --max-ne-rows=8;
+            --max-ne-columns=1;
             display: grid;
             grid-template-rows: 40px repeat(var(--max-ne-rows), 40px) 40px;
-            grid-template-columns: repeat(var(--max-ne-ports), 40fr);
-            width: auto;
-            height: auto;
+            grid-template-columns: repeat(var(--max-ne-columns), 40fr);
+            width: 300px;
+            height: 120px;
         }
 
         .portFree {
@@ -116,13 +113,101 @@
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
+        }
+
+        .predictedPortFree {
+            border: 1px solid #ffff00;
+            background-color: green;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedPortUsed {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedPortReserved {
+            border: 1px solid #ffff00;
+            background-color: #808080;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedPortFaulty {
+            border: 1px solid #ffff00;
+            background-color: red;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedPortPredicted {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
+            background-size: 1.25em 1.25em;
+            opacity: 1;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
         }</style><script async src="/mni/js/mni.js"></script><script defer="defer" src="./js/app.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" nohref="nohref" class="active" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="panel" id="resourcePanel"><div class="ne-select" id="neList"><label for="neId">NE</label> <select id="neId" onchange="if(this.selectedIndex !== undefined) fetchNePoints();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="nePoint">Point</label> <select id="nePoint" onchange="if(this.selectedIndex !== undefined) fetchNe();"></select></div></div><div id="view-panel" style="width: 90%;"><div class="ne-panel" id="nePanel"><div class="grid" id="neGrid"></div></div><div class="metadata-panel" id="metadataPanel"></div></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>let flrReady = null;
+            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="panel" id="resourcePanel"><div class="ne-select" id="neList"><label for="neId">NE</label> <select id="neId" onchange="if(this.selectedIndex !== undefined) fetchCveNe(); fetchNePoints();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="nePoint">Point</label> <select id="nePoint" onchange="if(this.selectedIndex !== undefined) fetchNe();"></select></div></div><div id="view-panel" style="width: 80%;"><div id="left-ne-display" style="float:left; width: 55%"><div class="ne-panel" id="nePanel"><div class="grid" id="neGrid"></div></div></div><div id="right-ne-metadata" style="float:right; width: 35%"><div class="metadata-panel" id="metadataPanel" style="float:right;"></div></div></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>let flrReady = null;
         let frpReady = null;
         let frReady = null;
+        let fvnReady = null;
         let retryMs = 5000;
         let neId = null;
         let point = null;
+        var cveKnown = 0;
+        var cveImpacting = 0;
+        function fetchCveNe(neId = null) {
+            cveKnown = 0;
+            cveImpacting = 0;
+            if (neId == null) {
+                let r = document.getElementById("neId");
+                neId = r.options[r.selectedIndex].value;
+            }
+            fetch("<%=payload.gatewayUrl%>/cve/ne/" + neId, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                })
+                .then((data) => {
+                    if (data != null) {
+                        if (data.known != null) {
+                            cveKnown = data.known.length;
+                        }
+                        if (data.impacting != null) {
+                            cveImpacting = data.impacting.length;
+                        }
+                    }
+                })
+                .catch((e) => {
+                    console.error(e);
+                });
+        }
         function fetchListNe() {
             if (flrReady != null) {
                 clearTimeout(flrReady);
@@ -152,14 +237,18 @@
                     flrReady = setTimeout(fetchListNe, retryMs);
                 });
         }
-        function fetchNe() {
+        function fetchNe(neId, point = null) {
             if (frReady != null) {
                 clearTimeout(flrReady);
             }
-            let r = document.getElementById("neId");
-            neId = r.options[r.selectedIndex].value;
-            let p = document.getElementById("nePoint");
-            point = p.options[p.selectedIndex].value;
+            if (neId == null) {
+                let r = document.getElementById("neId");
+                neId = r.options[r.selectedIndex].value;
+            }
+            if (point == null) {
+                let p = document.getElementById("nePoint");
+                point = p.options[p.selectedIndex].value;
+            }
             let grid = document.querySelector(".grid");
             while (grid.firstChild) {
                 grid.removeChild(grid.firstChild)
@@ -180,76 +269,103 @@
                 .then((data) => {
                     if (data.ports != null) {
                         let nePorts = data.ports.length;
-                        let neGridRows = 1;
+                        let neGridMaxColumns = 8;
+                        let neGridColumns = 8;
                         let portUsed = 0;
                         let portFree = 0;
                         let portReserved = 0;
                         let portFaulty = 0;
                         let portPredicted = 0;
-                        let neGridPorts = 1;
-                        if (nePorts >= 4) {
-                            neGridRows = 2;
+                        let source = "historical";
+                        if (data.source != null) {
+                            source = data.source;
                         }
-                        if (nePorts >= 4) {
-                            neGridPorts = Math.round(nePorts / neGridRows);
+                        console.log("source", source);
+                        if (nePorts > neGridMaxColumns) {
+                            neGridColumns = Math.max(Math.ceil(nePorts / neGridMaxColumns), neGridMaxColumns);
                         }
 
-                        grid.style.setProperty("--max-ne-ports", neGridPorts);
-                        grid.style.setProperty("--max-ne-rows", neGridRows);
+                        grid.style.setProperty("--max-ne-rows", nePorts);
+                        grid.style.setProperty("--max-ne-columns", neGridColumns);
+
+
                         for (let j = 0; j < data.ports.length; j++) {
                             let cell = document.createElement("div");
                             cell.setAttribute("id", "port" + j);
                             cell.setAttribute("title", data.ports[j].name + ": " + data.ports[j].state + " " + data.ports[j].configuration.rate + data.ports[j].configuration.unit);
                             switch (data.ports[j].state) {
                                 case "free":
-                                    cell.setAttribute("class", "portFree");
+                                    if (source == "predicted") {
+                                        cell.setAttribute("class", "predictedPortFree");
+                                    } else {
+                                        cell.setAttribute("class", "portFree");
+                                    }
                                     portFree = portFree + 1;
                                     break;
                                 case "used":
-                                    cell.setAttribute("class", "portUsed");
+                                    if (source == "predicted") {
+                                        cell.setAttribute("class", "predictedPortUsed");
+                                    } else {
+                                        cell.setAttribute("class", "portUsed");
+                                    }
                                     portUsed = portUsed + 1;
                                     break;
                                 case "reserved":
-                                    cell.setAttribute("class", "portReserved");
+                                    if (source == "predicted") {
+                                        cell.setAttribute("class", "predictedPortReserved");
+                                    } else {
+                                        cell.setAttribute("class", "portReserved");
+                                    }
                                     portReserved = portReserved + 1;
                                     break;
                                 case "faulty":
-                                    cell.setAttribute("class", "portFaulty");
+                                    if (source == "predicted") {
+                                        cell.setAttribute("class", "predictedPortFaulty");
+                                    } else {
+                                        cell.setAttribute("class", "portFaulty");
+                                    }
                                     portFaulty = portFaulty + 1;
                                     break;
                                 case "predicted":
-                                    cell.setAttribute("class", "portPredicted");
+                                    if (source == "predicted") {
+                                        cell.setAttribute("class", "predictedPortPredicted");
+                                    } else {
+                                        cell.setAttribute("class", "portPredicted");
+                                    }
                                     portPredicted = portPredicted + 1;
                                     break;
                             }
                             cell.classList.add("cell");
                             grid.appendChild(cell);
-                            document.getElementById("port" + j).innerHTML = data.ports[j].name;
+                            document.getElementById("port" + j).innerHTML = (j + 1); //data.ports[j].name;
                         }
                         if (data?.decommissioned == undefined) {
                             data.decommissioned = "";
                         }
-                        /*
-                        let metadata = '<small><b>Reference</b>:&emsp;' + data.reference + '<br>' +
-                            '<center>( '+neId+' )</center><br>' +
+                        let metadata = '<small><b>Host</b>:&emsp;' + data.host + '<br>' +
+                            '<center>( ' + neId + ' )</center><br>' +
                             '<br>Commissioned:&emsp;&emsp;' + data.commissioned + '<br>' +
                             'Decommissioned:&emsp;' + data.decommissioned + '<br>' +
-                            '<br><b>Dimensions</b>:<br>' +
-                            'H/W/D:&emsp;' + data.dimensions.height + ' / ' + data.dimensions.width + ' / ' + data.dimensions.depth + ' ' + data.dimensions.unit + '<br>' +
-                            'Slots:&emsp;&emsp;' + data.ports + '<br>' +
+                            'Source:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' + source + '<br>' +
+                            '<br><b>Details</b>:<br>' +
+                            'IP:&emsp;&emsp;' + data.mgmtIP + '<br>' +
+                            'Vendor:&emsp;' + data.vendor + '<br>' +
+                            'Model:&emsp;' + data.model + '<br>' +
+                            'Image:&emsp;' + data.image + '<br>' +
+                            'Version:&emsp;' + data.version + '<br>' +
                             '<br><b>Location</b>:<br>' +
-                            'X,Y,Z:&emsp;&emsp;' + data.coordinate.x + ' , ' + data.coordinate.y + ' , ' + data.coordinate.z + '<br>' +
-                            'Area:&emsp;&emsp;' + data.area + '<br>' +
-                            'Floor:&emsp;&emsp;' + data.floor + '<br>' +
-                            'Row:&emsp;&emsp;' + data.row + '<br>' +
+                            'Site:&emsp;' + data.siteId + '<br>' +
+                            'Rack:&emsp;' + data.rackId + '<br>' +
+                            'Slot(s):&emsp;' + data.slotPosition + '<br>' +
                             '<br><b>Usage Summary:</b><br>' +
-                            'Free:&emsp;&emsp;&emsp;&emsp;' + portFree + '<br>' +
-                            'Used:&emsp;&emsp;&emsp;&emsp;' + portUsed + '<br>' +
-                            'Reserved:&emsp;&emsp;' + portReserved + '<br>' +
-                            'Faulty:&emsp;&emsp;&emsp;' + portFaulty + '<br>' +
-                            'Predicted:&emsp;&emsp;' + portPredicted + '<br></small>';
-                            */
-                        let metadata = "<small><b>metadata</b></small>";
+                            'Free:&emsp;&emsp;&emsp;' + portFree + '<br>' +
+                            'Used:&emsp;&emsp;&emsp;' + portUsed + '<br>' +
+                            'Reserved:&emsp;' + portReserved + '<br>' +
+                            'Faulty:&emsp;&emsp;' + portFaulty + '<br>' +
+                            'Predicted:&emsp;' + portPredicted + '<br>' +
+                            '<br><b>Common vulnerabilities and Exposures (CVE):</b><br>' +
+                            'Known:&emsp;&emsp;' + cveKnown + '<br>' +
+                            'Impacting:&emsp;' + cveImpacting + '</small>';
                         document.getElementById("metadataPanel").innerHTML = metadata;
                     }
                 })
@@ -296,4 +412,17 @@
         } catch (e) {
             console.error(e);
             flrReady = setTimeout(fetchListNe, retryMs);
+        }
+        try {
+            if ("<%=payload.neId%>" != null) {
+                if ("<%=payload.point%>" != null) {
+                    fetchCveNe("<%=payload.neId%>");
+                    fetchNe("<%=payload.neId%>");
+                } else {
+                    fetchCveNe("<%=payload.neId%>");
+                    fetchNe("<%=payload.neId%>", "<%=payload.point%>");
+                }
+            }
+        } catch (e) {
+            console.error(e);
         }</script></body></html>

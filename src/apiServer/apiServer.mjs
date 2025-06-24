@@ -34,8 +34,11 @@ import { Console } from "node:console";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
+import { compare, compareVersions } from "compare-versions";
 
 const allPrintableRegEx = /[ -~]/gi;
+const versionRegex = /^(\d+\.)?(\d+\.)?(\*|\d+)$/gi;
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
@@ -647,7 +650,6 @@ async function jobPrune() {
         break;
     }
     // prune resource data
-    /*
     for (let i = 0; i < tables.length; i++) {
       let DDIdsRead = await DDC.runAndReadAll(
         "SELECT id FROM " + tables[i].table
@@ -729,28 +731,52 @@ async function jobPrune() {
               let ddRows = ddRead.getRows();
               for (let idx in ddRows) {
                 await DDC.run(
-                  "DELETE from _nePortCoax WHERE nePortTsId = " + ddRows[idx][0]
+                  "DELETE from _nePortCoax WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
-                  "DELETE from _nePortEthernet WHERE nePortTsId = " +
-                    ddRows[idx][0]
+                  "DELETE from _nePortEthernet WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
-                  "DELETE from _nePortLoopback WHERE nePortTsId = " +
-                    ddRows[idx][0]
+                  "DELETE from _nePortLoopback WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
-                  "DELETE from _nePortFiber WHERE nePortTsId = " + ddRows[idx][0]
+                  "DELETE from _nePortFiber WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
-                  "DELETE from _nePortXdsl WHERE nePortTsId = " + ddRows[idx][0]
+                  "DELETE from _nePortXdsl WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
-                  "DELETE from _nePortVirtual WHERE nePortTsId = " +
-                    ddRows[idx][0]
+                  "DELETE from _nePortVirtual WHERE neTsId = " + ddRows[idx][0]
                 );
                 await DDC.run(
                   "DELETE from _nePort WHERE neTsId = " + ddRows[idx][0]
+                );
+              }
+            }
+            if (tables[i].shadow == "_rack") {
+              let ddRead = await DDC.runAndReadAll(
+                "SELECT tsId FROM " +
+                  tables[i].shadow +
+                  " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
+                  tables[i].shadow +
+                  " " +
+                  "WHERE source = 'historical' AND " +
+                  tables[i].key +
+                  " = '" +
+                  DDIdsRows[p] +
+                  "') " +
+                  "AND tsId != '" +
+                  predictedTsId +
+                  "' AND " +
+                  tables[i].key +
+                  " = '" +
+                  DDIdsRows[p] +
+                  "'"
+              );
+              let ddRows = ddRead.getRows();
+              for (let idx in ddRows) {
+                await DDC.run(
+                  "DELETE from _rackSlot WHERE rackTsId = " + ddRows[idx][0]
                 );
               }
             }
@@ -778,7 +804,6 @@ async function jobPrune() {
         }
       }
     }
-    */
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
       event: "prune",
       state: "stop",
@@ -1226,7 +1251,7 @@ async function jobAlertDqOffNetPAF() {
 
 async function dbAddPredictQueueItem(resource, id, state) {
   let ddq = await DDC.prepare(
-    "SELECT rowid FROM predictQueue WHERE resource = $1 AND id = $2 AND state = $3"
+    "SELECT qId FROM predictQueue WHERE resource = $1 AND id = $2 AND state = $3 AND delete = false LIMIT 1"
   );
   ddq.bindVarchar(1, resource);
   ddq.bindVarchar(2, id);
@@ -1240,6 +1265,13 @@ async function dbAddPredictQueueItem(resource, id, state) {
     ddp.bindVarchar(1, resource);
     ddp.bindVarchar(2, id);
     ddp.bindVarchar(3, state);
+    await ddp.run();
+  } else {
+    let ddp = await DDC.prepare(
+      "UPDATE predictQueue SET state = $1 WHERE qId = $2"
+    );
+    ddp.bindVarchar(1, state);
+    ddp.bindInteger(2, ddRows[0][0]);
     await ddp.run();
   }
 }
@@ -1262,6 +1294,7 @@ async function dbIdExists(id, table, fieldName = "id") {
   return exists;
 }
 
+/*
 async function dbNePortNameFromId(neId, portId) {
   let portName = null;
   let ddp = await DDC.runAndReadAll(
@@ -1293,11 +1326,11 @@ async function dbNePortIdFromName(neId, portName, source = "historical") {
   }
   return portId;
 }
-
+*/
 async function dbNePortExists(neId, port) {
   let exists = false;
   let ddp = await DDC.runAndReadAll(
-    "SELECT id FROM nePort WHERE neId = '" +
+    "SELECT rowid FROM _nePort WHERE neId = '" +
       neId +
       "' AND lower(name) = lower('" +
       port +
@@ -3564,7 +3597,7 @@ var run = async () => {
           resJson.push({
             alertId: ddRows[idx][0],
             description: ddRows[idx][2],
-            delete: ddRows[idx][1],
+            delete: toBoolean(ddRows[idx][1]),
             function: ddRows[idx][3],
           });
         }
@@ -4393,7 +4426,7 @@ var run = async () => {
             }
           }
           if (req.body.versions?.length > 0) {
-            for (let p = 0; p < req.body.platforms.length; p++) {
+            for (let p = 0; p < req.body.versions.length; p++) {
               let vId = await getSeqNextValue("seq_cveVersions");
               ddp = await DDC.prepare(
                 "INSERT INTO cveVersions (id,cveId) VALUES ($1,$2)"
@@ -4586,6 +4619,94 @@ var run = async () => {
             .status(404)
             .json({
               errors: "cveId " + req.params.cveId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getCveByNe(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let neVersion = null;
+        let neImage = null;
+        let ddp = await DDC.prepare(
+          "SELECT vendor,model,image,version FROM ne,_ne WHERE ne.id = $1 AND _ne.neId = ne.id AND _ne.tsId = ne.historicalTsId AND delete = false LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.neId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          neImage = ddRows[0][2];
+          neVersion = ddRows[0][3];
+          let resKnown = [];
+          let resImpacting = [];
+          let ddk = await DDC.prepare(
+            "SELECT DISTINCT cve.id FROM cve, cvePlatforms WHERE cvePlatforms.cveId = cve.id AND lower(cve.vendor) = lower($1) AND lower(cvePlatforms.platform) = lower($2)"
+          );
+          ddk.bindVarchar(1, ddRows[0][0]);
+          ddk.bindVarchar(2, ddRows[0][1]);
+          let ddKnownRead = await ddk.runAndReadAll();
+          let ddKnownRows = ddKnownRead.getRows();
+          if (ddKnownRows.length > 0) {
+            for (let idx in ddKnownRows) {
+              resKnown.push(ddKnownRows[idx][0]);
+            }
+          }
+          // check neVersion format and attempt to clean if not numeric major.minor.patch style
+          // semver ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+          if (!versionRegex.test(neVersion)) {
+            let major = neVersion.substring(neVersion, neVersion.indexOf("."));
+            let minor = neVersion.substring(
+              neVersion.indexOf(".") + 1,
+              neVersion.indexOf(".", neVersion.indexOf(".") + 1)
+            );
+            minor = minor.replace(/[a-zA-Z].*/g, "");
+            let patch = neVersion.substring(neVersion.lastIndexOf(".") + 1);
+            patch = patch.replace(/[a-zA-Z].*/g, "");
+            neVersion = major + "." + minor + "." + patch;
+          }
+          for (let c = 0; c < resKnown.length; c++) {
+            let ddv = await DDC.prepare(
+              "SELECT lessThan,status,version,lower(versionType) FROM cveVersions WHERE cveId = $1"
+            );
+            ddv.bindVarchar(1, resKnown[c]);
+            let ddCveRead = await ddv.runAndReadAll();
+            let ddCveRows = ddCveRead.getRows();
+            if (ddCveRows.length > 0) {
+              for (let vdx in ddCveRows) {
+                if (ddCveRows[vdx][3] == "semver") {
+                  if (ddCveRows[vdx][2] != null) {
+                    if (compare(neVersion, ddCveRows[vdx][2], "<=")) {
+                      resImpacting.push(resKnown[c]);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          if (resImpacting.length > 0) {
+            resImpacting = Array.from(new Set(resImpacting.map(JSON.stringify)))
+              .map(JSON.parse)
+              .sort();
+          }
+          resJson = { known: resKnown, impacting: resImpacting };
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "neId " + req.params.neId + " does not exist",
             });
         }
       } else {
@@ -5671,7 +5792,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,strftime(_cable.point,'" +
             pointFormat +
-            "'),delete,source FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
+            "'),source FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddCable = await ddp.runAndReadAll();
@@ -5700,11 +5821,10 @@ var run = async () => {
           resJson = {
             cableId: ddCableRows[0][0],
             point: ddCableRows[0][13],
-            delete: ddCableRows[0][14],
-            source: ddCableRows[0][15],
+            delete: toBoolean(ddCableRows[0][3]),
+            source: ddCableRows[0][14],
             technology: ddCableRows[0][1],
             state: ddCableRows[0][2],
-            delete: ddCableRows[0][3],
             configuration: {},
           };
           if (ddCableRows[0][4] != null) {
@@ -7274,7 +7394,11 @@ var run = async () => {
     ddp.bindVarchar(15, body.rackId);
     ddp.bindVarchar(16, body.slotPosition);
     await ddp.run();
-
+    if (body.config != null) {
+      await DDC.run(
+        "UPDATE _ne SET config = '" + body.config + "' WHERE tsId = " + tsId
+      );
+    }
     if (body.decommissioned != null) {
       await DDC.run(
         "UPDATE _ne SET decommissioned = strptime('" +
@@ -7285,57 +7409,24 @@ var run = async () => {
           tsId
       );
     }
+    if (body.config != null) {
+      await DDC.run(
+        "UPDATE _ne SET config = '" + body.config + "' WHERE tsId = " + tsId
+      );
+    }
 
     // add ports
     for (let p = 0; p < body.ports.length; p++) {
-      let nePortTsId = uuidv4();
-      let tsPortId = await getSeqNextValue("seq_nePort");
-      let ddq = await DDC.runAndReadAll(
-        "SELECT id FROM nePort WHERE neId = '" +
-          neId +
-          "' AND lower(name) = lower('" +
-          body.ports[p].name +
-          "')"
+      let portTsId = await getSeqNextValue("seq_nePort");
+      let ddp = await DDC.prepare(
+        "INSERT INTO _nePort (tsId,point,source,neId,neTsId,name,technology,state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9)"
       );
-      let ddqRows = ddq.getRows();
-      if (ddqRows.length == 0) {
-        let ddp = await DDC.prepare(
-          "INSERT INTO nePort (id,delete,neId,name," +
-            tsCol +
-            ",tsPoint) VALUES ($1,$2,$3,$4,$5,strptime($6,$7))"
-        );
-        ddp.bindVarchar(1, nePortTsId);
-        ddp.bindBoolean(2, toBoolean(body.delete));
-        ddp.bindVarchar(3, neId);
-        ddp.bindVarchar(4, body.ports[p].name);
-        ddp.bindInteger(5, tsPortId);
-        ddp.bindVarchar(6, body.point || point);
-        ddp.bindVarchar(7, pointFormat);
-        await ddp.run();
-      } else {
-        nePortTsId = ddqRows[0][0];
-        let ddp = await DDC.prepare(
-          "UPDATE nePort SET delete = $1, " +
-            tsCol +
-            " = $2,tsPoint = strptime($3,$4) WHERE id = $5"
-        );
-        ddp.bindBoolean(1, toBoolean(body.delete));
-        ddp.bindInteger(2, tsPortId);
-        ddp.bindVarchar(3, body.point || point);
-        ddp.bindVarchar(4, pointFormat);
-        ddp.bindVarchar(5, nePortTsId);
-        await ddp.run();
-      }
-
-      ddp = await DDC.prepare(
-        "INSERT INTO _nePort (tsId,point,nePortId,source,neId,name,technology,state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9)"
-      );
-      ddp.bindInteger(1, tsPortId);
+      ddp.bindInteger(1, portTsId);
       ddp.bindVarchar(2, body.point || point);
       ddp.bindVarchar(3, pointFormat);
-      ddp.bindVarchar(4, nePortTsId);
-      ddp.bindVarchar(5, body.source);
-      ddp.bindVarchar(6, neId);
+      ddp.bindVarchar(4, body.source);
+      ddp.bindVarchar(5, neId);
+      ddp.bindInteger(6, tsId);
       ddp.bindVarchar(7, body.ports[p].name);
       ddp.bindVarchar(8, body.ports[p].technology);
       ddp.bindVarchar(9, body.ports[p].state);
@@ -7344,9 +7435,9 @@ var run = async () => {
       switch (body.ports[p].technology) {
         case "coax":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortCoax (nePortTsId,frequencyLow,frequencyHigh,channels,width,unit) VALUES ($1,$2,$3,$4,$5,$6)"
+            "INSERT INTO _nePortCoax (neTsId,frequencyLow,frequencyHigh,channels,width,unit) VALUES ($1,$2,$3,$4,$5,$6)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindFloat(
             2,
             toDecimal(body.ports[p].configuration.frequencyRange.low)
@@ -7362,9 +7453,9 @@ var run = async () => {
           break;
         case "ethernet":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortEthernet (nePortTsId,category,rate,unit) VALUES ($1,$2,$3,$4)"
+            "INSERT INTO _nePortEthernet (neTsId,category,rate,unit) VALUES ($1,$2,$3,$4)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, body.ports[p].configuration.category);
           ddp.bindInteger(3, toInteger(body.ports[p].configuration.rate));
           ddp.bindVarchar(4, body.ports[p].configuration.unit);
@@ -7372,18 +7463,18 @@ var run = async () => {
           break;
         case "loopback":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortLoopback (nePortTsId,rate,unit) VALUES ($1,$2,$3)"
+            "INSERT INTO _nePortLoopback (neTsId,rate,unit) VALUES ($1,$2,$3)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindInteger(2, toInteger(body.ports[p].configuration.rate));
           ddp.bindVarchar(3, body.ports[p].configuration.unit);
           await ddp.run();
           break;
         case "fiber":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortFiber (nePortTsId,rate,unit,mode,channels,width) VALUES ($1,$2,$3,$4,$5,$6)"
+            "INSERT INTO _nePortFiber (neTsId,rate,unit,mode,channels,width) VALUES ($1,$2,$3,$4,$5,$6)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindInteger(2, toInteger(body.ports[p].configuration.rate));
           ddp.bindVarchar(3, body.ports[p].configuration.unit);
           ddp.bindVarchar(4, body.ports[p].configuration.mode);
@@ -7393,9 +7484,9 @@ var run = async () => {
           break;
         case "xdsl":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortXdsl (nePortTsId,category,rate,unit) VALUES ($1,$2,$3,$4)"
+            "INSERT INTO _nePortXdsl (neTsId,category,rate,unit) VALUES ($1,$2,$3,$4)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, body.ports[p].configuration.category);
           ddp.bindInteger(3, toInteger(body.ports[p].configuration.rate));
           ddp.bindVarchar(4, body.ports[p].configuration.unit);
@@ -7403,9 +7494,9 @@ var run = async () => {
           break;
         case "virtual":
           ddp = await DDC.prepare(
-            "INSERT INTO _nePortVirtual (nePortTsId,rate,unit) VALUES ($1,$2,$3)"
+            "INSERT INTO _nePortVirtual (neTsId,rate,unit) VALUES ($1,$2,$3)"
           );
-          ddp.bindInteger(1, tsPortId);
+          ddp.bindInteger(1, tsId);
           ddp.bindInteger(2, toInteger(body.ports[p].configuration.rate));
           ddp.bindVarchar(3, body.ports[p].configuration.unit);
           await ddp.run();
@@ -7414,34 +7505,32 @@ var run = async () => {
     }
 
     // update rack slot usage
+    let neHost = body.host;
     if (body.rackId != null) {
       let rackId = body.rackId;
-      let slots = body.slots;
       let rackPoint = body.point || point;
       let slotPosition = body.slotPosition;
       let slotUsage = slotPosition.split(",").sort();
       if (slotUsage.length > 0) {
         let { status, body } = await getRack(rackId);
         if (status == 200 && body != null) {
-          body.point = rackPoint;
+          let rackChanged = false;
           for (let s = 0; s < body.slotUsage.length; s++) {
             for (let u = 0; u < slotUsage.length; u++) {
               if (body.slotUsage[s].slot == slotUsage[u]) {
-                body.slotUsage[s].usage = "used";
+                if (body.slotUsage[s].usage == "free") {
+                  rackChanged = true;
+                  body.point = rackPoint;
+                  body.slotUsage[s].usage = "used";
+                  body.slotUsage[s].neId = neId;
+                  body.slotUsage[s].host = neHost;
+                }
                 break;
               }
             }
           }
-          status = await addRack(rackId, body);
-          if (status != 200) {
-            LOGGER.error(dayjs().format(dayjsFormat), "error", "addNe", {
-              rackId: rackId,
-              slots: slots,
-              slotPosition: slotPosition,
-              slotUsage: resSlots,
-              error: err,
-            });
-            return 400;
+          if (rackChanged) {
+            status = await addRack(rackId, body);
           }
         }
       }
@@ -7538,180 +7627,22 @@ var run = async () => {
     }
   }
 
-  async function getSingleNePorts(neId) {
-    let resPorts = [];
-    let ddp = await DDC.prepare(
-      "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id AND ne.delete = false AND _ne.tsId = ne.historicalTsId ORDER BY _ne.point DESC LIMIT 1"
-    );
-    ddp.bindVarchar(1, neId);
-    let ddRead = await ddp.runAndReadAll();
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      let ddPort = await DDC.runAndReadAll(
-        "SELECT nePortTsId,name,technology,state FROM _nePort WHERE neId = '" +
-          neId +
-          "'"
-      );
-      let ddPortRows = ddPort.getRows();
-      for (let idx in ddPortRows) {
-        let resPort = {};
-        switch (ddPortRows[idx][2]) {
-          case "coax":
-            let ddCoax = await DDC.runAndReadAll(
-              "SELECT frequencyLow,frequencyHigh,channels,width,unit FROM _nePortCoax WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddCoaxRows = ddCoax.getRows();
-            if (ddCoaxRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  frequencyRange: {
-                    low: toDecimal(ddCoaxRows[0][0]),
-                    high: toDecimal(ddCoaxRows[0][1]),
-                  },
-                  channels: toDecimal(ddCoaxRows[0][2]),
-                  width: toDecimal(ddCoaxRows[0][3]),
-                  unit: ddCoaxRows[0][4],
-                },
-              };
-            }
-            break;
-          case "ethernet":
-            let ddEthernet = await DDC.runAndReadAll(
-              "SELECT category,rate,unit FROM _nePortEthernet WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddEthernetRows = ddEthernet.getRows();
-            if (ddEthernetRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  category: ddEthernetRows[0][0],
-                  rate: toInteger(ddEthernetRows[0][1]),
-                  unit: ddEthernetRows[0][2],
-                },
-              };
-            }
-            break;
-          case "loopback":
-            let ddLoopback = await DDC.runAndReadAll(
-              "SELECT rate,unit FROM _nePortLoopback WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddLoopbackRows = ddLoopback.getRows();
-            if (ddLoopbackRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  rate: toInteger(ddLoopbackRows[0][0]),
-                  unit: ddLoopbackRows[0][1],
-                },
-              };
-            }
-            break;
-          case "fiber":
-            let ddFiber = await DDC.runAndReadAll(
-              "SELECT rate,unit,mode,channels,width FROM _nePortFiber WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddFiberRows = ddFiber.getRows();
-            if (ddFiberRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  rate: toInteger(ddFiberRows[0][0]),
-                  unit: ddFiberRows[0][1],
-                  mode: ddFiberRows[0][2],
-                  width: toInteger(ddFiberRows[0][3]),
-                  channels: toInteger(ddFiberRows[0][4]),
-                },
-              };
-            }
-            break;
-          case "xdsl":
-            let ddXdsl = await DDC.runAndReadAll(
-              "SELECT category,rate,unit FROM _nePortXdsl WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddXdslRows = ddXdsl.getRows();
-            if (ddXdslRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  category: ddXdslRows[0][0],
-                  rate: toInteger(ddXdslRows[0][1]),
-                  unit: ddXdslRows[0][2],
-                },
-              };
-            }
-            break;
-          case "virtual":
-            let ddVirtual = await DDC.runAndReadAll(
-              "SELECT rate,unit FROM _nePortVirtual WHERE nePortTsId = '" +
-                ddPortRows[idx][0] +
-                "'"
-            );
-            let ddVirtualRows = ddVirtual.getRows();
-            if (ddVirtualRows.length > 0) {
-              resPort = {
-                name: ddPortRows[idx][1],
-                technology: ddPortRows[idx][2],
-                state: ddPortRows[idx][3],
-                configuration: {
-                  rate: toInteger(ddVirtualRows[0][0]),
-                  unit: ddVirtualRows[0][1],
-                },
-              };
-            }
-            break;
-        }
-        resPorts.push(resPort);
-      }
-    }
-    return resPorts;
-  }
-
   async function undeleteNe(neId) {
     let point = dayjs().format(dayjsFormat);
     let ddRead = await DDC.runAndReadAll(
       "SELECT ne.id FROM ne,_ne WHERE ne.id = '" +
-        req.params.neId +
+        neId +
         "' AND _ne.neId = ne.id AND _ne.source = 'historical' AND ne.delete = true LIMIT 1"
     );
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
-      await DDC.run(
-        "UPDATE nePort SET tsPoint = strptime('" +
-          point +
-          "','" +
-          pointFormat +
-          "'), delete = false WHERE neId = '" +
-          req.params.neId +
-          "'"
-      );
       await DDC.run(
         "UPDATE ne SET tsPoint = strptime('" +
           point +
           "','" +
           pointFormat +
           "'), delete = false WHERE id = '" +
-          req.params.neId +
+          neId +
           "'"
       );
       return 204;
@@ -7735,61 +7666,46 @@ var run = async () => {
       );
       let dddRows = ddd.getRows();
       if (dddRows.length > 0) {
-        /*
-DELETE FROM _nePortCoax WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePortEthernet WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePortLoopback WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePortFiber WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePortXdsl WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePortVirtual WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc');
-DELETE FROM _nePort WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc';
-UPDATE nePort SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc';
-DELETE FROM _ne WHERE neId = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc';
-UPDATE ne SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = 'ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc';
-        */
         await DDC.run(
-          "DELETE FROM _nePortCoax WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortCoax WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run(
-          "DELETE FROM _nePortEthernet WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortEthernet WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run(
-          "DELETE FROM _nePortLoopback WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortLoopback WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run(
-          "DELETE FROM _nePortFiber WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortFiber WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run(
-          "DELETE FROM _nePortXdsl WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortXdsl WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run(
-          "DELETE FROM _nePortVirtual WHERE nePortTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
+          "DELETE FROM _nePortVirtual WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
             neId +
             "')"
         );
         await DDC.run("DELETE FROM _nePort WHERE neId = '" + neId + "'");
-        await DDC.run(
-          "UPDATE nePort SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
-            neId +
-            "'"
-        );
         await DDC.run("DELETE FROM _ne WHERE neId = '" + neId + "'");
         await DDC.run(
-          "UPDATE ne SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+          "UPDATE ne SET delete = true, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
             neId +
             "'"
         );
         return 204;
+      } else {
+        return 404;
       }
     } else {
       let ddp = await DDC.prepare(
@@ -7800,55 +7716,40 @@ UPDATE ne SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoi
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
         if (predicted != null) {
-          /*
-DELETE FROM _nePortCoax WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePortEthernet WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePortLoopback WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePortFiber WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePortXdsl WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePortVirtual WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted');
-DELETE FROM _nePort WHERE nePortId IN (SELECT id FROM nePort,_nePort WHERE nePort.neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND _nePort.nePortId = nePort.id) AND _nePort.source = 'predicted';
-UPDATE nePort SET predictedTsId = NULL WHERE neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d';
-DELETE FROM _ne WHERE neId = '7a1a6b0c-01ec-41f2-8459-75784228f30d' AND source = 'predicted';
-UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f30d';
-          */
           await DDC.run(
-            "DELETE FROM _nePortCoax WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortCoax WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePortEthernet WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortEthernet WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePortLoopback WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortLoopback WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePortFiber WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortFiber WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePortXdsl WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortXdsl WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePortVirtual WHERE nePortTsId IN (SELECT tsId FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePortVirtual WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id AND _nePort.source = 'predicted')"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
-            "DELETE FROM _nePort WHERE nePortId IN (SELECT id FROM nePort,_nePort WHERE nePort.neId = '" +
+            "DELETE FROM _nePort WHERE neTsId IN (SELECT tsId FROM _nePort WHERE neId = '" +
               neId +
-              "' AND _nePort.nePortId = nePort.id) AND _nePort.source = 'predicted'"
-          );
-          await DDC.run(
-            "UPDATE nePort SET predictedTsId = NULL WHERE neId = '" + neId + "'"
+              "' AND source = 'predicted')"
           );
           await DDC.run(
             "DELETE FROM _ne WHERE neId = '" +
@@ -7860,12 +7761,46 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           );
           return 204;
         } else {
-          let { status, body } = await getNe(neId, { source: source });
+          let { status, body } = await getNe(neId);
           if (status == 200) {
+            // update rack slot usage
+            if (body.rackId != null) {
+              let rackId = body.rackId;
+              let rackPoint = dayjs().format(dayjsFormat);
+              let slotPosition = body.slotPosition;
+              let slotUsage = slotPosition.split(",").sort();
+              if (slotUsage.length > 0) {
+                let { status, body } = await getRack(rackId);
+                if (status == 200 && body != null) {
+                  let rackChanged = false;
+                  for (let s = 0; s < body.slotUsage.length; s++) {
+                    for (let u = 0; u < slotUsage.length; u++) {
+                      if (body.slotUsage[s].slot == slotUsage[u]) {
+                        if (body.slotUsage[s].usage == "used") {
+                          rackChanged = true;
+                          body.point = rackPoint;
+                          body.slotUsage[s].usage = "free";
+                        }
+                        break;
+                      }
+                    }
+                  }
+                  if (rackChanged) {
+                    status = await addRack(rackId, body);
+                  }
+                }
+              }
+            }
             status = await addNe(
               neId,
-              jsonDeepMerge(body, { point: point, delete: "true" })
+              jsonDeepMerge(body, {
+                point: dayjs().format(dayjsFormat),
+                delete: true,
+              })
             );
+          }
+          if (status == 200) {
+            status = 204;
           }
           return status;
         }
@@ -7878,11 +7813,24 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   async function getNe(neId, { point = null, source = "historical" } = {}) {
     // optional source = historical|predicted
     // optional point = 20250508T174124
+    let tsCol = "historicalTsId";
+    switch (source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+      default:
+        tsCol = "historicalTsId";
+    }
+
     let datePoint = "AND _ne.tsId = ne.historicalTsId";
     if (point != null) {
       datePoint =
-        "AND strftime(_ne.point,'" + pointFormat + "') = '" + point + "'";
+        " AND strftime(_ne.point,'" + pointFormat + "') = '" + point + "'";
     }
+
     let resJson = {};
     let ddp = await DDC.prepare(
       "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,strftime(point,'" +
@@ -7891,9 +7839,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,rackId,slotPosition FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id AND ne.delete = false " +
+        "'),siteId,rackId,slotPosition,tsId,config FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id " +
         datePoint +
-        " ORDER BY _ne.point DESC LIMIT 1"
+        " ORDER BY _ne.tsId DESC LIMIT 1"
     );
     ddp.bindVarchar(1, neId);
     let ddRead = await ddp.runAndReadAll();
@@ -7919,30 +7867,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       if (ddRows[0][15] != null) {
         resJson.decommissioned = ddRows[0][15];
       }
-
-      datePoint = "AND _nePort.tsId = nePort.historicalTsId";
-      switch (source) {
-        case "historical":
-          datePoint = "AND _nePort.tsId = nePort.historicalTsId";
-          break;
-        case "predicted":
-          datePoint = "AND _nePort.tsId = nePort.predictedTsId";
-          break;
-      }
-      if (point != null) {
-        datePoint +=
-          " AND strftime(_nePort.point,'" +
-          pointFormat +
-          "') = '" +
-          point +
-          "'";
+      if (ddRows[0][20] != null) {
+resJson.config = ddRows[0][20];
       }
       let ddn = await DDC.prepare(
-        "SELECT _nePort.tsId,_nePort.name,_nePort.technology,_nePort.state,nePort.historicalTsId,nePort.predictedTsId FROM nePort,_nePort WHERE nePort.neId = $1 AND _nePort.neId = nePort.neId AND nePort.delete = false " +
-          datePoint +
-          " ORDER BY _nePort.point DESC"
+        "SELECT tsId,name,technology,state FROM _nePort WHERE neTsId = $1"
       );
-      ddn.bindVarchar(1, ddRows[0][0]);
+      ddn.bindInteger(1, ddRows[0][19]);
       let ddPort = await ddn.runAndReadAll();
       let ddPortRows = ddPort.getRows();
       for (let idx in ddPortRows) {
@@ -7950,8 +7881,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         switch (ddPortRows[idx][2]) {
           case "coax":
             let ddCoax = await DDC.prepare(
-              "SELECT frequencyLow,frequencyHigh,channels,width,unit FROM _nePortCoax WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT frequencyLow,frequencyHigh,channels,width,unit FROM _nePortCoax WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddCoaxRows = ddCoax.getRows();
             if (ddCoaxRows.length > 0) {
@@ -7973,8 +7904,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             break;
           case "ethernet":
             let ddEthernet = await DDC.runAndReadAll(
-              "SELECT category,rate,unit FROM _nePortEthernet WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT category,rate,unit FROM _nePortEthernet WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddEthernetRows = ddEthernet.getRows();
             if (ddEthernetRows.length > 0) {
@@ -7992,8 +7923,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             break;
           case "loopback":
             let ddLoopback = await DDC.runAndReadAll(
-              "SELECT rate,unit FROM _nePortLoopback WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT rate,unit FROM _nePortLoopback WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddLoopbackRows = ddLoopback.getRows();
             if (ddLoopbackRows.length > 0) {
@@ -8010,8 +7941,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             break;
           case "fiber":
             let ddFiber = await DDC.runAndReadAll(
-              "SELECT rate,unit,mode,channels,width FROM _nePortFiber WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT rate,unit,mode,channels,width FROM _nePortFiber WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddFiberRows = ddFiber.getRows();
             if (ddFiberRows.length > 0) {
@@ -8031,8 +7962,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             break;
           case "xdsl":
             let ddXdsl = await DDC.runAndReadAll(
-              "SELECT category,rate,unit FROM _nePortXdsl WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT category,rate,unit FROM _nePortXdsl WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddXdslRows = ddXdsl.getRows();
             if (ddXdslRows.length > 0) {
@@ -8050,8 +7981,8 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             break;
           case "virtual":
             let ddVirtual = await DDC.runAndReadAll(
-              "SELECT rate,unit FROM _nePortVirtual WHERE nePortTsId = " +
-                ddPortRows[idx][0]
+              "SELECT rate,unit FROM _nePortVirtual WHERE neTsId = " +
+                ddRows[0][19]
             );
             let ddVirtualRows = ddVirtual.getRows();
             if (ddVirtualRows.length > 0) {
@@ -8078,12 +8009,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   async function getSingleNe(req, res, next) {
     try {
       let result = validationResult(req);
-      let options = { source: "historical", point: null };
       if (result.isEmpty()) {
-        if (req.query?.point != null) {
-          options.point = req.query.point;
-        }
-        let { status, body } = await getNe(req.params.neId, options);
+        let { status, body } = await getNe(req.params.neId, {
+          point: req.query.point,
+        });
         if (status == 200) {
           res.contentType(OAS.mimeJSON).status(status).json(body);
         } else if (status == 404) {
@@ -8178,11 +8107,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         }
         let { status, body } = await getNe(req.params.neId);
         if (status == 200 && body != null) {
-          let point = dayjs().format(dayjsFormat);
-          if (req.body?.point != null) {
-            point = req.body.point;
-          }
-          req.body = jsonDeepMerge(req.body, { point: point });
           req.body = jsonDeepMerge(body, req.body);
           return next();
         } else if (status == 404) {
@@ -9550,7 +9474,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM rack, _rack WHERE id = $1 AND rackId = id AND delete = false ORDER BY point DESC"
+            "'),source FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
@@ -9602,199 +9526,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     }
   }
 
-  async function getRackSlots(
-    rackId,
-    { point = null, tsId = null, source = "historical" } = {}
-  ) {
-    // optional source = historical|predicted
-    // optional point = 20250508T174124
-    let tsCol = "historicalTsId";
-
-    switch (source) {
-      case "historical":
-        tsCol = "historicalTsId";
-        break;
-      case "predicted":
-        tsCol = "predictedTsId";
-        break;
-      default:
-        tsCol = "historicalTsId";
-    }
-
-    let datePoint =
-      "AND _rack.tsId = rack." +
-      tsCol +
-      " AND _rackSlot.rackTsId = rack." +
-      tsCol +
-      " ";
-    if (point != null) {
-      datePoint =
-        "AND strftime(_rackSlot.point,'" + pointFormat + "') = '" + point + "'";
-    }
-    if (tsId != null) {
-      datePoint = "AND _rack.tsId = "+tsId;
-    }
-    let resJson = [];
-    let ddp = await DDC.prepare(
-      "SELECT slot,usage FROM rack,_rack, _rackSlot WHERE rack.id = $1 AND _rack.rackId = rack.id AND _rackSlot.rackId = rack.id AND _rackSlot.rackTsId = _rack.tsId AND rack.delete = false " +
-        datePoint +
-        " ORDER BY _rackSlot.slot"
-    );
-    ddp.bindVarchar(1, rackId);
-    let ddRead = await ddp.runAndReadAll();
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      for (let idx in ddRows) {
-        let resObj = { slot: ddRows[idx][0], usage: ddRows[idx][1] };
-        if (ddRows[idx][1] == "used") {
-          let ddn = await DDC.prepare(
-            "SELECT DISTINCT id,slotPosition FROM ne, _ne WHERE rackId = $1 AND _ne.neId = ne.id AND delete = false"
-          );
-          ddn.bindVarchar(1, rackId);
-          let ddNeRead = await ddn.runAndReadAll();
-          let ddNeRows = ddNeRead.getRows();
-          if (ddNeRows.length > 0) {
-            for (let ndx in ddNeRows) {
-              let neSlotUsage = ddNeRows[ndx][1].split(",");
-              if (neSlotUsage.includes(ddRows[idx][0].toString())) {
-                let { status, body } = await getNe(ddNeRows[ndx][0]);
-                if (status == 200 && body != null) {
-                  resObj.neId = ddNeRows[ndx][0];
-                  resObj.host = body.host;
-                  resObj.mgmtIP = body.mgmtIP;
-                }
-              }
-            }
-          }
-        }
-        resJson.push(resObj);
-      }
-      return { status: 200, body: resJson };
-    } else {
-      return { status: 404, body: null };
-    }
-  }
-
-  async function addRackSlots(rackId, rackTsId, body) {
-    try {
-      let point = dayjs().format(dayjsFormat);
-      for (let r = 1; r <= body.slots; r++) {
-        let tsId = await getSeqNextValue("seq_rackSlot");
-        let ddp = await DDC.prepare(
-          "INSERT INTO _rackSlot (tsId,point,source,rackTsId,rackId,slot,usage) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
-        );
-        ddp.bindInteger(1, tsId);
-        ddp.bindVarchar(2, body.point || point);
-        ddp.bindVarchar(3, pointFormat);
-        ddp.bindVarchar(4, body.source);
-        ddp.bindInteger(5, rackTsId);
-        ddp.bindVarchar(6, rackId);
-        ddp.bindInteger(7, r);
-        let usage = "free";
-        let neId = null;
-        if (body.slotUsage.length > 0) {
-          for (let u = 0; u < body.slotUsage.length; u++) {
-            if (body.slotUsage[u].slot == r) {
-              usage = body.slotUsage[u].usage;
-            }
-          }
-        }
-        ddp.bindVarchar(8, usage);
-        await ddp.run();
-      }
-      return 200;
-    } catch (err) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", "addRackSlots", {
-        rackId: rackId,
-        slots: body.slots,
-        slotUsage: body.slotUsage,
-        error: err,
-      });
-      return 400;
-    }
-  }
-
-  async function undeleteRackSlots(rackId) {
-    let point = dayjs().format(dayjsFormat);
-    let ddRead = await DDC.runAndReadAll(
-      "SELECT id FROM rackSlot,_rackSlot WHERE id = '" +
-        req.params.rackId +
-        "' AND _rackSlot.rackSlotId = rackSlot.id AND _rackSlot.source = 'historical' AND rackSlot.delete = true LIMIT 1"
-    );
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      await DDC.run(
-        "UPDATE rackSlot SET tsPoint = strptime('" +
-          point +
-          "','" +
-          pointFormat +
-          "'), delete = false WHERE id = '" +
-          req.params.rackId +
-          "'"
-      );
-      return 204;
-    } else {
-      return 404;
-    }
-  }
-
-  async function deleteRackSlots(
-    rackId,
-    {
-      point = null,
-      source = "historical",
-      predicted = null,
-      expunge = false,
-    } = {}
-  ) {
-    if (expunge) {
-      let ddd = await DDC.runAndReadAll(
-        "SELECT id FROM rackSlot WHERE id = '" + rackId + "'"
-      );
-      let dddRows = ddd.getRows();
-      if (dddRows.length > 0) {
-        await DDC.run(
-          "DELETE FROM _rackSlot WHERE rackSlotId = '" + rackId + "'"
-        );
-        await DDC.run("DELETE FROM rackSlot WHERE id = '" + rackId + "'");
-        return 204;
-      }
-    } else {
-      let ddp = await DDC.prepare(
-        "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM rackSlot,_rackSlot WHERE rackSlot.id = $1 AND _rackSlot.tsId = rackSlot.historicalTsId AND rackSlot.delete = false"
-      );
-      ddp.bindVarchar(1, neId);
-      let ddRead = await ddp.runAndReadAll();
-      let ddRows = ddRead.getRows();
-      if (ddRows.length > 0) {
-        if (predicted != null) {
-          await DDC.run(
-            "DELETE FROM _rackSlot WHERE rackSlotId = '" +
-              rackId +
-              "' AND _rackSlot.source = 'predicted'"
-          );
-          await DDC.run(
-            "UPDATE rackSlot SET predictedTsId = NULL WHERE id = '" +
-              rackId +
-              "'"
-          );
-          return 204;
-        } else {
-          let { status, body } = await getRackSlots(rackId);
-          if (status == 200) {
-            status = await addRackSlots(
-              rackId,
-              jsonDeepMerge(body, { point: point, delete: "true" })
-            );
-          }
-          return status;
-        }
-      } else {
-        return 400;
-      }
-    }
-  }
-
   async function getRack(rackId, { point = null, source = "historical" } = {}) {
     // optional source = historical|predicted
     // optional point = 20250508T174124
@@ -9811,9 +9542,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots,tsId FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
         datePoint +
-        " ORDER BY _rack.point DESC LIMIT 1"
+        " ORDER BY _rack.tsId DESC LIMIT 1"
     );
     ddp.bindVarchar(1, rackId);
     let ddRead = await ddp.runAndReadAll();
@@ -9837,6 +9568,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           unit: ddRows[0][23],
         },
         slots: toInteger(ddRows[0][24]),
+        slotUsage: [],
         source: ddRows[0][7],
         delete: toBoolean(ddRows[0][1]),
       };
@@ -9858,13 +9590,29 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       if (ddRows[0][19] != null) {
         resJson.coordinate.m = ddRows[0][19];
       }
-      let { status, body } = await getRackSlots(rackId, {
-        tsId: toInteger(ddRows[0][25])
-      });
-      if (status == 200) {
-        resJson.slotUsage = body;
+      //
+      let rackTsId = toInteger(ddRows[0][4]);
+      let dds = await DDC.prepare(
+        "SELECT slot,usage,neId,host FROM _rackSlot WHERE rackId = $1 AND rackTsId = $2 ORDER BY _rackSlot.slot"
+      );
+      dds.bindVarchar(1, rackId);
+      dds.bindInteger(2, rackTsId);
+      let ddSlotRead = await dds.runAndReadAll();
+      let ddSlotRows = ddSlotRead.getRows();
+      if (ddSlotRows.length > 0) {
+        for (let ydx in ddSlotRows) {
+          let resObj = {
+            slot: ddSlotRows[ydx][0],
+            usage: ddSlotRows[ydx][1],
+            neId: ddSlotRows[ydx][2],
+            host: ddSlotRows[ydx][3],
+          };
+          resJson.slotUsage.push(resObj);
+        }
+        return { status: 200, body: resJson };
+      } else {
+        return { status: 404, body: null };
       }
-      return { status: 200, body: resJson };
     } else {
       return { status: 404, body: null };
     }
@@ -9873,7 +9621,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   async function addRack(rackId, body) {
     let tsId = await getSeqNextValue("seq_rack");
     let tsCol = "historicalTsId";
-
     switch (body.source) {
       case "historical":
         tsCol = "historicalTsId";
@@ -9991,30 +9738,69 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       );
     }
 
-    let status = await addRackSlots(rackId, tsId, body);
-    return status;
+    for (let r = 1; r <= body.slots; r++) {
+      let slotTsId = await getSeqNextValue("seq_rackSlot");
+      let ddp = await DDC.prepare(
+        "INSERT INTO _rackSlot (tsId,point,source,rackTsId,rackId,slot,usage) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+      );
+      ddp.bindInteger(1, slotTsId);
+      ddp.bindVarchar(2, body.point);
+      ddp.bindVarchar(3, pointFormat);
+      ddp.bindVarchar(4, body.source);
+      ddp.bindInteger(5, tsId);
+      ddp.bindVarchar(6, rackId);
+      ddp.bindInteger(7, r);
+      let usage = "free";
+      let neId = null;
+      let host = null;
+      if (body.slotUsage.length > 0) {
+        for (let u = 0; u < body.slotUsage.length; u++) {
+          if (body.slotUsage[u].slot == r) {
+            usage = body.slotUsage[u].usage;
+            if (
+              body.slotUsage[u]?.neId != null &&
+              body.slotUsage[u]?.host != null
+            ) {
+              neId = body.slotUsage[u].neId;
+              host = body.slotUsage[u].host;
+            }
+          }
+        }
+      }
+      ddp.bindVarchar(8, usage);
+      await ddp.run();
+      if (neId != null && host != null) {
+        await DDC.run(
+          "UPDATE _rackSlot SET neId = '" +
+            neId +
+            "', host = '" +
+            host +
+            "' WHERE tsId = " +
+            slotTsId
+        );
+      }
+    }
+    return 200;
   }
 
   async function undeleteRack(rackId) {
     let point = dayjs().format(dayjsFormat);
     let ddRead = await DDC.runAndReadAll(
       "SELECT rack.id FROM rack,_rack WHERE rack.id = '" +
-        req.params.rackId +
+        rackId +
         "' AND _rack.rackId = rack.id AND _rack.source = 'historical' AND rack.delete = true LIMIT 1"
     );
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
-      let status = await undeleteRackSlots(req.params.rackId);
       await DDC.run(
         "UPDATE rack SET tsPoint = strptime('" +
           point +
           "','" +
           pointFormat +
           "'), delete = false WHERE id = '" +
-          req.params.rackId +
+          rackId +
           "'"
       );
-      await dbAddPredictQueueItem("rack", req.params.rackId, "undelete");
       return 204;
     } else {
       return 404;
@@ -10030,52 +9816,72 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       expunge = false,
     } = {}
   ) {
+    let tsCol = "historicalTsId";
+    switch (source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+      default:
+        tsCol = "historicalTsId";
+    }
     if (expunge) {
       let ddd = await DDC.runAndReadAll(
         "SELECT id FROM rack WHERE id = '" + rackId + "'"
       );
       let dddRows = ddd.getRows();
       if (dddRows.length > 0) {
-        let { status } = await deleteRackSlots(rackId, {
-          point: point,
-          source: source,
-          predicted: predicted,
-          expunge: expunge,
-        });
-
+        await DDC.run("DELETE FROM _rackSlot WHERE rackId = '" + rackId + "'");
+        await DDC.run("DELETE FROM _rack WHERE rackId = '" + rackId + "'");
         await DDC.run(
-          "DELETE FROM _rackSlot WHERE rackSlotId = '" + rackId + "'"
+          "UPDATE rack SET delete = true, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+            rackId +
+            "'"
         );
-        await DDC.run("DELETE FROM rackSlot WHERE id = '" + rackId + "'");
         return 204;
+      } else {
+        return 404;
       }
+      return 204;
     } else {
       let ddp = await DDC.prepare(
-        "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM rack,_rack WHERE rack.id = $1 AND _rack.tsId = rack.historicalTsId AND rack.delete = false"
+        "SELECT id,tsPoint,historicalTsId,predictedTsId,source,tsId FROM rack,_rack WHERE rack.id = $1 AND _rack.tsId = rack." +
+          tsCol +
+          " AND rack.delete = false"
       );
-      ddp.bindVarchar(1, req.params.rackId);
+      ddp.bindVarchar(1, rackId);
       let ddRead = await ddp.runAndReadAll();
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
         if (predicted != null) {
           await DDC.run(
-            "DELETE FROM _rack WHERE rackId = '" +
-              req.params.rackId +
+            "DELETE FROM _rackSlot WHERE rackId = '" +
+              rackId +
               "' and source = 'predicted'"
           );
           await DDC.run(
-            "UPDATE rack SET predictedTsId = NULL WHERE id = '" +
-              req.params.rackId +
-              "'"
+            "DELETE FROM _rack WHERE rackId = '" +
+              rackId +
+              "' and source = 'predicted'"
           );
-          let status = await deleteRackSlots(rackId, { predicted: true });
+          await DDC.run(
+            "UPDATE rack SET predictedTsId = NULL WHERE id = '" + rackId + "'"
+          );
           return 204;
         } else {
-          let { status, body } = await getRackSlots(rackId);
+          let { status, body } = await getRack(rackId, {
+            source: source,
+            point: point,
+          });
           if (status == 200) {
             status = await addRack(
               rackId,
-              jsonDeepMerge(body, { point: point, delete: "true" })
+              jsonDeepMerge(body, {
+                point: dayjs().format(dayjsFormat),
+                delete: true,
+              })
             );
           }
           return status;
@@ -10103,10 +9909,17 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
         let rackId = uuidv4();
         let status = await addRack(rackId, req.body);
-        res
-          .contentType(OAS.mimeJSON)
-          .status(toInteger(status))
-          .json({ rackId: rackId });
+        if (status == 200) {
+          if (req.body.source == "historical") {
+            await dbAddPredictQueueItem("rack", rackId, "create");
+          }
+          res
+            .contentType(OAS.mimeJSON)
+            .status(toInteger(status))
+            .json({ rackId: rackId });
+        } else {
+          res.sendStatus(status);
+        }
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -10160,37 +9973,36 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   }
 
   async function getSingleRackSlots(req, res, next) {
-    let datePoint = "AND _rack.tsId = rack.historicalTsId";
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        if (req.query?.point != null) {
-          datePoint =
-            "AND strftime(_rack.point,'" +
-            pointFormat +
-            "') = '" +
-            req.query.point +
-            "'";
-        }
-        let ddp = await DDC.prepare(
-          "SELECT id FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
-            datePoint +
-            " ORDER BY _rack.point DESC LIMIT 1"
-        );
-        ddp.bindVarchar(1, req.params.rackId);
-        let ddRead = await ddp.runAndReadAll();
-        let ddRows = ddRead.getRows();
-        if (ddRows.length > 0) {
-          let { status, body } = await getRackSlots(req.params.rackId, {
-            point: req.query?.point,
-          });
-          res.contentType(OAS.mimeJSON).status(200).json(body);
-        } else {
+        let resJson = {};
+        let { status, body } = await getRack(req.params.rackId, {
+          point: req.query.point,
+        });
+        if (status == 200) {
+          if (body.slotUsage.length > 0) {
+            for (let s = 0; s < body.slotUsage.length; s++) {
+              if (
+                toInteger(body.slotUsage[s].slot) == toInteger(req.params.slot)
+              ) {
+                resJson = body.slotUsage[s];
+                break;
+              }
+            }
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else if (status == 404) {
           res
             .contentType(OAS.mimeJSON)
             .status(404)
             .json({
-              errors: "rackId " + req.params.rackId + " does not exist",
+              errors:
+                "rackId " +
+                req.params.rackId +
+                " and/or " +
+                req.params.slot +
+                " does not exist",
             });
         }
       } else {
@@ -10218,7 +10030,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             "'";
         }
         let ddp = await DDC.prepare(
-          "SELECT id,slots FROM rack, _rack,_rackSlot WHERE rack.id = $1 AND _rack.rackId = rack.id AND _rackSlot.rackId = rack.id AND _rackSlot.rackTsId = _rack.tsId AND rack.delete = false " +
+          "SELECT id,slots,neId,host FROM rack, _rack,_rackSlot WHERE rack.id = $1 AND _rack.rackId = rack.id AND _rackSlot.rackId = rack.id AND _rackSlot.rackTsId = _rack.tsId AND rack.delete = false " +
             datePoint +
             " AND _rackSlot.slot = " +
             req.params.slot +
@@ -10228,19 +10040,25 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let { status, body } = await getRackSlots(req.params.rackId, {
+          let { status, body } = await getRack(req.params.rackId, {
             point: req.query?.point,
           });
-          let usage = "";
-          if (body != null) {
+          let resSlot = {};
+          if (status == 200 && body != null) {
             for (let s = 0; s < body.length; s++) {
               if (body[s].slot == toInteger(req.params.slot)) {
-                usage = body[s].usage;
+                resSlot.usage = body[s].usage;
+                if (ddRows[0][2] != null) {
+                  resSlot.neId = ddRows[0][2];
+                }
+                if (ddRows[0][3] != null) {
+                  resSlot.host = ddRows[0][3];
+                }
                 break;
               }
             }
           }
-          res.contentType(OAS.mimeJSON).status(200).json({ usage: usage });
+          res.contentType(OAS.mimeJSON).status(200).json(resSlot);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -10266,15 +10084,12 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   }
 
   async function getSingleRack(req, res, next) {
-    let datePoint = "AND _rack.tsId = rack.historicalTsId";
     try {
       let result = validationResult(req);
-      let options = { source: "historical", point: null };
       if (result.isEmpty()) {
-        if (req.query?.point != null) {
-          options.point = req.query.point;
-        }
-        let { status, body } = await getRack(req.params.rackId, options);
+        let { status, body } = await getRack(req.params.rackId, {
+          point: req.query.point,
+        });
         if (status == 200) {
           res.contentType(OAS.mimeJSON).status(status).json(body);
         } else if (status == 404) {
@@ -10309,11 +10124,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
       if (result.isEmpty()) {
         let { status, body } = await getRack(req.params.rackId);
         if (status == 200 && body != null) {
-          let point = dayjs().format(dayjsFormat);
-          if (req.body?.point != null) {
-            point = req.body.point;
-          }
-          req.body = jsonDeepMerge(req.body, { point: point });
           req.body = jsonDeepMerge(body, req.body);
           return next();
         } else if (status == 404) {
@@ -10397,7 +10207,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         for (let idx in ddRows) {
           let { status, body } = await getRack(ddRows[idx][0], {
             point: ddRows[idx][1],
-            source: ddRows[idx][2],
           });
           if (status == 200) {
             resJson.push(body);
@@ -10665,12 +10474,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         if (req.body.link?.ingress != null) {
           for (let n = 0; n < req.body.link.ingress.length; n++) {
             let tsIngressId = await getSeqNextValue("seq_serviceIngress");
+            /*
             let nePortId = await dbNePortIdFromName(
               req.body.link.ingress[n].neId,
               req.body.link.ingress[n].port
             );
+            */
             ddp = await DDC.prepare(
-              "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+              "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
             );
             ddp.bindInteger(1, tsIngressId);
             ddp.bindVarchar(2, req.body.point);
@@ -10679,7 +10490,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             ddp.bindVarchar(5, serviceId);
             ddp.bindInteger(6, tsId);
             ddp.bindVarchar(7, req.body.link.ingress[n].neId);
-            ddp.bindVarchar(8, nePortId);
+            ddp.bindVarchar(8, req.body.link.ingress[n].port);
             await ddp.run();
             if (req.body.link.ingress[n]?.cVlanId != null) {
               await DDC.run(
@@ -10707,7 +10518,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             }
             let { status, body } = await getNe(req.body.link.ingress[n].neId);
             for (let b = 0; b < body.ports.length; b++) {
-              if (body.ports[b].name === req.body.link.ingress[n].port) {
+              if (
+                body.ports[b].name.toLowerCase() ==
+                req.body.link.ingress[n].port.toLowerCase()
+              ) {
                 body.ports[b].state = "used";
                 body.point = req.body.point;
                 break;
@@ -10732,12 +10546,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
         if (req.body.link?.egress != null) {
           for (let n = 0; n < req.body.link.egress.length; n++) {
             let tsEgressId = await getSeqNextValue("seq_serviceEgress");
+            /*
             let nePortId = await dbNePortIdFromName(
               req.body.link.egress[n].neId,
               req.body.link.egress[n].port
             );
+            */
             ddp = await DDC.prepare(
-              "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+              "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
             );
             ddp.bindInteger(1, tsEgressId);
             ddp.bindVarchar(2, req.body.point);
@@ -10746,7 +10562,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             ddp.bindVarchar(5, serviceId);
             ddp.bindInteger(6, tsId);
             ddp.bindVarchar(7, req.body.link.egress[n].neId);
-            ddp.bindVarchar(8, nePortId);
+            ddp.bindVarchar(8, req.body.link.egress[n].port);
             await ddp.run();
             if (req.body.link.egress[n]?.cVlanId != null) {
               await DDC.run(
@@ -10774,7 +10590,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             }
             let { status, body } = await getNe(req.body.link.egress[n].neId);
             for (let b = 0; b < body.ports.length; b++) {
-              if (body.ports[b].name === req.body.link.egress[n].port) {
+              if (
+                body.ports[b].name.toLowerCase() ==
+                req.body.link.egress[n].port.toLowerCase()
+              ) {
                 body.ports[b].state = "used";
                 body.point = req.body.point;
                 break;
@@ -10908,7 +10727,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               let ddIngressRows = ddIngress.getRows();
               if (ddIngressRows.length > 0) {
                 ddp = await DDC.prepare(
-                  "INSERT INTO _serviceIngress (point,source,serviceId,serviceTsId,neId,nePortId,cVlanId,sVlanId,lagMember) SELECT strptime($1,$2),source,serviceId,$3,neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $4 AND serviceTsId = $5"
+                  "INSERT INTO _serviceIngress (point,source,serviceId,serviceTsId,neId,nePort,cVlanId,sVlanId,lagMember) SELECT strptime($1,$2),source,serviceId,$3,neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $4 AND serviceTsId = $5"
                 );
                 ddp.bindVarchar(1, point);
                 ddp.bindVarchar(2, pointFormat);
@@ -10927,7 +10746,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               let ddEgressRows = ddEgress.getRows();
               if (ddEgressRows.length > 0) {
                 ddp = await DDC.prepare(
-                  "INSERT INTO _serviceEgress (point,source,serviceId,serviceTsId,neId,nePortId,cVlanId,sVlanId,lagMember) SELECT strptime($1,$2),source,serviceId,$3,neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $4 AND serviceTsId = $5"
+                  "INSERT INTO _serviceEgress (point,source,serviceId,serviceTsId,neId,nePort,cVlanId,sVlanId,lagMember) SELECT strptime($1,$2),source,serviceId,$3,neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $4 AND serviceTsId = $5"
                 );
                 ddp.bindVarchar(1, point);
                 ddp.bindVarchar(2, pointFormat);
@@ -11041,7 +10860,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let ddi = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           ddi.bindVarchar(1, req.params.serviceId);
           ddi.bindInteger(2, ddRows[0][3]);
@@ -11051,10 +10870,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddIngressRows) {
               let resObj = {
                 neId: ddIngressRows[pdx][0],
+                port: ddIngressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddIngressRows[pdx][0],
                   ddIngressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddIngressRows[pdx][2]) > 0) {
                 resObj.cVlanId = toInteger(ddIngressRows[pdx][2]);
@@ -11070,7 +10892,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let dde = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           dde.bindVarchar(1, req.params.serviceId);
           dde.bindInteger(2, ddRows[0][3]);
@@ -11080,10 +10902,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddEgressRows) {
               let resObj = {
                 neId: ddEgressRows[pdx][0],
+                port: ddEgressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddEgressRows[pdx][0],
                   ddEgressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddEgressRows[pdx][2]) > 0) {
                 resObj.cVlanId = toInteger(toInteger(ddEgressRows[pdx][2]));
@@ -11209,7 +11034,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let ddi = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           ddi.bindVarchar(1, req.params.serviceId);
           ddi.bindInteger(2, ddRows[0][14]);
@@ -11219,10 +11044,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddIngressRows) {
               let resIngressObj = {
                 neId: ddIngressRows[pdx][0],
+                port: ddIngressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddIngressRows[pdx][0],
                   ddIngressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddIngressRows[pdx][2]) > 0) {
                 resIngressObj.cVlanId = toInteger(ddIngressRows[pdx][2]);
@@ -11237,7 +11065,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             }
           }
           let dde = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           dde.bindVarchar(1, req.params.serviceId);
           dde.bindInteger(2, ddRows[0][14]);
@@ -11247,10 +11075,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddEgressRows) {
               let resEgressObj = {
                 neId: ddEgressRows[pdx][0],
+                port: ddEgressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddEgressRows[pdx][0],
                   ddEgressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddEgressRows[pdx][2]) > 0) {
                 resEgressObj.cVlanId = toInteger(
@@ -11456,12 +11287,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           if (req.body.link?.ingress != null) {
             for (let n = 0; n < req.body.link.ingress.length; n++) {
               let tsIngressId = await getSeqNextValue("seq_serviceIngress");
+              /*
               let nePortId = await dbNePortIdFromName(
                 req.body.link.ingress[n].neId,
                 req.body.link.ingress[n].port
               );
+              */
               ddp = await DDC.prepare(
-                "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+                "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
               ddp.bindInteger(1, tsIngressId);
               ddp.bindVarchar(2, req.body.point);
@@ -11470,7 +11303,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               ddp.bindVarchar(5, req.params.serviceId);
               ddp.bindInteger(6, tsId);
               ddp.bindVarchar(7, req.body.link.ingress[n].neId);
-              ddp.bindVarchar(8, nePortId);
+              ddp.bindVarchar(8, req.body.link.ingress[n].port);
               await ddp.run();
               if (req.body.link.ingress[n]?.cVlanId != null) {
                 await DDC.run(
@@ -11523,12 +11356,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           if (req.body.link?.egress != null) {
             for (let n = 0; n < req.body.link.egress.length; n++) {
               let tsEgressId = await getSeqNextValue("seq_serviceEgress");
+              /*
               let nePortId = await dbNePortIdFromName(
                 req.body.link.egress[n].neId,
                 req.body.link.egress[n].port
               );
+              */
               ddp = await DDC.prepare(
-                "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+                "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
               ddp.bindInteger(1, tsEgressId);
               ddp.bindVarchar(2, req.body.point);
@@ -11537,7 +11372,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               ddp.bindVarchar(5, req.params.serviceId);
               ddp.bindInteger(6, tsId);
               ddp.bindVarchar(7, req.body.link.egress[n].neId);
-              ddp.bindVarchar(8, nePortId);
+              ddp.bindVarchar(8, req.body.link.egress[n].port);
               await ddp.run();
               if (req.body.link.egress[n]?.cVlanId != null) {
                 await DDC.run(
@@ -11663,7 +11498,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
 
           let ddi = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceIngress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           ddi.bindVarchar(1, ddRows[idx][0]);
           ddi.bindInteger(2, ddRows[idx][14]);
@@ -11673,10 +11508,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddIngressRows) {
               let resIngressObj = {
                 neId: ddIngressRows[pdx][0],
+                port: ddIngressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddIngressRows[pdx][0],
                   ddIngressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddIngressRows[pdx][2]) > 0) {
                 resIngressObj.cVlanId = toInteger(ddIngressRows[pdx][2]);
@@ -11691,7 +11529,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             }
           }
           let dde = await DDC.prepare(
-            "SELECT neId,nePortId,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
+            "SELECT neId,nePort,cVlanId,sVlanId,lagMember FROM _serviceEgress WHERE serviceId = $1 AND serviceTsId = $2"
           );
           dde.bindVarchar(1, ddRows[idx][0]);
           dde.bindInteger(2, ddRows[idx][14]);
@@ -11701,10 +11539,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             for (let pdx in ddEgressRows) {
               let resEgressObj = {
                 neId: ddEgressRows[pdx][0],
+                port: ddEgressRows[pdx][1],
+                /*
                 port: await dbNePortNameFromId(
                   ddEgressRows[pdx][0],
                   ddEgressRows[pdx][1]
                 ),
+                */
               };
               if (toInteger(ddEgressRows[pdx][2]) > 0) {
                 resEgressObj.cVlanId = toInteger(
@@ -11945,12 +11786,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           if (req.body[i].link?.ingress != null) {
             for (let n = 0; n < req.body[i].link.ingress.length; n++) {
               let tsIngressId = await getSeqNextValue("seq_serviceIngress");
+              /*
               let nePortId = await dbNePortIdFromName(
                 req.body[i].link.ingress[n].neId,
                 req.body[i].link.ingress[n].port
               );
+              */
               ddp = await DDC.prepare(
-                "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+                "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
               ddp.bindInteger(1, tsIngressId);
               ddp.bindVarchar(2, req.body[i].point);
@@ -11959,7 +11802,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               ddp.bindVarchar(5, req.body[i].serviceId);
               ddp.bindInteger(6, tsId);
               ddp.bindVarchar(7, req.body[i].link.ingress[n].neId);
-              ddp.bindVarchar(8, nePortId);
+              ddp.bindVarchar(8, req.body[i].link.ingress[n].port);
               await ddp.run();
               if (req.body[i].link.ingress[n]?.cVlanId != null) {
                 await DDC.run(
@@ -11985,11 +11828,15 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                     tsIngressId
                 );
               }
+
               let { status, body } = await getNe(
                 req.body[i].link.ingress[n].neId
               );
               for (let b = 0; b < body.ports.length; b++) {
-                if (body.ports[b].name === req.body[i].link.ingress[n].port) {
+                if (
+                  body.ports[b].name.toLowerCase() ==
+                  req.body[i].link.ingress[n].port.toLowerCase()
+                ) {
                   body.ports[b].state = "used";
                   body.point = req.body[i].point;
                   break;
@@ -12014,12 +11861,14 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           if (req.body[i].link?.egress != null) {
             for (let n = 0; n < req.body[i].link.egress.length; n++) {
               let tsEgressId = await getSeqNextValue("seq_serviceEgress");
+              /*
               let nePortId = await dbNePortIdFromName(
                 req.body[i].link.egress[n].neId,
                 req.body[i].link.egress[n].port
               );
+              */
               ddp = await DDC.prepare(
-                "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePortId) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+                "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
               ddp.bindInteger(1, tsEgressId);
               ddp.bindVarchar(2, req.body[i].point);
@@ -12028,7 +11877,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               ddp.bindVarchar(5, req.body[i].serviceId);
               ddp.bindInteger(6, tsId);
               ddp.bindVarchar(7, req.body[i].link.egress[n].neId);
-              ddp.bindVarchar(8, nePortId);
+              ddp.bindVarchar(8, req.body[i].link.egress[n].port);
               await ddp.run();
               if (req.body[i].link.egress[n]?.cVlanId != null) {
                 await DDC.run(
@@ -12058,7 +11907,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                 req.body[i].link.egress[n].neId
               );
               for (let b = 0; b < body.ports.length; b++) {
-                if (body.ports[b].name === req.body[i].link.egress[n].port) {
+                if (
+                  body.ports[b].name.toLowerCase() ==
+                  req.body[i].link.egress[n].port.toLowerCase()
+                ) {
                   body.ports[b].state = "used";
                   body.point = req.body[i].point;
                   break;
@@ -12355,6 +12207,9 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
               tsId
           );
         }
+        if (req.body.source == "historical" && toBoolean(req.body.onNet)) {
+          await dbAddPredictQueueItem("site", siteId, "create");
+        }
         res.contentType(OAS.mimeJSON).status(200).json({ siteId: siteId });
       } else {
         res
@@ -12402,7 +12257,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
           }
         } else {
           let ddp = await DDC.prepare(
-            "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM site,_site WHERE site.id = $1 AND _site.tsId = site.historicalTsId AND site.delete = false"
+            "SELECT id,tsPoint,historicalTsId,predictedTsId,source,onNet FROM site,_site WHERE site.id = $1 AND _site.tsId = site.historicalTsId AND site.delete = false"
           );
           ddp.bindVarchar(1, req.params.siteId);
           let ddRead = await ddp.runAndReadAll();
@@ -12453,7 +12308,13 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                   req.params.siteId +
                   "'"
               );
-              await dbAddPredictQueueItem("site", req.params.siteId, "delete");
+              if (ddRows[0][4] == "historical" && toBoolean(ddRows[0][5])) {
+                await dbAddPredictQueueItem(
+                  "site",
+                  req.params.siteId,
+                  "delete"
+                );
+              }
               res.sendStatus(204);
             }
           } else {
@@ -12781,7 +12642,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                 tsId
             );
           }
-          if (req.body.source == "historical") {
+          if (req.body.source == "historical" && toBoolean(req.body.onNet)) {
             await dbAddPredictQueueItem("site", req.params.siteId, "update");
           }
           res.sendStatus(204);
@@ -12999,7 +12860,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
                 tsId
             );
           }
-          if (req.body[i].source == "historical") {
+          if (
+            req.body[i].source == "historical" &&
+            toBoolean(req.body[i].onNet)
+          ) {
             await dbAddPredictQueueItem("site", req.body[i].siteId, "create");
           }
           resJson.push(req.body[i].siteId);
@@ -14147,7 +14011,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
             connectsTo: {},
             coordinates: [],
             source: ddRows[0][6],
-            delete: ddRows[0][1],
+            delete: toBoolean(ddRows[0][1]),
           };
           if (ddRows[0][12] != null) {
             resJson.demographics.premises.passed = toInteger(ddRows[0][12]);
@@ -16513,6 +16377,21 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
 
   /*
        Tag:           Alerts
+       operationId:   getCveByNe
+       exposed Route: /mni/v1/cve/ne
+       HTTP method:   GET
+       OpenID Scope:  read:mni_alert
+    */
+  app.get(
+    // security("read:mni_alert"),
+    serveUrlPrefix + serveUrlVersion + "/cve/ne/:neId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("neId").isUUID(4),
+    getCveByNe
+  );
+
+  /*
+       Tag:           Alerts
        operationId:   addSingleCve
        exposed Route: /mni/v1/cve
        HTTP method:   POST
@@ -17483,6 +17362,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("model").isString().trim(),
     body("image").isString().trim(),
     body("version").isString().trim(),
+    body("config").optional().isString().trim(),
     body("ports").isArray({ min: 1 }),
     body("ports.*.name").isString().isLength(OAS.portName),
     body("ports.*.technology").isIn(OAS.portTechnology),
@@ -17666,6 +17546,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("model").optional().isString().trim(),
     body("image").optional().isString().trim(),
     body("version").optional().isString().trim(),
+    body("config").optional().isString().trim(),
     body("ports").optional().isArray({ min: 1 }),
     body("ports.*.name").optional().isString().isLength(OAS.portName),
     body("ports.*.technology").optional().isIn(OAS.portTechnology),
@@ -17797,6 +17678,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("model").isString().trim(),
     body("image").isString().trim(),
     body("version").isString().trim(),
+    body("config").optional().isString().trim(),
     body("ports").isArray({ min: 1 }),
     body("ports.*.name").isString().isLength(OAS.portName),
     body("ports.*.technology").isIn(OAS.portTechnology),
@@ -17939,6 +17821,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("*.model").isString().trim(),
     body("*.image").isString().trim(),
     body("*.version").isString().trim(),
+    body("*.config").optional().isString().trim(),
     body("*.ports").isArray({ min: 1 }),
     body("*.ports.*.name").isString().isLength(OAS.portName),
     body("*.ports.*.technology").isIn(OAS.portTechnology),
@@ -18341,7 +18224,7 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("build.planned.unit").default("day").isIn(OAS.durationUnit),
     body("build.actual").optional().isObject(),
     body("build.actual.start")
-      .if(body("build.actual").exists())
+      .optional().if(body("build.actual").exists())
       .matches(OAS.datePeriodYearMonthDay),
     body("build.actual.completion")
       .if(body("build.actual").exists())
@@ -18362,15 +18245,15 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     oneOf(
       [
         // site
-        body("connectsTo.siteId").if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.siteId").optional().if(body("build.actual").exists()).isUUID(4),
       ],
       [
         // trench
-        body("connectsTo.trenchId").if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.trenchId").optional().if(body("build.actual").exists()).isUUID(4),
       ],
       [
         // pole
-        body("connectsTo.poleId").if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.poleId").optional().if(body("build.actual").exists()).isUUID(4),
       ],
       {
         message: "either site, trench or pole identifier must be supplied",
@@ -19670,7 +19553,6 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
   app.put(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
     // security("write:mni_trench"),
-    dumpRequest,
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").isIn(OAS.trenchPurpose),
@@ -19687,10 +19569,10 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     body("demographics.premises.area")
       .default("unclassified")
       .isIn(OAS.areaType),
-    body("build").isObject(),
-    body("build.jobId").isString().trim(),
-    body("build.permitId").isString().trim(),
-    body("build.planned").isObject(),
+    body("build").optional().isObject(),
+    body("build.jobId").optional().isString().trim(),
+    body("build.permitId").optional().isString().trim(),
+    body("build.planned").optional().isObject(),
     body("build.planned.start").optional().matches(OAS.datePeriodYearMonthDay),
     body("build.planned.completion")
       .optional()
@@ -19719,15 +19601,15 @@ UPDATE ne SET predictedTsId = NULL WHERE id = '7a1a6b0c-01ec-41f2-8459-75784228f
     oneOf(
       [
         // site
-        body("connectsTo.siteId").if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.siteId").optional().if(body("connectsTo").exists()).isUUID(4),
       ],
       [
         // trench
-        body("connectsTo.trenchId").if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.trenchId").optional().if(body("connectsTo").exists()).isUUID(4),
       ],
       [
         // pole
-        body("connectsTo.poleId").if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.poleId").optional().if(body("connectsTo").exists()).isUUID(4),
       ],
       {
         message: "either site, trench or pole identifier must be supplied",

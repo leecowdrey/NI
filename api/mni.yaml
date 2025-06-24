@@ -666,6 +666,47 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /cve/ne/{neId}:
+    get:
+      summary: List known and impacting CVEs for specified NE
+      security:
+      - openId:
+        - read:mni_alert
+      operationId: getCveByNe
+      parameters:
+      - $ref: "#/components/parameters/neId"
+      tags:
+      - Alerts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  known:
+                    type: array
+                    minItems: 0
+                    items:
+                      $ref: "#/components/schemas/cveId"
+                  impacting:
+                    type: array
+                    minItems: 0
+                    items:
+                      $ref: "#/components/schemas/cveId"
+              examples:
+                sample:
+                  value:
+                    known:
+                    - CVE-2025-5516
+                    impacting:
+                    - CVE-2025-5516
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /cve/{cveId}:
     get:
       summary: List single CVE details
@@ -5632,6 +5673,10 @@ paths:
                     version:
                       description: software firmware/image version
                       type: string
+                    config:
+                      description: |
+                        CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
+                      type: string
                     ports:
                       type: array
                       minItems: 1
@@ -5858,6 +5903,10 @@ paths:
                     type: string
                   version:
                     description: software firmware/image version
+                    type: string
+                  config:
+                    description: |
+                      CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
                     type: string
                   ports:
                     type: array
@@ -6223,6 +6272,10 @@ paths:
                 version:
                   description: software firmware/image version
                   type: string
+                config:
+                  description: |
+                    CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
+                  type: string
                 ports:
                   type: array
                   minItems: 1
@@ -6472,6 +6525,10 @@ paths:
                   version:
                     description: software firmware/image version
                     type: string
+                  config:
+                    description: |
+                      CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
+                    type: string
                   ports:
                     type: array
                     minItems: 1
@@ -6693,6 +6750,10 @@ paths:
                 version:
                   description: software firmware/image version
                   type: string
+                config:
+                  description: |
+                    CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
+                  type: string
                 ports:
                   type: array
                   minItems: 1
@@ -6903,6 +6964,10 @@ paths:
                   type: string
                 version:
                   description: software firmware/image version
+                  type: string
+                config:
+                  description: |
+                    CLI, JSON or XML (NETCONF/YANG) configuration, *note*: is stored automatically in compressed format
                   type: string
                 ports:
                   type: array

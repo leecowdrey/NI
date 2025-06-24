@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="img/icon.png">
     <style>
         .panel {
-            width: 45%;
+            width: 85%;
             height: 40%;
             border-radius: 10px;
             background-color: #b3b3b3;
@@ -58,12 +58,9 @@
         }
 
         .metadata-panel {
-            width: 45%;
-            height: calc(70vh - 10px);
             border-radius: 10px;
-            background-color: #b3b3b3;
             font-family: 'Courier New', Courier, monospace;
-            color: #000000;
+            color: #ffffff;
             text-align: left;
             margin-top: 20px;
             margin-left: 20px;
@@ -131,6 +128,59 @@
             text-indent: 1em;
             color: white;
         }
+
+        .predictedSlotFree {
+            border: 1px solid #ffff00;
+            background-color: green;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedSlotUsed {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedSlotReserved {
+            border: 1px solid #ffff00;
+            background-color: #808080;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedSlotFaulty {
+            border: 1px solid #ffff00;
+            background-color: red;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
+
+        .predictedSlotPredicted {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
+            background-size: 1.25em 1.25em;
+            opacity: 1;
+            text-align: left;
+            font-size: 0.7em;
+            text-indent: 1em;
+            color: white;
+        }
     </style>
     <script async src="/mni/js/mni.js"></script>
 </head>
@@ -182,12 +232,12 @@
         </div>
     </div>
     <div id="view-panel" style="width: 80%;">
-        <div id="left-rack-display" style="float:left; width: 45%">
+        <div id="left-rack-display" style="float:left; width: 55%">
             <div class="rack-panel" id="rackPanel">
                 <div class="grid" id="rackGrid"></div>
             </div>
         </div>
-        <div id="right-rack-metadata" style="float:right; width: 55%">
+        <div id="right-rack-metadata" style="float:right; width: 35%">
             <div class="metadata-panel" id="metadataPanel"></div>
         </div>
     </div>
@@ -263,6 +313,10 @@
                     let slotFaulty = 0;
                     let slotPredicted = 0;
                     let slotUsage = data.slotUsage.reverse();
+                    let source = "historical";
+                    if (data.source != null) {
+                        source = data.source;
+                    }
                     grid.style.setProperty("--max-rack-slots", rackSlots);
                     for (let j = 0; j < slotUsage.length; j++) {
                         let cell = document.createElement("div");
@@ -270,27 +324,47 @@
                         switch (slotUsage[j].usage) {
                             case "free":
                                 cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
-                                cell.setAttribute("class", "slotFree");
+                                if (source == "predicted") {
+                                    cell.setAttribute("class", "predictedSlotFree");
+                                } else {
+                                    cell.setAttribute("class", "slotFree");
+                                }
                                 slotFree = slotFree + 1;
                                 break;
                             case "used":
-                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage+" "+slotUsage[j].host+" "+slotUsage[j].mgmtIP);
-                                cell.setAttribute("class", "slotUsed");
+                                cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage + " " + slotUsage[j].host);
+                                if (source == "predicted") {
+                                    cell.setAttribute("class", "predictedSlotUsed");
+                                } else {
+                                    cell.setAttribute("class", "slotUsed");
+                                }
                                 slotUsed = slotUsed + 1;
                                 break;
                             case "reserved":
                                 cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
-                                cell.setAttribute("class", "slotReserved");
+                                if (source == "predicted") {
+                                    cell.setAttribute("class", "predictedSlotReserved");
+                                } else {
+                                    cell.setAttribute("class", "slotReserved");
+                                }
                                 slotReserved = slotReserved + 1;
                                 break;
                             case "faulty":
                                 cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
-                                cell.setAttribute("class", "slotFaulty");
+                                if (source == "predicted") {
+                                    cell.setAttribute("class", "predictedSlotFaulty");
+                                } else {
+                                    cell.setAttribute("class", "slotFaulty");
+                                }
                                 slotFaulty = slotFaulty + 1;
                                 break;
                             case "predicted":
                                 cell.setAttribute("title", rackSlots - j + ": " + slotUsage[j].usage);
-                                cell.setAttribute("class", "slotPredicted");
+                                if (source == "predicted") {
+                                    cell.setAttribute("class", "predictedSlotPredicted");
+                                } else {
+                                    cell.setAttribute("class", "slotPredicted");
+                                }
                                 slotPredicted = slotPredicted + 1;
                                 break;
                         }
@@ -300,7 +374,7 @@
                         switch (slotUsage[j].usage) {
                             case "used":
                                 if (slotUsage[j].neId != null) {
-                                    cellHTML = '&emsp;' + (rackSlots - j) + ' <a href="<%=payload.rootUrl%>/ne/' + slotUsage[j].neId + '" rel="noopener noreferrer" target="_blank">+</a>&emsp;' + slotUsage[j].host;
+                                    cellHTML = '&emsp;' + (rackSlots - j) + ' <a href="<%=payload.rootUrl%>/ne/' + slotUsage[j].neId + '" target="_self">+</a>&emsp;' + slotUsage[j].host;
                                 } else {
                                     cellHTML = '&emsp;' + (rackSlots - j);
                                 }
@@ -314,9 +388,10 @@
                         data.decommissioned = "";
                     }
                     let metadata = '<small><b>Reference</b>:&emsp;' + data.reference + '<br>' +
-                        '<center>( '+rackId+' )</center><br>' +
+                        '<center>( ' + rackId + ' )</center><br>' +
                         '<br>Commissioned:&emsp;&emsp;' + data.commissioned + '<br>' +
                         'Decommissioned:&emsp;' + data.decommissioned + '<br>' +
+                        'Source:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' + source + '<br>' +
                         '<br><b>Dimensions</b>:<br>' +
                         'H/W/D:&emsp;' + data.dimensions.height + ' / ' + data.dimensions.width + ' / ' + data.dimensions.depth + ' ' + data.dimensions.unit + '<br>' +
                         'Slots:&emsp;&emsp;' + data.slots + '<br>' +
@@ -330,7 +405,7 @@
                         'Used:&emsp;&emsp;&emsp;&emsp;' + slotUsed + '<br>' +
                         'Reserved:&emsp;&emsp;' + slotReserved + '<br>' +
                         'Faulty:&emsp;&emsp;&emsp;' + slotFaulty + '<br>' +
-                        'Predicted:&emsp;&emsp;' + slotPredicted + '<br></small>';
+                        'Predicted:&emsp;&emsp;' + slotPredicted + '</small>';
                     document.getElementById("metadataPanel").innerHTML = metadata;
                 })
                 .catch((e) => {

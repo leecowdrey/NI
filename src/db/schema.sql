@@ -377,16 +377,6 @@ CREATE TABLE IF NOT EXISTS ne (
     historicalTsId INTEGER,
     predictedTsId INTEGER
 );
-CREATE TABLE IF NOT EXISTS nePort (
-    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
-    delete BOOLEAN NOT NULL DEFAULT false,
-    neId VARCHAR NOT NULL,
-    name VARCHAR NOT NULL,
-    tsPoint TIMESTAMP,
-    historicalTsId INTEGER,
-    predictedTsId INTEGER,
-    FOREIGN KEY (neId) REFERENCES ne (id)
-);  
 CREATE TABLE IF NOT EXISTS service (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     delete BOOLEAN NOT NULL DEFAULT false,
@@ -664,6 +654,8 @@ CREATE TABLE IF NOT EXISTS _rackSlot (
     rackTsId INTEGER NOT NULL,
     slot INTEGER NOT NULL CHECK (slot >= 1 AND slot <= 59), 
     usage slotState DEFAULT 'free',
+    neId VARCHAR,
+    host VARCHAR,
     FOREIGN KEY (rackId) REFERENCES rack (id),
     FOREIGN KEY (rackTsId) REFERENCES _rack (tsId)
 );
@@ -686,92 +678,92 @@ CREATE TABLE IF NOT EXISTS _ne (
     siteId VARCHAR NOT NULL,
     rackId VARCHAR NOT NULL,
     slotPosition VARCHAR NOT NULL CHECK (regexp_full_match(slotPosition,'([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?')),
+    config VARCHAR USING COMPRESSION zstd, -- CLI, JSON, or XML content
     FOREIGN KEY (neId) REFERENCES ne (id),
     FOREIGN KEY (siteId) REFERENCES site (id),
     FOREIGN KEY (rackId) REFERENCES rack (id)
 );
 
 ---
-
 CREATE TABLE IF NOT EXISTS _nePort (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePort') PRIMARY KEY,
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
-    nePortId VARCHAR NOT NULL,
     source source NOT NULL DEFAULT 'historical',
     neId VARCHAR NOT NULL,
+    neTsId INTEGER NOT NULL,
     name VARCHAR NOT NULL,
     technology portTechnology NOT NULL,
     state portState NOT NULL DEFAULT 'free',
-    FOREIGN KEY (nePortId) REFERENCES nePort (id),
-    FOREIGN KEY (neId) REFERENCES ne (id)
+    FOREIGN KEY (neId) REFERENCES ne (id),
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId)
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortCoax (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortCoax') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     frequencyLow DECIMAL(6,2) NOT NULL DEFAULT 0.1 CHECK (frequencyLow >= 0.1 AND frequencyLow <= 100000),
     frequencyHigh DECIMAL(6,2) NOT NULL DEFAULT 100000 CHECK (frequencyHigh >= 0.1 AND frequencyHigh <= 100000),
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
     width DECIMAL(6,2) DEFAULT 1 CHECK (width >= 0.1 AND width <= 100000),
     unit portCoaxConfigurationRate DEFAULT 'GHz',
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortEthernet (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortEthernet') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     category portEthernetConfiguration NOT NULL DEFAULT 'Cat6A',
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortLoopback (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortLoopback') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortFiber (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortFiber') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     rate INTEGER NOT NULL DEFAULT 1 CHECK (rate >= 1 AND rate <= 200),
     unit portFiberConfigurationRate NOT NULL DEFAULT 'Gbps',
     mode portFiberConfigurationMode NOT NULL DEFAULT 'SMOF',
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
     width INTEGER DEFAULT 1 CHECK (width >= 1 AND width <= 1000),
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortXdsl (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortXdsl') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     category portXdslConfiguration NOT NULL DEFAULT 'VDSL2',
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 100),
     unit portXdslConfigurationRate DEFAULT 'Mbps',
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
 
 CREATE TABLE IF NOT EXISTS _nePortVirtual (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortVirtual') PRIMARY KEY,
-    nePortTsId INTEGER NOT NULL,
+    neTsId INTEGER NOT NULL,
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (nePortTsId) REFERENCES _nePort (tsId) 
+    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
 
 ---
@@ -802,14 +794,13 @@ CREATE TABLE IF NOT EXISTS _serviceIngress (
     serviceId VARCHAR NOT NULL,
     serviceTsId INTEGER NOT NULL,
     neId VARCHAR NOT NULL,
-    nePortId VARCHAR NOT NULL,
+    nePort VARCHAR NOT NULL,
     cVlanId INTEGER NOT NULL DEFAULT 0 CHECK (cVlanId >= 0 AND cVlanId <= 4095),
     sVlanId INTEGER NOT NULL DEFAULT 0 CHECK (sVlanId >= 0 AND sVlanId <= 4095),
     lagMember INTEGER DEFAULT 0 CHECK (lagMember >= 0 AND lagMember <= 256),
     FOREIGN KEY (serviceId) REFERENCES service (id),
     FOREIGN KEY (serviceTsId) REFERENCES _service (tsId),
-    FOREIGN KEY (neId) REFERENCES ne (id),
-    FOREIGN KEY (nePortId) REFERENCES nePort (id)
+    FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
 ---
@@ -821,14 +812,13 @@ CREATE TABLE IF NOT EXISTS _serviceEgress (
     serviceId VARCHAR NOT NULL,
     serviceTsId INTEGER NOT NULL,
     neId VARCHAR NOT NULL,
-    nePortId VARCHAR NOT NULL,
+    nePort VARCHAR NOT NULL,
     cVlanId INTEGER NOT NULL DEFAULT 0 CHECK (cVlanId >= 0 AND cVlanId <= 4095),
     sVlanId INTEGER NOT NULL DEFAULT 0 CHECK (sVlanId >= 0 AND sVlanId <= 4095),
     lagMember INTEGER DEFAULT 0 CHECK (lagMember >= 0 AND lagMember <= 256),
     FOREIGN KEY (serviceId) REFERENCES service (id),
     FOREIGN KEY (serviceTsId) REFERENCES _service (tsId),
-    FOREIGN KEY (neId) REFERENCES ne (id),
-    FOREIGN KEY (nePortId) REFERENCES nePort (id)
+    FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
 
@@ -837,7 +827,7 @@ CREATE TABLE IF NOT EXISTS _serviceEgress (
 ---
 
 INSERT INTO adminData (id,historicalDuration,historicalUnit,predictedDuration,predictedUnit) 
-    VALUES (uuid(),6,'month',1,'month');
+    VALUES (uuid(),1,'year',1,'month');
 
 INSERT INTO alert (id,description,function) VALUES ('5c8d258b-94d7-4826-afe0-bfb9a4237332','Trench Utilization 75%','jobAlertTrenchUtil(75);');
 INSERT INTO alert (id,description,function) VALUES ('d461d060-f19c-4c4a-956a-07a0997dd9b7','Trench Utilization 90%','jobAlertTrenchUtil(90);');

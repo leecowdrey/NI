@@ -107,8 +107,8 @@ async function methodOne(bundle) {
                 fetch(url, {
                   method: "DELETE",
                 })
-                  .then((response) => {
-                    if (response.ok) {
+                  .then((deleteResponse) => {
+                    if (deleteResponse.ok) {
                       // add predicted variant of the specified resource
                       try {
                         url =
@@ -118,84 +118,78 @@ async function methodOne(bundle) {
                           "/" +
                           bundle.id;
                         fetch(url, {
-                          method: "PATCH",
+                          method: "GET",
                           headers: {
                             "Content-Type": OAS.mimeJSON,
                           },
-                          body: JSON.stringify({
-                            source: "predicted",
-                            point: predictedPoint.format(dayjsFormat),
-                          }),
                         })
-                          .then((response) => {
-                            if (response.ok) {
-                              resolve(bundle.qId);
-                            } else {
-                              reject(new Error({
-                                qId: bundle.qId,
-                                status: response.status,
-                                statusText: response.statusText,
-                              }));
+                          .then((getResponse) => {
+                            if (getResponse.ok) {
+                              if (
+                                toInteger(
+                                  getResponse.headers.get("Content-Length")
+                                ) > 0
+                              ) {
+                                return response.json();
+                              }
+                            }
+                          })
+                          .then((getData) => {
+                            if (getData != null) {
+                              getData.source = "predicted";
+                              getData.point = predictedPoint.format(dayjsFormat);
+                              fetch(url, {
+                                method: "PUT",
+                                headers: {
+                                  "Content-Type": OAS.mimeJSON,
+                                },
+                                body: JSON.stringify(getData),
+                              })
+                                .then((putResponse) => {
+                                  if (putResponse.ok) {
+                                    resolve(bundle.qId);
+                                  } else {
+                                    reject(new Error({ qId: bundle.qId }));
+                                  }
+                                })
+                                .catch((err) => {
+                                  console.error(err);
+                                  reject(new Error({ qId: bundle.qId }));
+                                });
                             }
                           })
                           .catch((err) => {
-                            reject( new Error({
-                              qId: bundle.qId,
-                              status: 500,
-                              statusText: err,
-                            }));
+                            console.error(err);
+                            reject(new Error({ qId: bundle.qId }));
                           });
                       } catch (err) {
-                        reject( new Error({
-                          qId: bundle.qId,
-                          status: 500,
-                          statusText: err,
-                        }));
+                        console.error(err);
+                        reject(new Error({ qId: bundle.qId }));
                       }
                     } else {
-                      reject( new Error({
-                        qId: bundle.qId,
-                        status: response.status,
-                        statusText: response.statusText,
-                      }));
+                      reject(new Error({ qId: bundle.qId }));
                     }
                   })
                   .catch((err) => {
-                   reject( new Error({
-                      qId: bundle.qId,
-                      status: 500,
-                      statusText: err,
-                    }));
+                    console.error(err);
+                    reject(new Error({ qId: bundle.qId }));
                   });
               } catch (err) {
-                reject( new Error({
-                  qId: bundle.qId,
-                  status: 500,
-                  statusText: err,
-                }));
+                console.error(err);
+                reject(new Error({ qId: bundle.qId }));
               }
             }
           } else {
-            reject( new Error({
-              qId: bundle.qId,
-              status: 500,
-              statusText: "no JSON response",
-            }));
+            reject(new Error({ qId: bundle.qId }));
           }
         })
         .catch((err) => {
-          reject( new Error({
-            qId: bundle.qId,
-            status: 500,
-            statusText: err,
-          }));
+          console.error(err);
+          reject(new Error({ qId: bundle.qId }));
         });
     } catch (err) {
-      reject( new Error({
-        qId: bundle.qId,
-        status: 500,
-        statusText: err,
-      }));
+      console.error(err);
+      reject(new Error({ qId: bundle.qId }));
     }
   });
 }
