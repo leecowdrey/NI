@@ -19178,7 +19178,7 @@
 			"parent_id": "374989534b2cf",
 			"target_type": "api",
 			"name": "Import services in bulk",
-			"version": 485,
+			"version": 506,
 			"sort": 2000,
 			"method": "POST",
 			"url": "/services",
@@ -19288,7 +19288,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "[\n  {\n    \"serviceId\": \"784d5d3d-44cf-41a2-8ef0-24a376b0b296\",\n    \"point\": \"20250512T122152\",\n    \"customer\": {\n      \"name\": \"Merkator\",\n      \"reference\": \"sample\"\n    },\n    \"commissioned\": \"20250512\",\n    \"reference\": \"gbr-worc-cg1-merk-sample-0001\",\n    \"rate\": 1,\n    \"unit\": \"Gbps\",\n    \"lag\": {\n      \"group\": \"LAG1\",\n      \"members\": 2\n    },\n    \"link\": {\n      \"ingress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/0\",\n          \"cVlanId\": 101,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/1\",\n          \"cVlanId\": 101,\n          \"member\": 2\n        }\n      ],\n      \"egress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/0\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/1\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        }\n      ]\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  }\n]",
+					"raw": "[\n  {\n    \"serviceId\": \"784d5d3d-44cf-41a2-8ef0-24a376b0b296\",\n    \"point\": \"20250512T122152\",\n    \"customer\": {\n      \"name\": \"ABC\",\n      \"reference\": \"sample\"\n    },\n    \"commissioned\": \"20250512\",\n    \"reference\": \"gbr-worc-cg1-sample-0001\",\n    \"rate\": 1,\n    \"unit\": \"Gbps\",\n    \"lag\": {\n      \"group\": \"LAG1\",\n      \"members\": 2\n    },\n    \"link\": {\n      \"ingress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/0\",\n          \"cVlanId\": 101,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/1\",\n          \"cVlanId\": 101,\n          \"member\": 2\n        }\n      ],\n      \"egress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/0\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/1\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        }\n      ]\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  },\n  {\n    \"serviceId\": \"81eefb1f-57d4-40be-bfa9-c765e6d7577a\",\n    \"point\": \"20250514T122152\",\n    \"customer\": {\n      \"name\": \"EFG\",\n      \"reference\": \"sample\"\n    },\n    \"commissioned\": \"20250514\",\n    \"reference\": \"gbr-worc-cg1sample-0002\",\n    \"rate\": 1,\n    \"unit\": \"Gbps\",\n    \"lag\": {\n      \"group\": \"LAG1\",\n      \"members\": 2\n    },\n    \"link\": {\n      \"ingress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/2\",\n          \"cVlanId\": 101,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/3\",\n          \"cVlanId\": 101,\n          \"member\": 2\n        }\n      ],\n      \"egress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/0\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/1\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        }\n      ]\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  }\n]",
 					"raw_parameter": [
 						{
 							"param_id": "62ba65db4baee",
@@ -72606,11 +72606,11 @@
 		{
 			"target_id": "bead95f33a18e",
 			"project_id": "40373eb16402000",
-			"parent_id": "3749894b4b2ad",
+			"parent_id": "20dfc99affe565",
 			"target_type": "api",
 			"name": "List of all CVE",
 			"version": 429,
-			"sort": 17000,
+			"sort": 5000,
 			"method": "GET",
 			"url": "/cve",
 			"protocol": "http/1.1",
@@ -72862,11 +72862,11 @@
 		{
 			"target_id": "bf92b2c33a1b4",
 			"project_id": "40373eb16402000",
-			"parent_id": "3749894b4b2ad",
+			"parent_id": "20dfc99affe565",
 			"target_type": "api",
 			"name": "Add single CVE",
 			"version": 469,
-			"sort": 18000,
+			"sort": 4000,
 			"method": "POST",
 			"url": "/cve",
 			"protocol": "http/1.1",
@@ -73074,11 +73074,11 @@
 		{
 			"target_id": "bfc613b33a1d3",
 			"project_id": "40373eb16402000",
-			"parent_id": "3749894b4b2ad",
+			"parent_id": "20dfc99affe565",
 			"target_type": "api",
 			"name": "Get single CVE",
 			"version": 470,
-			"sort": 19000,
+			"sort": 3000,
 			"method": "GET",
 			"url": "/cve/CVE-2025-21601",
 			"protocol": "http/1.1",
@@ -73274,11 +73274,11 @@
 		{
 			"target_id": "c0cd7b2b3a1f5",
 			"project_id": "40373eb16402000",
-			"parent_id": "3749894b4b2ad",
+			"parent_id": "20dfc99affe565",
 			"target_type": "api",
 			"name": "Delete single CVE",
 			"version": 425,
-			"sort": 20000,
+			"sort": 2000,
 			"method": "DELETE",
 			"url": "/alert/cve/CVE-2025-5516",
 			"protocol": "http/1.1",
@@ -76178,11 +76178,11 @@
 		{
 			"target_id": "1a0bf82971c2f4",
 			"project_id": "40373eb16402000",
-			"parent_id": "3749894b4b2ad",
+			"parent_id": "20dfc99affe565",
 			"target_type": "api",
 			"name": "Get CVE By NE",
 			"version": 483,
-			"sort": 25000,
+			"sort": 1000,
 			"method": "GET",
 			"url": "/cve/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d",
 			"protocol": "http/1.1",
@@ -77617,13 +77617,13 @@
 		{
 			"target_id": "205df7b4bfe013",
 			"project_id": "40373eb16402000",
-			"parent_id": "dab30c134b01a",
+			"parent_id": "20df5ff0bfe554",
 			"target_type": "api",
 			"name": "Get list of currencies",
-			"version": 499,
-			"sort": 3000,
+			"version": 503,
+			"sort": 4000,
 			"method": "GET",
-			"url": "/admin/currency",
+			"url": "/currency",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -77817,11 +77817,11 @@
 		{
 			"target_id": "205e8b097fe16f",
 			"project_id": "40373eb16402000",
-			"parent_id": "dab30c134b01a",
+			"parent_id": "20df5ff0bfe554",
 			"target_type": "api",
 			"name": "Change default currency",
 			"version": 500,
-			"sort": 4000,
+			"sort": 1000,
 			"method": "POST",
 			"url": "/admin/currency/578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5",
 			"protocol": "http/1.1",
@@ -78004,13 +78004,13 @@
 		{
 			"target_id": "205ea1e63fe19d",
 			"project_id": "40373eb16402000",
-			"parent_id": "dab30c134b01a",
+			"parent_id": "20df5ff0bfe554",
 			"target_type": "api",
 			"name": "Get default currency",
-			"version": 497,
-			"sort": 5000,
+			"version": 504,
+			"sort": 2000,
 			"method": "GET",
-			"url": "/admin/currency/default",
+			"url": "/currency/default",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -78200,6 +78200,458 @@
 			"mock_server_enable": 1,
 			"attribute_info": {},
 			"tags": []
+		},
+		{
+			"target_id": "2074863cffe3e2",
+			"project_id": "40373eb16402000",
+			"parent_id": "20df5ff0bfe554",
+			"target_type": "api",
+			"name": "Update currency conversion rate",
+			"version": 505,
+			"sort": 3000,
+			"method": "PATCH",
+			"url": "/currency/18b4e171-c453-422f-8b5d-f7e824d59d0b",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "json",
+					"parameter": [],
+					"raw": "{\n    \"rate\": 99999.9999\n}",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "2074956676e43d",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "20df5ff0bfe554",
+			"project_id": "40373eb16402000",
+			"parent_id": "0",
+			"target_type": "folder",
+			"name": "Currencies",
+			"version": 502,
+			"sort": 2500,
+			"server_id": "0",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"body": {
+					"parameter": []
+				},
+				"header": {
+					"parameter": []
+				},
+				"query": {
+					"parameter": []
+				},
+				"cookie": {
+					"parameter": []
+				}
+			}
+		},
+		{
+			"target_id": "20dfc99affe565",
+			"project_id": "40373eb16402000",
+			"parent_id": "0",
+			"target_type": "folder",
+			"name": "CVE",
+			"version": 507,
+			"sort": 2750,
+			"server_id": "0",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"body": {
+					"parameter": []
+				},
+				"header": {
+					"parameter": []
+				},
+				"query": {
+					"parameter": []
+				},
+				"cookie": {
+					"parameter": []
+				}
+			}
 		},
 		{
 			"target_id": "226321b1b4b0b7",
