@@ -19178,7 +19178,7 @@
 			"parent_id": "374989534b2cf",
 			"target_type": "api",
 			"name": "Import services in bulk",
-			"version": 477,
+			"version": 485,
 			"sort": 2000,
 			"method": "POST",
 			"url": "/services",
@@ -19288,7 +19288,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "[\n  {\n    \"serviceId\": \"784d5d3d-44cf-41a2-8ef0-24a376b0b296\",\n    \"point\": \"20250509T122152\",\n    \"customer\": {\n      \"name\": \"Merkator\",\n      \"reference\": \"sample\"\n    },\n    \"commissioned\": \"20250509\",\n    \"reference\": \"gbr-worc-cg1-merk-sample-0001\",\n    \"rate\": 1,\n    \"unit\": \"Gbps\",\n    \"lag\": {\n      \"group\": \"LAG1\",\n      \"members\": 2\n    },\n    \"link\": {\n      \"ingress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/0\",\n          \"cVlanId\": 101,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/1\",\n          \"cVlanId\": 101,\n          \"member\": 2\n        }\n      ],\n      \"egress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/0\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/1\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        }\n      ]\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  }\n]",
+					"raw": "[\n  {\n    \"serviceId\": \"784d5d3d-44cf-41a2-8ef0-24a376b0b296\",\n    \"point\": \"20250512T122152\",\n    \"customer\": {\n      \"name\": \"Merkator\",\n      \"reference\": \"sample\"\n    },\n    \"commissioned\": \"20250512\",\n    \"reference\": \"gbr-worc-cg1-merk-sample-0001\",\n    \"rate\": 1,\n    \"unit\": \"Gbps\",\n    \"lag\": {\n      \"group\": \"LAG1\",\n      \"members\": 2\n    },\n    \"link\": {\n      \"ingress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/0\",\n          \"cVlanId\": 101,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"VDSL 0/0/1\",\n          \"cVlanId\": 101,\n          \"member\": 2\n        }\n      ],\n      \"egress\": [\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/0\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        },\n        {\n          \"neId\": \"ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc\",\n          \"port\": \"GigabitEthernet0/0/1\",\n          \"sVlanId\": 202,\n          \"member\": 1\n        }\n      ]\n    },\n    \"source\": \"historical\",\n    \"delete\": false\n  }\n]",
 					"raw_parameter": [
 						{
 							"param_id": "62ba65db4baee",
@@ -31458,7 +31458,7 @@
 			"parent_id": "374989574b2e2",
 			"target_type": "api",
 			"name": "Update aspects of single rack",
-			"version": 467,
+			"version": 490,
 			"sort": 5000,
 			"method": "PATCH",
 			"url": "/rack/c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
@@ -31568,7 +31568,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "{\n\t\"slotUsage\": [\n\t\t{\n\t\t\t\"slot\": 1,\n\t\t\t\"usage\": \"reserved\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 2,\n\t\t\t\"usage\": \"used\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 3,\n\t\t\t\"usage\": \"free\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 4,\n\t\t\t\"usage\": \"free\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 5,\n\t\t\t\"usage\": \"faulty\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 6,\n\t\t\t\"usage\": \"reserved\"\n\t\t}\n\t]\n}",
+					"raw": "{\n\t\"source\": \"predicted\",\n\t\"point\": \"20270510T174124\"\n}",
 					"raw_parameter": [
 						{
 							"param_id": "62ba65f34bced",
@@ -32178,10 +32178,10 @@
 			"parent_id": "374989574b2e2",
 			"target_type": "api",
 			"name": "Replace single rack",
-			"version": 440,
+			"version": 491,
 			"sort": 6000,
 			"method": "PUT",
-			"url": "/rack/ec8abe7c-56a1-44f2-9a14-aa6ed5cd7a20",
+			"url": "/rack/c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -32288,7 +32288,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "{\n\t\"rackId\": \"ec8abe7c-56a1-44f2-9a14-aa6ed5cd7a20\",\n\t\"point\": \"20250325T192325\",\n\t\"reference\": \"gbr-worc-cg1-3\",\n\t\"commissioned\": \"20241111\",\n\t\"siteId\": \"0a3e6803-8d14-4f97-bc0e-947eb1cbfe74\",\n\t\"coordinate\": {\n\t\t\"x\": 52.31481,\n\t\t\"y\": -2.17511,\n\t\t\"z\": 61\n\t},\n\t\"dimensions\": {\n\t\t\"depth\": 600,\n\t\t\"height\": 1370,\n\t\t\"width\": 1200,\n\t\t\"unit\": \"mm\"\n\t},\n\t\"slots\": 24,\n\t\"source\": \"historical\",\n\t\"delete\": false\n}",
+					"raw": "{\n\t\"rackId\": \"c2f7ceba-ed76-441d-8e48-46b3ed3e7e35\",\n\t\"point\": \"20270510T174124\",\n\t\"reference\": \"gbr-worc-cg1-1\",\n\t\"commissioned\": \"20250509\",\n\t\"siteId\": \"0a3e6803-8d14-4f97-bc0e-947eb1cbfe74\",\n\t\"coordinate\": {\n\t\t\"x\": 52.314812,\n\t\t\"y\": -2.17511,\n\t\t\"z\": 61\n\t},\n\t\"dimensions\": {\n\t\t\"depth\": 600,\n\t\t\"height\": 267,\n\t\t\"width\": 1200,\n\t\t\"unit\": \"mm\"\n\t},\n\t\"slots\": 6,\n\t\"slotUsage\": [\n\t\t{\n\t\t\t\"slot\": 1,\n\t\t\t\"usage\": \"reserved\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 2,\n\t\t\t\"usage\": \"used\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 3,\n\t\t\t\"usage\": \"reserved\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 4,\n\t\t\t\"usage\": \"used\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 5,\n\t\t\t\"usage\": \"used\"\n\t\t},\n\t\t{\n\t\t\t\"slot\": 6,\n\t\t\t\"usage\": \"free\"\n\t\t}\n\t],\n\t\"source\": \"predicted\",\n\t\"delete\": false,\n\t\"floor\": 0,\n\t\"area\": \"colo\",\n\t\"row\": 1,\n\t\"column\": 1\n}",
 					"raw_parameter": [
 						{
 							"param_id": "62ba65f74bd15",
@@ -32766,7 +32766,20 @@
 				"pre_tasks": [],
 				"post_tasks": [],
 				"header": {
-					"parameter": []
+					"parameter": [
+						{
+							"param_id": "1bbbc9d2b6e441",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Content-Type",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
 				},
 				"query": {
 					"query_add_equal": 1,
@@ -36416,10 +36429,10 @@
 			"parent_id": "374989574b2eb",
 			"target_type": "api",
 			"name": "delete specified network equipment",
-			"version": 337,
+			"version": 487,
 			"sort": 5000,
 			"method": "DELETE",
-			"url": "/ne/ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc?predicted",
+			"url": "/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d?predicted",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -36542,7 +36555,7 @@
 					"query_add_equal": 1,
 					"parameter": [
 						{
-							"param_id": "30dd5791357627",
+							"param_id": "1b63218eb1c39c",
 							"description": "",
 							"field_type": "string",
 							"is_checked": 1,
@@ -36673,10 +36686,10 @@
 			"parent_id": "374989574b2eb",
 			"target_type": "api",
 			"name": "Get specified network equipment",
-			"version": 468,
+			"version": 486,
 			"sort": 6000,
 			"method": "GET",
-			"url": "/ne/ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+			"url": "/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d?point=20250610T174123",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -36810,7 +36823,20 @@
 				},
 				"query": {
 					"query_add_equal": 1,
-					"parameter": []
+					"parameter": [
+						{
+							"param_id": "1b6c4d00f1c3ae",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "point",
+							"not_null": 1,
+							"value": "20250610T174123",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
 				},
 				"cookie": {
 					"cookie_encode": 1,
@@ -42054,10 +42080,10 @@
 			"parent_id": "374989574b2f4",
 			"target_type": "api",
 			"name": "Replace entire single pole",
-			"version": 51,
+			"version": 494,
 			"sort": 6000,
 			"method": "PUT",
-			"url": "/pole/{poleId}",
+			"url": "/pole/360236fb-15b1-48be-babf-6c433c387ed8",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -42164,7 +42190,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "{\n\t\"purpose\": \"\",\n\t\"construction\": {\n\t\t\"height\": \"\",\n\t\t\"classifier\": \"\",\n\t\t\"unit\": \"\"\n\t},\n\t\"demographics\": {\n\t\t\"premises\": {\n\t\t\t\"passed\": 0,\n\t\t\t\"area\": \"unclassified\"\n\t\t}\n\t},\n\t\"build\": {\n\t\t\"jobId\": \"\",\n\t\t\"permitId\": \"\",\n\t\t\"planned\": {\n\t\t\t\"start\": \"\",\n\t\t\t\"completion\": \"\",\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"\"\n\t\t},\n\t\t\"actual\": {\n\t\t\t\"start\": \"\",\n\t\t\t\"completion\": \"\",\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"\"\n\t\t}\n\t},\n\t\"state\": \"\",\n\t\"connectsTo\": {\n\t\t\"siteId\": \"\",\n\t\t\"trenchId\": \"\",\n\t\t\"poleId\": \"\"\n\t},\n\t\"coordinate\": {\n\t\t\"x\": \"\",\n\t\t\"y\": \"\",\n\t\t\"z\": \"\",\n\t\t\"m\": \"\"\n\t},\n\t\"point\": \"\",\n\t\"source\": \"historical\",\n\t\"delete\": \"\"\n}",
+					"raw": "{\n\t\"poleId\": \"360236fb-15b1-48be-babf-6c433c387ed8\",\n\t\"point\": \"20260508T174124\",\n\t\"purpose\": \"service/drop\",\n\t\"construction\": {\n\t\t\"height\": 20,\n\t\t\"unit\": \"m\",\n\t\t\"classifier\": \"urban\"\n\t},\n\t\"demographics\": {\n\t\t\"premises\": {\n\t\t\t\"passed\": 1,\n\t\t\t\"area\": \"rural\"\n\t\t}\n\t},\n\t\"build\": {\n\t\t\"planned\": {\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"day\"\n\t\t},\n\t\t\"actual\": {\n\t\t\t\"duration\": 0,\n\t\t\t\"unit\": \"day\"\n\t\t}\n\t},\n\t\"state\": \"used\",\n\t\"connectsTo\": {},\n\t\"coordinate\": {\n\t\t\"x\": 52.31504,\n\t\t\"y\": -2.17728,\n\t\t\"z\": 61\n\t},\n\t\"source\": \"predicted\",\n\t\"delete\": false\n}",
 					"raw_parameter": [
 						{
 							"param_id": "62ba663b4be95",
@@ -42925,7 +42951,20 @@
 				"pre_tasks": [],
 				"post_tasks": [],
 				"header": {
-					"parameter": []
+					"parameter": [
+						{
+							"param_id": "1cd87d9df6e4ea",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Content-Type",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
 				},
 				"query": {
 					"query_add_equal": 1,
@@ -42936,20 +42975,7 @@
 					"parameter": []
 				},
 				"restful": {
-					"parameter": [
-						{
-							"param_id": "62ba66374be82",
-							"description": "internal (telegraph) pole identifier",
-							"field_type": "string",
-							"is_checked": 1,
-							"key": "poleId",
-							"not_null": 1,
-							"value": "",
-							"schema": {
-								"type": "string"
-							}
-						}
-					]
+					"parameter": []
 				}
 			},
 			"response": {
@@ -75387,10 +75413,10 @@
 			"parent_id": "374989574b2e2",
 			"target_type": "api",
 			"name": "Get specified rack slot usage",
-			"version": 459,
+			"version": 493,
 			"sort": 12000,
 			"method": "GET",
-			"url": "/rack/slots/c2f7ceba-ed76-441d-8e48-46b3ed3e7e35/2",
+			"url": "/rack/slots/c2f7ceba-ed76-441d-8e48-46b3ed3e7e35/6",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -76155,10 +76181,10 @@
 			"parent_id": "3749894b4b2ad",
 			"target_type": "api",
 			"name": "Get CVE By NE",
-			"version": 482,
+			"version": 483,
 			"sort": 25000,
 			"method": "GET",
-			"url": "/cve/ne/ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+			"url": "/cve/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -77589,6 +77615,593 @@
 			}
 		},
 		{
+			"target_id": "205df7b4bfe013",
+			"project_id": "40373eb16402000",
+			"parent_id": "dab30c134b01a",
+			"target_type": "api",
+			"name": "Get list of currencies",
+			"version": 499,
+			"sort": 3000,
+			"method": "GET",
+			"url": "/admin/currency",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "205e0cdcf6e098",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "205e8b097fe16f",
+			"project_id": "40373eb16402000",
+			"parent_id": "dab30c134b01a",
+			"target_type": "api",
+			"name": "Change default currency",
+			"version": 500,
+			"sort": 4000,
+			"method": "POST",
+			"url": "/admin/currency/578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": []
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "205ea1e63fe19d",
+			"project_id": "40373eb16402000",
+			"parent_id": "dab30c134b01a",
+			"target_type": "api",
+			"name": "Get default currency",
+			"version": 497,
+			"sort": 5000,
+			"method": "GET",
+			"url": "/admin/currency/default",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "205eae4cf6e2b6",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
 			"target_id": "226321b1b4b0b7",
 			"project_id": "40373eb16402000",
 			"parent_id": "dab30c134b01a",
@@ -78007,10 +78620,10 @@
 			"parent_id": "374989574b2e2",
 			"target_type": "api",
 			"name": "Get specified rack timeline",
-			"version": 478,
+			"version": 492,
 			"sort": 10000,
 			"method": "GET",
-			"url": "/rack/timeline/c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
+			"url": "/rack/timeline/441f85e4-ef84-424f-ba7a-a0a856445244",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",

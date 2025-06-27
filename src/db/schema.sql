@@ -54,6 +54,8 @@ CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','fiber');
 CREATE TYPE constructionType AS ENUM ('micro','narrow','hang-dug','backhoe','inline','portable','large');
 CREATE TYPE countryCode AS ENUM ( 'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATA', 'ATF', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY', 'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF', 'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC', 'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB', 'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'YEM', 'ZAF', 'ZMB', 'ZWE' );
+CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
+CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','HKD','IDR','ILS','INR','ISK','JOD','JPY','MAD','MXN','MYR','NGN','NOK','NZD','PLN','QAR','RUB','SEK','SGD','SHP','THB','TRY','UAH','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
 CREATE TYPE depthClassifier AS ENUM ('low','medium','deep');
 CREATE TYPE ductPurpose AS ENUM ('gas','power','cable','water');
 CREATE TYPE ductSizeCategory AS ENUM ('duct','microduct','subduct');
@@ -103,6 +105,7 @@ CREATE SEQUENCE IF NOT EXISTS seq_cableMultiFiber;
 CREATE SEQUENCE IF NOT EXISTS seq_cableSingleFiber;
 CREATE SEQUENCE IF NOT EXISTS seq_cvePlatforms;
 CREATE SEQUENCE IF NOT EXISTS seq_cveVersions;
+CREATE SEQUENCE IF NOT EXISTS seq_dashboard;
 CREATE SEQUENCE IF NOT EXISTS seq_duct;
 CREATE SEQUENCE IF NOT EXISTS seq_ne;
 CREATE SEQUENCE IF NOT EXISTS seq_nePort;
@@ -159,6 +162,15 @@ CREATE TABLE IF NOT EXISTS predictQueue (
     resource predictResourceType NOT NULL,
     id VARCHAR NOT NULL,
     state predictResourceStateType NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS adminCurrency (
+    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    symbol currencySymbol NOT NULL,
+    isoCode currencyIsoCode NOT NULL,
+    systemDefault BOOLEAN NOT NULL DEFAULT false,
+    rateFromDefault DECIMAL(18,6) NOT NULL DEFAULT 0 CHECK (rateFromDefault >= 0 AND rateFromDefault <= 99999.99999)
 );
 
 CREATE TABLE IF NOT EXISTS adminData (
@@ -827,7 +839,7 @@ CREATE TABLE IF NOT EXISTS _serviceEgress (
 ---
 
 INSERT INTO adminData (id,historicalDuration,historicalUnit,predictedDuration,predictedUnit) 
-    VALUES (uuid(),1,'year',1,'month');
+    VALUES (uuid(),1,'year',6,'month');
 
 INSERT INTO alert (id,description,function) VALUES ('5c8d258b-94d7-4826-afe0-bfb9a4237332','Trench Utilization 75%','jobAlertTrenchUtil(75);');
 INSERT INTO alert (id,description,function) VALUES ('d461d060-f19c-4c4a-956a-07a0997dd9b7','Trench Utilization 90%','jobAlertTrenchUtil(90);');
@@ -873,6 +885,44 @@ INSERT INTO alert (id,description,function) VALUES ('52ae75e2-036d-4a99-813f-de6
 INSERT INTO alert (id,description,function) VALUES ('126a7d5a-77af-4e99-9b6e-31b1945d5365','Data Quality - service','jobAlertDqService();');
 INSERT INTO alert (id,description,function) VALUES ('c54f88d9-d355-46e0-8fb2-9fa6ccdc4083','Data Quality - site','jobAlertDqSite();');
 INSERT INTO alert (id,description,function) VALUES ('b034d9e8-da77-4b8c-8f44-d6eb6b6076a5','Data Quality - offNet Postal Addresses','jobAlertDqOffNetPAF();');
+
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1bcfd0c7-a082-479e-b815-c9d16f3cba1b','Australian dollar','$','AUD',false, 1.7927);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c34355dd-7a42-4dd2-bb40-14b2b88fc20b','Brunei dollar','B$','BND',false, 1.49);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1c18fbcc-d9ed-40f7-bbbb-e99201f381fe','Caribbean guilder','Cg','XCG',false, 2.11);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c46d4309-d1e3-461a-99df-60d95aa4db4d','Central African CFA franc','F.CFA','XAF',false, 655.96);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2dd7be90-22ae-43e3-a34f-1cd7b6e8c9f8','CFP franc','₣','XPF',false,119.26);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('5ed96e80-9829-4c80-ad2b-1bdcea793b66','Chilean peso','$','CLP',false,1104.88);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e22fb15d-2d00-49ea-98cc-d20a77061c5c','Danish krone','kr','DKK',false,7.46);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('7e01ca3f-8320-4e50-aaf3-d2cc24ec8e78','Eastern Caribbean dollar','EC$','XCD',false, 3.17);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5','Euro','€','EUR',true,1);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('217b383a-7b9b-40e1-b059-f12651e4e072','Falkland Islands pound','£','FKP',false,0.84);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('bd703d99-ba3f-43ea-984a-f3bad74e380c','Indian rupee','₹','INR',false,100.18);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9fe00db6-2105-45a0-a95e-ffbf842eb411','New Zealand dollar','$','NZD',false,1.93);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2a402fcc-ea52-452d-83ea-a3c8fa15f470','Norwegian krone','kr','NOK',false,11.79);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a70ab726-2d5d-4ad5-8233-a0556b39ac39','Russian ruble','₽','RUB',false,92.20);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cc46dc8-56bf-4a96-b072-d08de73e476c','Saint Helena pound','£','SHP',false,0.85);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1eafc200-d5f7-460b-8012-fbb2dd00fc76','Singapore dollar','S$','SGD',false,1.49);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2428a44a-0eaf-404a-ad42-1e64c588cade','South African rand','R','ZAR',false,20.97);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('007fa4b5-9776-4e99-a116-095398b5d47a','Sterling','£','GBP',false,0.85);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9b9e9266-5439-4d55-97e6-af01a023d4ee','Swiss franc','Fr','CHF',false,0.94);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('18b4e171-c453-422f-8b5d-f7e824d59d0b','Turkish lira','₺','TRY',false,46.77);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('300e2d59-e873-4ecc-a3ad-58e44e3f3c03','United States dollar','$','USD',false,1.17);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c738c6cd-2614-42a2-965b-25fa7a3a8050','West African CFA franc','F.CFA','XOF',false,655.96);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c5f1a531-d219-4e24-94ed-f19deb1e4be1','Malaysian ringgit','RM','MYR',false,4.96);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('aa170720-91eb-49a0-9739-9667b67feb20','Mexican peso','$','MXN',false,22.13);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('3d9a53ce-3243-45e0-b948-fbb48ec03956','Moroccan dirham','DH','MAD',false,10.60);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d21b542f-9e27-4b2f-a2b4-0071b74a5dc8','Indonesian rupiah','Rp','IDR',false,19006.00);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e2a23cba-dcf2-4479-aaed-82259f6fcaef','Israeli new shekel','₪','ILS',false,3.97);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cb591c6-abe3-44ff-8058-c261a7730672','Japanese yen','¥','JPY',false,169.33);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('752c827d-16e0-40db-88fa-16f7d9eecf8f','Jordanian dinar','JD','JOD',false,0.83);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('23471b7e-da3b-4b71-b31b-33a139dada9f','Nigerian naira','₦','NGN',false,1811.20);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('873681db-6e23-4c63-baff-70cae4652e73','Qatari riyal','QR','QAR',false,4.28);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a491e7a4-3b5a-44e9-abb2-7d3cb5810b8e','Swedish krona','kr','SEK',false,11.10);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('be8c6d3f-b44b-44c2-b2b7-9a368efcaa2c','Thai baht','฿','THB',false,38.22);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d19d6d08-14e7-4bfc-92c9-cf0cd69ea4d8','Ukrainian hryvnia','₴','UAH',false,48.73);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('91e7d26b-4f51-4be5-9063-add3eb996922','Icelandic króna','kr','ISK',false,142.40);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('0cf0e7db-0561-446b-8950-0676153cb2ad','Hong Kong dollar','$','HKD',false,9.20);
+INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('135bf965-b0cc-40b9-9681-a4eb825aabc5','Polish złoty','zł','PLN',false,4.24);
 
 --
 -- EOF

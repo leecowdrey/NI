@@ -62,6 +62,11 @@ var cveDirectory = null;
 var cveRepoPullCronTime = null;
 var cveListBuild = null;
 var cveListBuildCronTime = null;
+var fxRateApiKey = null;
+var fxRateApiUrl = null;
+var fxUpdateCron = null;
+var fxRateCronTime = null;
+var fxRateUpdate = null;
 
 function noop() {}
 
@@ -240,6 +245,11 @@ function loadEnv() {
   if (tlsSslVerification) {
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
   }
+  fxRateApiKey = process.env.ALERTSRV_FX_KEY;
+  fxRateApiUrl =
+    process.env.ALERTSRV_FX_URL || "https://api.exchangeratesapi.io/v1/latest";
+  fxRateCronTime = process.env.ALERTSRV_FX_CRONTIME || "0 9 * * *";
+  fxRateUpdate = toBoolean(process.env.ALERTSRV_FX_UPDATE || false);
 }
 
 // quit
@@ -247,6 +257,9 @@ function quit() {
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "quit",
   });
+  if (fxUpdateCron != null) {
+    fxUpdateCron.stop();
+  }
   if (cveRepoCron != null) {
     cveRepoCron.stop();
   }
@@ -317,6 +330,411 @@ async function dnsSd() {
       });
       dnsSdTimer = setTimeout(dnsSd, endpointRetryMs);
     }
+  }
+}
+
+async function jobFxRateUpdate() {
+  try {
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "fxRateUpdate",
+      state: "start",
+    });
+    let base = "EUR";
+    let currency = [];
+    let rates = {};
+    /*
+    let rates = {
+      AED: 4.312112,
+      AFN: 82.430293
+      ALL: 98.241038,
+      AMD: 450.676379,
+      ANG: 2.101309,
+      AOA: 1076.707922,
+      ARS: 1395.48114,
+      AUD: 1.793766,
+      AWG: 2.116429,
+      AZN: 1.961917,
+      BAM: 1.959552,
+      BBD: 2.369808,
+      BDT: 143.544857,
+      BGN: 1.959925,
+      BHD: 0.443028,
+      BIF: 3495.797882,
+      BMD: 1.174163,
+      BND: 1.497612,
+      BOB: 8.109597,
+      BRL: 6.422435,
+      BSD: 1.173682,
+      BTC: 1.0996303e-5,
+      BTN: 100.363165,
+      BWP: 15.691514,
+      BYN: 3.840969,
+      BYR: 23013.599939,
+      BZD: 2.357534,
+      CAD: 1.602222,
+      CDF: 3378.067874,
+      CHF: 0.935798,
+      CLF: 0.028498,
+      CLP: 1093.522001,
+      CNY: 8.416226,
+      CNH: 8.418146,
+      COP: 4743.47868,
+      CRC: 591.9511,
+      CUC: 1.174163,
+      CUP: 31.115326,
+      CVE: 110.478424,
+      CZK: 24.742322,
+      DJF: 209.001972,
+      DKK: 7.46054,
+      DOP: 69.825782,
+      DZD: 151.924962,
+      EGP: 58.555755,
+      ERN: 17.612449,
+      ETB: 158.551141,
+      EUR: 1,
+      FJD: 2.628596,
+      FKP: 0.853811,
+      GBP: 24564.813084,
+      GEL: 3.19389,
+      GGP: 0.853811,
+      GHS: 12.148365,
+      GIP: 0.853811,
+      GMD: 83.951919,
+      GNF: 10168.730676,
+      GTQ: 9.026283,
+      GYD: 245.442057,
+      HKD: 9.217005,
+      HNL: 30.667636,
+      HRK: 7.534842,
+      HTG: 153.869212,
+      HUF: 399.08516,
+      IDR: 19027.43308,
+      ILS: 3.969364,
+      IMP: 0.853811,
+      INR: 100.403698,
+      IQD: 1537.489782,
+      IRR: 49461.627256,
+      ISK: 141.991338,
+      JEP: 0.853811,
+      JMD: 188.090151,
+      JOD: 0.832545,
+      JPY: 169.608472,
+      KES: 151.725714,
+      KGS: 102.614826,
+      KHR: 4705.049197,
+      KMF: 493.412737,
+      KPW: 1056.771306,
+      KRW: 1595.676476,
+      KWD: 0.359001,
+      KYD: 0.978102,
+      KZT: 610.58734,
+      LAK: 25309.677975,
+      LBP: 105158.550904,
+      LKR: 351.976955,
+      LRD: 234.736465,
+      LSL: 21.017945,
+      LTL: 3.466999,
+      LVL: 0.710239,
+      LYD: 6.356225,
+      MAD: 10.597062,
+      MDL: 19.876652,
+      MGA: 5159.924056,
+      MKD: 61.596024,
+      MMK: 2464.947165,
+      MNT: 4209.430706,
+      MOP: 9.490856,
+      MRU: 46.806022,
+      MUR: 53.025137,
+      MVR: 18.087968,
+      MWK: 2035.114125,
+      MXN: 22.128574,
+      MYR: 4.964948,
+      MZN: 75.099668,
+      NAD: 21.018572,
+      NGN: 1812.544516,
+      NIO: 43.192704,
+      NOK: 11.794124,
+      NPR: 160.581264,
+      NZD: 1.934329,
+      OMR: 0.45149,
+      PAB: 1.173657,
+      PEN: 4.165777,
+      PGK: 4.841353,
+      PHP: 66.411211,
+      PKR: 332.875017,
+      PLN: 4.241329,
+      PYG: 9365.933686,
+      QAR: 4.278192,
+      RON: 5.082899,
+      RSD: 117.176775,
+      RUB: 92.409401,
+      RWF: 1694.795677,
+      SAR: 4.403518,
+      SBD: 9.801138,
+      SCR: 16.568978,
+      SDG: 705.050879,
+      SEK: 11.114959,
+      SGD: 1.496577,
+      SHP: 0.922708,
+      SLE: 26.420086,
+      SLL: 24621.62083,
+      SOS: 670.704243,
+      SRD: 44.155588,
+      STD: 24302.808902,
+      SVC: 10.269927,
+      SYP: 15266.093297,
+      SZL: 21.013863,
+      THB: 38.263049,
+      TJS: 11.572157,
+      TMT: 4.121313,
+      TND: 3.43107,
+      TOP: 2.750001,
+      TRY: 46.829034,
+      TTD: 7.966322,
+      TWD: 34.140327,
+      TZS: 3096.370683,
+      UAH: 48.934733,
+      UGX: 4219.150604,
+      USD: 1.174163,
+      UYU: 47.281339,
+      UZS: 14772.411704,
+      VES: 124.670964,
+      VND: 30639.790327,
+      VUV: 141.049621,
+      WST: 3.224794,
+      XAF: 657.22103,
+      XAG: 0.032669,
+      XAU: 0.00036,
+      XCD: 3.173235,
+      XDR: 0.819305,
+      XOF: 657.246267,
+      XPF: 119.331742,
+      YER: 284.44112,
+      ZAR: 20.889011,
+      ZMK: 10568.866704,
+      ZMW: 27.786442,
+      ZWL: 378.080091,
+    };
+    */
+
+    // get installed base currency
+    // /currency/default
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url = ENDPOINT + "/currency/default";
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (
+            response.status == 200 &&
+            toInteger(response.headers.get("Content-Length")) > 0
+          ) {
+            return response.json();
+          }
+        }
+      })
+      .then(async (data) => {
+        if (data != null) {
+          if (data.isoCode != null) {
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(dayjsFormat),
+                "debug",
+                "fxRateUpdate",
+                {
+                  base: data.isoCode,
+                }
+              );
+            }
+            base = data.isoCode;
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", "fxRateUpdate", {
+          error: err,
+        });
+      });
+
+    // get installed currencies
+    url = ENDPOINT + "/currency";
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (
+            response.status == 200 &&
+            toInteger(response.headers.get("Content-Length")) > 0
+          ) {
+            return response.json();
+          }
+        }
+      })
+      .then(async (data) => {
+        if (data != null) {
+          if (DEBUG) {
+            LOGGER.debug(dayjs().format(dayjsFormat), "debug", "fxRateUpdate", {
+              currency: data.length,
+            });
+          }
+          if (data != null) {
+            if (data.length > 0) {
+              currency = data;
+            }
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", "fxRateUpdate", {
+          error: err,
+        });
+      });
+
+    // get rate updates
+    url =
+      fxRateApiUrl +
+      "?access_key=" +
+      fxRateApiKey +
+      "&base=" +
+      base +
+      "&format=1";
+      console.log(url);
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+            return response.json();
+        }
+      })
+      .then(async (data) => {
+        if (data != null) {
+          if (data.success == true) {
+            if (data.base.toLowerCase() == base.toLowerCase()) {
+              if (data.rates != null) {
+                rates = data.rates;
+              }
+            }
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(dayjsFormat), "error", "fxRateUpdate", {
+          error: err,
+        });
+      });
+
+    // scan the retrieved rates for currency and update if found
+    if (currency.length > 0) {
+      for (let c = 0; c < currency.length; c++) {
+        currency[c].changed = false;
+        if (currency[c].isoCode.toLowerCase() != base.toLowerCase()) {
+          let newRate = rates[currency[c].isoCode];
+          if (newRate != null) {
+            if (
+              newRate >= OAS.currency_rate.min &&
+              newRate <= OAS.currency_rate.max
+            ) {
+              if (DEBUG) {
+                LOGGER.debug(
+                  dayjs().format(dayjsFormat),
+                  "debug",
+                  "fxRateUpdate",
+                  {
+                    isoCode: currency[c].isoCode,
+                    old: currency[c].rate,
+                    new: toDecimal(
+                      newRate,
+                      OAS.currency_scale,
+                      OAS.currency_precision
+                    ),
+                  }
+                );
+              }
+              currency[c].changed = true;
+              currency[c].rate = toDecimal(
+                newRate,
+                OAS.currency_scale,
+                OAS.currency_precision
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // patch the updated currencies
+    if (currency.length > 0) {
+      for (let c = 0; c < currency.length; c++) {
+        if (currency[c].changed == true) {
+          await fetch(ENDPOINT + "/currency/" + currency[c].currencyId, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": OAS.mimeJSON,
+            },
+            body: JSON.stringify({ rate: currency[c].rate }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                noop();
+              } else {
+                LOGGER.error(
+                  dayjs().format(dayjsFormat),
+                  "error",
+                  "fxRateUpdate",
+                  {
+                    currencyId: currency[c].currencyId,
+                    isoCode: currency[c].isoCode,
+                    rate: currency[c].rate,
+                    status: response.status,
+                    statusText: response.statusText,
+                  }
+                );
+              }
+            })
+            .catch((err) => {
+              LOGGER.error(
+                dayjs().format(dayjsFormat),
+                "error",
+                "fxRateUpdate",
+                {
+                  currencyId: currency[c].currencyId,
+                  isoCode: currency[c].isoCode,
+                  rate: currency[c].rate,
+                  error: err,
+                }
+              );
+            });
+        }
+      }
+    }
+
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "fxRateUpdate",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "fxRateUpdate",
+      state: "failed",
+      error: e,
+    });
   }
 }
 
@@ -1065,9 +1483,28 @@ var run = async () => {
       timestamp: dayjsFormat,
       ignoreTlsSsl: tlsSslVerification,
     },
+    fx: {
+      enabled: fxRateUpdate,
+      key: fxRateApiKey.replace(allPrintableRegEx, "*"),
+      update: fxRateCronTime,
+      url: fxRateApiUrl,
+    },
   });
 
-  // cron jobs - cve repository daily pull, daily list build
+  // cron jobs - cve repository daily pull, daily list build, FX rate update
+  if (fxRateUpdate) {
+    fxUpdateCron = cron.schedule(
+      fxRateCronTime,
+      () => {
+        jobFxRateUpdate();
+      },
+      {
+        scheduled: true,
+        recoverMissedExecutions: false,
+        name: "fxRateUpdate",
+      }
+    );
+  }
   if (cveScan) {
     cveRepoCron = cron.schedule(
       cveRepoPullCronTime,
@@ -1093,9 +1530,9 @@ var run = async () => {
     );
   }
 
-  // 
+  //
   await jobCveRepoPull(cveDirectory);
-  await jobCveListBuild(cveDirectory)
+  await jobCveListBuild(cveDirectory);
 
   // process a queue item
   await queueDrain();

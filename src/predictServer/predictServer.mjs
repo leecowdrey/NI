@@ -42,7 +42,7 @@ var tlsSslVerification = false;
 var queueDrainTimer = null;
 var queueDrainIntervalMs = 30000;
 var dateBoundaryTimer = null;
-var dateBoundaryIntervalMs = 3600000;
+var dateBoundaryIntervalMs = 1800000; // 30 minutes
 var endpointTimer = null;
 var dnsSdTimer = null;
 var endpointRetryMs = null;
@@ -104,33 +104,6 @@ function chunkArray(arr, size) {
     res.push(arr.slice(i, size + i));
   }
   return res;
-}
-
-function jsonDeepMerge(obj1, obj2) {
-  for (let key in obj2) {
-    if (obj2.hasOwnProperty(key)) {
-      if (obj2[key] instanceof Object && obj1[key] instanceof Object) {
-        obj1[key] = jsonDeepMerge(obj1[key], obj2[key]);
-      } else {
-        obj1[key] = obj2[key];
-      }
-    }
-  }
-  return obj1;
-}
-
-function jsonSortByMultiKeys(arr, keys) {
-  if (Array.isArray(arr)) {
-    return arr.sort((x, y) => {
-      for (let key of keys) {
-        if (x[key] < y[key]) return -1;
-        if (x[key] > y[key]) return 1;
-      }
-      return 0;
-    });
-  } else {
-    return arr;
-  }
 }
 
 // error handling
@@ -309,6 +282,9 @@ async function dnsSd() {
 }
 
 async function getDateBoundary() {
+  if (dateBoundaryTimer != null) {
+    clearTimeout(dateBoundaryTimer);
+  }
   try {
     while (!ENDPOINT_READY) {
       await sleep(endpointRetryMs);

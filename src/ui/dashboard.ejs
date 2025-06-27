@@ -84,7 +84,7 @@
         </div>
     </div>
     <hr />
-    <div class="panel" id="somePanel">
+    <div class="panel" id="businessMetricsPanel">
         ...
     </div>
     <div class="footer">
@@ -118,6 +118,10 @@
         let inactiveTrench = 0;
         let activeRack = 0;
         let inactiveRack = 0;
+        let dbmReady = null;
+        let totalPremisesPassed = 0;
+        let totalTrenchDistance = 0;
+        let totalTrenchDistanceUnit = "";
         function toPercent(n, t) {
             let r = 0;
             try {
@@ -134,6 +138,12 @@
                 return 0;
             }
             return Number.parseInt(s, 10);
+        }
+        function toDecimal(n, p = 2) {
+            if (Number.isNaN(Number.parseFloat(n))) {
+                return Number(0);
+            }
+            return Number(parseFloat(n).toFixed(p));
         }
         function fetchStats() {
             if (ready != null) {
@@ -241,6 +251,9 @@
                             if (data.resources?.trenches?.inactive != null) {
                                 inactiveTrench = toInteger(data.resources.trenches.inactive);
                             }
+                            if (data.metrics != null) {
+                                document.getElementById("businessMetricsPanel").innerHTML = "<center>Premises Passed: " + data.metrics.premises.passed + "&emsp;|&emsp;Trench Coverage: " + data.metrics.trench.distance + data.metrics.trench.unit + "&emsp;|&emsp;Cable Coverage: " + data.metrics.cable.distance + data.metrics.cable.unit + "</center>";
+                            }
                         }
                     }
                     activeCable = toPercent(activeCable, totalCable);
@@ -347,6 +360,7 @@
                     ready = setTimeout(fetchStats, refreshMs);
                 })
                 .catch((e) => {
+                    console.error(e);
                     ready = setTimeout(fetchStats, refreshMs);
                 });
         }

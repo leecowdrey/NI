@@ -46,7 +46,7 @@
         var lineSymbol;
         let fmrReady = null;
         let ftgReady = null;
-        let fltReady = null;
+        let flsReady = null;
         let fppReady = null;
         let retryMs = 5000;
         let siteId = null;
@@ -60,8 +60,8 @@
         let mapRenderUrl = null;
         let urlOnOffNetSuffix = "";
         function fetchListSites() {
-            if (fltReady != null) {
-                clearTimeout(fltReady);
+            if (flsReady != null) {
+                clearTimeout(flsReady);
             }
             if (document.getElementById("onNet").checked) {
                 urlOnOffNetSuffix = "onnet";
@@ -79,7 +79,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        fltReady = setTimeout(fetchListSites, retryMs);
+                        flsReady = setTimeout(fetchListSites, retryMs);
                     }
                 })
                 .then((data) => {
@@ -92,7 +92,7 @@
                     document.getElementById("siteType").setAttribute("value", "");
                 })
                 .catch((e) => {
-                    fltReady = setTimeout(fetchListSites, retryMs);
+                    flsReady = setTimeout(fetchListSites, retryMs);
                 });
 
         }
@@ -207,7 +207,7 @@
         try {
             fetchListSites();
         } catch (e) {
-            fltReady = setTimeout(fetchListSites, retryMs);
+            flsReady = setTimeout(fetchListSites, retryMs);
         }
     </script>
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">

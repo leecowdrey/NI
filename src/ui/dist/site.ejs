@@ -22,7 +22,7 @@
         var lineSymbol;
         let fmrReady = null;
         let ftgReady = null;
-        let fltReady = null;
+        let flsReady = null;
         let fppReady = null;
         let retryMs = 5000;
         let siteId = null;
@@ -36,8 +36,8 @@
         let mapRenderUrl = null;
         let urlOnOffNetSuffix = "";
         function fetchListSites() {
-            if (fltReady != null) {
-                clearTimeout(fltReady);
+            if (flsReady != null) {
+                clearTimeout(flsReady);
             }
             if (document.getElementById("onNet").checked) {
                 urlOnOffNetSuffix = "onnet";
@@ -55,7 +55,7 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        fltReady = setTimeout(fetchListSites, retryMs);
+                        flsReady = setTimeout(fetchListSites, retryMs);
                     }
                 })
                 .then((data) => {
@@ -68,7 +68,7 @@
                     document.getElementById("siteType").setAttribute("value", "");
                 })
                 .catch((e) => {
-                    fltReady = setTimeout(fetchListSites, retryMs);
+                    flsReady = setTimeout(fetchListSites, retryMs);
                 });
 
         }
@@ -183,6 +183,6 @@
         try {
             fetchListSites();
         } catch (e) {
-            fltReady = setTimeout(fetchListSites, retryMs);
+            flsReady = setTimeout(fetchListSites, retryMs);
         }</script><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
             return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="wrapper"><div class="mapVendor-select" id="mapVendorList"><label for="mapVendor">Map Vendor</label> <select id="mapVendor"></select></div><div class="site-select" id="siteList"><label for="onNet">onNet</label> <input type="checkbox" id="onNet" checked="checked" onchange="fetchListSites();"> <label for="siteId">site</label> <select id="siteId" onchange="if(this.selectedIndex !== undefined) fetchSite();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListSites();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="siteArea">Area</label> <input id="siteArea" disabled="disabled"> <label for="siteType">Type</label> <input id="siteType" disabled="disabled"></div></div><div class="map" id="map"></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div></body></html>

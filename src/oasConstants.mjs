@@ -9,6 +9,9 @@
 //=====================================================================
 //
 // OpenAPI types, enums and sizes
+export const currency_scale = 5;
+export const currency_precision = 5;
+export const currency_rate = { min: 0, max: 99999.99999 };
 export const X_scale = 3;
 export const Y_scale = 2;
 export const Z_scale = 8;
@@ -593,6 +596,74 @@ export const languageCode = [
   "zh",
   "zu",
 ];
+export const currencySymbol = [
+  "$",
+  "£",
+  "¥",
+  "฿",
+  "₣",
+  "₦",
+  "₪",
+  "€",
+  "₴",
+  "₹",
+  "₺",
+  "₽",
+  "B$",
+  "Cg",
+  "DH",
+  "EC$",
+  "F.CFA",
+  "Fr",
+  "JD",
+  "kr",
+  "QR",
+  "R",
+  "RM",
+  "Rp",
+  "S$",
+  "XCG",
+  "zł",
+];
+export const currencyIsoCode = [
+  "AUD",
+  "BND",
+  "CHF",
+  "CLP",
+  "DKK",
+  "EUR",
+  "FKP",
+  "GBP",
+  "HKD",
+  "IDR",
+  "ILS",
+  "INR",
+  "ISK",
+  "JOD",
+  "JPY",
+  "MAD",
+  "MXN",
+  "MYR",
+  "NGN",
+  "NOK",
+  "NZD",
+  "PLN",
+  "QAR",
+  "RUB",
+  "SEK",
+  "SGD",
+  "SHP",
+  "THB",
+  "TRY",
+  "UAH",
+  "USD",
+  "XAF",
+  "XCD",
+  "XCG",
+  "XOF",
+  "XPF",
+  "ZAR",
+];
 export const mapVendorOpenStreetMap = "OpenStreet Map";
 export const mapVendorGoogleMaps = "Google Maps";
 export const mapVendorMicrosoftAzure = "Microsoft Azure";
@@ -653,7 +724,8 @@ export const portXdslConfigurationRate = ["Mbps"];
 export const premisesPassed = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const rackSlots = { min: 1, max: 58 };
 export const rackSlotUsage = ["free", "used", "reserved", "faulty"];
-export const rackSlotPosition = "([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?";
+export const rackSlotPosition =
+  "([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?";
 export const ribbons = { min: 1, max: 36 };
 export const siteType = [
   "street",

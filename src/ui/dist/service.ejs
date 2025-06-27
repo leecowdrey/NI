@@ -1,4 +1,4 @@
-<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><link rel="stylesheet" href="/mni/css/style.css"><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><style>.panel {
+<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><link rel="stylesheet" href="/mni/css/style.css"><link rel="stylesheet" href="/mni/css/font-awesome.min.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';</script><style>.panel {
             width: 30%;
             height: 40%;
             border-radius: 10px;
@@ -8,5 +8,335 @@
             margin-top: 20px;
             margin-left: 20px;
             display: inline-block;
-        }</style><script async src="/mni/js/mni.js"></script><script defer="defer" src="./js/app.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="panel" id="resourcePanel"></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div></body></html>
+        }
+
+        #content {
+            position: relative;
+        }
+
+        .customer {
+            border: 1px solid #ffffff;
+            background-color: #0000ff;
+            position: absolute;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+            word-wrap: break-word;
+        }
+
+        .ne {
+            border: 1px solid #ffffff;
+            background-color: #b3b3b3;
+            position: absolute;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: #000000;
+            word-wrap: break-word;
+        }
+
+        .port {
+            border: 1px solid #ffffff;
+            background-color: #b3b3b3;
+            position: absolute;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: #000000;
+        }
+
+        #customer1 {
+            left: 50px;
+            top: 100px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #customer2 {
+            left: 50px;
+            top: 200px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #customer3 {
+            left: 50px;
+            top: 300px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #customer4 {
+            left: 50px;
+            top: 400px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #customer5 {
+            left: 50px;
+            top: 500px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #customer6 {
+            left: 50px;
+            top: 600px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #ingress {
+            left: 200px;
+            top: 200px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #ingress1 {
+            left: 150px;
+            top: 100px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress2 {
+            left: 150px;
+            top: 200px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress3 {
+            left: 150px;
+            top: 300px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress4 {
+            left: 150px;
+            top: 400px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress5 {
+            left: 150px;
+            top: 500px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress6 {
+            left: 150px;
+            top: 600px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #ingress {
+            left: 300px;
+            top: 200px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #egress1 {
+            left: 400px;
+            top: 100px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #egress2 {
+            left: 400px;
+            top: 200px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #egress3 {
+            left: 400px;
+            top: 300px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #egress4 {
+            left: 400px;
+            top: 400px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #egress5 {
+            left: 400px;
+            top: 500px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #egress6 {
+            left: 400px;
+            top: 600px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop1 {
+            left: 500px;
+            top: 100px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop2 {
+            left: 500px;
+            top: 200px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop3 {
+            left: 500px;
+            top: 300px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop4 {
+            left: 500px;
+            top: 400px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop5 {
+            left: 500px;
+            top: 500px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #nextHop6 {
+            left: 500px;
+            top: 600px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .xConnect {
+            position: absolute;
+            width: 4px;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .cable {
+            position: absolute;
+            width: 1px;
+            background-color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: #ffffff;
+        }</style><script async src="/mni/js/mni.js"></script><script>function adjustLine(from, to, line) {
+
+            var fT = from.offsetTop + from.offsetHeight / 2;
+            var tT = to.offsetTop + to.offsetHeight / 2;
+            var fL = from.offsetLeft + from.offsetWidth;// / 2;
+            var tL = to.offsetLeft;// + to.offsetWidth / 2;
+
+            var CA = Math.abs(tT - fT);
+            var CO = Math.abs(tL - fL);
+            var H = Math.sqrt(CA * CA + CO * CO);
+            var ANG = 180 / Math.PI * Math.acos(CA / H);
+
+            if (tT > fT) {
+                var top = (tT - fT) / 2 + fT;
+            } else {
+                var top = (fT - tT) / 2 + tT;
+            }
+            if (tL > fL) {
+                var left = (tL - fL) / 2 + fL;
+            } else {
+                var left = (fL - tL) / 2 + tL;
+            }
+
+            if ((fT < tT && fL < tL) || (tT < fT && tL < fL) || (fT > tT && fL > tL) || (tT > fT && tL > fL)) {
+                ANG *= -1;
+            }
+            top -= H / 2;
+
+            line.style["-webkit-transform"] = 'rotate(' + ANG + 'deg)';
+            line.style["-moz-transform"] = 'rotate(' + ANG + 'deg)';
+            line.style["-ms-transform"] = 'rotate(' + ANG + 'deg)';
+            line.style["-o-transform"] = 'rotate(' + ANG + 'deg)';
+            line.style["-transform"] = 'rotate(' + ANG + 'deg)';
+            line.style.top = top + 'px';
+            line.style.left = left + 'px';
+            line.style.height = H + 'px';
+        }</script><script defer="defer" src="./js/app.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/ne');" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" class="active" title="ports"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/setting');" title="Settings"><i class="fa fa-cog"></i></a> <a nohref="nohref" onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
+            return false;" title="About"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return jump('<%=payload.rootUrl%>/help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="logout();" title="Quit"><i class="fa fa-window-close"></i></a> <a nohref="nohref" onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;" title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a></div><div class="panel" id="servicePanel"><div id="customer1" class="customer">ABC</div><div id="customer1Cable1" class="cable"></div><div id="customer1Cable2" class="cable"></div><div id="customer2" class="customer">DEF</div><div id="customer2Cable1" class="cable"></div><div id="customer2Cable2" class="cable"></div><div id="ingress" class="ne">gbr-worc-cg1-01</div><div id="ingress1" class="port" title="VDSL 0/0/0">1</div><div id="ingressCable1" class="cable"></div><div id="ingress2" class="port" title="VDSL 0/0/1">2</div><div id="ingressCable2" class="cable"></div><div id="ingress3" class="port" title="VDSL 0/1/0">3</div><div id="ingressCable3" class="cable"></div><div id="ingress4" class="port" title="VDSL 0/1/1">4</div><div id="ingressCable4" class="cable"></div><div id="egress1" class="port" title="GigaEthernet0/0/0">5</div><div id="egressCable1" class="cable"></div><div id="egress2" class="port" title="GigaEthernet0/0/1">6</div><div id="egressCable2" class="cable"></div><div id="nextHopCable1" class="cable"></div><div id="nextHopCable2" class="cable"></div><div id="nextHop1" class="ne">next hop</div><div id="nextHop2" class="ne">next hop</div></div><div class="panel" id="mermaidPanel"><div id="serviceFlow" class="mermaid">--- config: theme: 'base' themeVariables: primaryColor: '#b3b3b3' primaryTextColor: '#000000' primaryBorderColor: '#ffffff' background: '#f4f4f4' lineColor: '#a2a2a2' fontFamily: 'Courier New, Courier, monospace' fontSize: '0.8em' --- graph LR A[ABC] --> I1(1) A[ABC] --> I2(2) B[DEF] --> I3(3) B[DEF] --> I4(4) I1 -- VDSL 0/0/0 --> INE1(gbr-worc-cg1-01) I2 -- VDSL 0/0/1 --> INE2(gbr-worc-cg1-01) I3 -- VDSL 0/1/0 --> INE1(gbr-worc-cg1-02) I4 -- VDSL 0/1/1 --> INE2(gbr-worc-cg1-02) INE1 --> ENE1(5) INE2 --> ENE2(6) ENE1 -- GigaEthernet0/0/0 --> NH1[nexthop] ENE2 -- GigaEthernet0/0/1 --> NH2[nexthop] classDef customer fill:#0000ff,stroke:#ffffff,stroke-width:1px,color:white; class A,B customer</div></div><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>adjustLine(
+            document.getElementById('customer1'),
+            document.getElementById('ingress1'),
+            document.getElementById('customer1Cable1')
+        );
+        adjustLine(
+            document.getElementById('customer1'),
+            document.getElementById('ingress2'),
+            document.getElementById('customer1Cable2')
+        );
+        adjustLine(
+            document.getElementById('customer2'),
+            document.getElementById('ingress3'),
+            document.getElementById('customer2Cable1')
+        );
+        adjustLine(
+            document.getElementById('customer2'),
+            document.getElementById('ingress4'),
+            document.getElementById('customer2Cable2')
+        );
+        adjustLine(
+            document.getElementById('ingress1'),
+            document.getElementById('ingress'),
+            document.getElementById('ingressCable1')
+        );
+        adjustLine(
+            document.getElementById('ingress2'),
+            document.getElementById('ingress'),
+            document.getElementById('ingressCable2')
+        );
+        adjustLine(
+            document.getElementById('ingress3'),
+            document.getElementById('ingress'),
+            document.getElementById('ingressCable3')
+        );
+        adjustLine(
+            document.getElementById('ingress4'),
+            document.getElementById('ingress'),
+            document.getElementById('ingressCable4')
+        );
+        adjustLine(
+            document.getElementById('ingress'),
+            document.getElementById('egress1'),
+            document.getElementById('egressCable1')
+        );
+        adjustLine(
+            document.getElementById('ingress'),
+            document.getElementById('egress2'),
+            document.getElementById('egressCable2')
+        );
+        adjustLine(
+            document.getElementById('egress1'),
+            document.getElementById('nextHop1'),
+            document.getElementById('nextHopCable1')
+        );
+        adjustLine(
+            document.getElementById('egress2'),
+            document.getElementById('nextHop2'),
+            document.getElementById('nextHopCable2')
+        );</script></body></html>

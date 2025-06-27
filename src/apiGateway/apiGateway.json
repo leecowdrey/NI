@@ -1055,6 +1055,134 @@
       "method": "PUT"
     },
     {
+      "endpoint": "/mni/v1/currency",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/currency",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/currency/{currencyId}",
+      "@comment": "updateCurrencyRate",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/currency/{currencyId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PATCH"
+    },
+    {
+      "endpoint": "/mni/v1/currency/{currencyId}",
+      "@comment": "updateCurrencyDefault",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/currency/{currencyId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/currency/default",
+      "@comment": "updateCurrencyDefault",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/currency/default",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
       "endpoint": "/mni/v1/admin/map",
       "@comment": "getMultipleMap",
       "output_encoding": "no-op",
@@ -2467,7 +2595,7 @@
       "@comment": "deleteSingleFiber",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/cable/{cableId}",
@@ -2883,7 +3011,7 @@
       "@comment": "deleteSingleDuct",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/duct/{ductId}",
@@ -3171,7 +3299,7 @@
       "@comment": "deleteSingleNe",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/ne/{neId}",
@@ -3523,7 +3651,7 @@
       "@comment": "deleteSinglePole",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/pole/{poleId}",
@@ -3875,7 +4003,7 @@
       "@comment": "deleteSingleRack",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/rack/{rackId}",
@@ -4195,7 +4323,7 @@
       "@comment": "deleteSingleService",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/service/{serviceId}",
@@ -4547,7 +4675,7 @@
       "@comment": "deleteSingleSite",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/site/{siteId}",
@@ -4899,7 +5027,7 @@
       "@comment": "deleteSingleTrench",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["predicted","restore"],
+      "input_query_strings": ["predicted", "restore"],
       "backend": [
         {
           "url_pattern": "/mni/v1/trench/{trenchId}",

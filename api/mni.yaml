@@ -2342,6 +2342,156 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /currency:
+    get:
+      summary: List of all defined currencies
+      security:
+      - openId:
+        - read:mni_api
+      operationId: getAllCurrencies
+      parameters:
+      - $ref: "#/components/parameters/pageSize"
+      - $ref: "#/components/parameters/pageNumber"
+      tags:
+      - Currencies
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    currencyId:
+                      $ref: "#/components/schemas/currencyId"
+                    name:
+                      $ref: "#/components/schemas/currencyName"
+                    symbol:
+                      $ref: "#/components/schemas/currencySymbol"
+                    isoCode:
+                      $ref: "#/components/schemas/currencyIsoCode"
+                    rate:
+                      description: foreign currency conversion rate from default currency to this currency
+                      type: number
+                      format: currency
+              examples:
+                sample:
+                  value:
+                  - currencyId: 578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5
+                    name: 'Euro'
+                    symbol: '€'
+                    isoCode: EUR
+                    rate: 1
+                  - currencyId: 007fa4b5-9776-4e99-a116-095398b5d47a
+                    name: 'Sterling'
+                    symbol: '£'
+                    isoCode: GBP
+                    rate: 0.85
+                  - currencyId: 300e2d59-e873-4ecc-a3ad-58e44e3f3c03
+                    name: 'United States dollar'
+                    symbol: '$'
+                    isoCode: USD
+                    rate: 1.17
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /currency/default:
+    get:
+      summary: Get default monetary currency
+      security:
+      - openId:
+        - read:mni_api
+      operationId: getDefaultCurrency
+      tags:
+      - Currencies
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  currencyId:
+                    $ref: "#/components/schemas/currencyId"
+                  name:
+                    $ref: "#/components/schemas/currencyName"
+                  symbol:
+                    $ref: "#/components/schemas/currencySymbol"
+                  isoCode:
+                    $ref: "#/components/schemas/currencyIsoCode"
+              examples:
+                sample:
+                  value:
+                    currencyId: 578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5
+                    name: 'Euro'
+                    symbol: '€'
+                    isoCode: EUR
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /currency{currencyId}:
+    patch:
+      summary: update currency conversion rate
+      security:
+      - openId:
+        - write:mni_admin
+      operationId: updateCurrencyRate
+      parameters:
+      - $ref: "#/components/parameters/currencyId"
+      tags:
+      - Currencies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - rate
+              properties:
+                rate:
+                  type: number
+                  format: currency
+                  minimum: 0
+            examples:
+              sample:
+                value:
+                  rate: 0.85
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Change default currency
+      security:
+      - openId:
+        - write:mni_admin
+      operationId: updateCurrencyDefault
+      parameters:
+      - $ref: "#/components/parameters/currencyId"
+      tags:
+      - Currencies
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /ducts:
     get:
       summary: Export ducts in bulk
@@ -10688,6 +10838,7 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+
   /admin/map/provider:
     get:
       summary: List of all available Map Providers
@@ -11850,6 +12001,82 @@ paths:
           $ref: "#/components/responses/NotFound"
 components:
   schemas:
+    currencyIsoCode:
+      type: string
+      description: ISO code for currency
+      enum:
+      - AUD
+      - BND
+      - CHF
+      - CLP
+      - DKK
+      - EUR
+      - FKP
+      - GBP
+      - INR
+      - NOK
+      - NZD
+      - RUB
+      - SGD
+      - SHP
+      - TRY
+      - USD
+      - XAF
+      - XCD
+      - XCG
+      - XOF
+      - XPF
+      - ZAR
+    currencyName:
+      type: string
+      description: name of currency
+      enum:
+      - 'Australian dollar'
+      - 'Brunei dollar'
+      - 'Caribbean guilder'
+      - 'Central African CFA franc'
+      - 'CFP franc'
+      - 'Chilean peso'
+      - 'Danish krone'
+      - 'Eastern Caribbean dollar'
+      - 'Euro'
+      - 'Falkland Islands pound'
+      - 'Indian rupee'
+      - 'New Zealand dollar'
+      - 'Norwegian krone'
+      - 'Russian ruble'
+      - 'Saint Helena pound'
+      - 'Singapore dollar'
+      - 'South African rand'
+      - 'Sterling'
+      - 'Swiss franc'
+      - 'Turkish lira'
+      - 'United States dollar'
+      - 'West African CFA franc'
+    currencySymbol:
+      type: string
+      description: symbol for currency
+      enum:
+      - '$'
+      - '£'
+      - '₣'
+      - '€'
+      - '₹'
+      - '₺'
+      - '₽'
+      - 'B$'
+      - 'Cg'
+      - 'EC$'
+      - 'F.CFA'
+      - 'Fr'
+      - 'kr'
+      - 'R'
+      - 'S$'
+      - 'XCG'
+    currencyId:
+      description: internal currency identifier
+      type: string
+      format: uuid
     callbackAuthentication:
       type: string
       description: |
@@ -14214,6 +14441,13 @@ components:
       description: internal alert content identifier
       in: path
       required: true
+      schema:
+        type: string
+        format: uuid
+    currencyId:
+      name: currencyId
+      in: path
+      description: internal currency identifier
       schema:
         type: string
         format: uuid

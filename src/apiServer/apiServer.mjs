@@ -1914,6 +1914,150 @@ var run = async () => {
     }
   }
 
+  async function getAllCurrencies(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,name,symbol,isoCode,rateFromDefault FROM adminCurrency ORDER BY isoCode"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push({
+              currencyId: ddRows[idx][0],
+              name: ddRows[idx][1],
+              symbol: ddRows[idx][2],
+              isoCode: ddRows[idx][3],
+              rate: toDecimal(ddRows[idx][4]),
+            });
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getDefaultCurrency(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,name,symbol,isoCode FROM adminCurrency WHERE systemDefault = true"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          res.contentType(OAS.mimeJSON).status(200).json({
+            currencyId: ddRows[0][0],
+            name: ddRows[0][1],
+            symbol: ddRows[0][2],
+            isoCode: ddRows[0][3],
+          });
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({ errors: "not found default currency" });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function updateCurrencyDefault(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM adminCurrency WHERE id = '" +
+            req.params.currencyId +
+            "'"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          await DDC.run("UPDATE adminCurrency SET systemDefault = false");
+          await DDC.run(
+            "UPDATE adminCurrency SET systemDefault = true WHERE id = '" +
+              req.params.currencyId +
+              "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "currencyId " + req.params.currencyId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function updateCurrencyRate(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM adminCurrency WHERE id = '" +
+            req.params.currencyId +
+            "'"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddp = await DDC.prepare(
+            "UPDATE adminCurrency SET rateFromDefault = $1 WHERE id = $2"
+          );
+          ddp.bindFloat(1, toDecimal(req.body.rate,OAS.currency_scale,OAS.currency_precision));
+          ddp.bindVarchar(2, req.params.currencyId);
+          await ddp.run();
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "currencyId " + req.params.currencyId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function addMultipleEmail(req, res, next) {
     try {
       let result = validationResult(req);
@@ -7868,7 +8012,7 @@ var run = async () => {
         resJson.decommissioned = ddRows[0][15];
       }
       if (ddRows[0][20] != null) {
-resJson.config = ddRows[0][20];
+        resJson.config = ddRows[0][20];
       }
       let ddn = await DDC.prepare(
         "SELECT tsId,name,technology,state FROM _nePort WHERE neTsId = $1"
@@ -13552,6 +13696,51 @@ resJson.config = ddRows[0][20];
     }
   }
 
+  async function allTrenchPremisesPassed() {
+    let totalPassed = 0;
+    let ddp = await DDC.runAndReadAll(
+      "SELECT id FROM trench WHERE delete = false"
+    );
+    let ddRows = ddp.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        let passed = await trenchPremisesPassed(ddRows[idx][0]);
+        totalPassed = toInteger(totalPassed + passed);
+      }
+    }
+    return { passed: totalPassed };
+  }
+
+  async function trenchPremisesPassed(trenchId, point = null) {
+    let passed = 0;
+    let ddp = await DDC.prepare(
+      "SELECT id,strftime(point,'" +
+        pointFormat +
+        "') FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+    );
+    ddp.bindVarchar(1, trenchId);
+    let ddRead = await ddp.runAndReadAll();
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      let ddq = await DDC.prepare(
+        "SELECT premisesPassed FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
+      );
+      ddq.bindVarchar(1, trenchId);
+      ddq.bindVarchar(2, pointFormat);
+      if (point != null) {
+        ddq.bindVarchar(3, point);
+      } else {
+        ddq.bindVarchar(3, ddRows[0][1]);
+      }
+      let ddPremises = await ddq.runAndReadAll();
+      let ddPremisesRows = ddPremises.getRows();
+      if (ddPremisesRows.length > 0) {
+        passed = toInteger(ddPremisesRows[0][0]);
+      }
+    }
+    return passed;
+  }
+
   async function getTrenchPremisesPassed(req, res, next) {
     try {
       let result = validationResult(req);
@@ -13791,6 +13980,117 @@ resJson.config = ddRows[0][20];
     }
   }
 
+  async function allTrenchDistance() {
+    let totalDistance = 0.0;
+    let totalDistanceUnit = "m";
+    let ddp = await DDC.runAndReadAll(
+      "SELECT id FROM trench WHERE delete = false"
+    );
+    let ddRows = ddp.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        let { distance, unit } = await trenchDistance(ddRows[idx][0]);
+        totalDistance = toDecimal(totalDistance + distance, OAS.X_scale, 2);
+        totalDistanceUnit = unit;
+      }
+    }
+    // m => km => Mm
+    if (totalDistance < 1000) {
+      totalDistance = toDecimal(totalDistance, OAS.X_scale, 2);
+    } else if (totalDistance >= 1000) {
+      // kilometres
+      totalDistance = toDecimal(totalDistance / 1000, OAS.X_scale, 2);
+      totalDistanceUnit = "km";
+    } else if (totalDistance >= 1000000) {
+      // megametres
+      totalDistance = toDecimal(totalDistance / 1000000, OAS.X_scale, 2);
+      totalDistanceUnit = "Mm";
+    }
+    return { distance: totalDistance, unit: totalDistanceUnit };
+  }
+
+  async function trenchDistance(trenchId, point = null) {
+    let distance = 0.0;
+    let unit = "m";
+    let resCoordinate = [];
+    let ddp = await DDC.prepare(
+      "SELECT id,historicalTsId,predictedTsId FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+    );
+    ddp.bindVarchar(1, trenchId);
+    let ddTrench = await ddp.runAndReadAll();
+    let ddRows = ddTrench.getRows();
+    if (ddRows.length > 0) {
+      let trenchTsId = ddRows[0][1];
+      if (point != null) {
+        let ddq = await DDC.prepare(
+          "SELECT tsId FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
+        );
+        ddq.bindVarchar(1, trenchId);
+        ddq.bindVarchar(2, pointFormat);
+        ddq.bindVarchar(3, point);
+        let ddPoint = await ddq.runAndReadAll();
+        let ddPointRows = ddPoint.getRows();
+        if (ddPointRows.length > 0) {
+          trenchTsId = ddPointRows[0][0];
+        } else {
+          trenchTsId = ddRows[0][1];
+        }
+      }
+      let ddc = await DDC.prepare(
+        "SELECT x,y FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
+      );
+      ddc.bindVarchar(1, trenchId);
+      ddc.bindInteger(2, toInteger(trenchTsId));
+      let ddCoordinate = await ddc.runAndReadAll();
+      let ddCoordinateRows = ddCoordinate.getRows();
+      if (ddCoordinateRows.length > 0) {
+        for (let idx in ddCoordinateRows) {
+          let resObj = {
+            x: toDecimal(
+              ddCoordinateRows[idx][0],
+              OAS.X_scale,
+              OAS.XY_precision
+            ),
+            y: toDecimal(
+              ddCoordinateRows[idx][1],
+              OAS.Y_scale,
+              OAS.XY_precision
+            ),
+          };
+          resCoordinate.push(resObj);
+        }
+      }
+      if (resCoordinate.length > 0) {
+        for (let i = 0; i < resCoordinate.length - 1; i++) {
+          let fromX = resCoordinate[i].x;
+          let fromY = resCoordinate[i].y;
+          let toX = resCoordinate[i + 1].x;
+          let toY = resCoordinate[i + 1].y;
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT st_distance_spheroid(ST_Point2D(" +
+              fromX +
+              "," +
+              fromY +
+              ")," +
+              "ST_Point2D(" +
+              toX +
+              "," +
+              toY +
+              "))"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            distance = distance + toDecimal(ddRows[0][0]);
+          }
+        }
+      }
+    }
+    return {
+      distance: toDecimal(distance, OAS.X_scale, OAS.XY_precision),
+      unit: unit,
+    };
+  }
+
   async function getTrenchDistance(req, res, next) {
     try {
       let result = validationResult(req);
@@ -13799,82 +14099,31 @@ resJson.config = ddRows[0][20];
           distance: 0.0,
           unit: "m",
         };
-        let resCoordinate = [];
-        let distance = 0;
         let ddp = await DDC.prepare(
-          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,trenchId,source FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+          "SELECT id FROM trench  WHERE id = $1 AND delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddTrench = await ddp.runAndReadAll();
         let ddRows = ddTrench.getRows();
         if (ddRows.length > 0) {
-          let trenchTsId = 0;
-          if (req.query?.point != null) {
-            let ddq = await DDC.prepare(
-              "SELECT tsId FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
-            );
-            ddq.bindVarchar(1, req.params.trenchId);
-            ddq.bindVarchar(2, pointFormat);
-            ddq.bindVarchar(3, req.query.point);
-            let ddPoint = await ddq.runAndReadAll();
-            let ddPointRows = ddPoint.getRows();
-            if (ddPointRows.length > 0) {
-              trenchTsId = ddPointRows[0][0];
-            } else {
-              trenchTsId = ddRows[0][3];
-            }
-          } else {
-            trenchTsId = ddRows[0][3];
-          }
-          let ddc = await DDC.prepare(
-            "SELECT x,y FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
+          let { distance, unit } = await trenchDistance(
+            req.params.trenchId,
+            req.query.point
           );
-          ddc.bindVarchar(1, req.params.trenchId);
-          ddc.bindInteger(2, toInteger(trenchTsId));
-          let ddCoordinate = await ddc.runAndReadAll();
-          let ddCoordinateRows = ddCoordinate.getRows();
-          if (ddCoordinateRows.length > 0) {
-            for (let idx in ddCoordinateRows) {
-              let resObj = {
-                x: toDecimal(
-                  ddCoordinateRows[idx][0],
-                  OAS.X_scale,
-                  OAS.XY_precision
-                ),
-                y: toDecimal(
-                  ddCoordinateRows[idx][1],
-                  OAS.Y_scale,
-                  OAS.XY_precision
-                ),
-              };
-              resCoordinate.push(resObj);
-            }
+          // m => km => Mm
+          if (distance < 1000) {
+            distance = toDecimal(distance, OAS.X_scale, 2);
+          } else if (distance >= 1000) {
+            // kilometres
+            distance = toDecimal(distance / 1000, OAS.X_scale, 2);
+            unit = "km";
+          } else if (distance >= 1000000) {
+            // megametres
+            distance = toDecimal(distance / 1000000, OAS.X_scale, 2);
+            unit = "Mm";
           }
-          if (resCoordinate.length > 0) {
-            for (let i = 0; i < resCoordinate.length - 1; i++) {
-              let fromX = resCoordinate[i].x;
-              let fromY = resCoordinate[i].y;
-              let toX = resCoordinate[i + 1].x;
-              let toY = resCoordinate[i + 1].y;
-              let ddRead = await DDC.runAndReadAll(
-                "SELECT st_distance_spheroid(ST_Point2D(" +
-                  fromX +
-                  "," +
-                  fromY +
-                  ")," +
-                  "ST_Point2D(" +
-                  toX +
-                  "," +
-                  toY +
-                  "))"
-              );
-              let ddRows = ddRead.getRows();
-              if (ddRows.length > 0) {
-                distance += Number.parseFloat(ddRows[0][0]);
-              }
-            }
-          }
-          resJson.distance = toDecimal(distance, OAS.X_scale, OAS.XY_precision);
+          resJson.distance = distance;
+          resJson.unit = unit;
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
         } else {
           res
@@ -14930,6 +15179,11 @@ resJson.config = ddRows[0][20];
               sites: await dbActiveInactiveCounts("site"),
               trenches: await dbActiveInactiveCounts("trench"),
             },
+            metrics: {
+              trench: await allTrenchDistance(),
+              cable: { distance: 0, unit: "m" },
+              premises: await allTrenchPremisesPassed(),
+            },
           });
       } else {
         res
@@ -14969,6 +15223,64 @@ resJson.config = ddRows[0][20];
     // security("read:mni_api"),
     header("Accept").default(OAS.mimeYAML).isIn(OAS.mimeAcceptType),
     getOpenAPI
+  );
+
+  /*
+     Tag:           Administration - Currency
+     operationId:   getAllCurrencies
+     exposed Route: /mni/v1/currency
+     HTTP method:   GET
+     OpenID Scope:  read:mni_api
+  */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/currency",
+    // security("read:mni_api"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getAllCurrencies
+  );
+
+  /*
+     Tag:           Administration - Currency
+     operationId:   getDefaultCurrency
+     exposed Route: /mni/v1/currency/default
+     HTTP method:   GET
+     OpenID Scope:  read:mni_api
+  */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/currency/default",
+    // security("read:mni_api"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getDefaultCurrency
+  );
+
+  /*
+     Tag:           Administration - Currency
+     operationId:   updateCurrencyRate
+     exposed Route: /mni/v1/currency/:currencyId
+     HTTP method:   GET
+     OpenID Scope:  write:mni_admin
+  */
+  app.patch(
+    serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
+    // security("write:mni_admin"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    param("currencyId").isUUID(4),
+    body("rate").isFloat(OAS.currency_rate),
+    updateCurrencyRate
+  );
+
+  /*
+     Tag:           Administration - Currency
+     operationId:   updateCurrencyDefault
+     exposed Route: /mni/v1/currency/:currencyId
+     HTTP method:   GET
+     OpenID Scope:  write:mni_admin
+  */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
+    // security("write:mni_admin"),
+    param("currencyId").isUUID(4),
+    updateCurrencyDefault
   );
 
   /*
@@ -18224,7 +18536,8 @@ resJson.config = ddRows[0][20];
     body("build.planned.unit").default("day").isIn(OAS.durationUnit),
     body("build.actual").optional().isObject(),
     body("build.actual.start")
-      .optional().if(body("build.actual").exists())
+      .optional()
+      .if(body("build.actual").exists())
       .matches(OAS.datePeriodYearMonthDay),
     body("build.actual.completion")
       .if(body("build.actual").exists())
@@ -18245,15 +18558,24 @@ resJson.config = ddRows[0][20];
     oneOf(
       [
         // site
-        body("connectsTo.siteId").optional().if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.siteId")
+          .optional()
+          .if(body("build.actual").exists())
+          .isUUID(4),
       ],
       [
         // trench
-        body("connectsTo.trenchId").optional().if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.trenchId")
+          .optional()
+          .if(body("build.actual").exists())
+          .isUUID(4),
       ],
       [
         // pole
-        body("connectsTo.poleId").optional().if(body("build.actual").exists()).isUUID(4),
+        body("connectsTo.poleId")
+          .optional()
+          .if(body("build.actual").exists())
+          .isUUID(4),
       ],
       {
         message: "either site, trench or pole identifier must be supplied",
@@ -19601,15 +19923,24 @@ resJson.config = ddRows[0][20];
     oneOf(
       [
         // site
-        body("connectsTo.siteId").optional().if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.siteId")
+          .optional()
+          .if(body("connectsTo").exists())
+          .isUUID(4),
       ],
       [
         // trench
-        body("connectsTo.trenchId").optional().if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.trenchId")
+          .optional()
+          .if(body("connectsTo").exists())
+          .isUUID(4),
       ],
       [
         // pole
-        body("connectsTo.poleId").optional().if(body("connectsTo").exists()).isUUID(4),
+        body("connectsTo.poleId")
+          .optional()
+          .if(body("connectsTo").exists())
+          .isUUID(4),
       ],
       {
         message: "either site, trench or pole identifier must be supplied",
