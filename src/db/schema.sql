@@ -49,7 +49,7 @@ CREATE TYPE cableFiberConfigurationMode AS ENUM ('SMOF','MMOF');
 CREATE TYPE cableFiberConfigurationRate AS ENUM ('Gbps','Tbps');
 CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','fiber');
-CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large');
+CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large', 'unclassified');
 CREATE TYPE countryCode AS ENUM ( 'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATA', 'ATF', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY', 'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF', 'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC', 'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB', 'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'YEM', 'ZAF', 'ZMB', 'ZWE' );
 CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
 CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','HKD','IDR','ILS','INR','ISK','JOD','JPY','MAD','MXN','MYR','NGN','NOK','NZD','PLN','QAR','RUB','SEK','SGD','SHP','THB','TRY','UAH','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS costSite (
 
 CREATE TABLE IF NOT EXISTS costTrench (
     purpose trenchPurpose NOT NULL,
-    type constructionType NULL,
+    type constructionType DEFAULT 'unclassified',
     unit sizeUnit NOT NULL DEFAULT 'm',
     costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
     PRIMARY KEY (purpose,type)
