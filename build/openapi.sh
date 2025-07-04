@@ -160,6 +160,22 @@ which yq &>/dev/null || pip install yq &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+doing "Checking for release version"
+MNI_VERSION=$(grep -E "^MNI_VERSION=.*" src/mni.ini|cut -d '=' -f2-|cut -d '"' -f2) && \
+MNI_BUILD=$(grep -E "^MNI_BUILD=.*" src/mni.ini|cut -d '=' -f2-|cut -d '"' -f2)
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Updating OpenAPI version and build tag"
+if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+  sed -i -e "s/^  version: .*/  version: ${MNI_VERSION}.${MNI_BUILD}/" api/mni.yaml
+elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+  sed -i '' "s/^  version: .*/  version: ${MNI_VERSION}.${MNI_BUILD}/" api/mni.yaml
+fi
+git diff --quiet src/mni.ini &>/dev/null || git add -f src/mni.ini
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+
 [[ -d "api" ]] || exit 255
 doing "OpenAPI Generate JSON"
 git diff --quiet api/mni.yaml &>/dev/null || git add -f api/mni.yaml

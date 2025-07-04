@@ -586,7 +586,7 @@ async function jobFxRateUpdate() {
         if (data != null) {
           if (DEBUG) {
             LOGGER.debug(dayjs().format(dayjsFormat), "debug", "fxRateUpdate", {
-              currency: data.length,
+              currencies: data.length,
             });
           }
           if (data != null) {
@@ -610,7 +610,6 @@ async function jobFxRateUpdate() {
       "&base=" +
       base +
       "&format=1";
-      console.log(url);
     await fetch(url, {
       method: "GET",
       headers: {
@@ -947,7 +946,7 @@ async function jobCveListBuild(target = cveDirectory) {
                             body: JSON.stringify(cveJson),
                           })
                             .then((response) => {
-                              if (response.ok) {
+                              if (response.ok || response.status == 409) {
                                 noop();
                               } else {
                                 LOGGER.error(
@@ -1500,7 +1499,7 @@ var run = async () => {
       },
       {
         scheduled: true,
-        recoverMissedExecutions: false,
+        recoverMissedExecutions: true,
         name: "fxRateUpdate",
       }
     );
@@ -1513,7 +1512,7 @@ var run = async () => {
       },
       {
         scheduled: true,
-        recoverMissedExecutions: false,
+        recoverMissedExecutions: true,
         name: "cveRepoPull",
       }
     );
@@ -1524,15 +1523,11 @@ var run = async () => {
       },
       {
         scheduled: true,
-        recoverMissedExecutions: false,
+        recoverMissedExecutions: true,
         name: "cveListBuild",
       }
     );
   }
-
-  //
-  await jobCveRepoPull(cveDirectory);
-  await jobCveListBuild(cveDirectory);
 
   // process a queue item
   await queueDrain();

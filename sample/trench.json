@@ -2,6 +2,7 @@
   {
     "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
     "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -59,6 +60,7 @@
   {
     "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
     "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -137,6 +139,7 @@
   {
     "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
     "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -229,6 +232,7 @@
   {
     "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
     "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -341,6 +345,7 @@
   {
     "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
     "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -478,6 +483,7 @@
   {
     "trenchId": "b55fcbef-6d4f-4803-8755-0d920835de85",
     "purpose": "service/drop",
+    "reference": "bel-zel-vliegezenlaan",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -590,6 +596,7 @@
   {
     "trenchId": "2b41db28-5db7-4ec1-a1e3-33a8d4d95727",
     "purpose": "service/drop",
+    "reference": "bel-zel-m1-t1",
     "construction": {
       "depth": 914.4,
       "classifier": "low",

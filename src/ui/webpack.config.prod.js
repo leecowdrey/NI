@@ -47,6 +47,10 @@ module.exports = merge(common, {
       filename: "duct.ejs",
     }),
     new HtmlWebpackPlugin({
+      template: "!!raw-loader!./openapi.ejs",
+      filename: "openapi.ejs",
+    }),
+    new HtmlWebpackPlugin({
       template: "!!raw-loader!./help.ejs",
       filename: "help.ejs",
     }),
@@ -97,6 +101,10 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       template: "!!raw-loader!./trenchLifetime.ejs",
       filename: "trenchLifetime.ejs",
+    }),
+    new HtmlWebpackPlugin({
+      template: "!!raw-loader!./q2c.ejs",
+      filename: "q2c.ejs",
     }),
     new HtmlWebpackPlugin({
       template: "!!raw-loader!./setting.ejs",

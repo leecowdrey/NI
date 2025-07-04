@@ -63,7 +63,7 @@ global.LOGGER = new Console({
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
-var duckDbExtensions = ["spatial"];
+var duckDbExtensions = ["spatial", "inet"];
 var duckDbMaxMemory = null;
 var duckDbThreads = null;
 var duckDbVerison = null;
@@ -1924,7 +1924,7 @@ var run = async () => {
           req.query.pageNumber
         );
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id,name,symbol,isoCode,rateFromDefault FROM adminCurrency ORDER BY isoCode"
+          "SELECT id,name,symbol,isoCode,rateFromDefault FROM currency ORDER BY isoCode"
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -1957,7 +1957,7 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id,name,symbol,isoCode FROM adminCurrency WHERE systemDefault = true"
+          "SELECT id,name,symbol,isoCode FROM currency WHERE systemDefault = true LIMIT 1"
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
@@ -1989,15 +1989,13 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM adminCurrency WHERE id = '" +
-            req.params.currencyId +
-            "'"
+          "SELECT id FROM currency WHERE id = '" + req.params.currencyId + "'"
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          await DDC.run("UPDATE adminCurrency SET systemDefault = false");
+          await DDC.run("UPDATE currency SET systemDefault = false");
           await DDC.run(
-            "UPDATE adminCurrency SET systemDefault = true WHERE id = '" +
+            "UPDATE currency SET systemDefault = true WHERE id = '" +
               req.params.currencyId +
               "'"
           );
@@ -2026,16 +2024,17 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM adminCurrency WHERE id = '" +
-            req.params.currencyId +
-            "'"
+          "SELECT id FROM currency WHERE id = '" + req.params.currencyId + "'"
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
           let ddp = await DDC.prepare(
-            "UPDATE adminCurrency SET rateFromDefault = $1 WHERE id = $2"
+            "UPDATE currency SET rateFromDefault = $1 WHERE id = $2"
           );
-          ddp.bindFloat(1, toDecimal(req.body.rate,OAS.currency_scale,OAS.currency_precision));
+          ddp.bindFloat(
+            1,
+            toDecimal(req.body.rate, OAS.currency_scale, OAS.currency_precision)
+          );
           ddp.bindVarchar(2, req.params.currencyId);
           await ddp.run();
           res.sendStatus(204);
@@ -4619,7 +4618,7 @@ var run = async () => {
         } else {
           res
             .contentType(OAS.mimeJSON)
-            .status(202)
+            .status(409)
             .json({
               errors: "cveId " + req.body.cveId + " already exists",
             });
@@ -4864,6 +4863,274 @@ var run = async () => {
     }
   }
 
+  async function getAllTrenchCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costTrench ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addTrenchCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceTrenchCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costTrench SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costTrench SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteTrenchCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costTrench WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costTrench WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getAllCables(req, res, next) {
     try {
       let result = validationResult(req);
@@ -5008,7 +5275,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
             configTsCol +
-            ") VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+            ",reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -5018,6 +5285,7 @@ var run = async () => {
         ddp.bindVarchar(6, req.body.technology);
         ddp.bindVarchar(7, req.body.state);
         ddp.bindInteger(8, configTsId);
+        ddp.bindVarchar(9, req.body.reference);
         await ddp.run();
 
         if (req.body?.ductId != null) {
@@ -5172,7 +5440,7 @@ var run = async () => {
           }
         } else {
           let ddp = await DDC.prepare(
-            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
+            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId,reference FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
           );
           ddp.bindVarchar(1, req.params.cableId);
           let ddRead = await ddp.runAndReadAll();
@@ -5196,6 +5464,7 @@ var run = async () => {
             let ductId = ddRows[0][11];
             let poleId = ddRows[0][12];
             let point = dayjs().format(dayjsFormat);
+            let reference = ddRows[0][13];
 
             if (req.query?.predicted != null) {
               switch (technology) {
@@ -5333,7 +5602,7 @@ var run = async () => {
               ddp = await DDC.prepare(
                 "INSERT INTO _cable (tsId,point,source,cableId,ductId,poleId,technology,state," +
                   configTsCol +
-                  ") SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4 FROM _cable WHERE tsId = $5"
+                  "),reference SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4,reference FROM _cable WHERE tsId = $5"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -6326,7 +6595,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddCable = await DDC.runAndReadAll(
-        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
+        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
       );
       let ddCableRows = ddCable.getRows();
       if (ddCableRows.length > 0) {
@@ -6334,6 +6603,7 @@ var run = async () => {
           let resObj = {
             cableId: ddCableRows[idx][0],
             technology: ddCableRows[idx][1],
+            reference: ddCableRows[idx][11],
             state: ddCableRows[idx][2],
             delete: toBoolean(ddCableRows[idx][3]),
             configuration: {},
@@ -6583,7 +6853,7 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
               configTsCol +
-              ") VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+              ",reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -6593,6 +6863,7 @@ var run = async () => {
           ddp.bindVarchar(6, req.body[i].technology);
           ddp.bindVarchar(7, req.body[i].state);
           ddp.bindInteger(8, configTsId);
+          ddp.bindVarchar(9, req.body[i].reference);
           await ddp.run();
 
           if (req.body[i].ductId != null) {
@@ -7563,7 +7834,7 @@ var run = async () => {
     for (let p = 0; p < body.ports.length; p++) {
       let portTsId = await getSeqNextValue("seq_nePort");
       let ddp = await DDC.prepare(
-        "INSERT INTO _nePort (tsId,point,source,neId,neTsId,name,technology,state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9)"
+        "INSERT INTO _nePort (tsId,point,source,neId,neTsId,name,technology,state,errorCount) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
       );
       ddp.bindInteger(1, portTsId);
       ddp.bindVarchar(2, body.point || point);
@@ -7574,6 +7845,7 @@ var run = async () => {
       ddp.bindVarchar(7, body.ports[p].name);
       ddp.bindVarchar(8, body.ports[p].technology);
       ddp.bindVarchar(9, body.ports[p].state);
+      ddp.bindInteger(10, body.ports[p].errorCount);
       await ddp.run();
 
       switch (body.ports[p].technology) {
@@ -8015,7 +8287,7 @@ var run = async () => {
         resJson.config = ddRows[0][20];
       }
       let ddn = await DDC.prepare(
-        "SELECT tsId,name,technology,state FROM _nePort WHERE neTsId = $1"
+        "SELECT tsId,name,technology,state,errorCount FROM _nePort WHERE neTsId = $1"
       );
       ddn.bindInteger(1, ddRows[0][19]);
       let ddPort = await ddn.runAndReadAll();
@@ -8034,6 +8306,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   frequencyRange: {
                     low: toDecimal(ddCoaxRows[0][0]),
@@ -8057,6 +8330,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   category: ddEthernetRows[0][0],
                   rate: toInteger(ddEthernetRows[0][1]),
@@ -8076,6 +8350,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   rate: toInteger(ddLoopbackRows[0][0]),
                   unit: ddLoopbackRows[0][1],
@@ -8094,6 +8369,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   rate: toInteger(ddFiberRows[0][0]),
                   unit: ddFiberRows[0][1],
@@ -8115,6 +8391,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   category: ddXdslRows[0][0],
                   rate: toInteger(ddXdslRows[0][1]),
@@ -8134,6 +8411,7 @@ var run = async () => {
                 name: ddPortRows[idx][1],
                 technology: ddPortRows[idx][2],
                 state: ddPortRows[idx][3],
+                errorCount: ddPortRows[idx][4],
                 configuration: {
                   rate: toInteger(ddVirtualRows[0][0]),
                   unit: ddVirtualRows[0][1],
@@ -8538,7 +8816,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -8568,6 +8846,7 @@ var run = async () => {
         ddp.bindInteger(17, toInteger(req.body.build.actual.duration));
         ddp.bindVarchar(18, req.body.build.planned.unit);
         ddp.bindVarchar(19, req.body.build.actual.unit);
+        ddp.bindVarchar(20, req.body.reference);
         await ddp.run();
         if (req.body.build?.jobId != null) {
           await DDC.run(
@@ -8740,7 +9019,7 @@ var run = async () => {
                   break;
               }
               let ddp = await DDC.prepare(
-                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint FROM _pole WHERE tsId = $4"
+                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference FROM _pole WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -8809,7 +9088,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "') FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
+            "'),reference FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
             datePoint +
             " ORDER BY _pole.point DESC LIMIT 1"
         );
@@ -8820,6 +9099,7 @@ var run = async () => {
           resJson = {
             poleId: req.params.poleId,
             point: ddRows[0][30],
+            reference: ddRows[0][31],
             purpose: ddRows[0][6],
             construction: {
               height: toDecimal(ddRows[0][7]),
@@ -8994,7 +9274,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "') FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
+            "'),reference FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.poleId);
         let ddPole = await ddp.runAndReadAll();
@@ -9003,6 +9283,7 @@ var run = async () => {
           resJson = {
             poleId: req.params.poleId,
             purpose: ddRows[0][6],
+            reference: ddRows[0][31],
             point: ddRows[0][30],
             construction: {
               height: toDecimal(ddRows[0][7]),
@@ -9158,7 +9439,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -9189,6 +9470,7 @@ var run = async () => {
           ddp.bindInteger(17, toInteger(req.body.build.actual.duration));
           ddp.bindVarchar(18, req.body.build.planned.unit);
           ddp.bindVarchar(19, req.body.build.actual.unit);
+          ddp.bindVarchar(20, req.body.reference);
           await ddp.run();
           if (req.body.build?.jobId != null) {
             await DDC.run(
@@ -9316,7 +9598,7 @@ var run = async () => {
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
           "X,Y,Z,M,strftime(point,'" +
           pointFormat +
-          "') FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
+          "'),reference FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -9324,6 +9606,7 @@ var run = async () => {
           let resObj = {
             poleId: ddRows[idx][0],
             purpose: ddRows[idx][6],
+            reference: ddRows[idx][31],
             construction: {
               height: toDecimal(ddRows[idx][7]),
               unit: ddRows[idx][9],
@@ -9458,7 +9741,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -9479,6 +9762,7 @@ var run = async () => {
           ddp.bindInteger(17, req.body[i].build.actual.duration);
           ddp.bindVarchar(18, req.body[i].build.planned.unit);
           ddp.bindVarchar(19, req.body[i].build.actual.unit);
+          ddp.bindVarchar(20, req.body[i].reference);
           await ddp.run();
           if (req.body[i].build?.jobId != null) {
             await DDC.run(
@@ -10551,7 +10835,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
+          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -10562,6 +10846,7 @@ var run = async () => {
         ddp.bindVarchar(7, dateFormat);
         ddp.bindInteger(8, req.body.rate);
         ddp.bindVarchar(9, req.body.unit);
+        ddp.bindVarchar(10, req.body.reference);
         await ddp.run();
 
         if (req.body.reference != null) {
@@ -10854,7 +11139,7 @@ var run = async () => {
               }
 
               let ddp = await DDC.prepare(
-                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit FROM _service WHERE tsId = $4"
+                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference FROM _service WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -10962,7 +11247,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),rate,unit FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
+            "'),rate,unit,reference FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
             datePoint +
             " AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
@@ -10973,6 +11258,7 @@ var run = async () => {
           resJson = {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
+            reference: ddRows[0][16],
             customer: {},
             commissioned: ddRows[0][9],
             rate: toInteger(ddRows[0][14]),
@@ -11138,7 +11424,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),tsId,rate,unit FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
+            "'),tsId,rate,unit,reference FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.serviceId);
         let ddRead = await ddp.runAndReadAll();
@@ -11147,6 +11433,7 @@ var run = async () => {
           resJson = {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
+            reference: ddRows[0][17],
             customer: {},
             commissioned: ddRows[0][9],
             rate: toInteger(ddRows[0][15]),
@@ -11364,7 +11651,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -11375,6 +11662,7 @@ var run = async () => {
           ddp.bindVarchar(7, dateFormat);
           ddp.bindInteger(8, req.body.rate);
           ddp.bindVarchar(9, req.body.unit);
+          ddp.bindVarchar(10, req.body.reference);
           await ddp.run();
 
           if (req.body.reference != null) {
@@ -11603,7 +11891,7 @@ var run = async () => {
           dateFormat +
           "'),lagGroup,lagMembers,strftime(point,'" +
           pointFormat +
-          "'),tsId,rate,unit FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
+          "'),tsId,rate,unit,reference FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -11611,6 +11899,7 @@ var run = async () => {
           let resObj = {
             serviceId: ddRows[idx][0],
             point: ddRows[idx][13],
+            reference: ddRows[idx][17],
             customer: {},
             commissioned: ddRows[idx][9],
             rate: toInteger(ddRows[idx][15]),
@@ -11863,7 +12152,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -11874,6 +12163,7 @@ var run = async () => {
           ddp.bindVarchar(7, dateFormat);
           ddp.bindInteger(8, req.body[i].rate);
           ddp.bindVarchar(9, req.body[i].unit);
+          ddp.bindVarchar(10, req.body[i].reference);
           await ddp.run();
 
           if (req.body[i].reference != null) {
@@ -13234,7 +13524,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _trench (tsId, point, trenchId, source, purpose, depth, classifier, unit, type, premisesPassed, area, plannedDuration, actualDuration, state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
+          "INSERT INTO _trench (tsId, point, trenchId, source, purpose, depth, classifier, unit, type, premisesPassed, area, plannedDuration, actualDuration, state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -13251,6 +13541,7 @@ var run = async () => {
         ddp.bindInteger(13, toInteger(req.body.build.planned.duration));
         ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
         ddp.bindVarchar(15, req.body.state);
+        ddp.bindVarchar(16, req.body.reference);
         await ddp.run();
 
         if (req.body.build?.jobId != null) {
@@ -13473,7 +13764,7 @@ var run = async () => {
               }
               let tsId = await getSeqNextValue("seq_trench");
               let ddClone = await DDC.prepare(
-                "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId) SELECT $1,strptime($2,$3),trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId FROM _trench WHERE tsId = $4"
+                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId FROM _trench WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -13556,7 +13847,7 @@ var run = async () => {
             dateFormat +
             "'), actualDuration, actualUnit, state, connectsToSiteId, connectsToTrenchId, connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "') FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
+            "'),reference FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
             datePoint +
             " ORDER BY _trench.point DESC LIMIT 1"
         );
@@ -13569,6 +13860,7 @@ var run = async () => {
             point: ddRows[0][28],
             source: ddRows[0][6],
             purpose: ddRows[0][7],
+            reference: ddRows[0][29],
             construction: {
               depth: toDecimal(ddRows[0][8]),
               classifier: ddRows[0][9],
@@ -14060,7 +14352,7 @@ var run = async () => {
           resCoordinate.push(resObj);
         }
       }
-      if (resCoordinate.length > 0) {
+      if (resCoordinate.length > 1) {
         for (let i = 0; i < resCoordinate.length - 1; i++) {
           let fromX = resCoordinate[i].x;
           let fromY = resCoordinate[i].y;
@@ -14235,7 +14527,7 @@ var run = async () => {
             dateFormat +
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "') FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+            "'),reference FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddRead = await ddp.runAndReadAll();
@@ -14244,6 +14536,7 @@ var run = async () => {
           resJson = {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
+            reference: ddRows[0][29],
             purpose: ddRows[0][7],
             construction: {
               depth: toDecimal(ddRows[0][8]),
@@ -14434,7 +14727,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -14451,6 +14744,7 @@ var run = async () => {
           ddp.bindInteger(13, toInteger(req.body.build.planned.duration));
           ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
           ddp.bindVarchar(15, req.body.state);
+          ddp.bindVarchar(16, req.body.reference);
           await ddp.run();
 
           if (req.body.build?.jobId != null) {
@@ -14630,7 +14924,7 @@ var run = async () => {
           dateFormat +
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,tsId,strftime(point,'" +
           pointFormat +
-          "') FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
+          "'),reference FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -14638,6 +14932,7 @@ var run = async () => {
           let resObj = {
             trenchId: ddRows[idx][0],
             purpose: ddRows[idx][7],
+            reference: ddRows[idx][30],
             construction: {
               depth: toDecimal(ddRows[idx][8]),
               classifier: ddRows[idx][9],
@@ -14867,7 +15162,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -14887,6 +15182,7 @@ var run = async () => {
           ddp.bindInteger(13, toInteger(req.body[i].build.planned.duration));
           ddp.bindInteger(14, toInteger(req.body[i].build.actual.duration));
           ddp.bindVarchar(15, req.body[i].state);
+          ddp.bindVarchar(16, req.body[i].reference);
           await ddp.run();
 
           if (req.body[i].build?.jobId != null) {
@@ -15135,7 +15431,10 @@ var run = async () => {
             .sendFile("mni.yaml", { root: apiDirectory });
           break;
         default:
-          res.sendStatus(404);
+          res
+            .status(200)
+            .contentType(accepts)
+            .sendFile("mni.json", { root: apiDirectory });
       }
     } catch (e) {
       return next(e);
@@ -15195,6 +15494,150 @@ var run = async () => {
       return next(e);
     }
   }
+
+  async function q2cTrenchDistanceEstimate(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let distance = 0;
+        let costPerUnit = 0;
+        let resJson = {
+          distance: 0,
+          unit: "m",
+          cost: 0,
+          isoCode: "",
+          symbol: "",
+          rate: 1,
+        };
+        // system default currency rate
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT symbol,isoCode,rateFromDefault FROM currency WHERE systemDefault = true LIMIT 1"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          resJson.symbol = ddRows[0][0];
+          resJson.isoCode = ddRows[0][1];
+          resJson.rate = toDecimal(ddRows[0][2]);
+        }
+        // requested currency rate if supplied
+        if (req.body.isoCode != null) {
+          resJson.isoCode = req.body.isoCode;
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT symbol,isoCode,rateFromDefault FROM currency WHERE lower(isoCode) = lower('" +
+              resJson.isoCode +
+              "')"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson.symbol = ddRows[0][0];
+            resJson.isoCode = ddRows[0][1];
+            resJson.rate = toDecimal(ddRows[0][2]);
+          }
+        }
+        // adjust rate per distance unit based on purpose
+        if (req.body.purpose != "unclassified") {
+          ddRead = await DDC.runAndReadAll(
+            "SELECT unit,costPerUnit FROM costTrench WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "')"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson.unit = ddRows[0][0];
+            costPerUnit = toDecimal(ddRows[0][1]);
+          }
+        } else {
+          ddRead = await DDC.runAndReadAll(
+            "SELECT unit,costPerUnit FROM costTrench WHERE lower(purpose) = lower('unclassified') AND lower(type) = lower('" +
+              req.body.type +
+              "')"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson.unit = ddRows[0][0];
+            costPerUnit = toDecimal(ddRows[0][1]);
+          }
+        }
+        if (req.body.coordinates.length > 1) {
+          for (let i = 0; i < req.body.coordinates.length - 1; i++) {
+            let fromX = toDecimal(
+              req.body.coordinates[i].x,
+              OAS.X_scale,
+              OAS.XY_precision
+            );
+            let fromY = toDecimal(
+              req.body.coordinates[i].y,
+              OAS.X_scale,
+              OAS.XY_precision
+            );
+            let toX = toDecimal(
+              req.body.coordinates[i + 1].x,
+              OAS.X_scale,
+              OAS.XY_precision
+            );
+            let toY = toDecimal(
+              req.body.coordinates[i + 1].y,
+              OAS.X_scale,
+              OAS.XY_precision
+            );
+            let ddRead = await DDC.runAndReadAll(
+              "SELECT st_distance_spheroid(ST_Point2D(" +
+                fromX +
+                "," +
+                fromY +
+                ")," +
+                "ST_Point2D(" +
+                toX +
+                "," +
+                toY +
+                "))"
+            );
+            let ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              distance =
+                distance +
+                toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision);
+            }
+          }
+        }
+        resJson.cost = new Intl.NumberFormat({
+          style: "currency",
+          currency: resJson.isoCode,
+          symbol: resJson.symbol,
+        }).format(
+          (
+            Math.round(
+              (Math.round(distance * costPerUnit * 100) / 100).toFixed(2) *
+                resJson.rate *
+                100
+            ) / 100
+          ).toFixed(2)
+        );
+        // m => km => Mm
+        if (distance < 1000) {
+          resJson.distance = toDecimal(distance, OAS.X_scale, 2);
+          resJson.unit = "m";
+        } else if (distance >= 1000) {
+          // kilometres
+          resJson.distance = toDecimal(distance / 1000, OAS.X_scale, 2);
+          resJson.unit = "km";
+        } else if (distance >= 1000000) {
+          // megametres
+          resJson.distance = toDecimal(distance / 1000000, OAS.X_scale, 2);
+          resJson.unit = "Mm";
+        }
+        res.status(200).contentType(OAS.mimeJSON).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   // Express API routes
 
   /*
@@ -15221,7 +15664,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/api",
     // security("read:mni_api"),
-    header("Accept").default(OAS.mimeYAML).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getOpenAPI
   );
 
@@ -16825,17 +17268,18 @@ var run = async () => {
        operationId:   addSingleCable
        exposed Route: /mni/v1/cable
        HTTP method:   POST
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cable",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
     }),
     body("technology").isIn(OAS.cableTechnology),
+    body("reference").isString().trim(),
     body("configuration").isObject(),
     oneOf(
       [
@@ -16944,11 +17388,11 @@ var run = async () => {
        operationId:   deleteSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   DELETE
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     param("cableId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
@@ -16991,11 +17435,11 @@ var run = async () => {
        operationId:   updateSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   PATCH
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf(
@@ -17008,6 +17452,7 @@ var run = async () => {
       }
     ),
     body("technology").optional().isIn(OAS.cableTechnology),
+    body("reference").optional().isString().trim(),
     body("configuration").optional().isObject(),
     oneOf(
       [
@@ -17102,17 +17547,18 @@ var run = async () => {
        operationId:   replaceSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   PUT
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
     }),
     body("technology").isIn(OAS.cableTechnology),
+    body("reference").isString().trim(),
     body("configuration").isObject(),
     oneOf(
       [
@@ -17202,11 +17648,11 @@ var run = async () => {
        operationId:   updateSingleCableCoaxState
        exposed Route: /mni/v1/cable/:cableId/channel/:channel
        HTTP method:   PATCH
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/channel/:channel",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("channel").isInt(OAS.cableConfiguration_coax_channels),
@@ -17219,13 +17665,13 @@ var run = async () => {
        operationId:   updateSingleCableRibbonStrandState
        exposed Route: /mni/v1/cable/:cableId/state/multi/:ribbon/:strand
        HTTP method:   PATCH
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix +
       serveUrlVersion +
       "/cable/:cableId/state/multi/:ribbon/:strand",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("ribbon").isInt(OAS.ribbons),
@@ -17239,11 +17685,11 @@ var run = async () => {
        operationId:   updateSingleCableStrandState
        exposed Route: /mni/v1/cable/:cableId/state/single/:strand
        HTTP method:   PATCH
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/state/single/:strand",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("strand").isInt(OAS.cableConfiguration_single_fiber_strands),
@@ -17270,11 +17716,11 @@ var run = async () => {
        operationId:   addMultipleCables
        exposed Route: /mni/v1/cables
        HTTP method:   POST
-       OpenID Scope:  cable_write
+       OpenID Scope:  write:mni_cable
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cables",
-    // security("cable_write"),
+    // security("write:mni_cable"),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
@@ -17283,6 +17729,7 @@ var run = async () => {
       message: "either pole or duct identifier must be supplied",
     }),
     body("*.technology").isIn(OAS.cableTechnology),
+    body("*.reference").isString().trim(),
     body("*.configuration").isObject(),
     oneOf(
       [
@@ -17749,6 +18196,7 @@ var run = async () => {
       }
     ),
     body("ports.*.state").isIn(OAS.portState),
+    body("ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
     body("ports.*.connectsTo").optional().isObject(),
     oneOf(
       [
@@ -17933,7 +18381,8 @@ var run = async () => {
           "port configuration for fiber, coax, xdsl, ethernet, loopback or virtual must be supplied",
       }
     ),
-    body("ports.*.state").isIn(OAS.portState),
+    body("ports.*.state").optional().isIn(OAS.portState),
+    body("ports.*.errorCount").optional().isInt(OAS.portErrorCount),
     body("ports.*.connectsTo").optional().isObject(),
     oneOf(
       [
@@ -18062,6 +18511,7 @@ var run = async () => {
       }
     ),
     body("ports.*.state").isIn(OAS.portState),
+    body("ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
     body("ports.*.connectsTo").optional().isObject(),
     oneOf(
       [
@@ -18210,6 +18660,7 @@ var run = async () => {
       }
     ),
     body("*.ports.*.state").isIn(OAS.portState),
+    body("*.ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
     body("*.ports.*.connectsTo").optional().isObject(),
     oneOf(
       [
@@ -18289,6 +18740,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.height").default(20).isFloat(OAS.height),
     body("construction.classifier")
@@ -18442,6 +18894,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").optional().isIn(OAS.polePurpose),
+    body("reference").optional().isString().trim(),
     body("construction").optional().isObject(),
     body("construction.height").optional().isFloat(OAS.height),
     body("construction.classifier").optional().isIn(OAS.heightClassifier),
@@ -18511,6 +18964,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("reference").isString().trim(),
     body("construction").optional().isObject(),
     body("construction.height").optional().default(20).isFloat(OAS.height),
     body("construction.classifier")
@@ -18621,6 +19075,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.poleId").isUUID(4),
     body("*.purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("*.reference").isString().trim(),
     body("*.construction").isObject(),
     body("*.construction.height").default(0).isFloat(OAS.height),
     body("*.construction.classifier")
@@ -19593,6 +20048,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").isIn(OAS.trenchPurpose),
+    body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.depth")
       .default(914.4)
@@ -19806,6 +20262,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").optional().isIn(OAS.trenchPurpose),
+    body("reference").optional().isString().trim(),
     body("construction").optional().isObject(),
     body("construction.depth")
       .optional()
@@ -19878,6 +20335,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").isIn(OAS.trenchPurpose),
+    body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.depth")
       .default(914.4)
@@ -19986,6 +20444,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.trenchId").isUUID(4),
     body("*.purpose").isIn(OAS.trenchPurpose),
+    body("*.reference").isString().trim(),
     body("*.construction").isObject(),
     body("*.construction.depth")
       .default(914.4)
@@ -20069,6 +20528,97 @@ var run = async () => {
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleTrench
+  );
+
+  /*
+       Tag:           Costs - Trench
+       operationId:   getAllTrenchCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/trench",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllTrenchCosts
+  );
+
+  /*
+       Tag:           Costs - Trench
+       operationId:   addTrenchCost
+       exposed Route: /mni/v1/cost/trench
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/trench",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.trenchPurpose),
+    body("type").optional().isIn(OAS.constructionType),
+    body("unit").isIn(OAS.sizeUnit),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addTrenchCost
+  );
+
+  /*
+       Tag:           Costs - Trench
+       operationId:   replaceTrenchCost
+       exposed Route: /mni/v1/cost/trench
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/trench",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.trenchPurpose),
+    body("type").optional().isIn(OAS.constructionType),
+    body("unit").isIn(OAS.sizeUnit),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceTrenchCost
+  );
+
+  /*
+       Tag:           Costs - Trench
+       operationId:   deleteTrenchCost
+       exposed Route: /mni/v1/cost/trench
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/trench",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.trenchPurpose),
+    body("type").optional().isIn(OAS.constructionType),
+    deleteTrenchCost
+  );
+
+  /*
+       Tag:           Q2C
+       operationId:   q2cTrenchDistanceEstimate
+       exposed Route: /mni/v1/q2c/trench
+       HTTP method:   POST
+       OpenID Scope:  read:mni_q2c
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/q2c/trenchDistance",
+    // security("read:mni_trench"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").default("service/drop").isIn(OAS.trenchPurpose),
+    body("type").optional().isIn(OAS.constructionType),
+    body("trenchId").optional().isUUID(4),
+    body("isoCode").optional().default("EUR").isIn(OAS.currencyIsoCode),
+    body("coordinates").isArray({ min: 2 }),
+    body("coordinates.*.x").isFloat(OAS.coordinate_x),
+    body("coordinates.*.y").isFloat(OAS.coordinate_y),
+    body("coordinates.*.z").optional().default(0).isFloat(OAS.coordinate_z),
+    q2cTrenchDistanceEstimate
   );
 
   /*

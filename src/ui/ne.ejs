@@ -30,6 +30,7 @@
             font-family: 'Courier New', Courier, monospace;
             color: #ffffff;
             text-align: left;
+            font-size: 0.7em;
             margin-top: 20px;
             margin-left: 20px;
             display: inline-block;
@@ -81,7 +82,7 @@
             border: 1px solid white;
             background-color: green;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -91,7 +92,7 @@
             border: 1px solid white;
             background-color: black;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -101,7 +102,7 @@
             border: 1px solid white;
             background-color: #808080;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -111,7 +112,7 @@
             border: 1px solid white;
             background-color: red;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -124,7 +125,7 @@
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -134,7 +135,7 @@
             border: 1px solid #ffff00;
             background-color: green;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -144,7 +145,7 @@
             border: 1px solid #ffff00;
             background-color: black;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -154,7 +155,7 @@
             border: 1px solid #ffff00;
             background-color: #808080;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -164,7 +165,7 @@
             border: 1px solid #ffff00;
             background-color: red;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -177,7 +178,7 @@
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
             text-indent: 1em;
             color: white;
@@ -210,14 +211,16 @@
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');"
+            title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-        <a nohref onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+            title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
@@ -359,6 +362,7 @@
                         let portReserved = 0;
                         let portFaulty = 0;
                         let portPredicted = 0;
+                        let portErrorCount = 0;
                         let source = "historical";
                         if (data.source != null) {
                             source = data.source;
@@ -375,7 +379,8 @@
                         for (let j = 0; j < data.ports.length; j++) {
                             let cell = document.createElement("div");
                             cell.setAttribute("id", "port" + j);
-                            cell.setAttribute("title", data.ports[j].name + ": " + data.ports[j].state + " " + data.ports[j].configuration.rate + data.ports[j].configuration.unit);
+                            cell.setAttribute("title", data.ports[j].name + ": " + data.ports[j].state + " " + data.ports[j].configuration.rate + data.ports[j].configuration.unit+ ", errors: "+data.ports[j].errorCount);
+                            portErrorCount = portErrorCount + data.ports[j].errorCount;
                             switch (data.ports[j].state) {
                                 case "free":
                                     if (source == "predicted") {
@@ -420,7 +425,16 @@
                             }
                             cell.classList.add("cell");
                             grid.appendChild(cell);
-                            document.getElementById("port" + j).innerHTML = (j + 1); //data.ports[j].name;
+                            // <i class="fa fa-check"></i> or &#10003;
+                            // <i class="fa fa fa-exclamation"></i> or &#x26A0;
+                            // <i class="fa fa-times"></i> or &#10060;
+                            let errorIndicator = '<i class="fa fa-check"></i>';
+                            if (data.ports[j].errorCount > 0 && data.ports[j].errorCount < 100) {
+                                errorIndicator = '<i class="fa fa fa-exclamation"></i>';
+                            } else if (data.ports[j].errorCount >= 100 ) {
+                                errorIndicator = '<i class="fa fa-times"></i> ';
+                            }
+                            document.getElementById("port" + j).innerHTML = (j + 1)+"<br>"+errorIndicator; //data.ports[j].name;
                         }
                         if (data?.decommissioned == undefined) {
                             data.decommissioned = "";
@@ -446,6 +460,7 @@
                             'Reserved:&emsp;' + portReserved + '<br>' +
                             'Faulty:&emsp;&emsp;' + portFaulty + '<br>' +
                             'Predicted:&emsp;' + portPredicted + '<br>' +
+                            'Error Count:&emsp;' + portErrorCount + '<br>' +
                             '<br><b>Common vulnerabilities and Exposures (CVE):</b><br>' +
                             'Known:&emsp;&emsp;' + cveKnown + '<br>' +
                             'Impacting:&emsp;' + cveImpacting + '</small>';

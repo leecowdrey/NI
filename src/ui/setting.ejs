@@ -52,13 +52,14 @@
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Settings"><i class="fa fa-cog"></i></a>
-        <a nohref onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+            title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i

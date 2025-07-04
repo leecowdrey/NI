@@ -12,6 +12,7 @@
 export const currency_scale = 5;
 export const currency_precision = 5;
 export const currency_rate = { min: 0, max: 99999.99999 };
+export const costPerUnit = { min: 0, max: 999999.99 };
 export const X_scale = 3;
 export const Y_scale = 2;
 export const Z_scale = 8;
@@ -76,6 +77,16 @@ export const callback_maxLifeRetries = { min: 0, max: 255 };
 export const callback_retries = { min: 1, max: 8 };
 export const callback_retryDelay = { min: 0, max: 86400 };
 export const callbackAuthentication = ["none", "basic"];
+export const costType = [
+  "cable",
+  "duct",
+  "ne",
+  "pole",
+  "rack",
+  "service",
+  "site",
+  "trench",
+];
 export const coordinate_x = { min: -180, max: 180 };
 export const coordinate_y = { min: -90, max: 90 };
 export const coordinate_z = { min: Number.MIN_VALUE, max: Number.MAX_VALUE };
@@ -86,7 +97,6 @@ export const csv_uuids =
 export const constructionType = [
   "micro",
   "narrow",
-  "hang-dug",
   "backhoe",
   "inline",
   "portable",
@@ -702,6 +712,7 @@ export const portEthernetConfiguration = [
 export const portEthernetConfigurationRate = ["Mbps", "Gbps", "Tbps"];
 export const portFiberConfigurationMode = ["SMOF", "MMOF"];
 export const portFiberConfigurationRate = ["Gbps", "Tbps"];
+export const portErrorCount = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const portName = { min: 3, max: 64 };
 export const portState = ["free", "used", "reserved", "faulty"];
 export const portTechnology = [
@@ -727,6 +738,16 @@ export const rackSlotUsage = ["free", "used", "reserved", "faulty"];
 export const rackSlotPosition =
   "([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?";
 export const ribbons = { min: 1, max: 36 };
+export const serviceType = [
+  "broadband",
+  "circuit",
+  "ethernet",
+  "fttx",
+  "optical",
+  "sogea",
+  "unclassified",
+  "voice",
+];
 export const siteType = [
   "street",
   "exchange",
@@ -735,12 +756,14 @@ export const siteType = [
   "colo",
   "unclassified",
 ];
-export const sizeUnit = ["cm", "mm", "m", "inch", "feet"];
+export const sizeUnit = ["cm", "mm", "m", "km", "Mm", "inch", "feet"];
 export const source = ["historical", "predicted"];
 export const trenchPurpose = [
-  "service/drop",
-  "link",
   "backhaul",
+  "pole",
+  "ring",
+  "service/drop",
+  "tower",
   "unclassified",
 ];
 export const trenchState = ["free", "used", "reserved", "faulty"];

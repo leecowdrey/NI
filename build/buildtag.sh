@@ -165,19 +165,17 @@ which yq &>/dev/null || pip install yq &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
-doing "Checking for OpenAPI release version"
-MNI_VERSION=$(yq -r ".info.version" api/mni.yaml)
+doing "Checking for release version"
+MNI_VERSION=$(grep -E "^MNI_VERSION=.*" src/mni.ini|cut -d '=' -f2-|cut -d '"' -f2)
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating build tag"
-BUILD_IDENT=$(date +'%s')
+MNI_BUILD=$(date +'%s')
 if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
-  sed -i -e "s/MNI_VERSION=.*/MNI_VERSION=\"${MNI_VERSION}\"/" src/mni.ini && \
-  sed -i -e "s/MNI_BUILD=.*/MNI_BUILD=\"${BUILD_IDENT}\"/" src/mni.ini
+  sed -i -e "s/MNI_BUILD=.*/MNI_BUILD=\"${MNI_BUILD}\"/" src/mni.ini
 elif [[ "${OSTYPE}" == "darwin"* ]] ; then
-  sed -i '' "s/MNI_VERSION=.*/MNI_VERSION=\"${MNI_VERSION}\"/" src/mni.ini && \
-  sed -i '' "s/MNI_BUILD=.*/MNI_BUILD=\"${BUILD_IDENT}\"/" src/mni.ini
+  sed -i '' "s/MNI_BUILD=.*/MNI_BUILD=\"${MNI_BUILD}\"/" src/mni.ini
 fi
 git diff --quiet src/mni.ini &>/dev/null || git add -f src/mni.ini
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"

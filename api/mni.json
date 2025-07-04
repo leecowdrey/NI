@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0"
+    "version": "1.0.0.1751643060"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -1051,6 +1051,286 @@
         }
       }
     },
+    "/cost/trench": {
+      "get": {
+        "summary": "List known trench costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllTrenchCosts",
+        "tags": [
+          "Costs - Trench"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "purpose",
+                      "unit",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "purpose": {
+                        "$ref": "#/components/schemas/trenchPurpose"
+                      },
+                      "type": {
+                        "description": "is only included when purpose is `unclassified`",
+                        "$ref": "#/components/schemas/constructionType"
+                      },
+                      "unit": {
+                        "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "purpose": "service/drop",
+                        "unit": "m",
+                        "costPerUnit": 5
+                      },
+                      {
+                        "purpose": "pole",
+                        "unit": "m",
+                        "costPerUnit": 6.5
+                      },
+                      {
+                        "purpose": "unclassified",
+                        "type": "large",
+                        "unit": "m",
+                        "costPerUnit": 30
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single trench cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addTrenchCost",
+        "tags": [
+          "Costs - Trench"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "type": {
+                    "description": "only include when purpose is `unclassified`",
+                    "$ref": "#/components/schemas/constructionType"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "service/drop",
+                    "unit": "m",
+                    "costPerUnit": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing trench cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceTrenchCost",
+        "tags": [
+          "Costs - Trench"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "type": {
+                    "description": "only include when purpose is `unclassified`",
+                    "$ref": "#/components/schemas/constructionType"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "service/drop",
+                    "unit": "m",
+                    "costPerUnit": 5.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single trench cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteTrenchCost",
+        "tags": [
+          "Costs - Trench"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "type": {
+                    "description": "only include when purpose is `unclassified`",
+                    "$ref": "#/components/schemas/constructionType"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "service/drop"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/cve/ne/{neId}": {
       "get": {
         "summary": "List known and impacting CVEs for specified NE",
@@ -1415,9 +1695,9 @@
                     ],
                     "versions": [
                       {
-                        "lessThan": "1.0",
+                        "lessThan": 1.0,
                         "status": "affected",
-                        "version": "0",
+                        "version": 0,
                         "versionType": "semver"
                       }
                     ]
@@ -1457,6 +1737,9 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
           }
         }
       }
@@ -3774,7 +4057,7 @@
                         "$ref": "#/components/schemas/currencyIsoCode"
                       },
                       "rate": {
-                        "description": "foreign currency conversion rate from default currency to this currency",
+                        "description": "currency conversion rate from default currency to this currency",
                         "type": "number",
                         "format": "currency"
                       }
@@ -5522,6 +5805,7 @@
               "schema": {
                 "type": "object",
                 "required": [
+                  "reference",
                   "customer",
                   "commissioned",
                   "link"
@@ -10070,6 +10354,12 @@
                         },
                         "connectsTo": {
                           "$ref": "#/components/schemas/portConnection"
+                        },
+                        "errorCount": {
+                          "description": "number of errors reported on this port",
+                          "type": "integer",
+                          "default": 0,
+                          "minimum": 0
                         }
                       }
                     }
@@ -10107,7 +10397,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/1",
@@ -10117,7 +10408,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/2",
@@ -10127,7 +10419,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/3",
@@ -10137,7 +10430,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/4",
@@ -10147,7 +10441,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/5",
@@ -10167,7 +10462,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/7",
@@ -10177,7 +10473,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/0",
@@ -10187,7 +10484,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/1",
@@ -10197,7 +10495,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/2",
@@ -10207,7 +10506,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/3",
@@ -10217,7 +10517,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/0",
@@ -10227,7 +10528,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/1",
@@ -10237,7 +10539,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/2",
@@ -10247,7 +10550,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/3",
@@ -10257,7 +10561,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       }
                     ],
                     "source": "historical",
@@ -10428,7 +10733,8 @@
                           "name",
                           "technology",
                           "configuration",
-                          "state"
+                          "state",
+                          "errorCount"
                         ],
                         "properties": {
                           "name": {
@@ -10445,6 +10751,12 @@
                           },
                           "connectsTo": {
                             "$ref": "#/components/schemas/portConnection"
+                          },
+                          "errorCount": {
+                            "description": "number of errors reported on this port",
+                            "type": "integer",
+                            "default": 0,
+                            "minimum": 0
                           }
                         }
                       }
@@ -10483,7 +10795,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/1",
@@ -10493,7 +10806,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/2",
@@ -10503,7 +10817,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/3",
@@ -10513,7 +10828,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/4",
@@ -10523,7 +10839,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/5",
@@ -10533,7 +10850,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/6",
@@ -10543,7 +10861,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-0/0/7",
@@ -10553,7 +10872,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-1/1/0",
@@ -10563,7 +10883,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-1/1/1",
@@ -10573,7 +10894,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-1/1/2",
@@ -10583,7 +10905,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-1/1/3",
@@ -10593,7 +10916,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-2/1/0",
@@ -10603,7 +10927,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-2/1/1",
@@ -10613,7 +10938,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-2/1/2",
@@ -10623,7 +10949,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         },
                         {
                           "name": "ge-2/1/3",
@@ -10633,7 +10960,8 @@
                             "category": "Cat6A",
                             "rate": 10,
                             "unit": "Gbps"
-                          }
+                          },
+                          "errorCount": 0
                         }
                       ],
                       "source": "historical",
@@ -10741,12 +11069,6 @@
                     "minItems": 1,
                     "items": {
                       "type": "object",
-                      "required": [
-                        "name",
-                        "technology",
-                        "configuration",
-                        "state"
-                      ],
                       "properties": {
                         "name": {
                           "$ref": "#/components/schemas/portName"
@@ -10762,6 +11084,12 @@
                         },
                         "connectsTo": {
                           "$ref": "#/components/schemas/portConnection"
+                        },
+                        "errorCount": {
+                          "description": "number of errors reported on this port",
+                          "type": "integer",
+                          "default": 0,
+                          "minimum": 0
                         }
                       }
                     }
@@ -10799,7 +11127,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/1",
@@ -10809,7 +11138,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/2",
@@ -10819,7 +11149,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/3",
@@ -10829,7 +11160,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/4",
@@ -10839,7 +11171,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/5",
@@ -10849,7 +11182,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/6",
@@ -10859,7 +11193,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-0/0/7",
@@ -10869,7 +11204,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/0",
@@ -10879,7 +11215,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/1",
@@ -10889,7 +11226,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/2",
@@ -10899,7 +11237,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-1/1/3",
@@ -10909,7 +11248,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/0",
@@ -10919,7 +11259,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/1",
@@ -10929,7 +11270,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/2",
@@ -10939,7 +11281,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       },
                       {
                         "name": "ge-2/1/3",
@@ -10949,7 +11292,8 @@
                           "category": "Cat6A",
                           "rate": 10,
                           "unit": "Gbps"
-                        }
+                        },
+                        "errorCount": 0
                       }
                     ],
                     "source": "historical",
@@ -11064,17 +11408,23 @@
                         "connectsTo": {
                           "$ref": "#/components/schemas/portConnection"
                         },
-                        "point": {
-                          "$ref": "#/components/schemas/dateTime"
-                        },
-                        "source": {
-                          "$ref": "#/components/schemas/source"
-                        },
-                        "delete": {
-                          "$ref": "#/components/schemas/delete"
+                        "errorCount": {
+                          "description": "number of errors reported on this port",
+                          "type": "integer",
+                          "default": 0,
+                          "minimum": 0
                         }
                       }
                     }
+                  },
+                  "point": {
+                    "$ref": "#/components/schemas/dateTime"
+                  },
+                  "source": {
+                    "$ref": "#/components/schemas/source"
+                  },
+                  "delete": {
+                    "$ref": "#/components/schemas/delete"
                   }
                 }
               },
@@ -12860,6 +13210,9 @@
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
                       },
+                      "reference": {
+                        "type": "string"
+                      },
                       "purpose": {
                         "$ref": "#/components/schemas/trenchPurpose"
                       },
@@ -13022,6 +13375,7 @@
                   "type": "object",
                   "required": [
                     "point",
+                    "reference",
                     "purpose",
                     "construction",
                     "demographics",
@@ -13038,6 +13392,9 @@
                     },
                     "purpose": {
                       "$ref": "#/components/schemas/trenchPurpose"
+                    },
+                    "reference": {
+                      "type": "string"
                     },
                     "construction": {
                       "type": "object",
@@ -13310,6 +13667,7 @@
                 "type": "object",
                 "required": [
                   "purpose",
+                  "reference",
                   "construction",
                   "demographics",
                   "build",
@@ -13318,6 +13676,9 @@
                 "properties": {
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "reference": {
+                    "type": "string"
                   },
                   "construction": {
                     "type": "object",
@@ -13473,6 +13834,7 @@
                 "service/drop": {
                   "value": {
                     "purpose": "service/drop",
+                    "reference": "gbr-worc-cg-south",
                     "construction": {
                       "depth": 0.5,
                       "classifier": "low",
@@ -13700,6 +14062,7 @@
               "schema": {
                 "type": "object",
                 "required": [
+                  "reference",
                   "construction",
                   "demographics",
                   "build",
@@ -13708,6 +14071,9 @@
                 "properties": {
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "reference": {
+                    "type": "string"
                   },
                   "construction": {
                     "type": "object",
@@ -13863,6 +14229,7 @@
                 "service/drop": {
                   "value": {
                     "purpose": "service/drop",
+                    "reference": "gbr-worc-cg-south",
                     "construction": {
                       "depth": 0.5,
                       "classifier": "low",
@@ -13967,6 +14334,9 @@
                 "properties": {
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "reference": {
+                    "type": "string"
                   },
                   "construction": {
                     "type": "object",
@@ -14164,6 +14534,9 @@
                     "trenchId": {
                       "$ref": "#/components/schemas/trenchId"
                     },
+                    "reference": {
+                      "type": "string"
+                    },
                     "purpose": {
                       "$ref": "#/components/schemas/trenchPurpose"
                     },
@@ -14290,6 +14663,7 @@
                   "service/drop": {
                     "value": {
                       "trenchId": "5ef82c6f-b06b-4d93-a4c2-3b78b62dd7cf",
+                      "reference": "gbr-worc-cg-south",
                       "purpose": "service/drop",
                       "construction": {
                         "depth": 0.5,
@@ -14886,6 +15260,151 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/q2c/trenchDistance": {
+      "post": {
+        "summary": "simple trench distance estimate",
+        "security": [
+          {
+            "openId": [
+              "read:mni_q2c"
+            ]
+          }
+        ],
+        "operationId": "q2cTrenchDistanceEstimate",
+        "tags": [
+          "Q2C"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "coordinates"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/trenchPurpose"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/constructionType"
+                  },
+                  "trenchId": {
+                    "$ref": "#/components/schemas/trenchId"
+                  },
+                  "isoCode": {
+                    "$ref": "#/components/schemas/currencyIsoCode",
+                    "default": "EUR"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": {
+                      "$ref": "#/components/schemas/coordinate"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "service/drop": {
+                  "value": {
+                    "purpose": "service/drop",
+                    "trenchId": "b55fcbef-6d4f-4803-8755-0d920835de85",
+                    "isoCode": "EUR",
+                    "coordinates": [
+                      {
+                        "x": 52.314930723981576,
+                        "y": -2.1765905793762297
+                      },
+                      {
+                        "x": 52.31530785113297,
+                        "y": -2.175979035720834
+                      },
+                      {
+                        "x": 52.315461980435,
+                        "y": -2.175683992729196
+                      },
+                      {
+                        "x": 52.31558987455477,
+                        "y": -2.1755713399505705
+                      },
+                      {
+                        "x": 52.3157144889826,
+                        "y": -2.1754694160080046
+                      },
+                      {
+                        "x": 52.315793192650986,
+                        "y": -2.1754533227539152
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "distance": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "unit": {
+                      "$ref": "#/components/schemas/sizeUnit",
+                      "default": "m"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
+                    },
+                    "symbol": {
+                      "$ref": "#/components/schemas/currencySymbol"
+                    },
+                    "isoCode": {
+                      "$ref": "#/components/schemas/currencyIsoCode"
+                    },
+                    "rate": {
+                      "description": "currency conversion rate from default currency to this currency (if applicable)",
+                      "type": "number",
+                      "format": "currency"
+                    }
+                  }
+                },
+                "examples": {
+                  "service/drop": {
+                    "value": {
+                      "cost": 3.75,
+                      "distance": 3.75,
+                      "unit": "m",
+                      "symbol": "€",
+                      "isoCode": "EUR",
+                      "rate": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
@@ -18858,8 +19377,7 @@
         "type": "object",
         "required": [
           "x",
-          "y",
-          "z"
+          "y"
         ],
         "properties": {
           "x": {
@@ -18902,7 +19420,6 @@
         "enum": [
           "micro",
           "narrow",
-          "hand-dug",
           "backhoe",
           "inline",
           "portable",
@@ -20336,13 +20853,29 @@
           "unclassified"
         ]
       },
+      "serviceType": {
+        "description": "intended offering of the suppplied service, *note*: \n  - `broadband` includes residential offerings such as xDSL and DOCSIS\n  - `sogea` is Single Order Generic Ethernet Access which is replacing traditional broadband offerings\n  - `fttx` includes FTTC, FTTH, FTTP andd other variants\n  - `ethernet` is wholesale or enterprise point-to-point ethernet connectivity\n  - `optical` is layer 1 connectivity\n  - `voice` is the traditional required extra voice telephony service offered with `broadband`\n",
+        "type": "string",
+        "enum": [
+          "broadband",
+          "circuit",
+          "ethernet",
+          "fttx",
+          "optical",
+          "sogea",
+          "unclassified",
+          "voice"
+        ]
+      },
       "trenchPurpose": {
         "description": "intended purpose of the contents of the trench\n",
         "type": "string",
         "enum": [
-          "service/drop",
-          "ring",
           "backhaul",
+          "pole",
+          "ring",
+          "service/drop",
+          "tower",
           "unclassified"
         ]
       },
@@ -20584,12 +21117,14 @@
         "format": "uuid"
       },
       "sizeUnit": {
-        "description": "unit of measure of the dimension - `cm` - metric centimetres - `mm` - metric millimetres - `m` - metric metres - `inch` - imperial inches - `feet` - imperial feet",
+        "description": "unit of measure of the dimension:\n- `cm` metric centimetres\n- `mm` metric millimetres\n- `m` metric metres\n- `km` meric kilometres\n- `Mm` metric megametres\n- `inch` imperial inches\n- `feet` imperial feet\n",
         "type": "string",
         "enum": [
           "cm",
           "mm",
           "m",
+          "km",
+          "Mm",
           "inch",
           "feet"
         ]
@@ -20959,8 +21494,9 @@
       },
       "currencyId": {
         "name": "currencyId",
-        "in": "path",
         "description": "internal currency identifier",
+        "in": "path",
+        "required": true,
         "schema": {
           "type": "string",
           "format": "uuid"
@@ -21289,6 +21825,17 @@
           }
         }
       },
+      "Conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "could not be processed because of conflict in the current state of the resource",
+              "type": "object"
+            }
+          }
+        }
+      },
       "UnsupportedMediaType": {
         "description": "Unsupported Media Type",
         "content": {
@@ -21313,6 +21860,8 @@
         "write:mni_api",
         "read:mni_cable",
         "write:mni_cable",
+        "read:mni_cost",
+        "write:mni_cost",
         "read:mni_duct",
         "write:mni_duct",
         "read:mni_ne",
@@ -21321,6 +21870,8 @@
         "write:mni_pole",
         "read:mni_predict",
         "write:mni_predict",
+        "read:mni_q2c",
+        "write:mni_q2c",
         "read:mni_rack",
         "write:mni_rack",
         "read:mni_service",

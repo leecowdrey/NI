@@ -158,11 +158,11 @@ set +x
 
 BUILD_NUMBER=$(date +'%s')
 doing "Pipeline build ${BUILD_NUMBER}"
+build/buildtag.sh && \
 build/cvescan.sh && \
 build/openapi.sh && \
 build/erd2svg.sh && \
-build/buildui.sh && \
-build/buildtag.sh
+build/buildui.sh
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

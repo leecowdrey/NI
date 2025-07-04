@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="img/icon.png">
     <style>
         .panel {
-            width: 40%;
+            width: 50%;
             height: 40%;
             border-radius: 10px;
             background-color: #b3b3b3;
@@ -23,6 +23,20 @@
             margin-top: 10px;
             margin-left: 10px;
             display: inline-block;
+            font-size: 1em;
+        }
+
+        .metrics-panel {
+            width: 95%;
+            height: 30%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 10px;
+            margin-left: 10px;
+            display: inline-block;
+            font-size: 0.7em;
         }
 
         .graph_container {
@@ -60,14 +74,16 @@
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');"
+            title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-        <a nohref onclick="window.alert('<%=payload.appName%> v<%=payload.appVersion%>.<%=payload.appBuild%>');
-            return false;" title="About"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+            title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
@@ -84,7 +100,7 @@
         </div>
     </div>
     <hr />
-    <div class="panel" id="businessMetricsPanel">
+    <div class="metrics-panel" id="businessMetricsPanel">
         ...
     </div>
     <div class="footer">

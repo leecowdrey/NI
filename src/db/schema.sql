@@ -12,11 +12,8 @@
 --- optional/custom extensions that are required
 ---
 -- see https://duckdb.org/docs/extensions/inet
---INSTALL inet;
---LOAD inet;
--- see https://duckdb.org/docs/extensions/icu
---INSTALL icu;
---LOAD icu;
+INSTALL inet;
+LOAD inet;
 
 -- see https://github.com/duckdb/duckdb-spatial/blob/main/docs/example.md
 INSTALL spatial;
@@ -52,7 +49,7 @@ CREATE TYPE cableFiberConfigurationMode AS ENUM ('SMOF','MMOF');
 CREATE TYPE cableFiberConfigurationRate AS ENUM ('Gbps','Tbps');
 CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','fiber');
-CREATE TYPE constructionType AS ENUM ('micro','narrow','hang-dug','backhoe','inline','portable','large');
+CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large');
 CREATE TYPE countryCode AS ENUM ( 'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATA', 'ATF', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY', 'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF', 'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC', 'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB', 'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'YEM', 'ZAF', 'ZMB', 'ZWE' );
 CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
 CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','HKD','IDR','ILS','INR','ISK','JOD','JPY','MAD','MXN','MYR','NGN','NOK','NZD','PLN','QAR','RUB','SEK','SGD','SHP','THB','TRY','UAH','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
@@ -85,11 +82,12 @@ CREATE TYPE portXdslConfiguration AS ENUM ('ADSL','ADSL2','ADSL2+','VDSL','VDSL2
 CREATE TYPE portXdslConfigurationRate AS ENUM ('Mbps','Gbps');
 CREATE TYPE predictResourceType AS ENUM ('cable','duct','ne','pole','rack','service','site','trench');
 CREATE TYPE predictResourceStateType AS ENUM ('create','delete','update','undelete','read');
+CREATE TYPE serviceType AS ENUM ('broadband','circuit','ethernet','sogea','fttx','optical','unclassified','voice');
 CREATE TYPE siteType AS ENUM ('street','exchange','pop','dc','colo','unclassified');
-CREATE TYPE sizeUnit AS ENUM ('cm','mm','m','inch','feet');
+CREATE TYPE sizeUnit AS ENUM ('cm','mm','m','km','Mm','inch','feet');
 CREATE TYPE slotState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE source AS ENUM ('historical','predicted');
-CREATE TYPE trenchPurpose AS ENUM ('service/drop','link','backhaul','unclassified');
+CREATE TYPE trenchPurpose AS ENUM ('service/drop','ring','backhaul','pole','tower','unclassified');
 CREATE TYPE trenchState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE workflowEngineType AS ENUM ('bpmn','elsa');
 
@@ -130,6 +128,72 @@ CREATE SEQUENCE IF NOT EXISTS seq_trenchCoordinate;
 --- parent referential tables
 ---
 
+CREATE TABLE IF NOT EXISTS currency (
+    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    symbol currencySymbol NOT NULL,
+    isoCode currencyIsoCode NOT NULL,
+    systemDefault BOOLEAN NOT NULL DEFAULT false,
+    rateFromDefault DECIMAL(18,6) NOT NULL DEFAULT 0 CHECK (rateFromDefault >= 0 AND rateFromDefault <= 99999.99999)
+);
+
+CREATE TABLE IF NOT EXISTS costCable (
+    technology cableTechnology NOT NULL PRIMARY KEY,
+    unit sizeUnit NOT NULL DEFAULT 'm',
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99)
+);
+
+CREATE TABLE IF NOT EXISTS costDuct (
+    category ductSizeCategory NOT NULL,
+    configuration INTEGER NOT NULL DEFAULT 1 CHECK (configuration >= 1 AND configuration <= 48),
+    unit sizeUnit NOT NULL DEFAULT 'm',
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (category,configuration)
+);
+
+CREATE TABLE IF NOT EXISTS costNe (
+    vendor VARCHAR NOT NULL, 
+    model VARCHAR NOT NULL,
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (vendor,model)
+);
+
+CREATE TABLE IF NOT EXISTS costPole (
+    purpose polePurpose NOT NULL,
+    classifier heightClassifier NOT NULL,
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (purpose,classifier)
+);
+
+CREATE TABLE IF NOT EXISTS costRack (
+    slots INTEGER NOT NULL DEFAULT 42 CHECK (slots >= 1 AND slots <= 59),
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99)
+);
+
+CREATE TABLE IF NOT EXISTS costService (
+    type serviceType NOT NULL,
+    rate INTEGER NOT NULL CHECK (rate >= 0 AND rate <= 200),
+    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
+    lagMembers INTEGER DEFAULT 0 CHECK (lagMembers >= 0 AND lagMembers <= 256),
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (type,rate,unit,lagMembers)
+);
+
+CREATE TABLE IF NOT EXISTS costSite (
+    area areaType NOT NULL,
+    type siteType NOT NULL,
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (area,type)
+);
+
+CREATE TABLE IF NOT EXISTS costTrench (
+    purpose trenchPurpose NOT NULL,
+    type constructionType NULL,
+    unit sizeUnit NOT NULL DEFAULT 'm',
+    costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
+    PRIMARY KEY (purpose,type)
+);
+
 CREATE TABLE IF NOT EXISTS cve (
     id VARCHAR NOT NULL PRIMARY KEY,
     published TIMESTAMP NOT NULL DEFAULT now()::timestamp,
@@ -162,15 +226,6 @@ CREATE TABLE IF NOT EXISTS predictQueue (
     resource predictResourceType NOT NULL,
     id VARCHAR NOT NULL,
     state predictResourceStateType NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS adminCurrency (
-    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
-    name VARCHAR NOT NULL,
-    symbol currencySymbol NOT NULL,
-    isoCode currencyIsoCode NOT NULL,
-    systemDefault BOOLEAN NOT NULL DEFAULT false,
-    rateFromDefault DECIMAL(18,6) NOT NULL DEFAULT 0 CHECK (rateFromDefault >= 0 AND rateFromDefault <= 99999.99999)
 );
 
 CREATE TABLE IF NOT EXISTS adminData (
@@ -406,6 +461,7 @@ CREATE TABLE IF NOT EXISTS _trench (
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     trenchId VARCHAR NOT NULL,
     source source NOT NULL DEFAULT 'historical',
+    reference VARCHAR NOT NULL,
     purpose trenchPurpose NOT NULL,
     depth DECIMAL(6,2) NOT NULL DEFAULT 914.4 CHECK (depth >= 0),
     classifier depthClassifier NOT NULL DEFAULT 'low',
@@ -509,6 +565,7 @@ CREATE TABLE IF NOT EXISTS _pole (
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     poleId VARCHAR NOT NULL,
     source source NOT NULL DEFAULT 'historical',
+    reference VARCHAR NOT NULL,
     purpose polePurpose NOT NULL,
     height DECIMAL(6,2) NOT NULL DEFAULT 20 CHECK (height >= 0),
     classifier heightClassifier NOT NULL,
@@ -544,6 +601,7 @@ CREATE TABLE IF NOT EXISTS _cable (
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     source source NOT NULL DEFAULT 'historical',
     cableId VARCHAR NOT NULL,
+    reference VARCHAR NOT NULL,
     ductId VARCHAR,
     poleId VARCHAR,
     technology cableTechnology NOT NULL,
@@ -681,6 +739,8 @@ CREATE TABLE IF NOT EXISTS _ne (
     source source NOT NULL DEFAULT 'historical',
     host VARCHAR NOT NULL CHECK (regexp_full_match(host,'(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])')), 
     mgmtIP VARCHAR NOT NULL CHECK (regexp_full_match(mgmtIP,'((?:(?:\d{1,3}\.){3}(?:\d{1,3}))|(?:(?:::)?(?:[\dA-Fa-f]{1,4}:{1,2}){1,7}(?:[\d\%A-Fa-z\.]+)?(?:::)?)|(?:::[\dA-Fa-f\.]{1,15})|(?:::))')),
+    inetHost INET,
+    inetMgmtIP INET,
     vendor VARCHAR NOT NULL, 
     model VARCHAR NOT NULL,
     image VARCHAR NOT NULL,
@@ -706,6 +766,7 @@ CREATE TABLE IF NOT EXISTS _nePort (
     name VARCHAR NOT NULL,
     technology portTechnology NOT NULL,
     state portState NOT NULL DEFAULT 'free',
+    errorCount INTEGER NOT NULL DEFAULT 0 CHECK (errorCount >= 0),
     FOREIGN KEY (neId) REFERENCES ne (id),
     FOREIGN KEY (neTsId) REFERENCES _ne (tsId)
 );
@@ -785,11 +846,12 @@ CREATE TABLE IF NOT EXISTS _service (
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     serviceId VARCHAR NOT NULL,
     source source NOT NULL DEFAULT 'historical',
-    reference VARCHAR,
+    reference VARCHAR NOT NULL,
     customerName VARCHAR,
     customerReference VARCHAR,
     commissioned TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     decommissioned TIMESTAMP,
+    type serviceType NOT NULL DEFAULT 'unclassified',
     rate INTEGER NOT NULL DEFAULT 0 CHECK (rate >= 0 AND rate <= 200),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     lagGroup VARCHAR,
@@ -886,43 +948,216 @@ INSERT INTO alert (id,description,function) VALUES ('126a7d5a-77af-4e99-9b6e-31b
 INSERT INTO alert (id,description,function) VALUES ('c54f88d9-d355-46e0-8fb2-9fa6ccdc4083','Data Quality - site','jobAlertDqSite();');
 INSERT INTO alert (id,description,function) VALUES ('b034d9e8-da77-4b8c-8f44-d6eb6b6076a5','Data Quality - offNet Postal Addresses','jobAlertDqOffNetPAF();');
 
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1bcfd0c7-a082-479e-b815-c9d16f3cba1b','Australian dollar','$','AUD',false, 1.7927);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c34355dd-7a42-4dd2-bb40-14b2b88fc20b','Brunei dollar','B$','BND',false, 1.49);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1c18fbcc-d9ed-40f7-bbbb-e99201f381fe','Caribbean guilder','Cg','XCG',false, 2.11);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c46d4309-d1e3-461a-99df-60d95aa4db4d','Central African CFA franc','F.CFA','XAF',false, 655.96);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2dd7be90-22ae-43e3-a34f-1cd7b6e8c9f8','CFP franc','₣','XPF',false,119.26);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('5ed96e80-9829-4c80-ad2b-1bdcea793b66','Chilean peso','$','CLP',false,1104.88);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e22fb15d-2d00-49ea-98cc-d20a77061c5c','Danish krone','kr','DKK',false,7.46);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('7e01ca3f-8320-4e50-aaf3-d2cc24ec8e78','Eastern Caribbean dollar','EC$','XCD',false, 3.17);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5','Euro','€','EUR',true,1);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('217b383a-7b9b-40e1-b059-f12651e4e072','Falkland Islands pound','£','FKP',false,0.84);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('bd703d99-ba3f-43ea-984a-f3bad74e380c','Indian rupee','₹','INR',false,100.18);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9fe00db6-2105-45a0-a95e-ffbf842eb411','New Zealand dollar','$','NZD',false,1.93);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2a402fcc-ea52-452d-83ea-a3c8fa15f470','Norwegian krone','kr','NOK',false,11.79);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a70ab726-2d5d-4ad5-8233-a0556b39ac39','Russian ruble','₽','RUB',false,92.20);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cc46dc8-56bf-4a96-b072-d08de73e476c','Saint Helena pound','£','SHP',false,0.85);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1eafc200-d5f7-460b-8012-fbb2dd00fc76','Singapore dollar','S$','SGD',false,1.49);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2428a44a-0eaf-404a-ad42-1e64c588cade','South African rand','R','ZAR',false,20.97);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('007fa4b5-9776-4e99-a116-095398b5d47a','Sterling','£','GBP',false,0.85);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9b9e9266-5439-4d55-97e6-af01a023d4ee','Swiss franc','Fr','CHF',false,0.94);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('18b4e171-c453-422f-8b5d-f7e824d59d0b','Turkish lira','₺','TRY',false,46.77);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('300e2d59-e873-4ecc-a3ad-58e44e3f3c03','United States dollar','$','USD',false,1.17);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c738c6cd-2614-42a2-965b-25fa7a3a8050','West African CFA franc','F.CFA','XOF',false,655.96);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c5f1a531-d219-4e24-94ed-f19deb1e4be1','Malaysian ringgit','RM','MYR',false,4.96);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('aa170720-91eb-49a0-9739-9667b67feb20','Mexican peso','$','MXN',false,22.13);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('3d9a53ce-3243-45e0-b948-fbb48ec03956','Moroccan dirham','DH','MAD',false,10.60);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d21b542f-9e27-4b2f-a2b4-0071b74a5dc8','Indonesian rupiah','Rp','IDR',false,19006.00);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e2a23cba-dcf2-4479-aaed-82259f6fcaef','Israeli new shekel','₪','ILS',false,3.97);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cb591c6-abe3-44ff-8058-c261a7730672','Japanese yen','¥','JPY',false,169.33);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('752c827d-16e0-40db-88fa-16f7d9eecf8f','Jordanian dinar','JD','JOD',false,0.83);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('23471b7e-da3b-4b71-b31b-33a139dada9f','Nigerian naira','₦','NGN',false,1811.20);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('873681db-6e23-4c63-baff-70cae4652e73','Qatari riyal','QR','QAR',false,4.28);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a491e7a4-3b5a-44e9-abb2-7d3cb5810b8e','Swedish krona','kr','SEK',false,11.10);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('be8c6d3f-b44b-44c2-b2b7-9a368efcaa2c','Thai baht','฿','THB',false,38.22);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d19d6d08-14e7-4bfc-92c9-cf0cd69ea4d8','Ukrainian hryvnia','₴','UAH',false,48.73);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('91e7d26b-4f51-4be5-9063-add3eb996922','Icelandic króna','kr','ISK',false,142.40);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('0cf0e7db-0561-446b-8950-0676153cb2ad','Hong Kong dollar','$','HKD',false,9.20);
-INSERT INTO adminCurrency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('135bf965-b0cc-40b9-9681-a4eb825aabc5','Polish złoty','zł','PLN',false,4.24);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1bcfd0c7-a082-479e-b815-c9d16f3cba1b','Australian dollar','$','AUD',false, 1.7927);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c34355dd-7a42-4dd2-bb40-14b2b88fc20b','Brunei dollar','B$','BND',false, 1.49);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1c18fbcc-d9ed-40f7-bbbb-e99201f381fe','Caribbean guilder','Cg','XCG',false, 2.11);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c46d4309-d1e3-461a-99df-60d95aa4db4d','Central African CFA franc','F.CFA','XAF',false, 655.96);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2dd7be90-22ae-43e3-a34f-1cd7b6e8c9f8','CFP franc','₣','XPF',false,119.26);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('5ed96e80-9829-4c80-ad2b-1bdcea793b66','Chilean peso','$','CLP',false,1104.88);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e22fb15d-2d00-49ea-98cc-d20a77061c5c','Danish krone','kr','DKK',false,7.46);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('7e01ca3f-8320-4e50-aaf3-d2cc24ec8e78','Eastern Caribbean dollar','EC$','XCD',false, 3.17);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('578a82ad-a7ce-4f9c-ba5f-fbe27c1886f5','Euro','€','EUR',true,1);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('217b383a-7b9b-40e1-b059-f12651e4e072','Falkland Islands pound','£','FKP',false,0.84);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('bd703d99-ba3f-43ea-984a-f3bad74e380c','Indian rupee','₹','INR',false,100.18);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9fe00db6-2105-45a0-a95e-ffbf842eb411','New Zealand dollar','$','NZD',false,1.93);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2a402fcc-ea52-452d-83ea-a3c8fa15f470','Norwegian krone','kr','NOK',false,11.79);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a70ab726-2d5d-4ad5-8233-a0556b39ac39','Russian ruble','₽','RUB',false,92.20);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cc46dc8-56bf-4a96-b072-d08de73e476c','Saint Helena pound','£','SHP',false,0.85);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1eafc200-d5f7-460b-8012-fbb2dd00fc76','Singapore dollar','S$','SGD',false,1.49);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('2428a44a-0eaf-404a-ad42-1e64c588cade','South African rand','R','ZAR',false,20.97);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('007fa4b5-9776-4e99-a116-095398b5d47a','Sterling','£','GBP',false,0.85);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9b9e9266-5439-4d55-97e6-af01a023d4ee','Swiss franc','Fr','CHF',false,0.94);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('18b4e171-c453-422f-8b5d-f7e824d59d0b','Turkish lira','₺','TRY',false,46.77);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('300e2d59-e873-4ecc-a3ad-58e44e3f3c03','United States dollar','$','USD',false,1.17);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c738c6cd-2614-42a2-965b-25fa7a3a8050','West African CFA franc','F.CFA','XOF',false,655.96);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c5f1a531-d219-4e24-94ed-f19deb1e4be1','Malaysian ringgit','RM','MYR',false,4.96);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('aa170720-91eb-49a0-9739-9667b67feb20','Mexican peso','$','MXN',false,22.13);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('3d9a53ce-3243-45e0-b948-fbb48ec03956','Moroccan dirham','DH','MAD',false,10.60);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d21b542f-9e27-4b2f-a2b4-0071b74a5dc8','Indonesian rupiah','Rp','IDR',false,19006.00);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e2a23cba-dcf2-4479-aaed-82259f6fcaef','Israeli new shekel','₪','ILS',false,3.97);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cb591c6-abe3-44ff-8058-c261a7730672','Japanese yen','¥','JPY',false,169.33);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('752c827d-16e0-40db-88fa-16f7d9eecf8f','Jordanian dinar','JD','JOD',false,0.83);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('23471b7e-da3b-4b71-b31b-33a139dada9f','Nigerian naira','₦','NGN',false,1811.20);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('873681db-6e23-4c63-baff-70cae4652e73','Qatari riyal','QR','QAR',false,4.28);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a491e7a4-3b5a-44e9-abb2-7d3cb5810b8e','Swedish krona','kr','SEK',false,11.10);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('be8c6d3f-b44b-44c2-b2b7-9a368efcaa2c','Thai baht','฿','THB',false,38.22);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d19d6d08-14e7-4bfc-92c9-cf0cd69ea4d8','Ukrainian hryvnia','₴','UAH',false,48.73);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('91e7d26b-4f51-4be5-9063-add3eb996922','Icelandic króna','kr','ISK',false,142.40);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('0cf0e7db-0561-446b-8950-0676153cb2ad','Hong Kong dollar','$','HKD',false,9.20);
+INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('135bf965-b0cc-40b9-9681-a4eb825aabc5','Polish złoty','zł','PLN',false,4.24);
+
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('coax','m',1);
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('copper','m',1);
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('ethernet','m',1);
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('fiber','m',1);
+
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',1,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',10,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',12,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',14,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',19,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',2,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',24,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',3,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',48,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',5,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',6,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',7,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',8,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',1,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',10,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',12,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',14,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',19,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',2,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',24,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',3,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',5,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',6,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',7,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('microduct',8,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',1,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',10,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',12,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',14,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',19,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',2,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',24,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',3,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',48,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',5,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',6,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',7,'m',1);
+INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('subduct',8,'m',1);
+
+INSERT INTO costNe (vendor,model,costPerUnit) VALUES ('Cisco Systems, Inc.','C8300-1N1S-4T2X',7199.61);
+INSERT INTO costNe (vendor,model,costPerUnit) VALUES ('Juniper Networks','MX240',27250.00);
+
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('backhaul','commercial',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('backhaul','highways',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('backhaul','rural',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('backhaul','unclassified',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('backhaul','urban',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('link','commercial',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('link','highways',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('link','rural',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('link','unclassified',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('link','urban',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','commercial',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','highways',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','residential',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','rural',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','unclassified',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('service/drop','urban',1);
+INSERT INTO costPole (purpose, classifier, costPerUnit) VALUES ('unclassified','unclassified',1);
+
+INSERT INTO costRack (slots,costPerUnit) VALUES (1,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (2,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (3,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (4,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (5,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (6,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (7,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (8,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (9,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (10,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (11,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (12,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (13,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (14,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (15,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (16,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (17,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (18,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (19,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (20,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (21,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (22,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (23,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (24,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (25,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (26,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (27,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (28,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (29,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (30,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (31,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (32,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (33,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (34,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (35,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (36,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (37,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (38,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (39,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (40,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (41,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (42,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (43,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (44,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (45,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (46,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (47,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (48,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (49,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (50,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (51,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (52,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (53,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (54,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (55,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (56,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (57,1);
+INSERT INTO costRack (slots,costPerUnit) VALUES (58,1);
+
+INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ('broadband',67,'Mbps',0,31.23);
+INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ('optical',1,'Gbps',0,256.78);
+INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ('optical',1,'Gbps',2,512.34);
+INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ('sogea',1,'Gbps',0,62.46);
+INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ('unclassified',0,'Gbps',0,100.00);
+
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','colo',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','dc',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','exchange',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','pop',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','street',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('industrial','unclassified',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','colo',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','dc',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','exchange',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','pop',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','street',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('mixed','unclassified',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('psz','colo',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('psz','exchange',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('psz','pop',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('psz','street',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('psz','unclassified',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('residential','street',2);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('residential','unclassified',4);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('rural','colo',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('rural','exchange',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('rural','pop',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('rural','street',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('rural','unclassified',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('unclassified','unclassified',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('urban','colo',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('urban','exchange',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('urban','pop',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('urban','street',1);
+INSERT INTO costSite (area,type,costPerUnit) VALUES ('urban','unclassified',1);
+
+INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ('backhaul','m',10.00);
+INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ('pole','m',6.50);
+INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ('ring','m',8.50);
+INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ('service/drop','m',5.00);
+INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ('tower','m',7.50);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','backhoe','m',15.00);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','inline','m',20.00);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','large','m',30.00);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','micro','m',5.00);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','narrow','m',10.00);
+INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','portable','m',25.00);
 
 --
 -- EOF

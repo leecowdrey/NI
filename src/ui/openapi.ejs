@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="img/icon.png">
+    <script src="https://unpkg.com/swagger-ui-dist@5.7.2/swagger-ui-bundle.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.7.2/swagger-ui.css" />
     <style>
         .panel {
             width: 30%;
@@ -24,6 +26,12 @@
             margin-left: 20px;
             display: inline-block;
         }
+
+        .swaggerPanel {
+            font-family: "Lato";
+            src: url("/mni/fonts/Lato-Regular.ttf") format("truetype");
+            background-color: #ffffff;
+        }
     </style>
     <script async src="/mni/js/mni.js"></script>
 </head>
@@ -34,7 +42,8 @@
                 width="25%" height="25%"></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
             title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Cables"><i class="fa fa-plug"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+            title="Cables"><i class="fa fa-plug"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
             title="Ducts"><i class="fa fa-superpowers"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
@@ -59,8 +68,8 @@
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
-            title="OpenAPI"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" class="active" nohref title="OpenAPI"><i
+                class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
@@ -68,8 +77,24 @@
         <a nohref onmouseover="" style="cursor: pointer;" accesskey="h" onclick="toggleDiv('icon-bar');return false;"
             title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a>
     </div>
-    <div class="panel" id="resourcePanel">
-    </div>
+    <div id="swagger-ui" class="swaggerPanel"></div>
+    <script>
+        window.onload = function () {
+            const ui = SwaggerUIBundle({
+                url: "<%=payload.gatewayUrl%>/api",
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIBundle.SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+            })
+            window.ui = ui
+        }
+    </script>
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>

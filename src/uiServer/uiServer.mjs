@@ -822,6 +822,19 @@ var run = async () => {
     res.render("trenchLifetime", { payload: payload });
   });
 
+  app.get(serveUrlPrefix + "/q2c", function (req, res, next) {
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+    };
+    res.render("q2c", { payload: payload });
+  });
+
   app.get(serveUrlPrefix + "/email", function (req, res, next) {
     let payload = {
       appName: appName,
@@ -976,6 +989,19 @@ var run = async () => {
       gatewayUrlDns: apiGatewayDns,
     };
     res.render("setting", { payload: payload });
+  });
+
+  app.get(serveUrlPrefix + "/openapi", function (req, res, next) {
+    let payload = {
+      appName: appName,
+      appVersion: appVersion,
+      appBuild: appBuild,
+      rootUrl: serveUrlPrefix,
+      gatewayUrl: apiGatewayDns,
+      gatewayUrlIp: apiGatewayIp,
+      gatewayUrlDns: apiGatewayDns,
+    };
+    res.render("openapi", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/help", function (req, res, next) {
