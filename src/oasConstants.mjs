@@ -48,7 +48,7 @@ export const cableConfiguration_coax_channels = { min: 1, max: 512 };
 export const cableConfiguration_coax_frequency = { min: 0.1, max: 100000 };
 export const cableConfiguration_coax_width = { min: 1, max: 1000 };
 export const cableConfiguration_copper_twistedPairs = { min: 1, max: 48 };
-export const cableConfiguration_ethernet_rate = { min: 1, max: 200 };
+export const cableConfiguration_ethernet_rate = { min: 1, max: 768 };
 export const cableConfiguration_single_fiber_channel = { min: 1, max: 512 };
 export const cableConfiguration_single_fiber_strands = { min: 1, max: 48 };
 export const cableConfiguration_single_fiber_width = { min: 1, max: 1000 };
@@ -694,11 +694,11 @@ export const port = { min: 1, max: 65536 };
 export const portCoaxConfigurationRate = ["MHz", "GHz"];
 export const portConfiguration_coax_channels = { min: 1, max: 512 };
 export const portConfiguration_coax_width = { min: 0.1, max: 100000 };
-export const portConfiguration_ethernet_rate = { min: 1, max: 200 };
+export const portConfiguration_ethernet_rate = { min: 1, max: 768 };
 export const portConfiguration_single_fiber_channels = { min: 1, max: 512 };
-export const portConfiguration_single_fiber_rate = { min: 1, max: 200 };
+export const portConfiguration_single_fiber_rate = { min: 1, max: 768 };
 export const portConfiguration_single_fiber_width = { min: 1, max: 1000 };
-export const portConfiguration_xdsl_rate = { min: 1, max: 100 };
+export const portConfiguration_xdsl_rate = { min: 1, max: 768 };
 export const portEthernetConfiguration = [
   "Cat3",
   "Cat4",

@@ -48,7 +48,7 @@ CREATE TYPE cableEthernetConfigurationRate AS ENUM ('Mbps','Gbps','Tbps');
 CREATE TYPE cableFiberConfigurationMode AS ENUM ('SMOF','MMOF');
 CREATE TYPE cableFiberConfigurationRate AS ENUM ('Gbps','Tbps');
 CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty');
-CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','fiber');
+CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','singleFiber','multiFiber');
 CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large', 'unclassified');
 CREATE TYPE countryCode AS ENUM ( 'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATA', 'ATF', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY', 'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF', 'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC', 'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB', 'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'YEM', 'ZAF', 'ZMB', 'ZWE' );
 CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS costRack (
 
 CREATE TABLE IF NOT EXISTS costService (
     type serviceType NOT NULL,
-    rate INTEGER NOT NULL CHECK (rate >= 0 AND rate <= 200),
+    rate INTEGER NOT NULL CHECK (rate >= 0 AND rate <= 768),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     lagMembers INTEGER DEFAULT 0 CHECK (lagMembers >= 0 AND lagMembers <= 256),
     costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99),
@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS _cableEthernet (
     source source NOT NULL DEFAULT 'historical',
     cableId VARCHAR NOT NULL,
     category cableEthernetConfiguration NOT NULL DEFAULT 'Cat6A',
-    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
     unit cableEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     FOREIGN KEY (cableId) REFERENCES cable (id)
 );
@@ -790,7 +790,7 @@ CREATE TABLE IF NOT EXISTS _nePortEthernet (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortEthernet') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
     category portEthernetConfiguration NOT NULL DEFAULT 'Cat6A',
-    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
@@ -800,7 +800,7 @@ CREATE TABLE IF NOT EXISTS _nePortEthernet (
 CREATE TABLE IF NOT EXISTS _nePortLoopback (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortLoopback') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
-    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
@@ -810,7 +810,7 @@ CREATE TABLE IF NOT EXISTS _nePortLoopback (
 CREATE TABLE IF NOT EXISTS _nePortFiber (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortFiber') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
-    rate INTEGER NOT NULL DEFAULT 1 CHECK (rate >= 1 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 1 CHECK (rate >= 1 AND rate <= 768),
     unit portFiberConfigurationRate NOT NULL DEFAULT 'Gbps',
     mode portFiberConfigurationMode NOT NULL DEFAULT 'SMOF',
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
@@ -834,7 +834,7 @@ CREATE TABLE IF NOT EXISTS _nePortXdsl (
 CREATE TABLE IF NOT EXISTS _nePortVirtual (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortVirtual') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
-    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
 );
@@ -852,7 +852,7 @@ CREATE TABLE IF NOT EXISTS _service (
     commissioned TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     decommissioned TIMESTAMP,
     type serviceType NOT NULL DEFAULT 'unclassified',
-    rate INTEGER NOT NULL DEFAULT 0 CHECK (rate >= 0 AND rate <= 200),
+    rate INTEGER NOT NULL DEFAULT 0 CHECK (rate >= 0 AND rate <= 768),
     unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
     lagGroup VARCHAR,
     lagMembers INTEGER DEFAULT 0 CHECK (lagMembers >= 0 AND lagMembers <= 256),
@@ -989,7 +989,8 @@ INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALU
 INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('coax','m',1);
 INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('copper','m',1);
 INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('ethernet','m',1);
-INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('fiber','m',1);
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('singleFiber','m',1);
+INSERT INTO costCable (technology, unit, costPerUnit) VALUES ('multiFiber','m',1);
 
 INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',1,'m',1);
 INSERT INTO costDuct (category, configuration, unit, costPerUnit) VALUES ('duct',10,'m',1);

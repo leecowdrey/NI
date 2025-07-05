@@ -5631,6 +5631,902 @@
       "method": "POST"
     },
     {
+      "endpoint": "/mni/v1/cost/duct",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/duct",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/duct",
+      "@comment": "addDuctCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/duct",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/duct",
+      "@comment": "replaceDuctCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/duct",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/duct",
+      "@comment": "deleteDuctCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/duct",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/ne",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/ne",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/ne",
+      "@comment": "addNeCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/ne",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/ne",
+      "@comment": "replaceNeCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/ne",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/ne",
+      "@comment": "deleteNeCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/ne",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/pole",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/pole",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/pole",
+      "@comment": "addPoleCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/pole",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/pole",
+      "@comment": "replacePoleCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/pole",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/pole",
+      "@comment": "deletePoleCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/pole",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/rack",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/rack",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/rack",
+      "@comment": "addRackCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/rack",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/rack",
+      "@comment": "replaceRackCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/rack",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/rack",
+      "@comment": "deleteRackCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/rack",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/service",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/service",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/service",
+      "@comment": "addServiceCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/service",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/service",
+      "@comment": "replaceServiceCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/service",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/service",
+      "@comment": "deleteServiceCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/service",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/site",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/site",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/site",
+      "@comment": "addSiteCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/site",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/site",
+      "@comment": "replaceSiteCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/site",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/site",
+      "@comment": "deleteSiteCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/site",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
+      "endpoint": "/mni/v1/cost/cable",
+      "@comment": "getAllCurrencies",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/cable",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "GET"
+    },
+    {
+      "endpoint": "/mni/v1/cost/cable",
+      "@comment": "addCableCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/cable",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "POST"
+    },
+    {
+      "endpoint": "/mni/v1/cost/cable",
+      "@comment": "replaceCableCost",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/cable",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "PUT"
+    },
+    {
+      "endpoint": "/mni/v1/cost/cable",
+      "@comment": "deleteCableCost",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/cost/cable",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          }
+        }
+      ],
+      "method": "DELETE"
+    },
+    {
       "endpoint": "/mni/v1/cost/trench",
       "@comment": "getAllCurrencies",
       "output_encoding": "no-op",

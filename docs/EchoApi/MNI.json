@@ -72,18 +72,7 @@
 				"sort": 1000
 			}
 		],
-		"global_vars": {
-			"APISERV_SERVICE_KEY": {
-				"value": "veOtGzA5y75a6I8MhSW97iEKIGVwt2NFZbbqGBJBprG6ndA7kR3xVpZy/mp26MKtTJjb+O86TCYFWkW",
-				"current_value": null,
-				"description": "Backend Basic Auth Password"
-			},
-			"APISERV_SERVICE_USERNAME": {
-				"value": "364912b2af3d4da4275ef6b9886380f6caf274b5aacb812e",
-				"current_value": null,
-				"description": "Backend Basic Auth Username"
-			}
-		},
+		"global_vars": {},
 		"global_param": {
 			"header": {
 				"parameter": [
@@ -36686,10 +36675,10 @@
 			"parent_id": "374989574b2eb",
 			"target_type": "api",
 			"name": "Get specified network equipment",
-			"version": 486,
+			"version": 527,
 			"sort": 6000,
 			"method": "GET",
-			"url": "/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d?point=20250610T174123",
+			"url": "/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d ",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -36823,20 +36812,7 @@
 				},
 				"query": {
 					"query_add_equal": 1,
-					"parameter": [
-						{
-							"param_id": "1b6c4d00f1c3ae",
-							"description": "",
-							"field_type": "string",
-							"is_checked": 1,
-							"key": "point",
-							"not_null": 1,
-							"value": "20250610T174123",
-							"schema": {
-								"type": "string"
-							}
-						}
-					]
+					"parameter": []
 				},
 				"cookie": {
 					"cookie_encode": 1,
@@ -38069,10 +38045,10 @@
 			"parent_id": "374989574b2eb",
 			"target_type": "api",
 			"name": "Update aspects of a single network equipment",
-			"version": 339,
+			"version": 528,
 			"sort": 8000,
 			"method": "PATCH",
-			"url": "/ne/ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+			"url": "/ne/7a1a6b0c-01ec-41f2-8459-75784228f30d ",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",
@@ -38179,7 +38155,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "{\n   \"host\": \"gbr-kidd-cg1-02\"\n}",
+					"raw": "{\n   \t\"ports\": [\n\t\t{\n\t\t\t\"name\": \"at-0/0/0\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/1\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/2\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/3\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/4\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/5\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/6\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/0/7\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/0\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/1\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/2\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/3\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/4\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/5\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/6\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"at-0/1/7\",\n\t\t\t\"technology\": \"xdsl\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"category\": \"VDSL2\",\n\t\t\t\t\"rate\": 100,\n\t\t\t\t\"unit\": \"Mbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"xe-1/0/0\",\n\t\t\t\"technology\": \"fiber\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"rate\": 10,\n\t\t\t\t\"unit\": \"Gbps\",\n\t\t\t\t\"mode\": \"SMOF\",\n\t\t\t\t\"width\": 1,\n\t\t\t\t\"channels\": 1\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"xe-1/0/1\",\n\t\t\t\"technology\": \"fiber\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"rate\": 10,\n\t\t\t\t\"unit\": \"Gbps\",\n\t\t\t\t\"mode\": \"SMOF\",\n\t\t\t\t\"width\": 1,\n\t\t\t\t\"channels\": 1\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"lo0\",\n\t\t\t\"technology\": \"loopback\",\n\t\t\t\"state\": \"free\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"rate\": 10,\n\t\t\t\t\"unit\": \"Gbps\"\n\t\t\t}\n\t\t},\n\t\t{\n\t\t\t\"name\": \"me0\",\n\t\t\t\"technology\": \"virtual\",\n\t\t\t\"state\": \"used\",\n\t\t\t\"errorCount\": 101,\n\t\t\t\"configuration\": {\n\t\t\t\t\"rate\": 1,\n\t\t\t\t\"unit\": \"Gbps\"\n\t\t\t}\n\t\t}\n\t]\n}",
 					"raw_parameter": [
 						{
 							"param_id": "62ba661b4bdd9",
@@ -78998,7 +78974,7 @@
 			"parent_id": "24998f0dffe00c",
 			"target_type": "api",
 			"name": "trench distance",
-			"version": 516,
+			"version": 526,
 			"sort": 1000,
 			"method": "POST",
 			"url": "/q2c/trenchDistance",
@@ -79108,7 +79084,7 @@
 				"body": {
 					"mode": "json",
 					"parameter": [],
-					"raw": "{\n    \"purpose\": \"service/drop\",\n    \"isoCode\": \"EUR\",\n    \"trenchId\": \"b55fcbef-6d4f-4803-8755-0d920835de85\",\n    \"coordinates\": [\n        {\n            \"x\": 52.314930723981576,\n            \"y\": -2.1765905793762297\n        },\n        {\n            \"x\": 52.31530785113297,\n            \"y\": -2.175979035720834\n        },\n        {\n            \"x\": 52.315461980435,\n            \"y\": -2.175683992729196\n        },\n        {\n            \"x\": 52.31558987455477,\n            \"y\": -2.1755713399505705\n        },\n        {\n            \"x\": 52.3157144889826,\n            \"y\": -2.1754694160080046\n        },\n        {\n            \"x\": 52.315793192650986,\n            \"y\": -2.1754533227539152\n        }\n    ]\n}",
+					"raw": "{\n    \"purpose\": \"unclassified\",\n    \"type\": \"inline\",\n    \"isoCode\": \"EUR\",\n    \"trenchId\": \"b55fcbef-6d4f-4803-8755-0d920835de85\",\n    \"coordinates\": [\n        {\n            \"x\": 52.314930723981576,\n            \"y\": -2.1765905793762297\n        },\n        {\n            \"x\": 52.31530785113297,\n            \"y\": -2.175979035720834\n        },\n        {\n            \"x\": 52.315461980435,\n            \"y\": -2.175683992729196\n        },\n        {\n            \"x\": 52.31558987455477,\n            \"y\": -2.1755713399505705\n        },\n        {\n            \"x\": 52.3157144889826,\n            \"y\": -2.1754694160080046\n        },\n        {\n            \"x\": 52.315793192650986,\n            \"y\": -2.1754533227539152\n        }\n    ]\n}",
 					"raw_parameter": [],
 					"raw_schema": {
 						"type": "object"
@@ -82153,6 +82129,806 @@
 			"sort": 4000,
 			"method": "PUT",
 			"url": "/cost/trench",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "json",
+					"parameter": [],
+					"raw": "{\n    \"purpose\": \"unclassified\",\n    \"type\": \"portable\",\n    \"unit\": \"m\",\n    \"costPerUnit\": 10\n}",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "29ab2d3ff6e736",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Content-Type",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "2b03ee797fe00c",
+			"project_id": "40373eb16402000",
+			"parent_id": "2942afde7fe282",
+			"target_type": "api",
+			"name": "get all cable costs",
+			"version": 529,
+			"sort": 5000,
+			"method": "GET",
+			"url": "/cost/cable",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "none",
+					"parameter": [],
+					"raw": "",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "2b03fb9836e03b",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Accept",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "2b041f993fe11d",
+			"project_id": "40373eb16402000",
+			"parent_id": "2942afde7fe282",
+			"target_type": "api",
+			"name": "delete cable cost",
+			"version": 530,
+			"sort": 6000,
+			"method": "DELETE",
+			"url": "/cost/cable",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "json",
+					"parameter": [],
+					"raw": "{\n    \"purpose\": \"unclassified\",\n    \"type\": \"portable\"\n}",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "294fec9ef6e4c1",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Content-Type",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "2b043a90ffe155",
+			"project_id": "40373eb16402000",
+			"parent_id": "2942afde7fe282",
+			"target_type": "api",
+			"name": "Add cable cost",
+			"version": 531,
+			"sort": 7000,
+			"method": "POST",
+			"url": "/cost/cable",
+			"protocol": "http/1.1",
+			"mark_id": "1",
+			"description": "",
+			"request": {
+				"auth": {
+					"type": "inherit",
+					"kv": {
+						"key": "",
+						"value": "",
+						"in": "header"
+					},
+					"bearer": {
+						"key": ""
+					},
+					"basic": {
+						"username": "",
+						"password": ""
+					},
+					"digest": {
+						"username": "",
+						"password": "",
+						"realm": "",
+						"nonce": "",
+						"algorithm": "",
+						"qop": "",
+						"nc": "",
+						"cnonce": "",
+						"opaque": ""
+					},
+					"hawk": {
+						"authId": "",
+						"authKey": "",
+						"algorithm": "",
+						"user": "",
+						"nonce": "",
+						"extraData": "",
+						"default": "",
+						"delegation": "",
+						"timestamp": "",
+						"includePayloadHash": false
+					},
+					"awsv4": {
+						"accessKey": "",
+						"secretKey": "",
+						"region": "",
+						"service": "",
+						"sessionToken": "",
+						"addAuthDataToQuery": false
+					},
+					"ntlm": {
+						"username": "",
+						"password": "",
+						"entity": "",
+						"workstation": "",
+						"disableRetryRequest": false
+					},
+					"edgegrid": {
+						"accessToken": "",
+						"clientToken": "",
+						"clientSecret": "",
+						"nonce": "",
+						"timestamp": "",
+						"baseURi": "",
+						"headersToSign": ""
+					},
+					"oauth1": {
+						"consumerKey": "",
+						"consumerSecret": "",
+						"signatureMethod": "HMAC-SHA1",
+						"addEmptyParamsToSign": true,
+						"includeBodyHash": true,
+						"addParamsToHeader": false,
+						"disableHeaderEncoding": false,
+						"realm": "",
+						"version": "1.0",
+						"nonce": "",
+						"timestamp": "",
+						"verifier": "",
+						"callback": "",
+						"tokenSecret": "",
+						"token": ""
+					},
+					"jwt": {
+						"addTokenTo": "header",
+						"algorithm": "HS256",
+						"secret": "",
+						"isSecretBase64Encoded": false,
+						"payload": "",
+						"headerPrefix": "Bearer",
+						"queryParamKey": "token",
+						"header": ""
+					},
+					"asap": {
+						"alg": "HS256",
+						"iss": "",
+						"aud": "",
+						"kid": "",
+						"privateKey": "",
+						"sub": "",
+						"claims": "",
+						"exp": ""
+					}
+				},
+				"body": {
+					"mode": "json",
+					"parameter": [],
+					"raw": "{\n    \"purpose\": \"unclassified\",\n    \"type\": \"portable\",\n    \"unit\": \"m\",\n    \"costPerUnit\": 17.89\n}",
+					"raw_parameter": [],
+					"raw_schema": {
+						"type": "object"
+					},
+					"binary": null
+				},
+				"pre_tasks": [],
+				"post_tasks": [],
+				"header": {
+					"parameter": [
+						{
+							"param_id": "299a0cd936e60d",
+							"description": "",
+							"field_type": "string",
+							"is_checked": 1,
+							"key": "Content-Type",
+							"not_null": 1,
+							"value": "application/json",
+							"schema": {
+								"type": "string"
+							}
+						}
+					]
+				},
+				"query": {
+					"query_add_equal": 1,
+					"parameter": []
+				},
+				"cookie": {
+					"cookie_encode": 1,
+					"parameter": []
+				},
+				"restful": {
+					"parameter": []
+				}
+			},
+			"response": {
+				"example": [
+					{
+						"example_id": "1",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "200",
+							"content_type": "json",
+							"is_default": 1,
+							"mock": "",
+							"name": "Success",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					},
+					{
+						"example_id": "2",
+						"raw": "",
+						"raw_parameter": [],
+						"headers": [],
+						"expect": {
+							"code": "404",
+							"content_type": "json",
+							"is_default": -1,
+							"mock": "",
+							"name": "Failure",
+							"schema": {
+								"type": "object",
+								"properties": {}
+							},
+							"verify_type": "schema",
+							"sleep": 0
+						}
+					}
+				],
+				"is_check_result": 1
+			},
+			"mock_server_enable": 1,
+			"attribute_info": {},
+			"tags": []
+		},
+		{
+			"target_id": "2b0457d2bfe15a",
+			"project_id": "40373eb16402000",
+			"parent_id": "2942afde7fe282",
+			"target_type": "api",
+			"name": "Update cable cost",
+			"version": 532,
+			"sort": 8000,
+			"method": "PUT",
+			"url": "/cost/cable",
 			"protocol": "http/1.1",
 			"mark_id": "1",
 			"description": "",

@@ -4863,6 +4863,1709 @@ var run = async () => {
     }
   }
 
+  async function getAllCableCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costCable ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addCableCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costCable (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costCable (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceCableCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costCable SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteCableCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costCable WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costCable WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllDuctCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costDuct ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addDuctCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costDuct (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costDuct (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceDuctCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costDuct SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteDuctCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costDuct WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costDuct WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+  async function getAllNeCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costNe ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addNeCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costNe (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costNe (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceNeCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costNe SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteNeCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costNe WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costNe WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+  async function getAllPoleCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costPole ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addPoleCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costPole (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costPole (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replacePoleCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costPole SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deletePoleCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costPole WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costPole WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+  async function getAllRackCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costRack ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addRackCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costRack (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costRack (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceRackCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costRack SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteRackCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costRack WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costRack WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+  async function getAllServiceCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costService ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addServiceCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costService (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costService (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceServiceCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costService SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteServiceCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costService WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costService WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+  async function getAllSiteCosts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        /*
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT purpose,type,unit,costPerUnit FROM costSite ORDER BY purpose,type"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              purpose: ddRows[idx][0],
+              unit: ddRows[idx][2],
+              costPerUnit: toDecimal(ddRows[idx][3]),
+            };
+            if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
+              resObj.type = ddRows[idx][1];
+            }
+            resJson.push(resObj);
+          }
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+          */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addSiteCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costSite (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({
+                errors: "purpose " + req.body.purpose + " already exists",
+              });
+          } else {
+            let ddp = await DDC.prepare(
+              "INSERT INTO costSite (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
+            );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindInteger(2, req.body.unit);
+            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+            await ddp.run();
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: "unsupported variation" });
+        }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceSiteCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            let ddp = await DDC.prepare(
+              "UPDATE costSite SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+            );
+            ddp.bindVarchar(1, req.body.unit);
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(3, req.body.purpose);
+            ddp.bindVarchar(4, req.body.type);
+            await ddp.run();
+            res.sendStatus(204);
+          } else {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          }
+              */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteSiteCost(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        /*
+        if (req.body.purpose == "unclassified" && req.body.type != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') AND lower(type) = lower('" +
+              req.body.type +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors:
+                  "purpose " +
+                  req.body.purpose +
+                  " and type " +
+                  req.body.type +
+                  " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costSite WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "') AND lower(type) = lower('" +
+                req.body.type +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+        } else if (req.body.purpose != "unclassified") {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
+              req.body.purpose +
+              "') LIMIT 1"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length == 0) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "purpose " + req.body.purpose + " not found",
+              });
+          } else {
+            await DDC.run(
+              "DELETE FROM costSite WHERE lower(purpose) = lower('" +
+                req.body.purpose +
+                "')"
+            );
+            res.sendStatus(204);
+          }
+            */
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getAllTrenchCosts(req, res, next) {
     try {
       let result = validationResult(req);
@@ -20528,6 +22231,473 @@ var run = async () => {
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleTrench
+  );
+
+  /*
+       Tag:           Costs - Cable
+       operationId:   getAllCableCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/cable",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllCableCosts
+  );
+
+  /*
+       Tag:           Costs - Cable
+       operationId:   addCableCost
+       exposed Route: /mni/v1/cost/cable
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/cable",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("technology").isIn(OAS.cableTechnology),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addCableCost
+  );
+
+  /*
+       Tag:           Costs - Cable
+       operationId:   replaceCableCost
+       exposed Route: /mni/v1/cost/cable
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/cable",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("technology").isIn(OAS.cableTechnology),
+    body("unit").isIn(OAS.sizeUnit),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceCableCost
+  );
+
+  /*
+       Tag:           Costs - Cable
+       operationId:   deleteCableCost
+       exposed Route: /mni/v1/cost/cable
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/cable",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("technology").isIn(OAS.cableTechnology),
+    body("type").optional().isIn(OAS.constructionType),
+    deleteCableCost
+  );
+
+  /*
+       Tag:           Costs - Duct
+       operationId:   getAllDuctCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/duct",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllDuctCosts
+  );
+
+  /*
+       Tag:           Costs - Duct
+       operationId:   addDuctCost
+       exposed Route: /mni/v1/cost/duct
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/duct",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("category").isIn(OAS.ductSizeCategory),
+    body("configuration").isInt(OAS.ductConfiguration),
+    body("unit").isIn(OAS.sizeUnit),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addDuctCost
+  );
+
+  /*
+       Tag:           Costs - Duct
+       operationId:   replaceDuctCost
+       exposed Route: /mni/v1/cost/duct
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/duct",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("category").isIn(OAS.ductSizeCategory),
+    body("configuration").isInt(OAS.ductConfiguration),
+    body("unit").isIn(OAS.sizeUnit),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceDuctCost
+  );
+
+  /*
+       Tag:           Costs - Duct
+       operationId:   deleteDuctCost
+       exposed Route: /mni/v1/cost/duct
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/duct",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("category").isIn(OAS.ductSizeCategory),
+    body("configuration").isInt(OAS.ductConfiguration),
+    body("type").optional().isIn(OAS.constructionType),
+    deleteDuctCost
+  );
+
+  /*
+       Tag:           Costs - Ne
+       operationId:   getAllNeCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/ne",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllNeCosts
+  );
+
+  /*
+       Tag:           Costs - Ne
+       operationId:   addNeCost
+       exposed Route: /mni/v1/cost/ne
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/ne",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("vendor").isString().trim(),
+    body("model").isString().trim(),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addNeCost
+  );
+
+  /*
+       Tag:           Costs - Ne
+       operationId:   replaceNeCost
+       exposed Route: /mni/v1/cost/ne
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/ne",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("vendor").isString().trim(),
+    body("model").isString().trim(),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceNeCost
+  );
+
+  /*
+       Tag:           Costs - Ne
+       operationId:   deleteNeCost
+       exposed Route: /mni/v1/cost/ne
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/ne",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("vendor").isString().trim(),
+    body("model").isString().trim(),
+    deleteNeCost
+  );
+
+  /*
+       Tag:           Costs - Pole
+       operationId:   getAllPoleCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/pole",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllPoleCosts
+  );
+
+  /*
+       Tag:           Costs - Pole
+       operationId:   addPoleCost
+       exposed Route: /mni/v1/cost/pole
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/pole",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.polePurpose),
+    body("classifier").isIn(OAS.heightClassifier),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addPoleCost
+  );
+
+  /*
+       Tag:           Costs - Pole
+       operationId:   replacePoleCost
+       exposed Route: /mni/v1/cost/pole
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/pole",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.polePurpose),
+    body("classifier").isIn(OAS.heightClassifier),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replacePoleCost
+  );
+
+  /*
+       Tag:           Costs - Pole
+       operationId:   deletePoleCost
+       exposed Route: /mni/v1/cost/pole
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/pole",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("purpose").isIn(OAS.polePurpose),
+    body("classifier").isIn(OAS.heightClassifier),
+    deletePoleCost
+  );
+
+  /*
+       Tag:           Costs - Rack
+       operationId:   getAllRackCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/rack",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllRackCosts
+  );
+
+  /*
+       Tag:           Costs - Rack
+       operationId:   addRackCost
+       exposed Route: /mni/v1/cost/rack
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/rack",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("slots").isInt(OAS.rackSlots),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addRackCost
+  );
+
+  /*
+       Tag:           Costs - Rack
+       operationId:   replaceRackCost
+       exposed Route: /mni/v1/cost/rack
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/rack",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("slots").isInt(OAS.rackSlots),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceRackCost
+  );
+
+  /*
+       Tag:           Costs - Rack
+       operationId:   deleteRackCost
+       exposed Route: /mni/v1/cost/rack
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/rack",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("slots").isInt(OAS.rackSlots),
+    deleteRackCost
+  );
+
+  /*
+       Tag:           Costs - Service
+       operationId:   getAllServiceCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/service",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllServiceCosts
+  );
+
+  /*
+       Tag:           Costs - Service
+       operationId:   addServiceCost
+       exposed Route: /mni/v1/cost/service
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/service",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("type").isIn(OAS.serviceType),
+    body("rate").isInt(OAS.portConfiguration_ethernet_rate),
+    body("unit").isIn(OAS.portEthernetConfigurationRate),
+    body("lagMembers").default(0).isIn(OAS.lag_members),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addServiceCost
+  );
+
+  /*
+       Tag:           Costs - Service
+       operationId:   replaceServiceCost
+       exposed Route: /mni/v1/cost/service
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/service",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("type").isIn(OAS.serviceType),
+    body("rate").isInt(OAS.portConfiguration_ethernet_rate),
+    body("unit").isIn(OAS.portEthernetConfigurationRate),
+    body("lagMembers").default(0).isIn(OAS.lag_members),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceServiceCost
+  );
+
+  /*
+       Tag:           Costs - Service
+       operationId:   deleteServiceCost
+       exposed Route: /mni/v1/cost/service
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/service",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("type").isIn(OAS.serviceType),
+    body("rate").isInt(OAS.portConfiguration_ethernet_rate),
+    body("unit").isIn(OAS.portEthernetConfigurationRate),
+    body("lagMembers").default(0).isIn(OAS.lag_members),
+    deleteServiceCost
+  );
+
+  /*
+       Tag:           Costs - Site
+       operationId:   getAllSiteCosts
+       exposed Route: /mni/v1/costs
+       HTTP method:   GET
+       OpenID Scope:  read:mni_cost
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/cost/site",
+    // security("read:mni_cost"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllSiteCosts
+  );
+
+  /*
+       Tag:           Costs - Site
+       operationId:   addSiteCost
+       exposed Route: /mni/v1/cost/site
+       HTTP method:   POST
+       OpenID Scope:  write:mni_cost
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/cost/site",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("area").isIn(OAS.areaType),
+    body("type").isIn(OAS.siteType),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    addSiteCost
+  );
+
+  /*
+       Tag:           Costs - Site
+       operationId:   replaceSiteCost
+       exposed Route: /mni/v1/cost/site
+       HTTP method:   PUT
+       OpenID Scope:  write:mni_cost
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/cost/site",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("area").isIn(OAS.areaType),
+    body("type").isIn(OAS.siteType),
+    body("costPerUnit").isFloat(OAS.costPerUnit),
+    replaceSiteCost
+  );
+
+  /*
+       Tag:           Costs - Site
+       operationId:   deleteSiteCost
+       exposed Route: /mni/v1/cost/site
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_cost
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/cost/site",
+    // security("write:mni_cost"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("area").isIn(OAS.areaType),
+    body("type").isIn(OAS.siteType),
+    deleteSiteCost
   );
 
   /*

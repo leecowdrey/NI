@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1751645718"
+    "version": "1.0.0.1751733085"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -1051,6 +1051,1974 @@
         }
       }
     },
+    "/cost/cable": {
+      "get": {
+        "summary": "List known cable costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllCableCosts",
+        "tags": [
+          "Costs - Cable"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "technology",
+                      "unit",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "technology": {
+                        "$ref": "#/components/schemas/cableTechnology"
+                      },
+                      "unit": {
+                        "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "technology": "copper",
+                        "unit": "m",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "technology": "ethernet",
+                        "unit": "m",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "technology": "singleFiber",
+                        "unit": "m",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "technology": "multiFiber",
+                        "unit": "m",
+                        "costPerUnit": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single cable cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addCableCost",
+        "tags": [
+          "Costs - Cable"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "technology",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "technology": {
+                    "$ref": "#/components/schemas/cableTechnology"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "technology": "coax",
+                    "unit": "m",
+                    "costPerUnit": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing cable cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceCableCost",
+        "tags": [
+          "Costs - Cable"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "technology",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "technology": {
+                    "$ref": "#/components/schemas/cableTechnology"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "technology": "singleFiber",
+                    "unit": "m",
+                    "costPerUnit": 1.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single cable cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteCableCost",
+        "tags": [
+          "Costs - Cable"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "technology"
+                ],
+                "properties": {
+                  "technology": {
+                    "$ref": "#/components/schemas/cableTechnology"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "technology": "coax"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/duct": {
+      "get": {
+        "summary": "List known duct costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllDuctCosts",
+        "tags": [
+          "Costs - Duct"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "category",
+                      "configuration",
+                      "unit",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "category": {
+                        "$ref": "#/components/schemas/ductSizeCategory"
+                      },
+                      "configuration": {
+                        "$ref": "#/components/schemas/ductConfiguration"
+                      },
+                      "unit": {
+                        "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "category": "duct",
+                        "configuration": 1,
+                        "unit": "m",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "category": "microduct",
+                        "configuration": 19,
+                        "unit": "m",
+                        "costPerUnit": 2
+                      },
+                      {
+                        "category": "subduct",
+                        "configuration": 2,
+                        "unit": "m",
+                        "costPerUnit": 1.25
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single duct cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addDuctCost",
+        "tags": [
+          "Costs - Duct"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "category",
+                  "configuration",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "category": {
+                    "$ref": "#/components/schemas/ductSizeCategory"
+                  },
+                  "configuration": {
+                    "$ref": "#/components/schemas/ductConfiguration"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "category": "duct",
+                    "configuration": 24,
+                    "unit": "m",
+                    "costPerUnit": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing duct cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceDuctCost",
+        "tags": [
+          "Costs - Duct"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "category",
+                  "configuration",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "category": {
+                    "$ref": "#/components/schemas/ductSizeCategory"
+                  },
+                  "configuration": {
+                    "$ref": "#/components/schemas/ductConfiguration"
+                  },
+                  "unit": {
+                    "$ref": "#/components/schemas/sizeUnit"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "category": "duct",
+                    "configuration": 12,
+                    "unit": "m",
+                    "costPerUnit": 1.1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single duct cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteDuctCost",
+        "tags": [
+          "Costs - Duct"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "category",
+                  "configuration"
+                ],
+                "properties": {
+                  "category": {
+                    "$ref": "#/components/schemas/ductSizeCategory"
+                  },
+                  "configuration": {
+                    "$ref": "#/components/schemas/ductConfiguration"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "category": "duct",
+                    "configuration": 19
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/ne": {
+      "get": {
+        "summary": "List known ne costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllNeCosts",
+        "tags": [
+          "Costs - Ne"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "vendor",
+                      "model",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "vendor": {
+                        "type": "string"
+                      },
+                      "model": {
+                        "type": "string"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "vendor": "Cisco Systems, Inc.",
+                        "model": "C8300-1N1S-4T2X",
+                        "costPerUnit": 7199.61
+                      },
+                      {
+                        "vendor": "Juniper Networks",
+                        "model": "MX240",
+                        "costPerUnit": 27250.0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single ne cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addNeCost",
+        "tags": [
+          "Costs - Ne"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vendor",
+                  "model",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "vendor": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "vendor": "Juniper Networks",
+                    "model": "MX250",
+                    "costPerUnit": 32768.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing ne cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceNeCost",
+        "tags": [
+          "Costs - Ne"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vendor",
+                  "model",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "vendor": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "vendor": "Juniper Networks",
+                    "model": "MX240",
+                    "costPerUnit": 26250.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single ne cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteNeCost",
+        "tags": [
+          "Costs - Ne"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vendor",
+                  "model"
+                ],
+                "properties": {
+                  "vendor": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "vendor": "Juniper Networks",
+                    "model": "MX250"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/pole": {
+      "get": {
+        "summary": "List known pole costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllPoleCosts",
+        "tags": [
+          "Costs - Pole"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "purpose",
+                      "classifier",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "purpose": {
+                        "$ref": "#/components/schemas/polePurpose"
+                      },
+                      "classifier": {
+                        "$ref": "#/components/schemas/heightClassifier"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "purpose": "service/drop",
+                        "classifier": "highways",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "purpose": "service/drop",
+                        "classifier": "rural",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "purpose": "backhaul",
+                        "classifier": "rural",
+                        "costPerUnit": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single pole cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addPoleCost",
+        "tags": [
+          "Costs - Pole"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "classifier",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/polePurpose"
+                  },
+                  "classifier": {
+                    "$ref": "#/components/schemas/heightClassifier"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "link",
+                    "classifier": "commercial",
+                    "costPerUnit": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing pole cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replacePoleCost",
+        "tags": [
+          "Costs - Pole"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "classifier",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/polePurpose"
+                  },
+                  "classifier": {
+                    "$ref": "#/components/schemas/heightClassifier"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "link",
+                    "classifier": "commercial",
+                    "costPerUnit": 2.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single pole cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deletePoleCost",
+        "tags": [
+          "Costs - Pole"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "classifier"
+                ],
+                "properties": {
+                  "purpose": {
+                    "$ref": "#/components/schemas/polePurpose"
+                  },
+                  "classifier": {
+                    "$ref": "#/components/schemas/heightClassifier"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "purpose": "link",
+                    "classifier": "commercial"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/rack": {
+      "get": {
+        "summary": "List known rack costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllRackCosts",
+        "tags": [
+          "Costs - Rack"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "slots",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "slots": {
+                        "$ref": "#/components/schemas/rackSlots"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "slots": 1,
+                        "costPerUnit": 1
+                      },
+                      {
+                        "slots": 2,
+                        "costPerUnit": 2
+                      },
+                      {
+                        "slots": 3,
+                        "costPerUnit": 3
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single rack cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addRackCost",
+        "tags": [
+          "Costs - Rack"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slots",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "slots": {
+                    "$ref": "#/components/schemas/rackSlots"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "slots": 24,
+                    "costPerUnit": 24
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing rack cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceRackCost",
+        "tags": [
+          "Costs - Rack"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slots",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "slots": {
+                    "$ref": "#/components/schemas/rackSlots"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "slots": 48,
+                    "costPerUnit": 50
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single rack cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteRackCost",
+        "tags": [
+          "Costs - Rack"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slots"
+                ],
+                "properties": {
+                  "slots": {
+                    "$ref": "#/components/schemas/rackSlots"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "slots": 48
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/service": {
+      "get": {
+        "summary": "List known service costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllServiceCosts",
+        "tags": [
+          "Costs - Service"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "rate",
+                      "unit",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "type": {
+                        "$ref": "#/components/schemas/serviceType"
+                      },
+                      "rate": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 768
+                      },
+                      "unit": {
+                        "type": "string",
+                        "enum": [
+                          "Mbps",
+                          "Gbps",
+                          "Tbps"
+                        ]
+                      },
+                      "lagMembers": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 256,
+                        "default": 0
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "type": "broadband",
+                        "rate": 67,
+                        "unit": "Mbps",
+                        "costPerUnit": 31.23
+                      },
+                      {
+                        "type": "optical",
+                        "rate": 1,
+                        "unit": "Gbps",
+                        "costPerUnit": 256.78
+                      },
+                      {
+                        "type": "optical",
+                        "rate": 1,
+                        "unit": "Gbps",
+                        "lagMembers": 2,
+                        "costPerUnit": 512.34
+                      },
+                      {
+                        "type": "sogea",
+                        "rate": 1,
+                        "unit": "Gbps",
+                        "costPerUnit": 62.46
+                      },
+                      {
+                        "type": "unclassified",
+                        "rate": 1,
+                        "unit": "Gbps",
+                        "costPerUnit": 100.0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single service cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addServiceCost",
+        "tags": [
+          "Costs - Service"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "rate",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "type": {
+                    "$ref": "#/components/schemas/serviceType"
+                  },
+                  "rate": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 768
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "Mbps",
+                      "Gbps",
+                      "Tbps"
+                    ]
+                  },
+                  "lagMembers": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 256,
+                    "default": 0
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "type": "circuit",
+                    "rate": 256,
+                    "unit": "Mbps",
+                    "costPerUnit": 34.56
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing service cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceServiceCost",
+        "tags": [
+          "Costs - Service"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "rate",
+                  "unit",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "type": {
+                    "$ref": "#/components/schemas/serviceType"
+                  },
+                  "rate": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 768
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "Mbps",
+                      "Gbps",
+                      "Tbps"
+                    ]
+                  },
+                  "lagMembers": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 256,
+                    "default": 0
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "type": "circuit",
+                    "rate": 256,
+                    "unit": "Mbps",
+                    "costPerUnit": 56.78
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single service cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteServiceCost",
+        "tags": [
+          "Costs - Service"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "rate",
+                  "unit"
+                ],
+                "properties": {
+                  "type": {
+                    "$ref": "#/components/schemas/serviceType"
+                  },
+                  "rate": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 768
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": [
+                      "Mbps",
+                      "Gbps",
+                      "Tbps"
+                    ]
+                  },
+                  "lagMembers": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 256,
+                    "default": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "type": "circuit",
+                    "rate": 256,
+                    "unit": "Mbps"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/cost/site": {
+      "get": {
+        "summary": "List known site costs",
+        "security": [
+          {
+            "openId": [
+              "read:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "getAllSiteCosts",
+        "tags": [
+          "Costs - Site"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "area",
+                      "type",
+                      "costPerUnit"
+                    ],
+                    "properties": {
+                      "area": {
+                        "$ref": "#/components/schemas/areaType"
+                      },
+                      "type": {
+                        "$ref": "#/components/schemas/siteType"
+                      },
+                      "costPerUnit": {
+                        "type": "number",
+                        "format": "currency",
+                        "minimum": 0
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      {
+                        "area": "industrial",
+                        "type": "dc",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "area": "mixed",
+                        "type": "colo",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "area": "psz",
+                        "type": "pop",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "area": "residential",
+                        "type": "street",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "area": "rural",
+                        "type": "street",
+                        "costPerUnit": 1
+                      },
+                      {
+                        "area": "urban",
+                        "type": "exchange",
+                        "costPerUnit": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add single site cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "addSiteCost",
+        "tags": [
+          "Costs - Site"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "area",
+                  "type",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "area": {
+                    "$ref": "#/components/schemas/areaType"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/siteType"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "area": "mixed",
+                    "type": "street",
+                    "costPerUnit": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace single existing site cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "replaceSiteCost",
+        "tags": [
+          "Costs - Site"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "area",
+                  "type",
+                  "costPerUnit"
+                ],
+                "properties": {
+                  "area": {
+                    "$ref": "#/components/schemas/areaType"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/siteType"
+                  },
+                  "costPerUnit": {
+                    "type": "number",
+                    "format": "currency",
+                    "minimum": 0
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "area": "mixed",
+                    "type": "street",
+                    "costPerUnit": 2.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove single site cost",
+        "security": [
+          {
+            "openId": [
+              "write:mni_cost"
+            ]
+          }
+        ],
+        "operationId": "deleteSiteCost",
+        "tags": [
+          "Costs - Site"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "area",
+                  "type"
+                ],
+                "properties": {
+                  "area": {
+                    "$ref": "#/components/schemas/areaType"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/siteType"
+                  }
+                }
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "area": "psz",
+                    "type": "exchange"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/cost/trench": {
       "get": {
         "summary": "List known trench costs",
@@ -1459,7 +3427,7 @@
                           "lessThan",
                           "status",
                           "version",
-                          "type"
+                          "versionType"
                         ],
                         "properties": {
                           "lessThan": {
@@ -1663,7 +3631,7 @@
                         "lessThan",
                         "status",
                         "version",
-                        "type"
+                        "versionType"
                       ],
                       "properties": {
                         "lessThan": {
@@ -1695,9 +3663,9 @@
                     ],
                     "versions": [
                       {
-                        "lessThan": 1.0,
+                        "lessThan": "1.0",
                         "status": "affected",
-                        "version": 0,
+                        "version": "0",
                         "versionType": "semver"
                       }
                     ]
@@ -5837,8 +7805,8 @@
                   "rate": {
                     "description": "maximum service rate",
                     "type": "integer",
-                    "minimum": 0,
-                    "maximum": 200,
+                    "minimum": 1,
+                    "maximum": 768,
                     "default": 0
                   },
                   "unit": {
@@ -6088,7 +8056,7 @@
                     "description": "maximum service rate",
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 200
+                    "maximum": 768
                   },
                   "unit": {
                     "description": "unit of service rate",
@@ -6280,7 +8248,7 @@
                     "description": "maximum service rate",
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 200,
+                    "maximum": 768,
                     "default": 0
                   },
                   "unit": {
@@ -6564,7 +8532,7 @@
                       "description": "maximum service rate",
                       "type": "integer",
                       "minimum": 0,
-                      "maximum": 200,
+                      "maximum": 768,
                       "default": 0
                     },
                     "unit": {
@@ -9216,28 +11184,28 @@
                   "sample": {
                     "value": [
                       {
-                        "slot": "1",
+                        "slot": 1,
                         "usage": "reserved"
                       },
                       {
-                        "slot": "2",
+                        "slot": 2,
                         "usage": "used"
                       },
                       {
-                        "slot": "3",
+                        "slot": 3,
                         "usage": "free"
                       },
                       {
-                        "slot": "4",
+                        "slot": 4,
                         "usage": "free"
                       },
                       {
-                        "slot": "5",
+                        "slot": 5,
                         "usage": "faulty"
                       },
                       {
-                        "slot": "6",
-                        "usage": "predicted"
+                        "slot": 6,
+                        "usage": "free"
                       }
                     ]
                   }
@@ -19738,7 +21706,7 @@
             "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 200,
+            "maximum": 768,
             "default": 10
           },
           "unit": {
@@ -19765,7 +21733,7 @@
             "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 200,
+            "maximum": 768,
             "default": 10
           },
           "unit": {
@@ -19792,7 +21760,7 @@
             "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 200,
+            "maximum": 768,
             "default": 10
           },
           "unit": {
@@ -19868,7 +21836,7 @@
             "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 200
+            "maximum": 768
           },
           "unit": {
             "description": "unit of transmission rate",
@@ -20458,7 +22426,7 @@
             "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 200,
+            "maximum": 768,
             "default": 10
           },
           "unit": {
@@ -20893,7 +22861,8 @@
           "free",
           "used",
           "reserved",
-          "faulty"
+          "faulty",
+          "predicted"
         ]
       },
       "alertId": {
