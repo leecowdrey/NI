@@ -57,6 +57,7 @@ erDiagram
     _nePort {integer tsId timestamp point enum source varchar neId integer neTsId varchar name enum technology enum state integer errorCount}
     _service {integer tsId timestamp point varchar serviceId enum source varchar reference varchar customerName varchar customerReference timestamp commissioned timestamp decommissioned enum type integer rate enum unit varchar lagGroup integer lagMembers}
     costTrench {enum purpose enum type enum unit decimal costPerUnit}
+    ftsIndexQueue {integer qId timestamp point boolean delete varchar resource}
     ne {varchar id boolean delete timestamp tsPoint integer historicalTsId integer predictedTsId}
     _nePortVirtual {integer tsId integer neTsId integer rate enum unit}
     alert }o--o{ alertPublish : "alertId"

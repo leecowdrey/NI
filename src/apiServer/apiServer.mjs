@@ -47,6 +47,230 @@ var pointFormat = "%Y%m%dT%H%M%S";
 var dayjsDateFormat = "YYYYMMDD";
 var dateFormat = "%Y%m%d";
 
+const queueTables = ["predictQueue", "alertQueue", "ftsIndexQueue"];
+const pruneTables = [
+  { table: "cable", shadow: "_cableCoax", key: "cableId" },
+  { table: "cable", shadow: "_cableCopper", key: "cableId" },
+  {
+    table: "cable",
+    shadow: "_cableEthernet",
+    key: "cableId",
+  },
+  {
+    table: "cable",
+    shadow: "_cableMultiFiber",
+    key: "cableId",
+  },
+  {
+    table: "cable",
+    shadow: "_cableSingleFiber",
+    key: "cableId",
+  },
+  { table: "duct", shadow: "_duct", key: "ductId" },
+  //{ table: "ne", shadow: "_ne", key: "neId" },
+  { table: "pole", shadow: "_pole", key: "poleId" },
+  { table: "rack", shadow: "_rack", key: "rackId" },
+  //{ table: "service",shadow: "_serviceEgress",key: "serviceId" },
+  //{ table: "service", shadow: "_serviceIngress", key: "serviceId" },
+  { table: "site", shadow: "_site", key: "siteId" },
+  {
+    table: "trench",
+    ref: "coordinateTsId",
+    shadow: "_trenchCoordinate",
+    key: "trenchId",
+  },
+  { table: "trench", shadow: "_trench", key: "trenchId" },
+];
+
+// FTS only supports VARCHAR fields (not ENUM) but will use wildcard to avoid code maintenance
+const ftsTables = [
+  {
+    table: "adminEmail",
+    key: "id",
+    query: "id",
+    leader: true,
+    next: "adminEmailSend",
+  },
+  {
+    table: "adminEmailSend",
+    leader: false,
+    key: "id",
+    query: "adminEmailId",
+    next: "adminEmailReceive",
+  },
+  {
+    table: "adminEmailReceive",
+    leader: false,
+    key: "id",
+    query: "adminEmailId",
+    next: null,
+  },
+  { table: "adminKafka", key: "id", query: "id", leader: true, next: null },
+  {
+    table: "adminMap",
+    leader: true,
+    key: "id",
+    query: "id",
+    next: null,
+  },
+  {
+    table: "adminWorkflow",
+    key: "id",
+    queryKey: "id",
+    leader: true,
+    next: null,
+  },
+  {
+    table: "alert",
+    key: "id",
+    query: "id",
+    leader: true,
+    next: "alertCallback",
+  },
+  {
+    table: "alertCallback",
+    leader: false,
+    key: "alertId",
+    next: "alertContent",
+  },
+  { table: "alertContent", key: "id", query: "alertId", next: "alertPublish" },
+  {
+    table: "alertPublish",
+    leader: false,
+    key: "id",
+    query: "alertId",
+    next: "alertNotify",
+  },
+  {
+    table: "alertNotify",
+    leader: false,
+    key: "id",
+    query: "alertId",
+    next: "alertNotifyRecipient",
+  },
+  {
+    table: "alertNotifyRecipient",
+    leader: false,
+    key: "id",
+    query: "alertNotifyId",
+    next: "alertWorkflow",
+  },
+  {
+    table: "alertWorkflow",
+    leader: false,
+    key: "id",
+    query: "alertId",
+    next: null,
+  },
+  { table: "currency", key: "id", query: "id", leader: true, next: null },
+  { table: "cve", key: "id", query: "id", leader: true, next: "cvePlatforms" },
+  {
+    table: "cvePlatforms",
+    key: "id",
+    query: "cveId",
+    leader: false,
+    next: "cveVersions",
+  },
+  {
+    table: "cveVersions",
+    key: "id",
+    query: "cveId",
+    leader: false,
+    next: null,
+  },
+  { table: "cable", key: "id", query: "id", leader: true, next: "_cable" },
+  {
+    table: "_cable",
+    leader: false,
+    key: "tsId",
+    query: "cableId",
+    next: null,
+  },
+  { table: "duct", key: "id", query: "id", leader: true, next: "_duct" },
+  {
+    table: "_duct",
+    leader: false,
+    key: "tsId",
+    query: "ductId",
+  },
+  { table: "ne", key: "id", query: "id", leader: true, next: "_ne" },
+  {
+    table: "_ne",
+    leader: false,
+    key: "tsId",
+    query: "neId",
+    next: "_nePort",
+  },
+  {
+    table: "_nePort",
+    leader: false,
+    key: "tsId",
+    query: "neId",
+    next: null,
+  },
+  { table: "pole", key: "id", query: "id", leader: true, next: "_pole" },
+  {
+    table: "_pole",
+    leader: false,
+    key: "tsId",
+    query: "poleId",
+    next: null,
+  },
+  { table: "rack", key: "id", query: "id", leader: true, next: "_rack" },
+  {
+    table: "_rack",
+    leader: false,
+    key: "tsId",
+    query: "rackId",
+    next: "_rackSlot",
+  },
+  {
+    table: "_rackSlot",
+    leader: false,
+    key: "tsId",
+    query: "rackId",
+    next: null,
+  },
+  { table: "service", key: "id", query: "id", leader: true, next: "_service" },
+  {
+    table: "_service",
+    leader: false,
+    key: "tsId",
+    query: "serviceId",
+    next: "_serviceIngress",
+  },
+  {
+    table: "_serviceIngress",
+    leader: false,
+    key: "tsId",
+    query: "serviceId",
+    next: "_serviceEgress",
+  },
+  {
+    table: "_serviceEgress",
+    leader: false,
+    key: "tsId",
+    query: "serviceId",
+    next: null,
+  },
+  { table: "site", key: "id", query: "id", leader: true, next: "_site" },
+  {
+    table: "_site",
+    leader: false,
+    key: "tsId",
+    query: "siteId",
+    next: null,
+  },
+  { table: "trench", key: "id", query: "id", leader: true, next: "_trench" },
+  {
+    table: "_trench",
+    leader: false,
+    key: "tsId",
+    query: "trenchId",
+    next: null,
+  },
+];
+
 global.DEBUG = false;
 global.DDI = null;
 global.DDC = null;
@@ -63,13 +287,18 @@ global.LOGGER = new Console({
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
-var duckDbExtensions = ["spatial", "inet"];
+var duckDbExtensions = ["fts", "inet", "spatial"];
 var duckDbMaxMemory = null;
 var duckDbThreads = null;
 var duckDbVerison = null;
 var jobBackupEnabled = false;
 var backupCron = null;
 var backupCronTime = null;
+var updateFtsIndexTimer = null;
+var updateFtsIndexIntervalMs = 300000; // 5 minutes
+var updateFtsIndexQueueFillTimer = null;
+var updateFtsIndexQueueFillIntervalMs = 86400000; // 24 hours
+
 var updateGeometryTimer = null;
 var updateGeometryIntervalMs = 300000; // 5 minutes
 var updatePremisesPassedTimer = null;
@@ -265,11 +494,61 @@ async function jobBackup(target) {
   }
 }
 
-async function jobUpdateGeometry() {
-  if (updateGeometryTimer != null) {
-    clearTimeout(updateGeometryTimer);
+async function jobFtsReIndex(resource = null) {
+  if (updateFtsIndexTimer != null) {
+    clearTimeout(updateFtsIndexTimer);
   }
+  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    event: "ftsReIndex",
+    state: "start",
+  });
 
+  try {
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT qId,resource FROM ftsIndexQueue WHERE delete = FALSE"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        for (let t = 0; t < ftsTables.length; t++) {
+          if (ftsTables[t].table == ddRows[idx][1]) {
+            LOGGER.info(dayjs().format(dayjsFormat), "info", {
+              event: "ftsReIndex",
+              table: ftsTables[t].table,
+            });
+            // dont need to drop first as create include overwrite option
+            //await DDC.run("PRAGMA drop_fts_index('"+tables[t].table+"')");
+            await DDC.run(
+              "PRAGMA create_fts_index('" +
+                ftsTables[t].table +
+                "','" +
+                ftsTables[t].key +
+                "','*',stemmer = 'english',stopwords = 'english',strip_accents = 1,lower = 1,overwrite = true)"
+            );
+            await DDC.run(
+              "UPDATE ftsIndexQueue SET delete = true WHERE qId = " +
+                ddRows[idx][0]
+            );
+            break;
+          }
+        }
+      }
+    }
+    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+      event: "ftsReIndex",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      event: "ftsReIndex",
+      state: "failed",
+      error: e,
+    });
+  }
+  updateFtsIndexTimer = setTimeout(jobFtsReIndex, updateFtsIndexIntervalMs);
+}
+
+async function jobUpdateGeometry() {
   // child table (i.e. _pole) holds the spatial points as 3D points
   // parent table (i.e. pole) holds the spatial geometry object see https://duckdb.org/docs/stable/extensions/spatial/overview
   let points = [
@@ -504,19 +783,33 @@ async function jobPredictQueueFill() {
   predictQueueTimer = setTimeout(jobPredictQueueFill, predictQueueIntervalMs);
 }
 
+async function jobFtsIndexQueueFill() {
+  if (updateFtsIndexQueueFillTimer != null) {
+    clearTimeout(updateFtsIndexQueueFillTimer);
+  }
+  for (let t = 0; t < ftsTables.length; t++) {
+    if (toBoolean(ftsTables[t].leader)) {
+      await dbAddFtsIndexQueueItem(ftsTables[t].table);
+    }
+  }
+  updateFtsIndexQueueFillTimer = setTimeout(
+    jobFtsIndexQueueFill,
+    updateFtsIndexQueueFillIntervalMs
+  );
+}
+
 async function jobPruneQueues() {
   if (pruneQueuesTimer != null) {
     clearTimeout(pruneQueuesTimer);
   }
-  let tables = ["predictQueue", "alertQueue"];
   try {
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
       event: "pruneQueues",
       state: "start",
     });
     // prune queues
-    for (let i = 0; i < tables.length; i++) {
-      await DDC.run("DELETE FROM " + tables[i] + " WHERE delete = true");
+    for (let i = 0; i < queueTables.length; i++) {
+      await DDC.run("DELETE FROM " + queueTables[i] + " WHERE delete = true");
     }
     LOGGER.info(dayjs().format(dayjsFormat), "info", {
       event: "pruneQueues",
@@ -538,39 +831,6 @@ async function jobPrune() {
   }
   // TODO: update pruning for _nePort port configuration tables
   // TODO: update pruning for _serviceIngress and _serviceEgress
-  let tables = [
-    { table: "cable", shadow: "_cableCoax", key: "cableId" },
-    { table: "cable", shadow: "_cableCopper", key: "cableId" },
-    {
-      table: "cable",
-      shadow: "_cableEthernet",
-      key: "cableId",
-    },
-    {
-      table: "cable",
-      shadow: "_cableMultiFiber",
-      key: "cableId",
-    },
-    {
-      table: "cable",
-      shadow: "_cableSingleFiber",
-      key: "cableId",
-    },
-    { table: "duct", shadow: "_duct", key: "ductId" },
-    //{ table: "ne", shadow: "_ne", key: "neId" },
-    { table: "pole", shadow: "_pole", key: "poleId" },
-    { table: "rack", shadow: "_rack", key: "rackId" },
-    //{ table: "service",shadow: "_serviceEgress",key: "serviceId" },
-    //{ table: "service", shadow: "_serviceIngress", key: "serviceId" },
-    { table: "site", shadow: "_site", key: "siteId" },
-    {
-      table: "trench",
-      ref: "coordinateTsId",
-      shadow: "_trenchCoordinate",
-      key: "trenchId",
-    },
-    { table: "trench", shadow: "_trench", key: "trenchId" },
-  ];
   // defaults
   let historicalDuration = 1;
   let historicalUnit = "year";
@@ -650,15 +910,15 @@ async function jobPrune() {
         break;
     }
     // prune resource data
-    for (let i = 0; i < tables.length; i++) {
+    for (let i = 0; i < pruneTables.length; i++) {
       let DDIdsRead = await DDC.runAndReadAll(
-        "SELECT id FROM " + tables[i].table
+        "SELECT id FROM " + pruneTables[i].table
       );
       let DDIdsRows = DDIdsRead.getRows();
       for (let p = 0; p < DDIdsRows.length; p++) {
         let ddParent = await DDC.runAndReadAll(
           "SELECT strftime(tsPoint, '%Y-%m-%d %H:%M:%S'),historicalTsId,predictedTsId FROM " +
-            tables[i].table +
+            pruneTables[i].table +
             " WHERE id = '" +
             DDIdsRows[p] +
             "'"
@@ -675,13 +935,13 @@ async function jobPrune() {
             );
             await DDC.run(
               "DELETE FROM " +
-                tables[i].shadow +
+                pruneTables[i].shadow +
                 " WHERE source = 'historical' AND point < strptime('" +
                 historicalTimestamp.format("YYYYMMDD[T]HHmmss") +
                 "','%Y%m%dT%H%M%S') AND tsId != " +
                 historicalTsid +
                 " AND " +
-                tables[i].key +
+                pruneTables[i].key +
                 " = '" +
                 DDIdsRows[p] +
                 "'"
@@ -694,13 +954,13 @@ async function jobPrune() {
             );
             await DDC.run(
               "DELETE FROM " +
-                tables[i].shadow +
+                pruneTables[i].shadow +
                 " WHERE source = 'predicted' AND point > strptime('" +
                 predictedTimestamp.format("YYYYMMDD[T]HHmmss") +
                 "','%Y%m%dT%H%M%S') AND tsId != " +
                 predictedTsId +
                 " AND " +
-                tables[i].key +
+                pruneTables[i].key +
                 " = '" +
                 DDIdsRows[p] +
                 "'"
@@ -708,22 +968,22 @@ async function jobPrune() {
           }
           // remove any predicted which has been surpassed by historical
           if (predictedTsId != null) {
-            if (tables[i].shadow == "_ne") {
+            if (pruneTables[i].shadow == "_ne") {
               let ddRead = await DDC.runAndReadAll(
                 "SELECT tsId FROM " +
-                  tables[i].shadow +
+                  pruneTables[i].shadow +
                   " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                  tables[i].shadow +
+                  pruneTables[i].shadow +
                   " " +
                   "WHERE source = 'historical' AND " +
-                  tables[i].key +
+                  pruneTables[i].key +
                   " = '" +
                   DDIdsRows[p] +
                   "') " +
                   "AND tsId != '" +
                   predictedTsId +
                   "' AND " +
-                  tables[i].key +
+                  pruneTables[i].key +
                   " = '" +
                   DDIdsRows[p] +
                   "'"
@@ -753,22 +1013,22 @@ async function jobPrune() {
                 );
               }
             }
-            if (tables[i].shadow == "_rack") {
+            if (pruneTables[i].shadow == "_rack") {
               let ddRead = await DDC.runAndReadAll(
                 "SELECT tsId FROM " +
-                  tables[i].shadow +
+                  pruneTables[i].shadow +
                   " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                  tables[i].shadow +
+                  pruneTables[i].shadow +
                   " " +
                   "WHERE source = 'historical' AND " +
-                  tables[i].key +
+                  pruneTables[i].key +
                   " = '" +
                   DDIdsRows[p] +
                   "') " +
                   "AND tsId != '" +
                   predictedTsId +
                   "' AND " +
-                  tables[i].key +
+                  pruneTables[i].key +
                   " = '" +
                   DDIdsRows[p] +
                   "'"
@@ -782,20 +1042,20 @@ async function jobPrune() {
             }
             await DDC.run(
               "DELETE FROM " +
-                tables[i].shadow +
+                pruneTables[i].shadow +
                 " " +
                 "WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                tables[i].shadow +
+                pruneTables[i].shadow +
                 " " +
                 "WHERE source = 'historical' AND " +
-                tables[i].key +
+                pruneTables[i].key +
                 " = '" +
                 DDIdsRows[p] +
                 "') " +
                 "AND tsId != '" +
                 predictedTsId +
                 "' AND " +
-                tables[i].key +
+                pruneTables[i].key +
                 " = '" +
                 DDIdsRows[p] +
                 "'"
@@ -1249,6 +1509,31 @@ async function jobAlertDqOffNetPAF() {
   }
 }
 
+async function dbAddFtsIndexQueueItem(resource) {
+  let ddq = await DDC.prepare(
+    "SELECT qId FROM ftsIndexQueue WHERE resource = $1 AND delete = false LIMIT 1"
+  );
+  ddq.bindVarchar(1, resource);
+  let ddRead = await ddq.runAndReadAll();
+  let ddRows = ddRead.getRows();
+  if (ddRows.length == 0) {
+    let ddp = await DDC.prepare(
+      "INSERT INTO ftsIndexQueue (resource) VALUES ($1)"
+    );
+    ddp.bindVarchar(1, resource);
+    await ddp.run();
+  }
+  // recursively follow the FTS next shadow/related table
+  for (let t = 0; t < ftsTables.length; t++) {
+    if (ftsTables[t].table == resource) {
+      if (ftsTables[t].next != null) {
+        await dbAddFtsIndexQueueItem(ftsTables[t].next);
+      }
+      break;
+    }
+  }
+}
+
 async function dbAddPredictQueueItem(resource, id, state) {
   let ddq = await DDC.prepare(
     "SELECT qId FROM predictQueue WHERE resource = $1 AND id = $2 AND state = $3 AND delete = false LIMIT 1"
@@ -1274,6 +1559,7 @@ async function dbAddPredictQueueItem(resource, id, state) {
     ddp.bindInteger(2, ddRows[0][0]);
     await ddp.run();
   }
+  await dbAddFtsIndexQueueItem(resource);
 }
 
 async function dbIdExists(id, table, fieldName = "id") {
@@ -1446,9 +1732,14 @@ function quit() {
   LOGGER.info(dayjs().format(dayjsFormat), "info", {
     event: "quit",
   });
-
   if (backupCron != null) {
     backupCron.stop();
+  }
+  if (updateFtsIndexTimer != null) {
+    clearTimeout(updateFtsIndexTimer);
+  }
+  if (updateFtsIndexQueueFillTimer != null) {
+    clearTimeout(updateFtsIndexQueueFillTimer);
   }
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
@@ -1756,6 +2047,95 @@ var run = async () => {
     return next();
   }
 
+  async function fts(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let sql = null;
+        let next = null;
+        for (let t = 0; t < ftsTables.length; t++) {
+          if (req.body.resource == ftsTables[t].table) {
+            next = ftsTables[t].next;
+            sql =
+              "SELECT " +
+              ftsTables[t].query +
+              ",score FROM (SELECT *,fts_main_" +
+              ftsTables[t].table +
+              ".match_bm25(" +
+              ftsTables[t].key +
+              ",'" +
+              req.body.query +
+              "') AS score FROM " +
+              ftsTables[t].table +
+              " WHERE score > " +
+              req.body.score +
+              " ) sq ORDER BY score DESC";
+            let ddRead = await DDC.runAndReadAll(sql);
+            let ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              for (let idx in ddRows) {
+                resJson.push({
+                  resource: req.body.resource,
+                  id: ddRows[idx][0],
+                });
+              }
+            }
+            while (next != null) {
+              for (let n = 0; n < ftsTables.length; n++) {
+                if (next == ftsTables[n].table) {
+                  next = ftsTables[n].next;
+                  sql =
+                    "SELECT " +
+                    ftsTables[n].query +
+                    ",score FROM (SELECT *,fts_main_" +
+                    ftsTables[n].table +
+                    ".match_bm25(" +
+                    ftsTables[n].key +
+                    ",'" +
+                    req.body.query +
+                    "') AS score FROM " +
+                    ftsTables[n].table +
+                    " WHERE score > " +
+                    req.body.score +
+                    " ) sq ORDER BY score DESC";
+                  ddRead = await DDC.runAndReadAll(sql);
+                  ddRows = ddRead.getRows();
+                  if (ddRows.length > 0) {
+                    for (let idx in ddRows) {
+                      resJson.push({
+                        resource: req.body.resource,
+                        id: ddRows[idx][0],
+                      });
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+            break;
+          }
+        }
+        if (resJson.length > 0) {
+          // reduce the duplicated matches from across the time-series to singular entities
+          resJson = Array.from(new Set(resJson.map(JSON.stringify)))
+            .map(JSON.parse)
+            .sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(404);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getAdminData(req, res, next) {
     try {
       let ddRead = await DDC.runAndReadAll(
@@ -1999,6 +2379,7 @@ var run = async () => {
               req.params.currencyId +
               "'"
           );
+          await dbAddFtsIndexQueueItem("currency");
           res.sendStatus(204);
         } else {
           res
@@ -2037,6 +2418,7 @@ var run = async () => {
           );
           ddp.bindVarchar(2, req.params.currencyId);
           await ddp.run();
+          await dbAddFtsIndexQueueItem("currency");
           res.sendStatus(204);
         } else {
           res
@@ -2139,6 +2521,7 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
+        await dbAddFtsIndexQueueItem("adminEmail");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -2296,6 +2679,7 @@ var run = async () => {
           ddp.bindVarchar(10, req.body.receive.folderSeparator);
           await ddp.run();
         }
+        await dbAddFtsIndexQueueItem("adminEmail");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -2336,6 +2720,7 @@ var run = async () => {
               req.params.emailProviderId +
               "'"
           );
+          await dbAddFtsIndexQueueItem("adminEmail");
           res.sendStatus(204);
         } else {
           res
@@ -2585,6 +2970,7 @@ var run = async () => {
           ddp.bindVarchar(10, req.body.receive.folderSeparator);
           await ddp.run();
         }
+        await dbAddFtsIndexQueueItem("adminEmail");
         res.sendStatus(204);
       } else {
         res
@@ -2694,6 +3080,7 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
+        await dbAddFtsIndexQueueItem("adminKafka");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -2762,6 +3149,7 @@ var run = async () => {
         ddp.bindVarchar(15, req.body.producer.compressionMethod);
         ddp.bindVarchar(16, req.body.producer.authentication);
         await ddp.run();
+        await dbAddFtsIndexQueueItem("adminKafka");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -2792,6 +3180,7 @@ var run = async () => {
               req.params.kafkaProducerId +
               "'"
           );
+          await dbAddFtsIndexQueueItem("adminKafka");
           res.sendStatus(204);
         } else {
           res
@@ -2963,6 +3352,7 @@ var run = async () => {
           ddp.bindVarchar(15, req.body.producer.authentication);
           ddp.bindVarchar(16, req.body.kafkaProducerId);
           await ddp.run();
+          await dbAddFtsIndexQueueItem("adminKafka");
           res.sendStatus(204);
         } else {
           res
@@ -3082,6 +3472,7 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
+        await dbAddFtsIndexQueueItem("adminMap");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -3194,6 +3585,7 @@ var run = async () => {
           ddp.bindVarchar(7, req.body.identityProvider.token);
           ddp.bindVarchar(8, req.body.identityProvider.wellKnown);
           await ddp.run();
+          await dbAddFtsIndexQueueItem("adminMap");
           res
             .contentType(OAS.mimeJSON)
             .status(200)
@@ -3223,6 +3615,7 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM adminMap WHERE id = '" + req.params.mapProviderId + "'"
           );
+          await dbAddFtsIndexQueueItem("adminMap");
           res.sendStatus(204);
         } else {
           res
@@ -3390,6 +3783,7 @@ var run = async () => {
             ddp.bindVarchar(7, req.body.identityProvider.wellKnown);
             ddp.bindVarchar(8, req.body.mapProviderId);
             await ddp.run();
+            await dbAddFtsIndexQueueItem("adminMap");
             res.sendStatus(204);
           }
         } else {
@@ -3480,6 +3874,7 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
+        await dbAddFtsIndexQueueItem("adminWorkflow");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -3538,6 +3933,7 @@ var run = async () => {
         ddp.bindVarchar(5, req.body.engine.password);
         ddp.bindVarchar(6, req.body.engine.type);
         await ddp.run();
+        await dbAddFtsIndexQueueItem("adminWorkflow");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -3568,6 +3964,7 @@ var run = async () => {
               req.params.emailProviderId +
               "'"
           );
+          await dbAddFtsIndexQueueItem("adminWorkflow");
           res.sendStatus(204);
         } else {
           res
@@ -3705,6 +4102,7 @@ var run = async () => {
           ddp.bindVarchar(5, req.body.engine.type);
           ddp.bindVarchar(6, req.body.workflowEngineId);
           await ddp.run();
+          await dbAddFtsIndexQueueItem("adminWorkflow");
           res.sendStatus(204);
         } else {
           res
@@ -3794,6 +4192,7 @@ var run = async () => {
         ddp.bindBoolean(3, toBoolean(req.body.delete));
         ddp.bindVarchar(4, req.body.function);
         await ddp.run();
+        await dbAddFtsIndexQueueItem("alert");
         res.contentType(OAS.mimeJSON).status(200).json({ alertId: alertId });
       } else {
         res
@@ -3828,6 +4227,7 @@ var run = async () => {
             ddp.bindVarchar(1, req.query.requestorId);
             ddp.bindVarchar(2, subscriptionIds[idx]);
             await ddp.run();
+            await dbAddFtsIndexQueueItem("alert");
           }
           res.sendStatus(204);
         } else {
@@ -3882,6 +4282,7 @@ var run = async () => {
             ddp.bindInteger(12, req.body[i].maxLifeRetries);
             ddp.bindInteger(13, 0);
             await ddp.run();
+            await dbAddFtsIndexQueueItem("alert");
             resJson.alerts.push({
               alertId: req.body.alertId,
               subscriptionId: subscriptionId,
@@ -3942,6 +4343,7 @@ var run = async () => {
               ddp.bindVarchar(1, req.query.requestorId);
               ddp.bindVarchar(2, notificationIds[idx]);
               await ddp.run();
+              await dbAddFtsIndexQueueItem("alert");
               res.sendStatus(204);
             } else {
               res.contentType(OAS.mimeJSON).status(404).json({
@@ -4095,6 +4497,7 @@ var run = async () => {
             ddp.bindVarchar(2, publicationIds[idx]);
             await ddp.run();
           }
+          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4146,6 +4549,7 @@ var run = async () => {
               ddp.bindVarchar(5, req.body.alerts[i].kafkaProducerId);
               ddp.bindVarchar(6, req.body.alerts[i].topic);
               await ddp.run();
+              await dbAddFtsIndexQueueItem("alert");
               resArr.push({
                 alertId: req.body.alerts[i].alertId,
                 publicationId: publicationId,
@@ -4189,6 +4593,7 @@ var run = async () => {
             ddp.bindVarchar(2, workflowRunnerIds[idx]);
             await ddp.run();
           }
+          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4251,6 +4656,7 @@ var run = async () => {
           }
         }
         resJson.alerts = resArr;
+        await dbAddFtsIndexQueueItem("alert");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -4317,6 +4723,7 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM alert WHERE id = '" + req.params.alertId + "'"
           );
+          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4366,6 +4773,7 @@ var run = async () => {
                 "'"
             );
           }
+          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4400,6 +4808,7 @@ var run = async () => {
         ddp.bindVarchar(4, req.body.alertId);
         ddp.bindVarchar(5, req.body.content);
         await ddp.run();
+        await dbAddFtsIndexQueueItem("alert");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -4425,6 +4834,7 @@ var run = async () => {
               req.params.alertContentId +
               "'"
           );
+          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4611,6 +5021,7 @@ var run = async () => {
               }
             }
           }
+          await dbAddFtsIndexQueueItem("cve");
           res
             .contentType(OAS.mimeJSON)
             .status(200)
@@ -4648,6 +5059,7 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM cve WHERE id = '" + req.params.cveId + "'"
           );
+          await dbAddFtsIndexQueueItem("cve");
           res.sendStatus(204);
         } else {
           res
@@ -7088,6 +7500,9 @@ var run = async () => {
             await ddMultiFiber.run();
             break;
         }
+        if (req.body.source == "historical") {
+          await dbAddPredictQueueItem("cable", cableId, "create");
+        }
         res.contentType(OAS.mimeJSON).status(200).json({ cableId: cableId });
       } else {
         res
@@ -8811,6 +9226,9 @@ var run = async () => {
               "' WHERE tsId = " +
               tsId
           );
+        }
+        if (req.body.source == "historical") {
+          await dbAddPredictQueueItem("duct", ductId, "create");
         }
         res.contentType(OAS.mimeJSON).status(200).json({ ductId: ductId });
       } else {
@@ -10638,6 +11056,9 @@ var run = async () => {
               "' WHERE tsId = " +
               tsId
           );
+        }
+        if (req.body.source == "historical") {
+          await dbAddPredictQueueItem("pole", poleId, "create");
         }
         res.contentType(OAS.mimeJSON).status(200).json({ poleId: poleId });
       } else {
@@ -12746,6 +13167,9 @@ var run = async () => {
                 });
             }
           }
+        }
+        if (req.body.source == "historical") {
+          await dbAddPredictQueueItem("service", serviceId, "create");
         }
         return res
           .contentType(OAS.mimeJSON)
@@ -15375,6 +15799,9 @@ var run = async () => {
             );
           }
         }
+        if (req.body.source == "historical") {
+          await dbAddPredictQueueItem("trench", trenchId, "create");
+        }
         res.contentType(OAS.mimeJSON).status(200).json({ trenchId: trenchId });
       } else {
         res
@@ -17167,9 +17594,29 @@ var run = async () => {
                 workflow: await dbCounts("alertWorkflow"),
               },
             },
+            costs: {
+              cable: await dbCounts("costCable"),
+              duct: await dbCounts("costDuct"),
+              ne: await dbCounts("costNe"),
+              pole: await dbCounts("costPole"),
+              rack: await dbCounts("costRack"),
+              service: await dbCounts("costService"),
+              site: await dbCounts("costSite"),
+              trench: await dbCounts("costTrench"),
+            },
+            external: {
+              currency: await dbCounts("currency"),
+              cve: await dbCounts("cve"),
+            },
+            metrics: {
+              trench: await allTrenchDistance(),
+              cable: { distance: 0, unit: "m" },
+              premises: await allTrenchPremisesPassed(),
+            },
             queues: {
               predict: await dbQueueCounts("predictQueue"),
               alert: await dbQueueCounts("alertQueue"),
+              fts: await dbQueueCounts("ftsIndexQueue"),
             },
             resources: {
               cables: await dbActiveInactiveCounts("cable"),
@@ -17180,11 +17627,6 @@ var run = async () => {
               services: await dbActiveInactiveCounts("service"),
               sites: await dbActiveInactiveCounts("site"),
               trenches: await dbActiveInactiveCounts("trench"),
-            },
-            metrics: {
-              trench: await allTrenchDistance(),
-              cable: { distance: 0, unit: "m" },
-              premises: await allTrenchPremisesPassed(),
             },
           });
       } else {
@@ -22875,6 +23317,24 @@ var run = async () => {
     deletePredictQueueItem
   );
 
+  /*
+       Tag:           Search
+       operationId:   search
+       exposed Route: /mni/v1/search
+       HTTP method:   GET
+       OpenID Scope:  read:mni_api
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/search",
+    // security("read:mni_api"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("resource").isIn(OAS.fts_resources),
+    body("query").isString().trim(),
+    body("score").default(0.2).isFloat(OAS.fts_score),
+    fts
+  );
+
   // Express 404 handling ¯\_(ツ)_/¯
   app.use((req, res, next) => {
     res
@@ -22975,21 +23435,6 @@ var run = async () => {
       }
     );
   }
-  // timer jobs
-  updateGeometryTimer = setTimeout(
-    jobUpdateGeometry,
-    updateGeometryIntervalMs * Math.floor(Math.random() * 5)
-  );
-  updatePremisesPassedTimer = setTimeout(
-    jobUpdatePremisesPassed,
-    updatePremisesPassedIntervalMs * Math.floor(Math.random() * 5)
-  );
-  predictQueueTimer = setTimeout(
-    jobPredictQueueFill,
-    predictQueueIntervalMs * Math.floor(Math.random() * 5)
-  );
-  await jobPrune();
-  await jobPruneQueues();
 
   // Standup and process requests
   if (
@@ -23020,6 +23465,36 @@ var run = async () => {
   server.listen({ port: servePort, host: serveAddress }, function (error) {
     if (error) throw error;
   });
+
+  // timer jobs - stagger the starts
+  updateFtsIndexTimer = setTimeout(
+    jobFtsReIndex,
+    updateFtsIndexIntervalMs * Math.floor(Math.random() * 1)
+  );
+  pruneQueuesTimer = setTimeout(
+    jobPruneQueues,
+    pruneQueuesIntervalMs * Math.floor(Math.random() * 3)
+  );
+  updateGeometryTimer = setTimeout(
+    jobUpdateGeometry,
+    updateGeometryIntervalMs * Math.floor(Math.random() * 5)
+  );
+  updatePremisesPassedTimer = setTimeout(
+    jobUpdatePremisesPassed,
+    updatePremisesPassedIntervalMs * Math.floor(Math.random() * 7)
+  );
+  pruneTimer = setTimeout(
+    jobPrune,
+    pruneIntervalMs * Math.floor(Math.random() * 9)
+  );
+  predictQueueTimer = setTimeout(
+    jobPredictQueueFill,
+    predictQueueIntervalMs * Math.floor(Math.random() * 11)
+  );
+  updateFtsIndexQueueFillTimer = setTimeout(
+    jobFtsIndexQueueFill,
+    updateFtsIndexQueueFillIntervalMs * Math.floor(Math.random() * 13)
+  );
 
   // stdout ticker to indicate alive
   tickTimer = setTimeout(tick, tickIntervalMs);

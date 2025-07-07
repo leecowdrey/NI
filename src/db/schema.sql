@@ -11,13 +11,20 @@
 ---
 --- optional/custom extensions that are required
 ---
+
 -- see https://duckdb.org/docs/extensions/inet
 INSTALL inet;
 LOAD inet;
 
+---
+--- see https://duckdb.org/docs/stable/core_extensions/full_text_search.html
+INSTALL fts;
+LOAD fts;
+
 -- see https://github.com/duckdb/duckdb-spatial/blob/main/docs/example.md
 INSTALL spatial;
 LOAD spatial;
+
 ---- Represent a latitude and longitude as a point
 -- The Eiffel Tower in Paris, France has a 
 -- latitude of 48.858935 and longitude of 2.293412
@@ -105,6 +112,7 @@ CREATE SEQUENCE IF NOT EXISTS seq_cvePlatforms;
 CREATE SEQUENCE IF NOT EXISTS seq_cveVersions;
 CREATE SEQUENCE IF NOT EXISTS seq_dashboard;
 CREATE SEQUENCE IF NOT EXISTS seq_duct;
+CREATE SEQUENCE IF NOT EXISTS seq_ftsIndexQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_ne;
 CREATE SEQUENCE IF NOT EXISTS seq_nePort;
 CREATE SEQUENCE IF NOT EXISTS seq_nePortCoax;
@@ -217,6 +225,13 @@ CREATE TABLE IF NOT EXISTS cveVersions (
     version VARCHAR,
     versionType VARCHAR,
     FOREIGN KEY (cveId) REFERENCES cve (id)
+);
+
+CREATE TABLE IF NOT EXISTS ftsIndexQueue (
+    qId INTEGER NOT NULL DEFAULT nextval('seq_ftsIndexQueue') PRIMARY KEY,
+    point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
+    delete BOOLEAN NOT NULL DEFAULT false,
+    resource VARCHAR NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS predictQueue (

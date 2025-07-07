@@ -13,6 +13,26 @@ export const currency_scale = 5;
 export const currency_precision = 5;
 export const currency_rate = { min: 0, max: 99999.99999 };
 export const costPerUnit = { min: 0, max: 999999.99 };
+export const fts_resources = [
+"adminEmail",
+"adminKafka",
+"adminMap",
+"adminWorkflow",
+"alert",
+"cable",
+"currency",
+"cve",
+"duct",
+"ne",
+"pole",
+"rack",
+"service",
+"site",
+"trench",
+];
+export const fts_score = { min: 0.0, max: 1.0 };
+export const fts_score_scale = 3;
+export const fts_score_precision = 4;
 export const X_scale = 3;
 export const Y_scale = 2;
 export const Z_scale = 8;
