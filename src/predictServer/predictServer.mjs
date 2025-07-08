@@ -22,9 +22,6 @@ const maxParallelism = os.availableParallelism() - 4; // 4 is default nodejs thr
 const threadsDuplicate = 1;
 const threadsPredictMethodOne = 2;
 
-var dayjsFormat = "YYYYMMDD[T]HHmmss";
-var dayjsDateFormat = "YYYYMMDD";
-
 var DEBUG = false;
 var ENDPOINT_READY = false;
 var ENDPOINT = null;
@@ -110,13 +107,13 @@ function chunkArray(arr, size) {
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 errorTypes.forEach((errType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: errType,
     });
   }
   process.on(errType, async (e) => {
     try {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         signal: sigType,
         error: e,
       });
@@ -131,14 +128,14 @@ errorTypes.forEach((errType) => {
 const signalTraps = ["SIGTERM", "SIGINT", "SIGQUIT"];
 signalTraps.forEach((sigType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: sigType,
     });
   }
   switch (sigType) {
     case "SIGTERM":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -150,7 +147,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGQUIT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -162,7 +159,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGINT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -175,7 +172,7 @@ signalTraps.forEach((sigType) => {
     default:
       if (DEBUG) {
         LOGGER.debug(
-          (dayjs().format(dayjsFormat), "debug", { signal: sigType })
+          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
         );
       }
   }
@@ -184,7 +181,7 @@ signalTraps.forEach((sigType) => {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.PREDICTSERV_DEBUG || false);
-  dayjsFormat =
+  OAS.dayjsFormat =
     process.env.PREDICTSERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
@@ -205,7 +202,7 @@ function loadEnv() {
 
 // quit
 function quit() {
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "quit",
   });
   if (predictMethodOne != null) {
@@ -264,7 +261,7 @@ async function dnsSd() {
     ENDPOINT_READY = false;
     ENDPOINT = null;
     if (e.code === "ENOTFOUND") {
-      LOGGER.warn(dayjs().format(dayjsFormat), "warn", "endpoint", {
+      LOGGER.warn(dayjs().format(OAS.dayjsFormat), "warn", "endpoint", {
         dns:
           "DNS resolution failed, retrying in " +
           Number(parseFloat(endpointRetryMs / 100).toFixed(0)) +
@@ -272,7 +269,7 @@ async function dnsSd() {
       });
       dnsSdTimer = setTimeout(dnsSd, endpointRetryMs * 10);
     } else {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", "endpoint", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint", {
         dns: "DNS resolution failed",
         error: e,
       });
@@ -364,7 +361,7 @@ async function getDateBoundary() {
         }
         if (DEBUG) {
           LOGGER.debug(
-            dayjs().format(dayjsFormat),
+            dayjs().format(OAS.dayjsFormat),
             "debug",
             "getDateBoundary",
             {
@@ -377,13 +374,13 @@ async function getDateBoundary() {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", "getDateBoundary", {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "getDateBoundary", {
           url: url,
           error: err,
         });
       });
   } catch (err) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "getDateBoundary", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "getDateBoundary", {
       error: err,
     });
   }
@@ -433,7 +430,7 @@ async function duplicate(bundle) {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
           event: "deletePredicted",
           qId: bundle.qId,
           resource: bundle.resource,
@@ -443,7 +440,7 @@ async function duplicate(bundle) {
         return false;
       });
 
-    let predictedPoint = dayjs(bundle.point, dayjsFormat).add(
+    let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat).add(
       bundle.predicted.duration,
       bundle.predicted.unit
     );
@@ -452,7 +449,7 @@ async function duplicate(bundle) {
 
     // update original
     if (body.point != null) {
-      body.point = predictedPoint.format(dayjsFormat);
+      body.point = predictedPoint.format(OAS.dayjsFormat);
     }
     if (body.source != null) {
       body.source = "predicted";
@@ -470,7 +467,7 @@ async function duplicate(bundle) {
         return response.ok;
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
           event: "updateResource",
           qId: bundle.qId,
           resource: bundle.resource,
@@ -480,7 +477,7 @@ async function duplicate(bundle) {
         return false;
       });
   } catch (err) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "duplicate", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
       qId: bundle.qId,
       resource: bundle.resource,
       id: bundle.id,
@@ -514,7 +511,7 @@ async function queueDrain() {
             } else if (response.status == 204) {
               if (DEBUG) {
                 LOGGER.debug(
-                  dayjs().format(dayjsFormat),
+                  dayjs().format(OAS.dayjsFormat),
                   "debug",
                   "queueDrain",
                   {
@@ -525,7 +522,7 @@ async function queueDrain() {
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
               queueEmpty = true;
             } else {
-              LOGGER.error(dayjs().format(dayjsFormat), "error", "queueDrain", {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
                 state: "unknown",
                 status: response.status,
                 statusText: response.statusText,
@@ -600,7 +597,7 @@ async function queueDrain() {
                             // if only single incarnation of resource exists then simply duplicate
                             if (DEBUG) {
                               LOGGER.debug(
-                                dayjs().format(dayjsFormat),
+                                dayjs().format(OAS.dayjsFormat),
                                 "debug",
                                 "queueDrain",
                                 {
@@ -640,7 +637,7 @@ async function queueDrain() {
                               // multiple incarnations of historical resource exists so use most recent
                               if (DEBUG) {
                                 LOGGER.debug(
-                                  dayjs().format(dayjsFormat),
+                                  dayjs().format(OAS.dayjsFormat),
                                   "debug",
                                   "queueDrain",
                                   {
@@ -675,7 +672,7 @@ async function queueDrain() {
                                 })
                                 .catch((err) => {
                                   LOGGER.error(
-                                    dayjs().format(dayjsFormat),
+                                    dayjs().format(OAS.dayjsFormat),
                                     "error",
                                     "resourcesDrain",
                                     {
@@ -696,7 +693,7 @@ async function queueDrain() {
                   })
                   .catch((err) => {
                     LOGGER.error(
-                      dayjs().format(dayjsFormat),
+                      dayjs().format(OAS.dayjsFormat),
                       "error",
                       "resourcesDrain",
                       {
@@ -707,7 +704,7 @@ async function queueDrain() {
                   });
               } catch (err) {
                 LOGGER.error(
-                  dayjs().format(dayjsFormat),
+                  dayjs().format(OAS.dayjsFormat),
                   "error",
                   "resourcesDrain",
                   {
@@ -720,13 +717,13 @@ async function queueDrain() {
           }
         })
         .catch((err) => {
-          LOGGER.error(dayjs().format(dayjsFormat), "error", "queueDrain", {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
             url: url,
             error: err,
           });
         });
     } catch (err) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", "queueDrain", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
         error: err,
       });
     }
@@ -747,7 +744,7 @@ async function deleteQueueItem(qId) {
       .then((response) => {
         if (!response.ok) {
           LOGGER.error(
-            dayjs().format(dayjsFormat),
+            dayjs().format(OAS.dayjsFormat),
             "error",
             "deleteQueueItem",
             {
@@ -759,13 +756,13 @@ async function deleteQueueItem(qId) {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", "deleteQueueItem", {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
           url: url,
           error: err,
         });
       });
   } catch (err) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "deleteQueueItem", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
       error: err,
     });
   }
@@ -789,7 +786,7 @@ async function checkEndpointReadiness() {
           } else {
             ENDPOINT_READY = false;
             LOGGER.error(
-              dayjs().format(dayjsFormat),
+              dayjs().format(OAS.dayjsFormat),
               "error",
               "endpoint bad response status",
               {
@@ -807,7 +804,7 @@ async function checkEndpointReadiness() {
             } else {
               ENDPOINT_READY = false;
               LOGGER.error(
-                dayjs().format(dayjsFormat),
+                dayjs().format(OAS.dayjsFormat),
                 "error",
                 "endpoint response invalid date point",
                 {
@@ -819,7 +816,7 @@ async function checkEndpointReadiness() {
           } else {
             ENDPOINT_READY = false;
             LOGGER.error(
-              dayjs().format(dayjsFormat),
+              dayjs().format(OAS.dayjsFormat),
               "error",
               "endpoint response null date point",
               {
@@ -831,7 +828,7 @@ async function checkEndpointReadiness() {
         .catch((e) => {
           ENDPOINT_READY = false;
           LOGGER.error(
-            dayjs().format(dayjsFormat),
+            dayjs().format(OAS.dayjsFormat),
             "error",
             "endpoint no response",
             {
@@ -843,7 +840,7 @@ async function checkEndpointReadiness() {
     } catch (e) {
       ENDPOINT_READY = false;
       LOGGER.error(
-        dayjs().format(dayjsFormat),
+        dayjs().format(OAS.dayjsFormat),
         "error",
         "endpoint not reachable",
         {
@@ -854,7 +851,7 @@ async function checkEndpointReadiness() {
     }
   } else {
     ENDPOINT_READY = false;
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "endpoint not resolved");
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint not resolved");
   }
   if (ENDPOINT_READY) {
     endpointTimer = setTimeout(checkEndpointReadiness, endpointKeepaliveMs);
@@ -881,7 +878,7 @@ var run = async () => {
   // banner
   process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "starting",
     mni: {
       name: appName,
@@ -895,7 +892,7 @@ var run = async () => {
       keepaliveInterval: endpointKeepaliveMs,
     },
     environment: {
-      timestamp: dayjsFormat,
+      timestamp: OAS.dayjsFormat,
       ignoreTlsSsl: tlsSslVerification,
     },
     workerPoolsThreads: {

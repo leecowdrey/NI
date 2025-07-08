@@ -14,25 +14,23 @@ export const currency_precision = 5;
 export const currency_rate = { min: 0, max: 99999.99999 };
 export const costPerUnit = { min: 0, max: 999999.99 };
 export const fts_resources = [
-"adminEmail",
-"adminKafka",
-"adminMap",
-"adminWorkflow",
-"alert",
-"cable",
-"currency",
-"cve",
-"duct",
-"ne",
-"pole",
-"rack",
-"service",
-"site",
-"trench",
+  "adminEmail",
+  "adminKafka",
+  "adminMap",
+  "adminWorkflow",
+  "alert",
+  "cable",
+  "currency",
+  "cve",
+  "duct",
+  "ne",
+  "pole",
+  "rack",
+  "service",
+  "site",
+  "trench",
+  "*",
 ];
-export const fts_score = { min: 0.0, max: 1.0 };
-export const fts_score_scale = 3;
-export const fts_score_precision = 4;
 export const X_scale = 3;
 export const Y_scale = 2;
 export const Z_scale = 8;
@@ -128,6 +126,8 @@ export const datePeriodYearMonth = "[0-9]{6}";
 export const datePeriodYearMonthDay = "[0-9]{8}";
 export const datePeriodYearQuarter = "[Q|q][1,2,3,4][0-9]{4}";
 export const dateTime = "[0-9]{8}T[0-9]{6}";
+export const dayjsFormat = "YYYYMMDD[T]HHmmss";
+export const dayjsDateFormat = "YYYYMMDD";
 export const depthClassifier = ["low", "medium", "deep"];
 export const ductConfiguration = { min: 1, max: 48 };
 export const ductPurpose = ["gas", "power", "cable", "water"];

@@ -42,12 +42,10 @@ const versionRegex = /^(\d+\.)?(\d+\.)?(\*|\d+)$/gi;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-var dayjsFormat = "YYYYMMDD[T]HHmmss";
 var pointFormat = "%Y%m%dT%H%M%S";
-var dayjsDateFormat = "YYYYMMDD";
 var dateFormat = "%Y%m%d";
 
-const queueTables = ["predictQueue", "alertQueue", "ftsIndexQueue"];
+const queueTables = ["predictQueue", "alertQueue"];
 const pruneTables = [
   { table: "cable", shadow: "_cableCoax", key: "cableId" },
   { table: "cable", shadow: "_cableCopper", key: "cableId" },
@@ -82,191 +80,307 @@ const pruneTables = [
   { table: "trench", shadow: "_trench", key: "trenchId" },
 ];
 
-// FTS only supports VARCHAR fields (not ENUM) but will use wildcard to avoid code maintenance
+// FTS only supports VARCHAR fields (not ENUM)
 const ftsTables = [
   {
     table: "adminEmail",
     key: "id",
-    query: "id",
     leader: true,
+    field: ["vendor", "address", "name"],
     next: "adminEmailSend",
   },
   {
     table: "adminEmailSend",
     leader: false,
-    key: "id",
-    query: "adminEmailId",
+    key: "adminEmailId",
+    field: ["username", "host", "protocol", "authentication"],
     next: "adminEmailReceive",
   },
   {
     table: "adminEmailReceive",
     leader: false,
-    key: "id",
-    query: "adminEmailId",
+    key: "adminEmailId",
+    field: ["username", "host", "protocol"],
     next: null,
   },
-  { table: "adminKafka", key: "id", query: "id", leader: true, next: null },
+  {
+    table: "adminKafka",
+    key: "id",
+    leader: true,
+    field: ["name", "clientId", "username", "host", "acks"],
+    next: null,
+  },
   {
     table: "adminMap",
     leader: true,
     key: "id",
-    query: "id",
+    field: [
+      "vendor",
+      "renderUrl",
+      "credentialsIdentity",
+      "identityProviderBase",
+      "identityProviderWellKnown",
+    ],
     next: null,
   },
   {
     table: "adminWorkflow",
     key: "id",
-    queryKey: "id",
     leader: true,
+    field: ["name", "engineUsername", "engineUrl", "engineType"],
     next: null,
   },
   {
     table: "alert",
     key: "id",
-    query: "id",
     leader: true,
+    field: ["description", "function"],
     next: "alertCallback",
   },
   {
     table: "alertCallback",
     leader: false,
     key: "alertId",
+    field: ["callbackUrl", "username", "authentication"],
     next: "alertContent",
   },
-  { table: "alertContent", key: "id", query: "alertId", next: "alertPublish" },
+  {
+    table: "alertContent",
+    key: "alertId",
+    field: ["content"],
+    leader: false,
+    next: "alertPublish",
+  },
   {
     table: "alertPublish",
     leader: false,
-    key: "id",
-    query: "alertId",
+    key: "alertId",
+    field: ["topic"],
     next: "alertNotify",
   },
   {
     table: "alertNotify",
     leader: false,
-    key: "id",
-    query: "alertId",
+    key: "alertId",
+    field: ["subject"],
     next: "alertNotifyRecipient",
   },
   {
     table: "alertNotifyRecipient",
     leader: false,
-    key: "id",
-    query: "alertNotifyId",
+    key: "alertNotifyId",
+    field: ["recipient"],
     next: "alertWorkflow",
   },
   {
     table: "alertWorkflow",
     leader: false,
-    key: "id",
-    query: "alertId",
+    key: "alertId",
+    field: ["flowName"],
     next: null,
   },
-  { table: "currency", key: "id", query: "id", leader: true, next: null },
-  { table: "cve", key: "id", query: "id", leader: true, next: "cvePlatforms" },
+  {
+    table: "currency",
+    key: "isoCode",
+    leader: true,
+    field: ["name", "isoCode", "symbol"],
+    next: null,
+  },
+  {
+    table: "cve",
+    key: "id",
+    leader: true,
+    field: ["vendor", "uri"],
+    next: "cvePlatforms",
+  },
   {
     table: "cvePlatforms",
-    key: "id",
-    query: "cveId",
+    key: "cveId",
     leader: false,
+    field: ["platform"],
     next: "cveVersions",
   },
   {
     table: "cveVersions",
-    key: "id",
-    query: "cveId",
+    key: "cveId",
     leader: false,
+    field: ["version", "lessThan", "status", "versionType"],
     next: null,
   },
-  { table: "cable", key: "id", query: "id", leader: true, next: "_cable" },
+  {
+    table: "cable",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_cable",
+  },
   {
     table: "_cable",
-    leader: false,
-    key: "tsId",
-    query: "cableId",
+    key: "cableId",
+    field: ["reference", "technology", "state"],
     next: null,
   },
-  { table: "duct", key: "id", query: "id", leader: true, next: "_duct" },
+  {
+    table: "duct",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_duct",
+  },
   {
     table: "_duct",
     leader: false,
-    key: "tsId",
-    query: "ductId",
+    key: "ductId",
+    field: ["purpose", "category", "state"],
+    key: "ductId",
   },
-  { table: "ne", key: "id", query: "id", leader: true, next: "_ne" },
+  {
+    table: "ne",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_ne",
+  },
   {
     table: "_ne",
     leader: false,
-    key: "tsId",
-    query: "neId",
+    key: "neId",
+    field: ["host", "mgmtIP", "vendor", "model", "image", "version", "config"],
     next: "_nePort",
   },
   {
     table: "_nePort",
     leader: false,
-    key: "tsId",
-    query: "neId",
+    key: "neId",
+    field: ["name", "state", "technology"],
     next: null,
   },
-  { table: "pole", key: "id", query: "id", leader: true, next: "_pole" },
+  {
+    table: "pole",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_pole",
+  },
   {
     table: "_pole",
     leader: false,
-    key: "tsId",
-    query: "poleId",
+    key: "poleId",
+    field: [
+      "area",
+      "classifier",
+      "jobId",
+      "permitId",
+      "purpose",
+      "reference",
+      "state",
+      "unit",
+    ],
     next: null,
   },
-  { table: "rack", key: "id", query: "id", leader: true, next: "_rack" },
+  {
+    table: "rack",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_rack",
+  },
   {
     table: "_rack",
     leader: false,
-    key: "tsId",
-    query: "rackId",
+    key: "rackId",
+    field: ["reference", "floorArea", "unit"],
     next: "_rackSlot",
   },
   {
     table: "_rackSlot",
     leader: false,
-    key: "tsId",
-    query: "rackId",
+    key: "rackId",
+    field: ["neId", "host", "usage"],
     next: null,
   },
-  { table: "service", key: "id", query: "id", leader: true, next: "_service" },
+  {
+    table: "service",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_service",
+  },
   {
     table: "_service",
     leader: false,
-    key: "tsId",
-    query: "serviceId",
+    key: "serviceId",
+    field: [
+      "reference",
+      "customerName",
+      "customerReference",
+      "lagGroup",
+      "type",
+      "unit",
+    ],
     next: "_serviceIngress",
   },
   {
     table: "_serviceIngress",
     leader: false,
-    key: "tsId",
-    query: "serviceId",
+    key: "serviceId",
+    field: ["neId", "nePort"],
     next: "_serviceEgress",
   },
   {
     table: "_serviceEgress",
     leader: false,
-    key: "tsId",
-    query: "serviceId",
+    key: "serviceId",
+    field: ["neId", "nePort"],
     next: null,
   },
-  { table: "site", key: "id", query: "id", leader: true, next: "_site" },
+  {
+    table: "site",
+    key: "id",
+    field: null,
+    leader: true,
+    next: "_site",
+  },
   {
     table: "_site",
     leader: false,
-    key: "tsId",
-    query: "siteId",
+    key: "siteId",
+    field: [
+      "area",
+      "country",
+      "district",
+      "premisesNameNumber",
+      "reference",
+      "region",
+      "street",
+      "town",
+      "town",
+      "type",
+    ],
     next: null,
   },
-  { table: "trench", key: "id", query: "id", leader: true, next: "_trench" },
+  {
+    table: "trench",
+    key: "id",
+    field: null,
+    leader: true,
+    next: "_trench",
+  },
   {
     table: "_trench",
     leader: false,
-    key: "tsId",
-    query: "trenchId",
+    key: "trenchId",
+    field: [
+      "reference",
+      "jobId",
+      "permitId",
+      "purpose",
+      "classifier",
+      "unit",
+      "type",
+      "area",
+      "state",
+    ],
     next: null,
   },
 ];
@@ -287,17 +401,13 @@ global.LOGGER = new Console({
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
-var duckDbExtensions = ["fts", "inet", "spatial"];
+var duckDbExtensions = ["inet", "spatial"];
 var duckDbMaxMemory = null;
 var duckDbThreads = null;
 var duckDbVerison = null;
 var jobBackupEnabled = false;
 var backupCron = null;
 var backupCronTime = null;
-var updateFtsIndexTimer = null;
-var updateFtsIndexIntervalMs = 300000; // 5 minutes
-var updateFtsIndexQueueFillTimer = null;
-var updateFtsIndexQueueFillIntervalMs = 86400000; // 24 hours
 
 var updateGeometryTimer = null;
 var updateGeometryIntervalMs = 300000; // 5 minutes
@@ -454,7 +564,7 @@ function tick() {
 
 async function jobBackup(target) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "backup",
       state: "start",
       target: target,
@@ -464,13 +574,13 @@ async function jobBackup(target) {
         let result = await DDC.run(
           "EXPORT DATABASE '" + target + "' (OVERWRITE true)"
         );
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           event: "backup",
           state: "stop",
           result: result,
         });
       } else {
-        LOGGER.error(dayjs().format(dayjsFormat), "error", {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
           event: "backup",
           state: "failed",
           target: target,
@@ -478,7 +588,7 @@ async function jobBackup(target) {
         });
       }
     } else {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         event: "backup",
         state: "failed",
         target: target,
@@ -486,66 +596,12 @@ async function jobBackup(target) {
       });
     }
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "backup",
       state: "failed",
       error: e,
     });
   }
-}
-
-async function jobFtsReIndex(resource = null) {
-  if (updateFtsIndexTimer != null) {
-    clearTimeout(updateFtsIndexTimer);
-  }
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
-    event: "ftsReIndex",
-    state: "start",
-  });
-
-  try {
-    let ddRead = await DDC.runAndReadAll(
-      "SELECT qId,resource FROM ftsIndexQueue WHERE delete = FALSE"
-    );
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      for (let idx in ddRows) {
-        for (let t = 0; t < ftsTables.length; t++) {
-          if (ftsTables[t].table == ddRows[idx][1]) {
-            LOGGER.info(dayjs().format(dayjsFormat), "info", {
-              event: "ftsReIndex",
-              table: ftsTables[t].table,
-            });
-            // dont need to drop first as create include overwrite option
-            //await DDC.run("PRAGMA drop_fts_index('"+tables[t].table+"')");
-            await DDC.run(
-              "PRAGMA create_fts_index('" +
-                ftsTables[t].table +
-                "','" +
-                ftsTables[t].key +
-                "','*',stemmer = 'english',stopwords = 'english',strip_accents = 1,lower = 1,overwrite = true)"
-            );
-            await DDC.run(
-              "UPDATE ftsIndexQueue SET delete = true WHERE qId = " +
-                ddRows[idx][0]
-            );
-            break;
-          }
-        }
-      }
-    }
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
-      event: "ftsReIndex",
-      state: "stop",
-    });
-  } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
-      event: "ftsReIndex",
-      state: "failed",
-      error: e,
-    });
-  }
-  updateFtsIndexTimer = setTimeout(jobFtsReIndex, updateFtsIndexIntervalMs);
 }
 
 async function jobUpdateGeometry() {
@@ -558,7 +614,7 @@ async function jobUpdateGeometry() {
     { table: "_trenchCoordinate", dst: "geoPoint", src: "ST_Point3D(X,Y,Z)" },
   ];
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "updateGeometry",
       state: "start",
     });
@@ -577,12 +633,12 @@ async function jobUpdateGeometry() {
       await DDC.run(ddSql);
     }
     //
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "updateGeometry",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "updateGeometry",
       state: "failed",
       error: e,
@@ -598,7 +654,7 @@ async function jobUpdatePremisesPassed() {
   }
 
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "updatePremisesPassed",
       state: "start",
     });
@@ -629,7 +685,7 @@ async function jobUpdatePremisesPassed() {
     if (ddRows.length > 0) {
       for (let idx in ddRows) {
         if (DEBUG) {
-          LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
             event: "updatePremisesPassed",
             trench: ddRows[idx][1],
             source: ddRows[idx][2],
@@ -685,12 +741,12 @@ async function jobUpdatePremisesPassed() {
       }
     }
     //
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "updatePremisesPassed",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "updatePremisesPassed",
       state: "failed",
       error: e,
@@ -783,27 +839,12 @@ async function jobPredictQueueFill() {
   predictQueueTimer = setTimeout(jobPredictQueueFill, predictQueueIntervalMs);
 }
 
-async function jobFtsIndexQueueFill() {
-  if (updateFtsIndexQueueFillTimer != null) {
-    clearTimeout(updateFtsIndexQueueFillTimer);
-  }
-  for (let t = 0; t < ftsTables.length; t++) {
-    if (toBoolean(ftsTables[t].leader)) {
-      await dbAddFtsIndexQueueItem(ftsTables[t].table);
-    }
-  }
-  updateFtsIndexQueueFillTimer = setTimeout(
-    jobFtsIndexQueueFill,
-    updateFtsIndexQueueFillIntervalMs
-  );
-}
-
 async function jobPruneQueues() {
   if (pruneQueuesTimer != null) {
     clearTimeout(pruneQueuesTimer);
   }
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "pruneQueues",
       state: "start",
     });
@@ -811,12 +852,12 @@ async function jobPruneQueues() {
     for (let i = 0; i < queueTables.length; i++) {
       await DDC.run("DELETE FROM " + queueTables[i] + " WHERE delete = true");
     }
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "pruneQueues",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "pruneQueues",
       state: "failed",
       error: e,
@@ -837,7 +878,7 @@ async function jobPrune() {
   let predictedDuration = 6;
   let predictedUnit = "month";
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "prune",
       state: "start",
     });
@@ -1064,12 +1105,12 @@ async function jobPrune() {
         }
       }
     }
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "prune",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "prune",
       state: "failed",
       error: e,
@@ -1080,18 +1121,18 @@ async function jobPrune() {
 
 async function jobAlertTrenchUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertTrenchUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertTrenchUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertTrenchUtil",
       state: "failed",
       error: e,
@@ -1101,18 +1142,18 @@ async function jobAlertTrenchUtil(threshold = 100) {
 
 async function jobAlertDuctUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDuctUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDuctUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDuctUtil",
       state: "failed",
       error: e,
@@ -1122,18 +1163,18 @@ async function jobAlertDuctUtil(threshold = 100) {
 
 async function jobAlertCableUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertCableUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertCableUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertCableUtil",
       state: "failed",
       error: e,
@@ -1143,18 +1184,18 @@ async function jobAlertCableUtil(threshold = 100) {
 
 async function jobAlertPoleUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertPoleUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertPoleUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertPoleUtil",
       state: "failed",
       error: e,
@@ -1164,18 +1205,18 @@ async function jobAlertPoleUtil(threshold = 100) {
 
 async function jobAlertRackUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertRackUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertRackUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertRackUtil",
       state: "failed",
       error: e,
@@ -1185,18 +1226,18 @@ async function jobAlertRackUtil(threshold = 100) {
 
 async function jobAlertNePortUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNePortUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNePortUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertNePortUtil",
       state: "failed",
       error: e,
@@ -1206,18 +1247,18 @@ async function jobAlertNePortUtil(threshold = 100) {
 
 async function jobAlertTransmissionUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertTransmissionUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertTransmissionUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertTransmissionUtil",
       state: "failed",
       error: e,
@@ -1227,18 +1268,18 @@ async function jobAlertTransmissionUtil(threshold = 100) {
 
 async function jobAlertServiceBandwidth(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertServiceBandwidth",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertServiceBandwidth",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertServiceBandwidth",
       state: "failed",
       error: e,
@@ -1248,18 +1289,18 @@ async function jobAlertServiceBandwidth(threshold = 100) {
 
 async function jobAlertNeErrorRates(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNeErrorRates",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNeErrorRates",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertNeErrorRates",
       state: "failed",
       error: e,
@@ -1269,18 +1310,18 @@ async function jobAlertNeErrorRates(threshold = 100) {
 
 async function jobAlertNeClassifierUtil(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNeClassifierUtil",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertNeClassifierUtil",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertNeClassifierUtil",
       state: "failed",
       error: e,
@@ -1290,18 +1331,18 @@ async function jobAlertNeClassifierUtil(threshold = 100) {
 
 async function jobAlertWpEfficiency(threshold = 100) {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertWpEfficiency",
       state: "start",
       threshold: threshold,
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertWpEfficiency",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertWpEfficiency",
       state: "failed",
       error: e,
@@ -1311,17 +1352,17 @@ async function jobAlertWpEfficiency(threshold = 100) {
 
 async function jobAlertDqGeometryAlignment() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqGeometryAlignment",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqGeometryAlignment",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqGeometryAlignment",
       state: "failed",
       error: e,
@@ -1331,17 +1372,17 @@ async function jobAlertDqGeometryAlignment() {
 
 async function jobAlertDqMissingConnectedTo() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqMissingConnectedTo",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqMissingConnectedTo",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqMissingConnectedTo",
       state: "failed",
       error: e,
@@ -1351,17 +1392,17 @@ async function jobAlertDqMissingConnectedTo() {
 
 async function jobAlertDqTrench() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqTrench",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqMissingConnectedTo",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqMissingConnectedTo",
       state: "failed",
       error: e,
@@ -1371,17 +1412,17 @@ async function jobAlertDqTrench() {
 
 async function jobAlertDqCable() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqCable",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqCable",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqCable",
       state: "failed",
       error: e,
@@ -1391,17 +1432,17 @@ async function jobAlertDqCable() {
 
 async function jobAlertDqDuct() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqDuct",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqDuct",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqDuct",
       state: "failed",
       error: e,
@@ -1411,17 +1452,17 @@ async function jobAlertDqDuct() {
 
 async function jobAlertDqPole() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqPole",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqPole",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqPole",
       state: "failed",
       error: e,
@@ -1431,17 +1472,17 @@ async function jobAlertDqPole() {
 
 async function jobAlertDqNe() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqNe",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqNe",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqNe",
       state: "failed",
       error: e,
@@ -1451,17 +1492,17 @@ async function jobAlertDqNe() {
 
 async function jobAlertDqService() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqService",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqService",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqService",
       state: "failed",
       error: e,
@@ -1471,17 +1512,17 @@ async function jobAlertDqService() {
 
 async function jobAlertDqSite() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqSite",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqSite",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqSite",
       state: "failed",
       error: e,
@@ -1491,46 +1532,21 @@ async function jobAlertDqSite() {
 
 async function jobAlertDqOffNetPAF() {
   try {
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqOffNetPAF",
       state: "start",
     });
     // TODO:
-    LOGGER.info(dayjs().format(dayjsFormat), "info", {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "alertDqOffNetPAF",
       state: "stop",
     });
   } catch (e) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
       event: "alertDqOffNetPAF",
       state: "failed",
       error: e,
     });
-  }
-}
-
-async function dbAddFtsIndexQueueItem(resource) {
-  let ddq = await DDC.prepare(
-    "SELECT qId FROM ftsIndexQueue WHERE resource = $1 AND delete = false LIMIT 1"
-  );
-  ddq.bindVarchar(1, resource);
-  let ddRead = await ddq.runAndReadAll();
-  let ddRows = ddRead.getRows();
-  if (ddRows.length == 0) {
-    let ddp = await DDC.prepare(
-      "INSERT INTO ftsIndexQueue (resource) VALUES ($1)"
-    );
-    ddp.bindVarchar(1, resource);
-    await ddp.run();
-  }
-  // recursively follow the FTS next shadow/related table
-  for (let t = 0; t < ftsTables.length; t++) {
-    if (ftsTables[t].table == resource) {
-      if (ftsTables[t].next != null) {
-        await dbAddFtsIndexQueueItem(ftsTables[t].next);
-      }
-      break;
-    }
   }
 }
 
@@ -1559,7 +1575,6 @@ async function dbAddPredictQueueItem(resource, id, state) {
     ddp.bindInteger(2, ddRows[0][0]);
     await ddp.run();
   }
-  await dbAddFtsIndexQueueItem(resource);
 }
 
 async function dbIdExists(id, table, fieldName = "id") {
@@ -1691,7 +1706,8 @@ async function getSeqNextValue(seqName) {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.APISERV_DEBUG || false);
-  dayjsFormat = process.env.APISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
+  OAS.dayjsFormat =
+    process.env.APISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
@@ -1729,17 +1745,11 @@ function loadEnv() {
 
 // quit
 function quit() {
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "quit",
   });
   if (backupCron != null) {
     backupCron.stop();
-  }
-  if (updateFtsIndexTimer != null) {
-    clearTimeout(updateFtsIndexTimer);
-  }
-  if (updateFtsIndexQueueFillTimer != null) {
-    clearTimeout(updateFtsIndexQueueFillTimer);
   }
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
@@ -1779,13 +1789,13 @@ function quit() {
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 errorTypes.forEach((errType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: errType,
     });
   }
   process.on(errType, async (e) => {
     try {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         signal: sigType,
         error: e,
       });
@@ -1800,14 +1810,14 @@ errorTypes.forEach((errType) => {
 const signalTraps = ["SIGTERM", "SIGINT", "SIGQUIT", "SIGHUP"];
 signalTraps.forEach((sigType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: sigType,
     });
   }
   switch (sigType) {
     case "SIGTERM":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -1819,7 +1829,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGQUIT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -1831,7 +1841,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGINT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -1843,7 +1853,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGHUP":
       process.on(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         process.stdout.write("!");
@@ -1853,7 +1863,7 @@ signalTraps.forEach((sigType) => {
     default:
       if (DEBUG) {
         LOGGER.debug(
-          (dayjs().format(dayjsFormat), "debug", { signal: sigType })
+          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
         );
       }
   }
@@ -1876,7 +1886,7 @@ async function dnsSD() {
     }
   } catch (e) {
     if (DEBUG) {
-      LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+      LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
         dns: e,
       });
     }
@@ -1903,10 +1913,15 @@ var run = async () => {
       });
       DDC = await DDI.connect();
     } catch (e) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", "database locked", {
-        file: duckDbFile,
-        error: e,
-      });
+      LOGGER.error(
+        dayjs().format(OAS.dayjsFormat),
+        "error",
+        "database locked",
+        {
+          file: duckDbFile,
+          error: e,
+        }
+      );
       try {
         quit();
       } finally {
@@ -1915,7 +1930,7 @@ var run = async () => {
     }
   } else {
     LOGGER.error(
-      dayjs().format(dayjsFormat),
+      dayjs().format(OAS.dayjsFormat),
       "error",
       "database file missing",
       {
@@ -1949,7 +1964,7 @@ var run = async () => {
 
   // morgan logging for expressjs
   const morganFormat = (tokens, req, res) =>
-    dayjs(tokens.date(req, res, "iso")).format(dayjsFormat) +
+    dayjs(tokens.date(req, res, "iso")).format(OAS.dayjsFormat) +
     " info { " +
     "remote: '" +
     tokens["remote-addr"](req) +
@@ -1986,7 +2001,7 @@ var run = async () => {
   // request timeout handler
   app.use((req, res, next) => {
     res.setTimeout(serveTimeOutRequest, () => {
-      LOGGER.warn(dayjs().format(dayjsFormat), "warn", {
+      LOGGER.warn(dayjs().format(OAS.dayjsFormat), "warn", {
         event: "request timed out (408)",
         remote: req.ip,
         url: req.originalUrl,
@@ -2002,7 +2017,7 @@ var run = async () => {
   // request bad request handler
   app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         event: "bad request (400)",
         remote: req.ip,
         url: req.originalUrl,
@@ -2020,7 +2035,7 @@ var run = async () => {
         if (req.body != null) {
           hasBody = true;
         }
-        LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
           path: req.path.replace(serveUrlPrefix + serveUrlVersion, ""),
           originalUrl: req.originalUrl,
           method: req.method,
@@ -2032,12 +2047,12 @@ var run = async () => {
         if (hasBody) {
           switch (req.get("Content-Type")) {
             case OAS.mimeJSON:
-              LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
                 body: req.body,
               });
               break;
             default:
-              LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
                 body: "unsupported Content-Type",
               });
           }
@@ -2047,84 +2062,124 @@ var run = async () => {
     return next();
   }
 
+  async function getFtsResults(resource, query) {
+    let resResults = [];
+    let sql = null;
+    let next = null;
+    for (let t = 0; t < ftsTables.length; t++) {
+      if (resource == ftsTables[t].table) {
+        next = ftsTables[t].next;
+        if (ftsTables[t].field != null) {
+          sql =
+            "SELECT DISTINCT " +
+            ftsTables[t].key +
+            " FROM " +
+            ftsTables[t].table +
+            " WHERE";
+          for (let f = 0; f < ftsTables[t].field.length; f++) {
+            sql +=
+              " lower(" +
+              ftsTables[t].field[f] +
+              ") LIKE lower('%" +
+              query +
+              "%')";
+            if (f < ftsTables[t].field.length - 1) {
+              sql += " OR";
+            }
+          }
+          let ddRead = await DDC.runAndReadAll(sql);
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            for (let idx in ddRows) {
+              resResults.push({
+                resource: resource,
+                id: ddRows[idx][0],
+              });
+            }
+          }
+        }
+        while (next != null) {
+          for (let n = 0; n < ftsTables.length; n++) {
+            if (next == ftsTables[n].table) {
+              next = ftsTables[n].next;
+              if (ftsTables[n].field != null) {
+                sql =
+                  "SELECT DISTINCT " +
+                  ftsTables[n].key +
+                  " FROM " +
+                  ftsTables[n].table +
+                  " WHERE";
+                for (let f = 0; f < ftsTables[n].field.length; f++) {
+                  sql +=
+                    " lower(" +
+                    ftsTables[n].field[f] +
+                    ") LIKE lower('%" +
+                    query +
+                    "%')";
+                  if (f < ftsTables[n].field.length - 1) {
+                    sql += " OR";
+                  }
+                }
+                let ddRead = await DDC.runAndReadAll(sql);
+                let ddRows = ddRead.getRows();
+                if (ddRows.length > 0) {
+                  for (let idx in ddRows) {
+                    resResults.push({
+                      resource: resource,
+                      id: ddRows[idx][0],
+                    });
+                  }
+                }
+              }
+              break;
+            }
+          }
+        }
+        break;
+      }
+    }
+    return resResults;
+  }
   async function fts(req, res, next) {
     try {
       let result = validationResult(req);
+      let resJson = {};
+      let resResults = [];
       if (result.isEmpty()) {
-        let resJson = [];
-        let sql = null;
-        let next = null;
-        for (let t = 0; t < ftsTables.length; t++) {
-          if (req.body.resource == ftsTables[t].table) {
-            next = ftsTables[t].next;
-            sql =
-              "SELECT " +
-              ftsTables[t].query +
-              ",score FROM (SELECT *,fts_main_" +
-              ftsTables[t].table +
-              ".match_bm25(" +
-              ftsTables[t].key +
-              ",'" +
-              req.body.query +
-              "') AS score FROM " +
-              ftsTables[t].table +
-              " WHERE score > " +
-              req.body.score +
-              " ) sq ORDER BY score DESC";
-            let ddRead = await DDC.runAndReadAll(sql);
-            let ddRows = ddRead.getRows();
-            if (ddRows.length > 0) {
-              for (let idx in ddRows) {
-                resJson.push({
-                  resource: req.body.resource,
-                  id: ddRows[idx][0],
-                });
-              }
+        let resJson = {};
+        let resResults = [];
+        if (req.body.resource == "*") {
+          for (let l = 0; l < ftsTables.length; l++) {
+            if (ftsTables[l].leader) {
+              let resourceResults = await getFtsResults(
+                ftsTables[l].table,
+                req.body.query
+              );
+              resourceResults.forEach((result) => {
+                resResults.push(result);
+              });
             }
-            while (next != null) {
-              for (let n = 0; n < ftsTables.length; n++) {
-                if (next == ftsTables[n].table) {
-                  next = ftsTables[n].next;
-                  sql =
-                    "SELECT " +
-                    ftsTables[n].query +
-                    ",score FROM (SELECT *,fts_main_" +
-                    ftsTables[n].table +
-                    ".match_bm25(" +
-                    ftsTables[n].key +
-                    ",'" +
-                    req.body.query +
-                    "') AS score FROM " +
-                    ftsTables[n].table +
-                    " WHERE score > " +
-                    req.body.score +
-                    " ) sq ORDER BY score DESC";
-                  ddRead = await DDC.runAndReadAll(sql);
-                  ddRows = ddRead.getRows();
-                  if (ddRows.length > 0) {
-                    for (let idx in ddRows) {
-                      resJson.push({
-                        resource: req.body.resource,
-                        id: ddRows[idx][0],
-                      });
-                    }
-                  }
-                  break;
-                }
-              }
-            }
-            break;
           }
+        } else {
+          let resourceResults = await getFtsResults(
+            req.body.resource,
+            req.body.query
+          );
+          resourceResults.forEach((result) => {
+            resResults.push(result);
+          });
         }
-        if (resJson.length > 0) {
+        if (resResults.length > 0) {
           // reduce the duplicated matches from across the time-series to singular entities
-          resJson = Array.from(new Set(resJson.map(JSON.stringify)))
+          resResults = Array.from(new Set(resResults.map(JSON.stringify)))
             .map(JSON.parse)
             .sort();
-          res.contentType(OAS.mimeJSON).status(200).json(resJson);
-        } else {
-          res.sendStatus(404);
+          resJson.results = resResults;
         }
+        resJson.found = resResults.length;
+        resJson.resource = req.body.resource;
+        resJson.query = req.body.query;
+        res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -2379,7 +2434,6 @@ var run = async () => {
               req.params.currencyId +
               "'"
           );
-          await dbAddFtsIndexQueueItem("currency");
           res.sendStatus(204);
         } else {
           res
@@ -2418,7 +2472,6 @@ var run = async () => {
           );
           ddp.bindVarchar(2, req.params.currencyId);
           await ddp.run();
-          await dbAddFtsIndexQueueItem("currency");
           res.sendStatus(204);
         } else {
           res
@@ -2521,7 +2574,6 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
-        await dbAddFtsIndexQueueItem("adminEmail");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -2679,7 +2731,6 @@ var run = async () => {
           ddp.bindVarchar(10, req.body.receive.folderSeparator);
           await ddp.run();
         }
-        await dbAddFtsIndexQueueItem("adminEmail");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -2720,7 +2771,6 @@ var run = async () => {
               req.params.emailProviderId +
               "'"
           );
-          await dbAddFtsIndexQueueItem("adminEmail");
           res.sendStatus(204);
         } else {
           res
@@ -2970,7 +3020,6 @@ var run = async () => {
           ddp.bindVarchar(10, req.body.receive.folderSeparator);
           await ddp.run();
         }
-        await dbAddFtsIndexQueueItem("adminEmail");
         res.sendStatus(204);
       } else {
         res
@@ -3080,7 +3129,6 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
-        await dbAddFtsIndexQueueItem("adminKafka");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -3149,7 +3197,6 @@ var run = async () => {
         ddp.bindVarchar(15, req.body.producer.compressionMethod);
         ddp.bindVarchar(16, req.body.producer.authentication);
         await ddp.run();
-        await dbAddFtsIndexQueueItem("adminKafka");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -3180,7 +3227,6 @@ var run = async () => {
               req.params.kafkaProducerId +
               "'"
           );
-          await dbAddFtsIndexQueueItem("adminKafka");
           res.sendStatus(204);
         } else {
           res
@@ -3352,7 +3398,6 @@ var run = async () => {
           ddp.bindVarchar(15, req.body.producer.authentication);
           ddp.bindVarchar(16, req.body.kafkaProducerId);
           await ddp.run();
-          await dbAddFtsIndexQueueItem("adminKafka");
           res.sendStatus(204);
         } else {
           res
@@ -3472,7 +3517,6 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
-        await dbAddFtsIndexQueueItem("adminMap");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -3585,7 +3629,6 @@ var run = async () => {
           ddp.bindVarchar(7, req.body.identityProvider.token);
           ddp.bindVarchar(8, req.body.identityProvider.wellKnown);
           await ddp.run();
-          await dbAddFtsIndexQueueItem("adminMap");
           res
             .contentType(OAS.mimeJSON)
             .status(200)
@@ -3615,7 +3658,6 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM adminMap WHERE id = '" + req.params.mapProviderId + "'"
           );
-          await dbAddFtsIndexQueueItem("adminMap");
           res.sendStatus(204);
         } else {
           res
@@ -3783,7 +3825,6 @@ var run = async () => {
             ddp.bindVarchar(7, req.body.identityProvider.wellKnown);
             ddp.bindVarchar(8, req.body.mapProviderId);
             await ddp.run();
-            await dbAddFtsIndexQueueItem("adminMap");
             res.sendStatus(204);
           }
         } else {
@@ -3874,7 +3915,6 @@ var run = async () => {
         resJson = Array.from(new Set(resJson.map(JSON.stringify)))
           .map(JSON.parse)
           .sort();
-        await dbAddFtsIndexQueueItem("adminWorkflow");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -3933,7 +3973,6 @@ var run = async () => {
         ddp.bindVarchar(5, req.body.engine.password);
         ddp.bindVarchar(6, req.body.engine.type);
         await ddp.run();
-        await dbAddFtsIndexQueueItem("adminWorkflow");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -3964,7 +4003,6 @@ var run = async () => {
               req.params.emailProviderId +
               "'"
           );
-          await dbAddFtsIndexQueueItem("adminWorkflow");
           res.sendStatus(204);
         } else {
           res
@@ -4102,7 +4140,6 @@ var run = async () => {
           ddp.bindVarchar(5, req.body.engine.type);
           ddp.bindVarchar(6, req.body.workflowEngineId);
           await ddp.run();
-          await dbAddFtsIndexQueueItem("adminWorkflow");
           res.sendStatus(204);
         } else {
           res
@@ -4192,7 +4229,6 @@ var run = async () => {
         ddp.bindBoolean(3, toBoolean(req.body.delete));
         ddp.bindVarchar(4, req.body.function);
         await ddp.run();
-        await dbAddFtsIndexQueueItem("alert");
         res.contentType(OAS.mimeJSON).status(200).json({ alertId: alertId });
       } else {
         res
@@ -4227,7 +4263,6 @@ var run = async () => {
             ddp.bindVarchar(1, req.query.requestorId);
             ddp.bindVarchar(2, subscriptionIds[idx]);
             await ddp.run();
-            await dbAddFtsIndexQueueItem("alert");
           }
           res.sendStatus(204);
         } else {
@@ -4282,7 +4317,6 @@ var run = async () => {
             ddp.bindInteger(12, req.body[i].maxLifeRetries);
             ddp.bindInteger(13, 0);
             await ddp.run();
-            await dbAddFtsIndexQueueItem("alert");
             resJson.alerts.push({
               alertId: req.body.alertId,
               subscriptionId: subscriptionId,
@@ -4343,7 +4377,6 @@ var run = async () => {
               ddp.bindVarchar(1, req.query.requestorId);
               ddp.bindVarchar(2, notificationIds[idx]);
               await ddp.run();
-              await dbAddFtsIndexQueueItem("alert");
               res.sendStatus(204);
             } else {
               res.contentType(OAS.mimeJSON).status(404).json({
@@ -4497,7 +4530,6 @@ var run = async () => {
             ddp.bindVarchar(2, publicationIds[idx]);
             await ddp.run();
           }
-          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4549,7 +4581,6 @@ var run = async () => {
               ddp.bindVarchar(5, req.body.alerts[i].kafkaProducerId);
               ddp.bindVarchar(6, req.body.alerts[i].topic);
               await ddp.run();
-              await dbAddFtsIndexQueueItem("alert");
               resArr.push({
                 alertId: req.body.alerts[i].alertId,
                 publicationId: publicationId,
@@ -4593,7 +4624,6 @@ var run = async () => {
             ddp.bindVarchar(2, workflowRunnerIds[idx]);
             await ddp.run();
           }
-          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4656,7 +4686,6 @@ var run = async () => {
           }
         }
         resJson.alerts = resArr;
-        await dbAddFtsIndexQueueItem("alert");
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
@@ -4723,7 +4752,6 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM alert WHERE id = '" + req.params.alertId + "'"
           );
-          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4773,7 +4801,6 @@ var run = async () => {
                 "'"
             );
           }
-          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -4808,7 +4835,6 @@ var run = async () => {
         ddp.bindVarchar(4, req.body.alertId);
         ddp.bindVarchar(5, req.body.content);
         await ddp.run();
-        await dbAddFtsIndexQueueItem("alert");
         res
           .contentType(OAS.mimeJSON)
           .status(200)
@@ -4834,7 +4860,6 @@ var run = async () => {
               req.params.alertContentId +
               "'"
           );
-          await dbAddFtsIndexQueueItem("alert");
           res.sendStatus(204);
         } else {
           res
@@ -5021,7 +5046,6 @@ var run = async () => {
               }
             }
           }
-          await dbAddFtsIndexQueueItem("cve");
           res
             .contentType(OAS.mimeJSON)
             .status(200)
@@ -5059,7 +5083,6 @@ var run = async () => {
           await DDC.run(
             "DELETE FROM cve WHERE id = '" + req.params.cveId + "'"
           );
-          await dbAddFtsIndexQueueItem("cve");
           res.sendStatus(204);
         } else {
           res
@@ -7525,7 +7548,7 @@ var run = async () => {
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let ddRead = await DDC.runAndReadAll(
             "SELECT cable.id FROM cable,_cable WHERE cable.id = '" +
               req.params.cableId +
@@ -7581,7 +7604,7 @@ var run = async () => {
             let state = ddRows[0][10];
             let ductId = ddRows[0][11];
             let poleId = ddRows[0][12];
-            let point = dayjs().format(dayjsFormat);
+            let point = dayjs().format(OAS.dayjsFormat);
             let reference = ddRows[0][13];
 
             if (req.query?.predicted != null) {
@@ -8014,7 +8037,7 @@ var run = async () => {
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           await DDC.run(
             "UPDATE predictQueue SET point = strptime('" +
               point +
@@ -8089,7 +8112,7 @@ var run = async () => {
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           await DDC.run(
             "UPDATE alertQueue SET point = strptime('" +
               point +
@@ -8513,7 +8536,7 @@ var run = async () => {
                 });
             }
           }
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_cable");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -9253,7 +9276,7 @@ var run = async () => {
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let ddRead = await DDC.runAndReadAll(
             "SELECT duct.id FROM duct,_duct WHERE duct.id = '" +
               req.params.ductId +
@@ -9301,7 +9324,7 @@ var run = async () => {
               );
               res.sendStatus(204);
             } else {
-              let point = dayjs().format(dayjsFormat);
+              let point = dayjs().format(OAS.dayjsFormat);
               let tsId = await getSeqNextValue("seq_duct");
               let tsCol = "historicalTsId";
               switch (ddRows[0][4]) {
@@ -9546,7 +9569,7 @@ var run = async () => {
         let ddDuct = await ddp.runAndReadAll();
         let ddDuctRows = ddDuct.getRows();
         if (ddDuctRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_duct");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -9869,7 +9892,7 @@ var run = async () => {
   async function addNe(neId, body) {
     let tsId = await getSeqNextValue("seq_ne");
     let tsCol = "historicalTsId";
-    let point = dayjs().format(dayjsFormat);
+    let point = dayjs().format(OAS.dayjsFormat);
     switch (body.source) {
       case "historical":
         tsCol = "historicalTsId";
@@ -10165,7 +10188,7 @@ var run = async () => {
   }
 
   async function undeleteNe(neId) {
-    let point = dayjs().format(dayjsFormat);
+    let point = dayjs().format(OAS.dayjsFormat);
     let ddRead = await DDC.runAndReadAll(
       "SELECT ne.id FROM ne,_ne WHERE ne.id = '" +
         neId +
@@ -10303,7 +10326,7 @@ var run = async () => {
             // update rack slot usage
             if (body.rackId != null) {
               let rackId = body.rackId;
-              let rackPoint = dayjs().format(dayjsFormat);
+              let rackPoint = dayjs().format(OAS.dayjsFormat);
               let slotPosition = body.slotPosition;
               let slotUsage = slotPosition.split(",").sort();
               if (slotUsage.length > 0) {
@@ -10331,7 +10354,7 @@ var run = async () => {
             status = await addNe(
               neId,
               jsonDeepMerge(body, {
-                point: dayjs().format(dayjsFormat),
+                point: dayjs().format(OAS.dayjsFormat),
                 delete: true,
               })
             );
@@ -11083,7 +11106,7 @@ var run = async () => {
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let ddRead = await DDC.runAndReadAll(
             "SELECT pole.id FROM pole,_pole WHERE pole.id = '" +
               req.params.poleId +
@@ -11131,7 +11154,7 @@ var run = async () => {
               );
               res.sendStatus(204);
             } else {
-              let point = dayjs().format(dayjsFormat);
+              let point = dayjs().format(OAS.dayjsFormat);
               let tsId = await getSeqNextValue("seq_pole");
               let tsCol = "historicalTsId";
               switch (ddRows[0][4]) {
@@ -11539,7 +11562,7 @@ var run = async () => {
         let ddPole = await ddp.runAndReadAll();
         let ddPoleRows = ddPole.getRows();
         if (ddPoleRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_pole");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -12336,7 +12359,7 @@ var run = async () => {
   }
 
   async function undeleteRack(rackId) {
-    let point = dayjs().format(dayjsFormat);
+    let point = dayjs().format(OAS.dayjsFormat);
     let ddRead = await DDC.runAndReadAll(
       "SELECT rack.id FROM rack,_rack WHERE rack.id = '" +
         rackId +
@@ -12431,7 +12454,7 @@ var run = async () => {
             status = await addRack(
               rackId,
               jsonDeepMerge(body, {
-                point: dayjs().format(dayjsFormat),
+                point: dayjs().format(OAS.dayjsFormat),
                 delete: true,
               })
             );
@@ -13191,7 +13214,7 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
-        let point = dayjs().format(dayjsFormat);
+        let point = dayjs().format(OAS.dayjsFormat);
         if (req.query?.restore != null) {
           let ddRead = await DDC.runAndReadAll(
             "SELECT service.id FROM service,_service WHERE service.id = '" +
@@ -13755,7 +13778,7 @@ var run = async () => {
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_service");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -14789,7 +14812,7 @@ var run = async () => {
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let ddRead = await DDC.runAndReadAll(
             "SELECT site.id FROM site,_site WHERE site.id = '" +
               req.params.siteId +
@@ -14837,7 +14860,7 @@ var run = async () => {
               );
               res.sendStatus(204);
             } else {
-              let point = dayjs().format(dayjsFormat);
+              let point = dayjs().format(OAS.dayjsFormat);
               let tsId = await getSeqNextValue("seq_site");
               let tsCol = "historicalTsId";
               switch (ddRows[0][4]) {
@@ -15106,7 +15129,7 @@ var run = async () => {
         let ddSite = await ddp.runAndReadAll();
         let ddRows = ddSite.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_site");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -15825,7 +15848,7 @@ var run = async () => {
       if (result.isEmpty()) {
         // recover (restore) previously deleted if still exists
         if (req.query?.restore != null) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let ddRead = await DDC.runAndReadAll(
             "SELECT trench.id FROM trench,_trench WHERE trench.id = '" +
               req.params.trenchId +
@@ -15882,7 +15905,7 @@ var run = async () => {
               );
               res.sendStatus(204);
             } else {
-              let point = dayjs().format(dayjsFormat);
+              let point = dayjs().format(OAS.dayjsFormat);
               let tsCol = "historicalTsId";
               switch (ddRows[0][4]) {
                 case "historical":
@@ -16834,7 +16857,7 @@ var run = async () => {
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          let point = dayjs().format(dayjsFormat);
+          let point = dayjs().format(OAS.dayjsFormat);
           let tsId = await getSeqNextValue("seq_trench");
           let tsCol = "historicalTsId";
           switch (req.body.source) {
@@ -17484,7 +17507,7 @@ var run = async () => {
       res
         .status(200)
         .contentType(OAS.mimeJSON)
-        .json({ point: dayjs().format(dayjsFormat) });
+        .json({ point: dayjs().format(OAS.dayjsFormat) });
     } catch (e) {
       return next(e);
     }
@@ -17616,7 +17639,6 @@ var run = async () => {
             queues: {
               predict: await dbQueueCounts("predictQueue"),
               alert: await dbQueueCounts("alertQueue"),
-              fts: await dbQueueCounts("ftsIndexQueue"),
             },
             resources: {
               cables: await dbActiveInactiveCounts("cable"),
@@ -19225,7 +19247,9 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("alertId").isUUID(4),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("content").isString().trim(),
     addSingleAlertContent
   );
@@ -19503,7 +19527,9 @@ var run = async () => {
       }
     ),
     body("state").isIn(OAS.cableState),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleCable
@@ -19782,7 +19808,9 @@ var run = async () => {
       }
     ),
     body("state").isIn(OAS.cableState),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleCable
@@ -19954,7 +19982,7 @@ var run = async () => {
     ),
     body("*.state").isIn(OAS.cableState),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -20017,7 +20045,9 @@ var run = async () => {
       .default(1579)
       .isFloat(OAS.placement_horizontal),
     body("placement.unit").default("mm").isIn(OAS.sizeUnit),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleDuct
@@ -20143,7 +20173,9 @@ var run = async () => {
       .default(1579)
       .isFloat(OAS.placement_horizontal),
     body("placement.unit").default("mm").isIn(OAS.sizeUnit),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleDuct
@@ -20190,7 +20222,7 @@ var run = async () => {
       .isFloat(OAS.placement_horizontal),
     body("*.placement.unit").default("mm").isIn(OAS.sizeUnit),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -20368,7 +20400,9 @@ var run = async () => {
           "port connection to cable for single fiber, multi-fiber, coax, xdsl or ethernet must be supplied",
       }
     ),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleNe
@@ -20683,7 +20717,9 @@ var run = async () => {
           "port connection to cable for single fiber, multi-fiber, coax, xdsl or ethernet must be supplied",
       }
     ),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleNe
@@ -20833,7 +20869,7 @@ var run = async () => {
       }
     ),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -20953,7 +20989,9 @@ var run = async () => {
     body("coordinate.y").default(0).isFloat(OAS.coordinate_y),
     body("coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("coordinate.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSinglePole
@@ -21185,7 +21223,9 @@ var run = async () => {
     body("coordinate.y").default(0).isFloat(OAS.coordinate_y),
     body("coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("coordinate.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSinglePole
@@ -21300,7 +21340,7 @@ var run = async () => {
     body("*.coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("*.coordinate.m").optional().isString().trim(),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -21462,7 +21502,9 @@ var run = async () => {
     body("slotUsage").optional().isArray(),
     body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
     body("slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleRack
@@ -21502,7 +21544,9 @@ var run = async () => {
     body("slotUsage").optional().isArray(),
     body("slotUsage.*.slot").optional().isInt(OAS.rackSlots),
     body("slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleRack
@@ -21559,7 +21603,7 @@ var run = async () => {
     body("*.slotUsage.*.slot").optional().isInt(OAS.rackSlots),
     body("*.slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -21662,7 +21706,9 @@ var run = async () => {
     body("link.egress.*.cVlanId").default(0).isInt(OAS.vlanId),
     body("link.egress.*.sVlanId").default(0).isInt(OAS.vlanId),
     body("link.egress.*.member").optional().isInt(OAS.lag_members),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleService
@@ -21789,7 +21835,9 @@ var run = async () => {
     body("link.egress.*.cVlanId").default(0).isInt(OAS.vlanId),
     body("link.egress.*.sVlanId").default(0).isInt(OAS.vlanId),
     body("link.egress.*.member").optional().isInt(OAS.lag_members),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleService
@@ -21845,7 +21893,7 @@ var run = async () => {
     body("*.link.egress.*.sVlanId").default(0).isInt(OAS.vlanId),
     body("*.link.egress.*.member").optional().isInt(OAS.lag_members),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -21947,7 +21995,9 @@ var run = async () => {
     body("location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
     body("location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("location.coordinate.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleSite
@@ -22070,7 +22120,9 @@ var run = async () => {
     body("location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
     body("location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("location.coordinate.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleSite
@@ -22124,7 +22176,7 @@ var run = async () => {
     body("*.location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
     body("*.location.coordinate.m").optional().isString().trim(),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -22258,7 +22310,9 @@ var run = async () => {
     body("coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
     body("coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
     body("coordinates.*.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleTrench
@@ -22554,7 +22608,9 @@ var run = async () => {
     body("coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
     body("coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
     body("coordinates.*.m").optional().isString().trim(),
-    body("point").default(dayjs().format(dayjsFormat)).matches(OAS.dateTime),
+    body("point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleTrench
@@ -22668,7 +22724,7 @@ var run = async () => {
     body("*.coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
     body("*.coordinates.*.m").optional().isString().trim(),
     body("*.point")
-      .default(dayjs().format(dayjsFormat))
+      .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.delete").default(false).isBoolean({ strict: true }),
@@ -23321,17 +23377,16 @@ var run = async () => {
        Tag:           Search
        operationId:   search
        exposed Route: /mni/v1/search
-       HTTP method:   GET
-       OpenID Scope:  read:mni_api
+       HTTP method:   POST
+       OpenID Scope:  read:mni_search
     */
-  app.get(
+  app.post(
     serveUrlPrefix + serveUrlVersion + "/search",
-    // security("read:mni_api"),
+    // security("read:mni_search"),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("resource").isIn(OAS.fts_resources),
     body("query").isString().trim(),
-    body("score").default(0.2).isFloat(OAS.fts_score),
     fts
   );
 
@@ -23346,7 +23401,7 @@ var run = async () => {
   // banner
   process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "starting",
     mni: {
       name: appName,
@@ -23386,7 +23441,7 @@ var run = async () => {
       backupDirectory: backupDirectory,
       configDirectory: configDirectory,
       tickInterval: tickIntervalMs,
-      timestamp: dayjsFormat,
+      timestamp: OAS.dayjsFormat,
     },
     geometry: {
       premisesPassedBoundaryDistance: premisesPassedBoundaryDistance,
@@ -23404,7 +23459,7 @@ var run = async () => {
   // DuckDB will ignore the LOAD command if extension already loaded etc.
   for (let i = 0; i < duckDbExtensions.length; i++) {
     if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+      LOGGER.info(dayjs().format(OAS.dayjsFormat), "debug", {
         event: "extension",
         extension: duckDbExtensions[i],
         state: "install",
@@ -23412,7 +23467,7 @@ var run = async () => {
     }
     await DDC.run("INSTALL " + duckDbExtensions[i]);
     if (DEBUG) {
-      LOGGER.info(dayjs().format(dayjsFormat), "debug", {
+      LOGGER.info(dayjs().format(OAS.dayjsFormat), "debug", {
         event: "extension",
         extension: duckDbExtensions[i],
         state: "load",
@@ -23441,10 +23496,15 @@ var run = async () => {
     !fs.existsSync(path.join(configDirectory, sslKey)) ||
     !fs.existsSync(path.join(configDirectory, sslCert))
   ) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "SSL files missing", {
-      key: path.join(configDirectory, sslKey),
-      cert: path.join(configDirectory, sslCert),
-    });
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "SSL files missing",
+      {
+        key: path.join(configDirectory, sslKey),
+        cert: path.join(configDirectory, sslCert),
+      }
+    );
     try {
       quit();
     } finally {
@@ -23467,10 +23527,6 @@ var run = async () => {
   });
 
   // timer jobs - stagger the starts
-  updateFtsIndexTimer = setTimeout(
-    jobFtsReIndex,
-    updateFtsIndexIntervalMs * Math.floor(Math.random() * 1)
-  );
   pruneQueuesTimer = setTimeout(
     jobPruneQueues,
     pruneQueuesIntervalMs * Math.floor(Math.random() * 3)
@@ -23490,10 +23546,6 @@ var run = async () => {
   predictQueueTimer = setTimeout(
     jobPredictQueueFill,
     predictQueueIntervalMs * Math.floor(Math.random() * 11)
-  );
-  updateFtsIndexQueueFillTimer = setTimeout(
-    jobFtsIndexQueueFill,
-    updateFtsIndexQueueFillIntervalMs * Math.floor(Math.random() * 13)
   );
 
   // stdout ticker to indicate alive

@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1751922279"
+    "version": "1.0.0.1751998619"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -21138,6 +21138,151 @@
           }
         }
       }
+    },
+    "/search": {
+      "post": {
+        "summary": "search",
+        "security": [
+          {
+            "openId": [
+              "read:mni_search"
+            ]
+          }
+        ],
+        "operationId": "search",
+        "tags": [
+          "Search"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "resource",
+                  "query"
+                ],
+                "properties": {
+                  "resource": {
+                    "$ref": "#/components/schemas/searchResourceType"
+                  },
+                  "query": {
+                    "description": "case insensitive query phrase specified with search",
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "all": {
+                  "value": {
+                    "resource": "*",
+                    "query": "sample"
+                  }
+                },
+                "site": {
+                  "value": {
+                    "resource": "site",
+                    "query": "Zellix"
+                  }
+                },
+                "ne": {
+                  "value": {
+                    "resource": "ne",
+                    "query": "Cisco"
+                  }
+                },
+                "cve": {
+                  "value": {
+                    "resource": "cve",
+                    "query": "MX240"
+                  }
+                },
+                "currency": {
+                  "value": {
+                    "resource": "currency",
+                    "query": "sterl"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "results",
+                    "found",
+                    "resource",
+                    "query"
+                  ],
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "description": "internal MNI resource type of the matching resource",
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "internal MNI identifier of the matching resource",
+                            "type": "string",
+                            "format": "uuid"
+                          }
+                        }
+                      }
+                    },
+                    "found": {
+                      "description": "number of found matches",
+                      "type": "number",
+                      "format": "integer"
+                    },
+                    "resource": {
+                      "$ref": "#/components/schemas/searchResourceType"
+                    },
+                    "query": {
+                      "description": "query phrase specified with search",
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": {
+                      "results": [
+                        {
+                          "resource": "service",
+                          "id": "81eefb1f-57d4-40be-bfa9-c765e6d7577a"
+                        },
+                        {
+                          "resource": "service",
+                          "id": "784d5d3d-44cf-41a2-8ef0-24a376b0b296"
+                        }
+                      ],
+                      "found": 2,
+                      "resource": "*",
+                      "query": "sample"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -22347,6 +22492,28 @@
           "predicted"
         ],
         "default": "historical"
+      },
+      "searchResourceType": {
+        "description": "internal MNI resource type to search, *note*: `*` will perform the search across all supported resource types\n",
+        "type": "string",
+        "enum": [
+          "adminEmail",
+          "adminKafka",
+          "adminMap",
+          "adminWorkflow",
+          "alert",
+          "cable",
+          "currency",
+          "cve",
+          "duct",
+          "ne",
+          "pole",
+          "rack",
+          "service",
+          "site",
+          "trench",
+          "*"
+        ]
       },
       "siteType": {
         "description": "- `street` - various street furniture options\n- `exchange` - district/town exchange building etc.\n- `pop` - point of presence\n- `dc` - data center\n- `colo` - colocation\n- `unclassified` - not recorded or known\n",
@@ -23843,6 +24010,7 @@
         "write:mni_q2c",
         "read:mni_rack",
         "write:mni_rack",
+        "read:mni_search",
         "read:mni_service",
         "write:mni_service",
         "read:mni_site",

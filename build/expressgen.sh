@@ -9,6 +9,8 @@
 # © 2024-2025 Merkator nv/sa. All rights reserved.
 #=====================================================================
 #
+exit
+
 RETVAL=0
 OPENAPI_YAML="${1:-mni.yaml}"
 EXPRESSJS="${2:-express.js}"

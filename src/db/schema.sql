@@ -16,30 +16,9 @@
 INSTALL inet;
 LOAD inet;
 
----
---- see https://duckdb.org/docs/stable/core_extensions/full_text_search.html
-INSTALL fts;
-LOAD fts;
-
 -- see https://github.com/duckdb/duckdb-spatial/blob/main/docs/example.md
 INSTALL spatial;
 LOAD spatial;
-
----- Represent a latitude and longitude as a point
--- The Eiffel Tower in Paris, France has a 
--- latitude of 48.858935 and longitude of 2.293412
--- We can represent this location as a point
--- SELECT st_point(48.858935, 2.293412) AS Eiffel_Tower;
---
---SELECT
---    st_point(48.858935, 2.293412) AS Eiffel_Tower, 
---    st_point(48.873407, 2.295471) AS Arc_de_Triomphe,
---    st_distance(
---        st_transform(Eiffel_Tower, 'EPSG:4326', 'EPSG:27563'), 
---        st_transform(Arc_de_Triomphe, 'EPSG:4326', 'EPSG:27563')
---    ) AS Aerial_Distance_M;
---
--- for MNI can use ST_Point3D(X,Y,Z) or ST_Point4D(X,Y,Z,M) 
 
 ---
 --- custom types (ENUMs to match Open API)
@@ -112,7 +91,6 @@ CREATE SEQUENCE IF NOT EXISTS seq_cvePlatforms;
 CREATE SEQUENCE IF NOT EXISTS seq_cveVersions;
 CREATE SEQUENCE IF NOT EXISTS seq_dashboard;
 CREATE SEQUENCE IF NOT EXISTS seq_duct;
-CREATE SEQUENCE IF NOT EXISTS seq_ftsIndexQueue;
 CREATE SEQUENCE IF NOT EXISTS seq_ne;
 CREATE SEQUENCE IF NOT EXISTS seq_nePort;
 CREATE SEQUENCE IF NOT EXISTS seq_nePortCoax;
@@ -225,13 +203,6 @@ CREATE TABLE IF NOT EXISTS cveVersions (
     version VARCHAR,
     versionType VARCHAR,
     FOREIGN KEY (cveId) REFERENCES cve (id)
-);
-
-CREATE TABLE IF NOT EXISTS ftsIndexQueue (
-    qId INTEGER NOT NULL DEFAULT nextval('seq_ftsIndexQueue') PRIMARY KEY,
-    point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
-    delete BOOLEAN NOT NULL DEFAULT false,
-    resource VARCHAR NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS predictQueue (

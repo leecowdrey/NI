@@ -32,9 +32,6 @@ const clientRetryMs = 5000;
 const clientRefreshMs = 60000;
 const clientReadinessAttempts = 10;
 
-var dayjsFormat = "YYYYMMDD[T]HHmmss";
-var dayjsDatePointFormat = "YYYYMMDD";
-
 global.DEBUG = false;
 global.DDI = null;
 global.DDC = null;
@@ -143,7 +140,7 @@ async function apiGatewayDnsSD() {
     }
   } catch (e) {
     if (DEBUG) {
-      LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+      LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
         dns: e,
       });
     }
@@ -162,7 +159,7 @@ function tick() {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.UISERV_DEBUG || false);
-  dayjsFormat = process.env.UISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
+  OAS.dayjsFormat = process.env.UISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
@@ -186,7 +183,7 @@ function loadEnv() {
 
 // quit
 function quit() {
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "quit",
   });
   if (tickTimer != null) {
@@ -204,13 +201,13 @@ function quit() {
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 errorTypes.forEach((errType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: errType,
     });
   }
   process.on(errType, async (e) => {
     try {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         signal: sigType,
         error: e,
       });
@@ -225,14 +222,14 @@ errorTypes.forEach((errType) => {
 const signalTraps = ["SIGTERM", "SIGINT", "SIGQUIT", "SIGHUP"];
 signalTraps.forEach((sigType) => {
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
       trap: sigType,
     });
   }
   switch (sigType) {
     case "SIGTERM":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -244,7 +241,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGQUIT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -256,7 +253,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGINT":
       process.once(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         try {
@@ -268,7 +265,7 @@ signalTraps.forEach((sigType) => {
       break;
     case "SIGHUP":
       process.on(sigType, async () => {
-        LOGGER.info(dayjs().format(dayjsFormat), "info", {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
           signal: sigType,
         });
         process.stdout.write("!");
@@ -278,7 +275,7 @@ signalTraps.forEach((sigType) => {
     default:
       if (DEBUG) {
         LOGGER.debug(
-          (dayjs().format(dayjsFormat), "debug", { signal: sigType })
+          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
         );
       }
   }
@@ -301,7 +298,7 @@ async function dnsSD() {
     }
   } catch (e) {
     if (DEBUG) {
-      LOGGER.debug(dayjs().format(dayjsFormat), "debug", {
+      LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
         dns: e,
       });
     }
@@ -326,7 +323,7 @@ var run = async () => {
   // banner
   process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
-  LOGGER.info(dayjs().format(dayjsFormat), "info", {
+  LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "starting",
     mni: {
       name: appName,
@@ -344,7 +341,7 @@ var run = async () => {
       urlPrefix: serveUrlPrefix,
     },
     environment: {
-      timestamp: dayjsFormat,
+      timestamp: OAS.dayjsFormat,
       tickInterval: tickIntervalMs,
       distDirectory: distDirectory,
       configDirectory: configDirectory,
@@ -381,7 +378,7 @@ var run = async () => {
 
   // morgan logging for expressjs
   const morganFormat = (tokens, req, res) =>
-    dayjs(tokens.date(req, res, "iso")).format(dayjsFormat) +
+    dayjs(tokens.date(req, res, "iso")).format(OAS.dayjsFormat) +
     " info { " +
     "remote: '" +
     tokens["remote-addr"](req) +
@@ -417,7 +414,7 @@ var run = async () => {
   // request timeout handler
   app.use((req, res, next) => {
     res.setTimeout(serveTimeOutRequest, () => {
-      LOGGER.warn(dayjs().format(dayjsFormat), "warn", {
+      LOGGER.warn(dayjs().format(OAS.dayjsFormat), "warn", {
         event: "request timed out (408)",
         remote: req.ip,
         url: req.originalUrl,
@@ -433,7 +430,7 @@ var run = async () => {
   // request bad request handler
   app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-      LOGGER.error(dayjs().format(dayjsFormat), "error", {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         event: "bad request (400)",
         remote: req.ip,
         url: req.originalUrl,
@@ -451,7 +448,7 @@ var run = async () => {
   // static file handlers
   app.use(serveUrlPrefix, express.static(distDirectory));
   if (DEBUG) {
-    LOGGER.debug(dayjs().format(dayjsFormat), "debug", "dynamicPaths", {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", "dynamicPaths", {
       urlPath: serveUrlPrefix,
       osPath: distDirectory,
     });
@@ -465,7 +462,7 @@ var run = async () => {
         "/" +
         subDirs[idx].replace(distDirectory + path.sep, "");
       if (DEBUG) {
-        LOGGER.debug(dayjs().format(dayjsFormat), "debug", "dynamicPaths", {
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", "dynamicPaths", {
           urlPath:
             serveUrlPrefix +
             "/" +
@@ -1027,7 +1024,7 @@ var run = async () => {
     !fs.existsSync(path.join(configDirectory, sslKey)) ||
     !fs.existsSync(path.join(configDirectory, sslCert))
   ) {
-    LOGGER.error(dayjs().format(dayjsFormat), "error", "SSL files missing", {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "SSL files missing", {
       key: path.join(configDirectory, sslKey),
       cert: path.join(configDirectory, sslCert),
     });
