@@ -705,13 +705,19 @@ export const mapVendorPlatform = [
   mapVendorMicrosoftAzure,
   mapVendorERSI,
 ];
+export const managementProtocolHttps = "https";
+export const managementProtocolNetconf = "netconf";
+export const managementProtocolSnmp = "snmp";
+export const managementProtocolSsh = "ssh";
+export const managementProtocolTelnet = "telnet";
+export const managementProtocolNone = "none";
 export const managementProtocol = [
-  "https",
-  "netconf",
-  "snmp",
-  "ssh",
-  "telnet",
-  "none",
+  managementProtocolHttps,
+  managementProtocolNetconf,
+  managementProtocolSnmp,
+  managementProtocolSsh,
+  managementProtocolTelnet,
+  managementProtocolNone,
 ];
 export const pageNumber = { min: 1, max: Number.MAX_SAFE_INTEGER };
 export const pageSize = { min: 1, max: 128 };
