@@ -48,6 +48,20 @@ if [[ ${RETVAL} -eq 0 ]] ; then
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+for SECRET in sample/secret-*.json ; do
+  SECRET_NAME=${SECRET#"sample/secret-"}
+  SECRET_NAME=${SECRET_NAME%".json"}
+  doing "Adding secret - ${SECRET_NAME}"
+  curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/secret" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -d @${SECRET} &>/dev/null
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+done
+
 doing "Adding bulk email providers"
 curl --silent --insecure --connect-timeout 5 \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/email" \
@@ -88,25 +102,19 @@ curl --silent --insecure --connect-timeout 5 \
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
-doing "Adding NE sample CVE: CVE-2025-21601"
-curl --silent --insecure --connect-timeout 5 \
+for CVE in sample/CVE-*.json ; do
+  CVE_NAME=${CVE#"sample/CVE-"}
+  CVE_NAME=${CVE_NAME%".json"}
+  doing "Adding CVE - ${CVE_NAME}"
+  curl --silent --insecure --connect-timeout 5 \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/cve" \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/CVE-2025-21601.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding NE sample CVE: CVE-2025-30649"
-curl --silent --insecure --connect-timeout 5 \
-     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/cve" \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/CVE-2025-30649.json &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+     -d @${CVE} &>/dev/null
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+done
 
 doing "Adding bulk sites"
 curl --silent --insecure --connect-timeout 5 \

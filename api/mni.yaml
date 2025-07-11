@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1751998619
+  version: 1.0.0.1752246071
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -15624,6 +15624,58 @@ components:
       - link
       - backhaul
       - unclassified
+    managementProtocol:
+      description: |
+        protocol used to read and/or write the configuration or operational state of the network equipment
+      type: string
+      enum:
+      - https
+      - netconf
+      - snmp
+      - ssh
+      - telnet
+      - none
+      default: none
+    secretScopeType:
+      type: string
+    secretRealmType:
+      type: string
+    secretType:
+      description: |
+        type of the secret that is to be managed, *note*:
+        - `identity` for OAuth2.0/OIDC style secrets
+        - `plain` for simple username/password style secrets
+        - `snmp` for v1, v2c and v3c SNMP style secrets
+        - `ssh` for SSH key-based with optional certificate style secrets
+        - `token` for RESTful style API authorization style secrets
+      type: string
+      enum:
+      - identity
+      - plain
+      - snmp
+      - ssh
+      - ssl
+      - token
+    snmpVersion:
+      description: |
+        SNMP version, *note*: `v1` and `v2c` use community strings, where as `v3` uses authorization and encryption protocols for authentication
+      type: string
+      enum:
+      - v1
+      - v2c
+      - v3
+    snmpAuthorizationProtocol:
+      description: SNMP v3 authorization protocol
+      type: string
+      enum:
+      - MD5
+      - SHA
+    snmpEncryptionProtocol:
+      description: SNMP v3 encryption protocol
+      type: string
+      enum:
+      - DES
+      - AES-128
     serviceType:
       description: |
         intended offering of the suppplied service, *note*: 
@@ -16515,6 +16567,8 @@ security:
   - read:mni_rack
   - write:mni_rack
   - read:mni_search
+  - read:mni_secret
+  - write:mni_secret
   - read:mni_service
   - write:mni_service
   - read:mni_site

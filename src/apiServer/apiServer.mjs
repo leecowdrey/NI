@@ -10,6 +10,7 @@
 //
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
+import { Base64 } from "js-base64";
 import dns from "dns";
 import cron from "node-cron";
 import duckdb from "@duckdb/node-api";
@@ -32,9 +33,10 @@ import path from "path";
 import fs from "fs";
 import { Console } from "node:console";
 import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 import dayjs from "dayjs";
 import { compare, compareVersions } from "compare-versions";
+const { default: crypto } = await import("crypto");
 
 const allPrintableRegEx = /[ -~]/gi;
 const versionRegex = /^(\d+\.)?(\d+\.)?(\*|\d+)$/gi;
@@ -45,6 +47,7 @@ const app = express();
 var pointFormat = "%Y%m%dT%H%M%S";
 var dateFormat = "%Y%m%d";
 
+const cipherAlgorithm = "aes-256-gcm";
 const queueTables = ["predictQueue", "alertQueue"];
 const pruneTables = [
   { table: "cable", shadow: "_cableCoax", key: "cableId" },
@@ -93,41 +96,35 @@ const ftsTables = [
     table: "adminEmailSend",
     leader: false,
     key: "adminEmailId",
-    field: ["username", "host", "protocol", "authentication"],
+    field: ["host", "protocol", "authentication"],
     next: "adminEmailReceive",
   },
   {
     table: "adminEmailReceive",
     leader: false,
     key: "adminEmailId",
-    field: ["username", "host", "protocol"],
+    field: ["host", "protocol"],
     next: null,
   },
   {
     table: "adminKafka",
     key: "id",
     leader: true,
-    field: ["name", "clientId", "username", "host", "acks"],
+    field: ["name", "clientId", "host", "acks"],
     next: null,
   },
   {
     table: "adminMap",
     leader: true,
     key: "id",
-    field: [
-      "vendor",
-      "renderUrl",
-      "credentialsIdentity",
-      "identityProviderBase",
-      "identityProviderWellKnown",
-    ],
+    field: ["vendor", "renderUrl"],
     next: null,
   },
   {
     table: "adminWorkflow",
     key: "id",
     leader: true,
-    field: ["name", "engineUsername", "engineUrl", "engineType"],
+    field: ["name", "engineUrl", "engineType"],
     next: null,
   },
   {
@@ -141,7 +138,7 @@ const ftsTables = [
     table: "alertCallback",
     leader: false,
     key: "alertId",
-    field: ["callbackUrl", "username", "authentication"],
+    field: ["callbackUrl", "authentication"],
     next: "alertContent",
   },
   {
@@ -245,7 +242,16 @@ const ftsTables = [
     table: "_ne",
     leader: false,
     key: "neId",
-    field: ["host", "mgmtIP", "vendor", "model", "image", "version", "config"],
+    field: [
+      "host",
+      "mgmtIP",
+      "protocol",
+      "vendor",
+      "model",
+      "image",
+      "version",
+      "config",
+    ],
     next: "_nePort",
   },
   {
@@ -401,7 +407,7 @@ global.LOGGER = new Console({
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
-var duckDbExtensions = ["inet", "spatial"];
+var duckDbExtensions = ["spatial"]; // "inet",
 var duckDbMaxMemory = null;
 var duckDbThreads = null;
 var duckDbVerison = null;
@@ -439,6 +445,8 @@ var apiDirectory = null;
 var configDirectory = null;
 var serviceUsername = null;
 var serviceKey = null;
+var encryptionKey = null;
+var encryptionIV = null;
 var server = null;
 var premisesPassedBoundaryDistance = 10;
 
@@ -475,6 +483,34 @@ function toDecimal(n, s = OAS.float_scale, p = OAS.float_precision) {
     return Number(0);
   }
   return Number(parseFloat(n).toFixed(p));
+}
+
+function encrypt(plain) {
+  let encrypted = "";
+  if (plain.length > 0) {
+    let cipher = crypto.createCipheriv(
+      cipherAlgorithm,
+      Buffer.from(encryptionKey, "base64"),
+      Buffer.from(encryptionIV, "base64")
+    );
+    encrypted = cipher.update(plain, "utf8", "base64");
+    encrypted += cipher.final("base64");
+  }
+  return encrypted;
+}
+
+function decrypt(encrypted) {
+  let plain = "";
+  if (encrypted.length > 0) {
+    let decipher = crypto.createCipheriv(
+      cipherAlgorithm,
+      Buffer.from(encryptionKey, "base64"),
+      Buffer.from(encryptionIV, "base64")
+    );
+    plain = decipher.update(encrypted, "base64", "utf8");
+    plain += decipher.final("utf8");
+  }
+  return plain;
 }
 
 function sleep(ms) {
@@ -1706,8 +1742,6 @@ async function getSeqNextValue(seqName) {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.APISERV_DEBUG || false);
-  OAS.dayjsFormat =
-    process.env.APISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
@@ -1734,6 +1768,11 @@ function loadEnv() {
   sslCert = process.env.APISERV_SSL_CERT || "apiServer.crt";
   serviceUsername = process.env.APISERV_SERVICE_USERNAME || "internal";
   serviceKey = process.env.APISERV_SERVICE_KEY || "internal";
+  encryptionKey =
+    process.env.APISERV_ENCRYPTION_KEY ||
+    "RKSNSNOu/KsC/e3rQx2CupFXatPQyOirfwh+LJRs51k=";
+  encryptionIV =
+    process.env.APISERV_ENCRYPTION_IV || "UqcWaL23KcbQzhu3tq+pMQ==";
   apiDirectory =
     path.resolve(process.env.APISERV_API_DIRECTORY) ||
     path.join(__dirname, "api");
@@ -2140,6 +2179,7 @@ var run = async () => {
     }
     return resResults;
   }
+
   async function fts(req, res, next) {
     try {
       let result = validationResult(req);
@@ -2180,6 +2220,696 @@ var run = async () => {
         resJson.resource = req.body.resource;
         resJson.query = req.body.query;
         res.contentType(OAS.mimeJSON).status(200).json(resJson);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function secretExist(scope, realm, type) {
+    let exists = false;
+    let ddp = await DDC.prepare(
+      "SELECT rowid FROM secret WHERE lower(scope) = lower($1) AND lower(realm) = lower($2) AND type = $3 LIMIT 1"
+    );
+    ddp.bindVarchar(1, scope);
+    ddp.bindVarchar(2, realm);
+    ddp.bindVarchar(3, type);
+    let ddRead = await ddp.runAndReadAll();
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      exists = true;
+    }
+    return exists;
+  }
+
+  async function addSecret(body) {
+    try {
+      let ddp = null;
+      switch (body.type) {
+        case OAS.secretTypeIdentity:
+          ddp = await DDC.prepare(
+            "INSERT INTO secret (scope,realm,type,identityProviderBase,identityProviderAuthorization,identityProviderToken,identityProviderWellKnown,expiration) VALUES ($1,$2,$3,$4,$5,$6,$7,strptime($8,$9))"
+          );
+          ddp.bindVarchar(1, body.scope);
+          ddp.bindVarchar(2, body.realm);
+          ddp.bindVarchar(3, body.type);
+          ddp.bindVarchar(4, encrypt(body.identity.base));
+          ddp.bindVarchar(5, encrypt(body.identity.authorization));
+          ddp.bindVarchar(6, encrypt(body.identity.token));
+          ddp.bindVarchar(7, encrypt(body.identity.wellKnown));
+          ddp.bindVarchar(8, body.identity.expiration);
+          ddp.bindVarchar(9, pointFormat);
+          await ddp.run();
+          break;
+        case OAS.secretTypePlain:
+          ddp = await DDC.prepare(
+            "INSERT INTO secret (scope,realm,type,plainUsername,plainPassword,expiration) VALUES ($1,$2,$3,$4,$5,strptime($6,$7))"
+          );
+          ddp.bindVarchar(1, body.scope);
+          ddp.bindVarchar(2, body.realm);
+          ddp.bindVarchar(3, body.type);
+          ddp.bindVarchar(4, encrypt(body.plain.username));
+          ddp.bindVarchar(5, encrypt(body.plain.password));
+          ddp.bindVarchar(6, body.plain.expiration);
+          ddp.bindVarchar(7, pointFormat);
+          await ddp.run();
+          break;
+        case OAS.secretTypeSnmp:
+          switch (body.snmp.version) {
+            case "v3":
+              ddp = await DDC.prepare(
+                "INSERT INTO secret (scope,realm,type,snmpVersion,snmpUsername,snmpAuthorizationProtocol,snmpEncryptionProtocol,snmpAuthorizationPassword,snmpEncryptionPassword,expiration) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,strptime($10,$11))"
+              );
+              ddp.bindVarchar(1, body.scope);
+              ddp.bindVarchar(2, body.realm);
+              ddp.bindVarchar(3, body.type);
+              ddp.bindVarchar(4, body.snmp.version);
+              ddp.bindVarchar(5, encrypt(body.snmp.v3.username));
+              ddp.bindVarchar(6, encrypt(body.snmp.v3.authorization.protocol));
+              ddp.bindVarchar(7, encrypt(body.snmp.v3.authorization.password));
+              ddp.bindVarchar(8, encrypt(body.snmp.v3.encryption.protocol));
+              ddp.bindVarchar(9, encrypt(body.snmp.v3.encryption.password));
+              ddp.bindVarchar(10, body.snmp.expiration);
+              ddp.bindVarchar(11, pointFormat);
+              await ddp.run();
+              break;
+            default:
+              ddp = await DDC.prepare(
+                "INSERT INTO secret (scope,realm,type,snmpVersion,snmpCommunityRead,snmpCommunityWrite,snmpCommunityTrap,expiration) VALUES ($1,$2,$3,$4,$5,$6,$7,strptime($8,$9))"
+              );
+              ddp.bindVarchar(1, body.scope);
+              ddp.bindVarchar(2, body.realm);
+              ddp.bindVarchar(3, body.type);
+              ddp.bindVarchar(4, encrypt(body.snmp.version));
+              ddp.bindVarchar(5, encrypt(body.snmp.community.read));
+              ddp.bindVarchar(6, encrypt(body.snmp.community.write));
+              ddp.bindVarchar(7, encrypt(body.snmp.community.trap));
+              ddp.bindVarchar(8, body.snmp.expiration);
+              ddp.bindVarchar(9, pointFormat);
+              await ddp.run();
+          }
+          break;
+        case OAS.secretTypeSsh:
+          ddp = await DDC.prepare(
+            "INSERT INTO secret (scope,realm,type,sshUsername,sshKeyPrivate,sshKeyPublic,expiration) VALUES ($1,$2,$3,$4,$5,$6,strptime($7,$8))"
+          );
+          ddp.bindVarchar(1, body.scope);
+          ddp.bindVarchar(2, body.realm);
+          ddp.bindVarchar(3, body.type);
+          ddp.bindVarchar(4, encrypt(body.ssh.username));
+          ddp.bindVarchar(5, encrypt(body.ssh.key.private));
+          ddp.bindVarchar(6, encrypt(body.ssh.key.public));
+          ddp.bindVarchar(7, body.ssh.expiration);
+          ddp.bindVarchar(8, pointFormat);
+          await ddp.run();
+          if (body.ssh.key?.passphrase != null) {
+            await DDC.run(
+              "UPDATE secret SET sshKeyPassphrase = '" +
+                encrypt(body.ssh.key.passphrase) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          if (body.ssh.key?.hostCA != null) {
+            await DDC.run(
+              "UPDATE secret SET sshHostCA = '" +
+                encrypt(body.ssh.key.hostCA) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+        case OAS.secretTypeSsl:
+          ddp = await DDC.prepare(
+            "INSERT INTO secret (scope,realm,type,sslPrivate,expiration) VALUES ($1,$2,$3,$4,strptime($5,$6))"
+          );
+          ddp.bindVarchar(1, body.scope);
+          ddp.bindVarchar(2, body.realm);
+          ddp.bindVarchar(3, body.type);
+          ddp.bindVarchar(4, encrypt(body.ssl.private));
+          ddp.bindVarchar(5, body.ssl.expiration);
+          ddp.bindVarchar(6, pointFormat);
+          await ddp.run();
+          if (body.ssl?.ca != null) {
+            await DDC.run(
+              "UPDATE secret SET sslCA = '" +
+                encrypt(body.ssl.ca) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+        case OAS.secretTypeToken:
+          ddp = await DDC.prepare(
+            "INSERT INTO secret (scope,realm,type,tokenKey,expiration) VALUES ($1,$2,$3,$4,strptime($5,$6))"
+          );
+          ddp.bindVarchar(1, body.scope);
+          ddp.bindVarchar(2, body.realm);
+          ddp.bindVarchar(3, body.type);
+          ddp.bindVarchar(4, encrypt(body.token.key));
+          ddp.bindVarchar(5, body.token.expiration);
+          ddp.bindVarchar(6, pointFormat);
+          await ddp.run();
+          if (body.token?.identity != null) {
+            await DDC.run(
+              "UPDATE secret SET tokenIdentity = '" +
+                encrypt(body.token.identity) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+      }
+      return 204;
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+        event: "addSecret",
+        error: err,
+      });
+      return 500;
+    }
+  }
+
+  async function updateSecret(body) {
+    try {
+      let ddp = null;
+      switch (body.type) {
+        case OAS.secretTypeIdentity:
+          ddp = await DDC.prepare(
+            "UPDATE secret SET identityProviderBase = $1, identityProviderAuthorization = $2, identityProviderToken = $3, identityProviderWellKnown = $4) WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
+          );
+          ddp.bindVarchar(1, encrypt(body.identity.base));
+          ddp.bindVarchar(2, encrypt(body.identity.authorization));
+          ddp.bindVarchar(3, encrypt(body.identity.token));
+          ddp.bindVarchar(4, encrypt(body.identity.wellKnown));
+          ddp.bindVarchar(5, body.scope);
+          ddp.bindVarchar(6, body.realm);
+          ddp.bindVarchar(7, body.type);
+          await ddp.run();
+          break;
+        case OAS.secretTypePlain:
+          ddp = await DDC.prepare(
+            "UPDATE secret SET plainUsername = $1, plainPassword = $2 WHERE lower(scope) = lower($3) AND lower(realm) = lower($4) AND type = $5"
+          );
+          ddp.bindVarchar(1, encrypt(body.plain.username));
+          ddp.bindVarchar(2, encrypt(body.plain.password));
+          ddp.bindVarchar(3, body.scope);
+          ddp.bindVarchar(4, body.realm);
+          ddp.bindVarchar(5, body.type);
+          await ddp.run();
+          break;
+        case OAS.secretTypeSnmp:
+          switch (body.snmp.version) {
+            case "v3":
+              ddp = await DDC.prepare(
+                "UPDATE secret SET snmpVersion = $1,snmpUsername = $2,snmpAuthorizationProtocol = $3,snmpEncryptionProtocol = $4,snmpAuthorizationPassword = $5,snmpEncryptionPassword = $6 WHERE lower(scope) = lower($7) AND lower(realm) = lower($8) AND type = $9"
+              );
+              ddp.bindVarchar(1, body.snmp.version);
+              ddp.bindVarchar(2, encrypt(body.snmp.v3.username));
+              ddp.bindVarchar(3, encrypt(body.snmp.v3.authorization.protocol));
+              ddp.bindVarchar(4, encrypt(body.snmp.v3.authorization.password));
+              ddp.bindVarchar(5, encrypt(body.snmp.v3.encryption.protocol));
+              ddp.bindVarchar(6, encrypt(body.snmp.v3.encryption.password));
+              ddp.bindVarchar(7, body.scope);
+              ddp.bindVarchar(8, body.realm);
+              ddp.bindVarchar(9, body.type);
+              await ddp.run();
+              break;
+            default:
+              ddp = await DDC.prepare(
+                "UPDATE secret SET snmpVersion = $1,snmpCommunityRead = $2,snmpCommunityWrite = $3,snmpCommunityTrap = $4 WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
+              );
+              ddp.bindVarchar(1, encrypt(body.snmp.version));
+              ddp.bindVarchar(2, encrypt(body.snmp.community.read));
+              ddp.bindVarchar(3, encrypt(body.snmp.community.write));
+              ddp.bindVarchar(4, encrypt(body.snmp.community.trap));
+              ddp.bindVarchar(5, body.scope);
+              ddp.bindVarchar(6, body.realm);
+              ddp.bindVarchar(7, body.type);
+              await ddp.run();
+          }
+          break;
+        case OAS.secretTypeSsh:
+          ddp = await DDC.prepare(
+            "UPDATE secret SET sshUsername = $1,sshKeyPrivate = $2,sshKeyPublic = $3 WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
+          );
+          ddp.bindVarchar(1, encrypt(body.ssh.username));
+          ddp.bindVarchar(2, encrypt(body.ssh.key.private));
+          ddp.bindVarchar(3, encrypt(body.ssh.key.public));
+          ddp.bindVarchar(4, body.scope);
+          ddp.bindVarchar(5, body.realm);
+          ddp.bindVarchar(6, body.type);
+          await ddp.run();
+          if (body.ssh.key?.passphrase != null) {
+            await DDC.run(
+              "UPDATE secret SET sshKeyPassphrase = '" +
+                encrypt(body.ssh.key.passphrase) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          if (body.ssh.key?.hostCA != null) {
+            await DDC.run(
+              "UPDATE secret SET sshHostCA = '" +
+                encrypt(body.ssh.key.hostCA) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+        case OAS.secretTypeSsl:
+          ddp = await DDC.prepare(
+            "UPDATE secret SET sslPrivate = $1 WHERE lower(scope) = lower($2) AND lower(realm) = lower($3) AND type = $4"
+          );
+          ddp.bindVarchar(1, encrypt(body.ssl.private));
+          ddp.bindVarchar(2, body.scope);
+          ddp.bindVarchar(3, body.realm);
+          ddp.bindVarchar(4, body.type);
+          await ddp.run();
+          if (body.ssl?.ca != null) {
+            await DDC.run(
+              "UPDATE secret SET sslCA = '" +
+                encrypt(body.ssl.ca) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+        case OAS.secretTypeToken:
+          ddp = await DDC.prepare(
+            "UPDATE secret SET tokenKey = $1 WHERE lower(scope) = lower($2) AND lower(realm) = lower($3) AND type = $4"
+          );
+          ddp.bindVarchar(1, encrypt(body.token.key));
+          ddp.bindVarchar(2, body.scope);
+          ddp.bindVarchar(3, body.realm);
+          ddp.bindVarchar(4, body.type);
+          await ddp.run();
+          if (body.token?.identity != null) {
+            await DDC.run(
+              "UPDATE secret SET tokenIdentity = '" +
+                encrypt(body.token.identity) +
+                "' WHERE lower(scope) = lower('" +
+                body.scope +
+                "') AND lower(realm) = lower('" +
+                body.realm +
+                "') AND type = '" +
+                body.type +
+                "'"
+            );
+          }
+          break;
+      }
+      return 204;
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+        event: "updateSecret",
+        error: err,
+      });
+      return 500;
+    }
+  }
+
+  async function addSingleSecret(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (
+          !(await secretExist(req.body.scope, req.body.realm, req.body.type))
+        ) {
+          res.sendStatus(await addSecret(req.body));
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(409)
+            .json({
+              errors:
+                "scope " +
+                req.body.scope +
+                ", realm " +
+                req.body.realm +
+                " of type " +
+                req.body.type +
+                " already exists",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteSecret(scope, realm, type) {
+    try {
+      if (await secretExist(scope, realm, type)) {
+        await DDC.run(
+          "DELETE FROM secret WHERE lower(scope) = lower('" +
+            scope +
+            "') AND lower(realm) = lower('" +
+            realm +
+            "') AND type = '" +
+            type +
+            "'"
+        );
+        return 204;
+      } else {
+        return 404;
+      }
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+        event: "deleteSecret",
+        error: err,
+      });
+      return 500;
+    }
+  }
+
+  async function deleteSingleSecret(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let status = await deleteSecret(
+          req.params.scope,
+          req.params.realm,
+          req.params.type
+        );
+        if (status == 204) {
+          res.sendStatus(status);
+        } else if (status == 404) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(status)
+            .json({
+              errors:
+                "scope " +
+                req.params.scope +
+                ", realm " +
+                req.params.realm +
+                " of type " +
+                req.params.type +
+                " not found",
+            });
+        } else {
+          res.sendStatus(500);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getSecret(scope, realm, type) {
+    try {
+      let ddRead = null;
+      let ddRows = null;
+      let resJson = {};
+      if (await secretExist(scope, realm, type)) {
+        switch (type) {
+          case OAS.secretTypeIdentity:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),identityProviderBase,identityProviderAuthorization,identityProviderTokenidentityProviderWellKnown FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                identity: {
+                  base: decrypt(ddRows[0][1]),
+                  authorization: decrypt(ddRows[0][2]),
+                  token: decrypt(ddRows[0][3]),
+                  wellKnown: decrypt(ddRows[0][4]),
+                  expiration: ddRows[0][0],
+                },
+              };
+            }
+            break;
+          case OAS.secretTypePlain:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),plainUsername,plainPassword FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                plain: {
+                  username: decrypt(ddRows[0][1]),
+                  password: decrypt(ddRows[0][2]),
+                  expiration: ddRows[0][0],
+                },
+              };
+            }
+            break;
+          case OAS.secretTypeSnmp:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),snmpVersion,snmpCommunityRead,snmpCommunityWrite,snmpCommunityTrap,snmpUsername,snmpAuthorizationProtocol,snmpAuthorizationPassword,snmpEncryptionProtocol,snmpEncryptionPassword FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                snmp: { version: ddRows[0][1] },
+              };
+              switch (ddRows[0][1]) {
+                case "v3":
+                  if (ddRows[0][5] != null) {
+                    resJson.snmp.v3.username = decrypt(ddRows(ddRows[0][5]));
+                  }
+                  resJson.snmp.v3.authorization.protocol = decrypt(
+                    ddRows(ddRows[0][6])
+                  );
+                  resJson.snmp.v3.authorization.password = decrypt(
+                    ddRows(ddRows[0][7])
+                  );
+                  resJson.snmp.v3.encryption.protocol = decrypt(
+                    ddRows(ddRows[0][8])
+                  );
+                  resJson.snmp.v3.encryption.password = decrypt(
+                    ddRows(ddRows[0][9])
+                  );
+                  break;
+                default:
+                  resJson.snmp.community.read = decrypt(ddRows[0][2]);
+                  resJson.snmp.community.write = decrypt(ddRows[0][3]);
+                  resJson.snmp.community.trap = decrypt(ddRows[0][4]);
+              }
+              resJson.snmp.expiration = ddRows[0][0];
+            }
+            break;
+          case OAS.secretTypeSsh:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),sshUsername,sshKeyPassphrase,sshKeyPrivate,sshKeyPublic,sshHostCA FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                ssh: {
+                  username: decrypt(ddRows[0][1]),
+                  key: {
+                    private: decrypt(ddRows[0][3]),
+                    public: decrypt(ddRows[0][4]),
+                  },
+                  expiration: ddRows[0][0],
+                },
+              };
+              if (ddRows[0][2] != null) {
+                resJson.ssh.passphrase = decrypt(ddRows[0][2]);
+              }
+              if (ddRows[0][5] != null) {
+                resJson.ssh.key.hostCA = decrypt(ddRows[0][5]);
+              }
+            }
+            break;
+          case OAS.secretTypeSsl:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),sslPrivate,sslCA FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                ssl: {
+                  private: decrypt(ddRows[0][1]),
+                  expiration: ddRows[0][0],
+                },
+              };
+              if (ddRows[0][2] != null) {
+                resJson.ssl.ca = decrypt(ddRows[0][2]);
+              }
+            }
+            break;
+          case OAS.secretTypeToken:
+            ddRead = await DDC.runAndReadAll(
+              "SELECT strftime(expiration,'" +
+                pointFormat +
+                "'),tokenKey,tokenIdentity FROM secret WHERE lower(scope) = lower('" +
+                scope +
+                "') AND lower(realm) = lower('" +
+                realm +
+                "') AND type = '" +
+                type +
+                "' LIMIT 1"
+            );
+            ddRows = ddRead.getRows();
+            if (ddRows.length > 0) {
+              resJson = {
+                scope: scope,
+                realm: realm,
+                type: type,
+                token: {
+                  key: decrypt(ddRows[0][1]),
+                },
+              };
+              if (ddRows[0][2] != null) {
+                resJson.token.identity = decrypt(ddRows[0][2]);
+              }
+            }
+            break;
+        }
+        return resJson;
+      } else {
+        return null;
+      }
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+        event: "getSecret",
+        error: err,
+      });
+      return null;
+    }
+  }
+
+  async function getSingleSecret(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (
+          await secretExist(req.params.scope, req.params.realm, req.params.type)
+        ) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(200)
+            .json(
+              await getSecret(
+                req.params.scope,
+                req.params.realm,
+                req.params.type
+              )
+            );
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "scope " +
+                req.params.scope +
+                ", realm " +
+                req.params.realm +
+                " of type " +
+                req.params.type +
+                " not found",
+            });
+        }
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -2506,7 +3236,17 @@ var run = async () => {
           let dddRows = ddd.getRows();
           if (dddRows.length > 0) {
             await DDC.run(
+              "DELETE FROM secret WHERE scope = 'adminEmailSend' AND realm = '" +
+                req.body[i].emailProviderId +
+                "'"
+            );
+            await DDC.run(
               "DELETE FROM adminEmailSend WHERE adminEmailId = '" +
+                req.body[i].emailProviderId +
+                "'"
+            );
+            await DDC.run(
+              "DELETE FROM secret WHERE scope = 'adminEmailReceive' AND realm = '" +
                 req.body[i].emailProviderId +
                 "'"
             );
@@ -2533,40 +3273,60 @@ var run = async () => {
           ddp.bindVarchar(4, req.body[i].name);
           await ddp.run();
 
+          let emailSendSecret = {
+            scope: "adminEmailSend",
+            realm: req.body[i].emailProviderId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body[i].send.username,
+              password: req.body[i].send.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(emailSendSecret);
+
           ddp = await DDC.prepare(
-            "INSERT INTO adminEmailSend (adminEmailId,username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+            "INSERT INTO adminEmailSend (adminEmailId,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7)"
           );
           ddp.bindVarchar(1, req.body[i].emailProviderId);
-          ddp.bindVarchar(2, req.body[i].send.username);
-          ddp.bindVarchar(3, req.body[i].send.password);
-          ddp.bindVarchar(4, req.body[i].send.host);
-          ddp.bindInteger(5, toInteger(req.body[i].send.port));
-          ddp.bindVarchar(6, req.body[i].send.protocol);
-          ddp.bindVarchar(7, req.body[i].send.authentication);
-          ddp.bindBoolean(8, toBoolean(req.body[i].send.encryption.enabled));
-          ddp.bindBoolean(9, toBoolean(req.body[i].send.encryption.starttls));
+          ddp.bindVarchar(2, req.body[i].send.host);
+          ddp.bindInteger(3, toInteger(req.body[i].send.port));
+          ddp.bindVarchar(4, req.body[i].send.protocol);
+          ddp.bindVarchar(5, req.body[i].send.authentication);
+          ddp.bindBoolean(6, toBoolean(req.body[i].send.encryption.enabled));
+          ddp.bindBoolean(7, toBoolean(req.body[i].send.encryption.starttls));
           await ddp.run();
 
           if (req.body[i].receive != null && req.body[i].receive != {}) {
+            let emailReceiveSecret = {
+              scope: "adminEmailReceive",
+              realm: req.body[i].emailProviderId,
+              type: OAS.secretTypePlain,
+              plain: {
+                username: req.body[i].receive.username,
+                password: req.body[i].receive.password,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await addSecret(emailReceiveSecret);
+
             let ddp = await DDC.prepare(
-              "INSERT INTO adminEmailReceive (adminEmailId,username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+              "INSERT INTO adminEmailReceive (adminEmailId,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
             );
             ddp.bindVarchar(1, req.body[i].emailProviderId);
-            ddp.bindVarchar(2, req.body[i].receive.username);
-            ddp.bindVarchar(3, req.body[i].receive.password);
-            ddp.bindVarchar(4, req.body[i].receive.host);
-            ddp.bindInteger(5, toInteger(req.body[i].receive.port));
-            ddp.bindVarchar(6, req.body[i].receive.protocol);
+            ddp.bindVarchar(2, req.body[i].receive.host);
+            ddp.bindInteger(3, toInteger(req.body[i].receive.port));
+            ddp.bindVarchar(4, req.body[i].receive.protocol);
             ddp.bindBoolean(
-              7,
+              5,
               toBoolean(req.body[i].receive.encryption.enabled)
             );
             ddp.bindBoolean(
-              8,
+              6,
               toBoolean(eq.body[i].receive.encryption.starttls)
             );
-            ddp.bindVarchar(9, req.body[i].receive.rootFolder);
-            ddp.bindVarchar(10, req.body[i].receive.folderSeparator);
+            ddp.bindVarchar(7, req.body[i].receive.rootFolder);
+            ddp.bindVarchar(8, req.body[i].receive.folderSeparator);
             await ddp.run();
           }
           resJson.push(req.body[i].emailProviderId);
@@ -2602,38 +3362,48 @@ var run = async () => {
             name: ddEmailRows[idx][3],
           };
           let ddReceive = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
+            "SELECT host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
               "FROM adminEmailReceive WHERE adminEmailId = '" +
               ddEmailRows[idx][0] +
               "'"
           );
           let ddReceiveRows = ddReceive.getRows();
           if (ddReceiveRows.length > 0) {
+            let emailReceiveSecret = await getSecret(
+              "adminEmailReceive",
+              ddEmailRows[idx][0],
+              OAS.secretTypePlain
+            );
             resObj.receive = {
-              username: ddReceiveRows[0][0],
-              password: ddReceiveRows[0][1],
-              host: ddReceiveRows[0][2],
-              port: toInteger(ddReceiveRows[0][3]),
-              protocol: ddReceiveRows[0][4],
+              username: emailReceiveSecret.plain.username,
+              password: emailReceiveSecret.plain.password,
+              host: ddReceiveRows[0][0],
+              port: toInteger(ddReceiveRows[0][1]),
+              protocol: ddReceiveRows[0][2],
               encryption: {
-                enabled: toBoolean(ddReceiveRows[0][5]),
-                starttls: toBoolean(ddReceiveRows[0][6]),
+                enabled: toBoolean(ddReceiveRows[0][3]),
+                starttls: toBoolean(ddReceiveRows[0][4]),
               },
-              rootFolder: ddReceiveRows[0][7],
-              folderSeparator: ddReceiveRows[0][8],
+              rootFolder: ddReceiveRows[0][5],
+              folderSeparator: ddReceiveRows[0][6],
             };
           }
           let ddSend = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
+            "SELECT host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
               "FROM adminEmailSend WHERE adminEmailId = '" +
               ddEmailRows[idx][0] +
               "'"
           );
           let ddSendRows = ddSend.getRows();
           if (ddSendRows.length > 0) {
+            let emailSendSecret = await getSecret(
+              "adminEmailSend",
+              ddEmailRows[idx][0],
+              OAS.secretTypePlain
+            );
             resObj.send = {
-              username: ddSendRows[0][0],
-              password: ddSendRows[0][1],
+              username: emailSendSecret.plain.username,
+              password: emailSendSecret.plain.password,
               host: ddSendRows[0][2],
               port: toInteger(ddSendRows[0][3]),
               protocol: ddSendRows[0][4],
@@ -2701,34 +3471,53 @@ var run = async () => {
         ddp.bindVarchar(4, req.body.name);
         await ddp.run();
 
+        let emailSendSecret = {
+          scope: "adminEmailSend",
+          realm: emailProviderId,
+          type: OAS.secretTypePlain,
+          plain: {
+            username: req.body.send.username,
+            password: req.body.send.password,
+            expiration: OAS.secretExpiration,
+          },
+        };
+        let result = await addSecret(emailSendSecret);
+
         ddp = await DDC.prepare(
-          "INSERT INTO adminEmailSend (adminEmailId,username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+          "INSERT INTO adminEmailSend (adminEmailId,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7)"
         );
         ddp.bindVarchar(1, emailProviderId);
-        ddp.bindVarchar(2, req.body.send.username);
-        ddp.bindVarchar(3, req.body.send.password);
-        ddp.bindVarchar(4, req.body.send.host);
-        ddp.bindInteger(5, toInteger(req.body.send.port));
-        ddp.bindVarchar(6, req.body.send.protocol);
-        ddp.bindVarchar(7, req.body.send.authentication);
-        ddp.bindBoolean(8, toBoolean(req.body.send.encryption.enabled));
-        ddp.bindBoolean(9, toBoolean(req.body.send.encryption.starttls));
+        ddp.bindVarchar(2, req.body.send.host);
+        ddp.bindInteger(3, toInteger(req.body.send.port));
+        ddp.bindVarchar(4, req.body.send.protocol);
+        ddp.bindVarchar(5, req.body.send.authentication);
+        ddp.bindBoolean(6, toBoolean(req.body.send.encryption.enabled));
+        ddp.bindBoolean(7, toBoolean(req.body.send.encryption.starttls));
         await ddp.run();
 
         if (req.body.receive != null && req.body.receive != {}) {
+          let emailReceiveSecret = {
+            scope: "adminEmailReceive",
+            realm: emailProviderId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body.receive.username,
+              password: req.body.receive.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(emailReceiveSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminEmailReceive (adminEmailId,username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+            "INSERT INTO adminEmailReceive (adminEmailId,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
           );
           ddp.bindVarchar(1, emailProviderId);
-          ddp.bindVarchar(2, req.body.receive.username);
-          ddp.bindVarchar(3, req.body.receive.password);
-          ddp.bindVarchar(4, req.body.receive.host);
-          ddp.bindInteger(5, toInteger(req.body.receive.port));
-          ddp.bindVarchar(6, req.body.receive.protocol);
-          ddp.bindBoolean(7, toBoolean(req.body.receive.encryption.enabled));
-          ddp.bindBoolean(8, toBoolean(req.body.receive.encryption.starttls));
-          ddp.bindVarchar(9, req.body.receive.rootFolder);
-          ddp.bindVarchar(10, req.body.receive.folderSeparator);
+          ddp.bindVarchar(2, req.body.receive.host);
+          ddp.bindInteger(3, toInteger(req.body.receive.port));
+          ddp.bindVarchar(4, req.body.receive.protocol);
+          ddp.bindBoolean(5, toBoolean(req.body.receive.encryption.enabled));
+          ddp.bindBoolean(6, toBoolean(req.body.receive.encryption.starttls));
+          ddp.bindVarchar(7, req.body.receive.rootFolder);
+          ddp.bindVarchar(8, req.body.receive.folderSeparator);
           await ddp.run();
         }
         res
@@ -2751,6 +3540,16 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         if (await dbIdExists(req.params.emailProviderId, "adminEmail")) {
+          await DDC.run(
+            "DELETE FROM secret WHERE scope = 'adminEmailSend' AND realm = '" +
+              req.params.emailProviderId +
+              "'"
+          );
+          await DDC.run(
+            "DELETE FROM secret WHERE scope = 'adminEmailReceive' AND realm = '" +
+              req.params.emailProviderId +
+              "'"
+          );
           await DDC.run(
             "DELETE FROM alertNotify WHERE emailProviderId = '" +
               req.params.emailProviderId +
@@ -2811,8 +3610,13 @@ var run = async () => {
             address: ddEmailRows[0][1],
             name: ddEmailRows[0][2],
           };
+          let emailReceiveSecret = await getSecret(
+            "adminEmailReceive",
+            req.params.emailProviderId,
+            OAS.secretTypePlain
+          );
           let ddReceive = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
+            "SELECT host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
               "FROM adminEmailReceive WHERE adminEmailId = '" +
               req.params.emailProviderId +
               "'"
@@ -2820,21 +3624,26 @@ var run = async () => {
           let ddReceiveRows = ddReceive.getRows();
           if (ddReceiveRows.length > 0) {
             resJson.receive = {
-              username: ddReceiveRows[0][0],
-              password: ddReceiveRows[0][1],
-              host: ddReceiveRows[0][2],
-              port: toInteger(ddReceiveRows[0][3]),
-              protocol: ddReceiveRows[0][4],
+              username: emailReceiveSecret.plain.username,
+              password: emailReceiveSecret.plain.password,
+              host: ddReceiveRows[0][0],
+              port: toInteger(ddReceiveRows[0][1]),
+              protocol: ddReceiveRows[0][2],
               encryption: {
-                enabled: toBoolean(ddReceiveRows[0][5]),
-                starttls: toBoolean(ddReceiveRows[0][6]),
+                enabled: toBoolean(ddReceiveRows[0][3]),
+                starttls: toBoolean(ddReceiveRows[0][4]),
               },
-              rootFolder: ddReceiveRows[0][7],
-              folderSeparator: ddReceiveRows[0][8],
+              rootFolder: ddReceiveRows[0][5],
+              folderSeparator: ddReceiveRows[0][6],
             };
           }
+          let emailSendSecret = await getSecret(
+            "adminEmailSend",
+            req.params.emailProviderId,
+            OAS.secretTypePlain
+          );
           let ddSend = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
+            "SELECT host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
               "FROM adminEmailSend WHERE adminEmailId = '" +
               req.params.emailProviderId +
               "'"
@@ -2842,15 +3651,15 @@ var run = async () => {
           let ddSendRows = ddSend.getRows();
           if (ddSendRows.length > 0) {
             resJson.send = {
-              username: ddSendRows[0][0],
-              password: ddSendRows[0][1],
-              host: ddSendRows[0][2],
-              port: toInteger(ddSendRows[0][3]),
-              protocol: ddSendRows[0][4],
-              authentication: ddSendRows[0][5],
+              username: emailSendSecret.plain.username,
+              password: emailSendSecret.plain.password,
+              host: ddSendRows[0][0],
+              port: toInteger(ddSendRows[0][1]),
+              protocol: ddSendRows[0][2],
+              authentication: ddSendRows[0][3],
               encryption: {
-                enabled: toBoolean(ddSendRows[0][6]),
-                starttls: toBoolean(ddSendRows[0][7]),
+                enabled: toBoolean(ddSendRows[0][4]),
+                starttls: toBoolean(ddSendRows[0][5]),
               },
             };
             res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -2893,8 +3702,13 @@ var run = async () => {
             address: ddEmailRows[0][1],
             name: ddEmailRows[0][2],
           };
+          let emailReceiveSecret = await getSecret(
+            "adminEmailReceive",
+            req.params.emailProviderId,
+            OAS.secretTypePlain
+          );
           let ddReceive = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
+            "SELECT host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
               "FROM adminEmailReceive WHERE adminEmailId = '" +
               req.params.emailProviderId +
               "'"
@@ -2902,37 +3716,42 @@ var run = async () => {
           let ddReceiveRows = ddReceive.getRows();
           if (ddReceiveRows.length > 0) {
             resJson.receive = {
-              username: ddReceiveRows[0][0],
-              password: ddReceiveRows[0][1],
-              host: ddReceiveRows[0][2],
-              port: ddReceiveRows[0][3],
-              protocol: ddReceiveRows[0][4],
+              username: emailReceiveSecret.plain.username,
+              password: emailReceiveSecret.plain.password,
+              host: ddReceiveRows[0][0],
+              port: ddReceiveRows[0][1],
+              protocol: ddReceiveRows[0][2],
               encryption: {
-                enabled: ddReceiveRows[0][5],
-                starttls: ddReceiveRows[0][6],
+                enabled: ddReceiveRows[0][3],
+                starttls: ddReceiveRows[0][4],
               },
-              rootFolder: ddReceiveRows[0][7],
-              folderSeparator: ddReceiveRows[0][8],
+              rootFolder: ddReceiveRows[0][5],
+              folderSeparator: ddReceiveRows[0][6],
             };
           }
           let ddSend = await DDC.runAndReadAll(
-            "SELECT username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
+            "SELECT host,port,protocol,authentication,encryptionEnabled,encryptionStartTls " +
               "FROM adminEmailSend WHERE adminEmailId = '" +
               req.params.emailProviderId +
               "'"
           );
           let ddSendRows = ddSend.getRows();
           if (ddSendRows.length > 0) {
+            let emailSendSecret = await getSecret(
+              "adminEmailSend",
+              req.params.emailProviderId,
+              OAS.secretTypePlain
+            );
             resJson.send = {
-              username: ddSendRows[0][0],
-              password: ddSendRows[0][1],
-              host: ddSendRows[0][2],
-              port: ddSendRows[0][3],
-              protocol: ddSendRows[0][4],
-              authentication: ddSendRows[0][5],
+              username: emailSendSecret.plain.username,
+              password: emailSendSecret.plain.password,
+              host: ddSendRows[0][0],
+              port: ddSendRows[0][1],
+              protocol: ddSendRows[0][2],
+              authentication: ddSendRows[0][3],
               encryption: {
-                enabled: ddSendRows[0][6],
-                starttls: ddSendRows[0][7],
+                enabled: ddSendRows[0][4],
+                starttls: ddSendRows[0][5],
               },
             };
             // pass to replace to regenerate the record
@@ -2971,14 +3790,26 @@ var run = async () => {
       let ddEmailRows = ddEmail.getRows();
       if (ddEmailRows.length > 0) {
         // remove existing related FK, but keep parent PK
+        await DDC.run(
+          "DELETE FROM secret WHERE scope = 'adminEmailSend' AND realm = '" +
+            req.params.emailProviderId +
+            "'"
+        );
+        await DDC.run(
+          "DELETE FROM secret WHERE scope = 'adminEmailReceive' AND realm = '" +
+            req.params.emailProviderId +
+            "'"
+        );
         let ddp = await DDC.prepare(
           "DELETE FROM adminEmailSend WHERE adminEmailId = $1"
         );
         ddp.bindVarchar(1, req.params.emailProviderId);
         await ddp.run();
-        ddp = await DDC.prepare(
+        ddp = await DDC.run(
           "DELETE FROM adminEmailReceive WHERE adminEmailId = $1"
         );
+        ddp.bindVarchar(1, req.params.emailProviderId);
+        await ddp.run();
 
         // replacement, update existing PK and insert the related FK
         ddp = await DDC.prepare(
@@ -2990,34 +3821,53 @@ var run = async () => {
         ddp.bindVarchar(4, req.params.emailProviderId);
         await ddp.run();
 
+        let emailSendSecret = {
+          scope: "adminEmailSend",
+          realm: req.params.emailProviderId,
+          type: OAS.secretTypePlain,
+          plain: {
+            username: req.body.send.username,
+            password: req.body.send.password,
+            expiration: OAS.secretExpiration,
+          },
+        };
+        let result = await addSecret(emailSendSecret);
+
         ddp = await DDC.prepare(
-          "INSERT INTO adminEmailSend (adminEmailId,username,password,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+          "INSERT INTO adminEmailSend (adminEmailId,host,port,protocol,authentication,encryptionEnabled,encryptionStartTls) VALUES ($1,$2,$3,$4,$5,$6,$7)"
         );
         ddp.bindVarchar(1, req.params.emailProviderId);
-        ddp.bindVarchar(2, req.body.send.username);
-        ddp.bindVarchar(3, req.body.send.password);
-        ddp.bindVarchar(4, req.body.send.host);
-        ddp.bindInteger(5, toInteger(req.body.send.port));
-        ddp.bindVarchar(6, req.body.send.protocol);
-        ddp.bindVarchar(7, req.body.send.authentication);
-        ddp.bindBoolean(8, toBoolean(req.body.send.encryption.enabled));
-        ddp.bindBoolean(9, toBoolean(req.body.send.encryption.starttls));
+        ddp.bindVarchar(2, req.body.send.host);
+        ddp.bindInteger(3, toInteger(req.body.send.port));
+        ddp.bindVarchar(4, req.body.send.protocol);
+        ddp.bindVarchar(5, req.body.send.authentication);
+        ddp.bindBoolean(6, toBoolean(req.body.send.encryption.enabled));
+        ddp.bindBoolean(7, toBoolean(req.body.send.encryption.starttls));
         await ddp.run();
 
         if (req.body.receive != null && req.body.receive != {}) {
+          let emailReceiveSecret = {
+            scope: "adminEmailReceive",
+            realm: req.params.emailProviderId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body.receive.username,
+              password: req.body.receive.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(emailReceiveSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminEmailReceive (adminEmailId,username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+            "INSERT INTO adminEmailReceive (adminEmailId,username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
           );
           ddp.bindVarchar(1, req.params.emailProviderId);
-          ddp.bindVarchar(2, req.body.receive.username);
-          ddp.bindVarchar(3, req.body.receive.password);
-          ddp.bindVarchar(4, req.body.receive.host);
-          ddp.bindInteger(5, toInteger(req.body.receive.port));
-          ddp.bindVarchar(6, req.body.receive.protocol);
-          ddp.bindBoolean(7, toBoolean(req.body.receive.encryption.enabled));
-          ddp.bindBoolean(8, toBoolean(req.body.receive.encryption.starttls));
-          ddp.bindVarchar(9, req.body.receive.rootFolder);
-          ddp.bindVarchar(10, req.body.receive.folderSeparator);
+          ddp.bindVarchar(2, req.body.receive.host);
+          ddp.bindInteger(3, toInteger(req.body.receive.port));
+          ddp.bindVarchar(4, req.body.receive.protocol);
+          ddp.bindBoolean(5, toBoolean(req.body.receive.encryption.enabled));
+          ddp.bindBoolean(6, toBoolean(req.body.receive.encryption.starttls));
+          ddp.bindVarchar(7, req.body.receive.rootFolder);
+          ddp.bindVarchar(8, req.body.receive.folderSeparator);
           await ddp.run();
         }
         res.sendStatus(204);
@@ -3041,29 +3891,34 @@ var run = async () => {
     try {
       let resJson = [];
       let ddKafka = await DDC.runAndReadAll(
-        "SELECT id,name,clientId,username,password,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka"
+        "SELECT id,name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka"
       );
       let ddRows = ddKafka.getRows();
       if (ddRows.length > 0) {
         for (let idx in ddRows) {
+          let kafkaSecret = await getSecret(
+            "adminKafka",
+            ddRows[idx][0],
+            OAS.secretTypePlain
+          );
           let resObj = {
             kafkaProducerId: ddRows[idx][0],
             name: ddRows[idx][1],
             clientId: ddRows[idx][2],
             producer: {
-              username: ddRows[idx][3],
-              password: ddRows[idx][4],
-              host: ddRows[idx][5],
-              port: toInteger(ddRows[idx][6]),
-              retryDelay: toInteger(ddRows[idx][7]),
-              retries: toInteger(ddRows[idx][8]),
-              acks: ddRows[idx][9],
-              linger: toInteger(ddRows[idx][10]),
-              batchSize: toInteger(ddRows[idx][11]),
-              bufferMemory: toInteger(ddRows[idx][12]),
-              maxInFlightRequestsPerConnection: toInteger(ddRows[idx][13]),
-              compressionMethod: ddRows[idx][14],
-              authentication: ddRows[idx][15],
+              username: kafkaSecret.plain.username,
+              password: kafkaSecret.plain.password,
+              host: ddRows[idx][3],
+              port: toInteger(ddRows[idx][4]),
+              retryDelay: toInteger(ddRows[idx][5]),
+              retries: toInteger(ddRows[idx][6]),
+              acks: ddRows[idx][7],
+              linger: toInteger(ddRows[idx][8]),
+              batchSize: toInteger(ddRows[idx][9]),
+              bufferMemory: toInteger(ddRows[idx][10]),
+              maxInFlightRequestsPerConnection: toInteger(ddRows[idx][11]),
+              compressionMethod: ddRows[idx][12],
+              authentication: ddRows[idx][13],
             },
           };
           resJson.push(resObj);
@@ -3093,6 +3948,11 @@ var run = async () => {
           let dddRows = ddd.getRows();
           if (dddRows.length > 0) {
             await DDC.run(
+              "DELETE FROM secret WHERE scope = 'adminKafka' AND realm = '" +
+                req.body[i].kafkaProducerId +
+                "'"
+            );
+            await DDC.run(
               "DELETE FROM adminKafka WHERE id = '" +
                 req.body[i].kafkaProducerId +
                 "'"
@@ -3101,28 +3961,37 @@ var run = async () => {
         }
         let resJson = [];
         for (let i = 0; i < req.body.length; i++) {
+          let kafkaSecret = {
+            scope: "adminKafka",
+            realm: req.body[i].kafkaProducerId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body[i].producer.username,
+              password: req.body[i].producer.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(kafkaSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminKafka (id,name,clientId,username,password,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
+            "INSERT INTO adminKafka (id,name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
           );
           ddp.bindVarchar(1, req.body[i].kafkaProducerId);
           ddp.bindVarchar(2, req.body[i].name);
           ddp.bindVarchar(3, req.body[i].clientId);
-          ddp.bindVarchar(4, req.body[i].producer.username);
-          ddp.bindVarchar(5, req.body[i].producer.password);
-          ddp.bindVarchar(6, req.body[i].producer.host);
-          ddp.bindInteger(7, req.body[i].producer.port);
-          ddp.bindInteger(8, req.body[i].producer.retryDelay);
-          ddp.bindInteger(9, req.body[i].producer.retries);
-          ddp.bindVarchar(10, req.body[i].producer.acks);
-          ddp.bindInteger(11, req.body[i].producer.linger);
-          ddp.bindInteger(12, req.body[i].producer.batchSize);
-          ddp.bindInteger(13, req.body[i].producer.bufferMemory);
+          ddp.bindVarchar(4, req.body[i].producer.host);
+          ddp.bindInteger(5, req.body[i].producer.port);
+          ddp.bindInteger(6, req.body[i].producer.retryDelay);
+          ddp.bindInteger(7, req.body[i].producer.retries);
+          ddp.bindVarchar(8, req.body[i].producer.acks);
+          ddp.bindInteger(9, req.body[i].producer.linger);
+          ddp.bindInteger(10, req.body[i].producer.batchSize);
+          ddp.bindInteger(11, req.body[i].producer.bufferMemory);
           ddp.bindInteger(
-            14,
+            12,
             req.body[i].producer.maxInFlightRequestsPerConnection
           );
-          ddp.bindVarchar(15, req.body[i].producer.compressionMethod);
-          ddp.bindVarchar(16, req.body[i].producer.authentication);
+          ddp.bindVarchar(13, req.body[i].producer.compressionMethod);
+          ddp.bindVarchar(14, req.body[i].producer.authentication);
           await ddp.run();
           resJson.push(req.body[i].kafkaProducerId);
         }
@@ -3177,25 +4046,34 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let kafkaProducerId = uuidv4();
+        let kafkaSecret = {
+          scope: "adminKafka",
+          realm: kafkaProducerId,
+          type: OAS.secretTypePlain,
+          plain: {
+            username: req.body.producer.username,
+            password: req.body.producer.password,
+            expiration: OAS.secretExpiration,
+          },
+        };
+        let result = await addSecret(kafkaSecret);
         let ddp = await DDC.prepare(
-          "INSERT INTO adminKafka (id,name,clientId,username,password,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
+          "INSERT INTO adminKafka (id,name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
         );
         ddp.bindVarchar(1, kafkaProducerId);
         ddp.bindVarchar(2, req.body.name);
         ddp.bindVarchar(3, req.body.clientId);
-        ddp.bindVarchar(4, req.body.producer.username);
-        ddp.bindVarchar(5, req.body.producer.password);
-        ddp.bindVarchar(6, req.body.producer.host);
-        ddp.bindInteger(7, req.body.producer.port);
-        ddp.bindInteger(8, req.body.producer.retryDelay);
-        ddp.bindInteger(9, req.body.producer.retries);
-        ddp.bindVarchar(10, req.body.producer.acks);
-        ddp.bindInteger(11, req.body.producer.linger);
-        ddp.bindInteger(12, req.body.producer.batchSize);
-        ddp.bindInteger(13, req.body.producer.bufferMemory);
-        ddp.bindInteger(14, req.body.producer.maxInFlightRequestsPerConnection);
-        ddp.bindVarchar(15, req.body.producer.compressionMethod);
-        ddp.bindVarchar(16, req.body.producer.authentication);
+        ddp.bindVarchar(4, req.body.producer.host);
+        ddp.bindInteger(5, req.body.producer.port);
+        ddp.bindInteger(6, req.body.producer.retryDelay);
+        ddp.bindInteger(7, req.body.producer.retries);
+        ddp.bindVarchar(8, req.body.producer.acks);
+        ddp.bindInteger(9, req.body.producer.linger);
+        ddp.bindInteger(10, req.body.producer.batchSize);
+        ddp.bindInteger(11, req.body.producer.bufferMemory);
+        ddp.bindInteger(12, req.body.producer.maxInFlightRequestsPerConnection);
+        ddp.bindVarchar(13, req.body.producer.compressionMethod);
+        ddp.bindVarchar(14, req.body.producer.authentication);
         await ddp.run();
         res
           .contentType(OAS.mimeJSON)
@@ -3217,6 +4095,11 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         if (await dbIdExists(req.params.kafkaProducerId, "adminKafka")) {
+          await DDC.run(
+            "DELETE FROM secret WHERE scope = 'adminKafka' AND realm = '" +
+              req.params.kafkaProducerId +
+              "'"
+          );
           await DDC.run(
             "DELETE FROM alertPublish WHERE kafkaId = '" +
               req.params.kafkaProducerId +
@@ -3255,30 +4138,35 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddKafka = await DDC.runAndReadAll(
-          "SELECT name,clientId,username,password,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka WHERE id = '" +
+          "SELECT name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka WHERE id = '" +
             req.params.kafkaProducerId +
             "'"
         );
         let ddKafkaRows = ddKafka.getRows();
         if (ddKafkaRows.length > 0) {
+          let kafkaSecret = await getSecret(
+            "adminKafka",
+            req.params.kafkaProducerId,
+            OAS.secretTypePlain
+          );
           let resJson = {
             kafkaProducerId: req.params.kafkaProducerId,
             name: ddKafkaRows[0][0],
             clientId: ddKafkaRows[0][1],
             producer: {
-              username: ddKafkaRows[0][2],
-              password: ddKafkaRows[0][3],
-              host: ddKafkaRows[0][4],
-              port: toInteger(ddKafkaRows[0][5]),
-              retryDelay: toInteger(ddKafkaRows[0][6]),
-              retries: toInteger(ddKafkaRows[0][7]),
-              acks: ddKafkaRows[0][8],
-              linger: toInteger(ddKafkaRows[0][9]),
-              batchSize: toInteger(ddKafkaRows[0][10]),
-              bufferMemory: toInteger(ddKafkaRows[0][11]),
-              maxInFlightRequestsPerConnection: toInteger(ddKafkaRows[0][12]),
-              compressionMethod: ddKafkaRows[0][13],
-              authentication: ddKafkaRows[0][14],
+              username: kafkaSecret.plain.username,
+              password: kafkaSecret.plain.password,
+              host: ddKafkaRows[0][2],
+              port: toInteger(ddKafkaRows[0][3]),
+              retryDelay: toInteger(ddKafkaRows[0][4]),
+              retries: toInteger(ddKafkaRows[0][5]),
+              acks: ddKafkaRows[0][6],
+              linger: toInteger(ddKafkaRows[0][7]),
+              batchSize: toInteger(ddKafkaRows[0][8]),
+              bufferMemory: toInteger(ddKafkaRows[0][9]),
+              maxInFlightRequestsPerConnection: toInteger(ddKafkaRows[0][10]),
+              compressionMethod: ddKafkaRows[0][11],
+              authentication: ddKafkaRows[0][12],
             },
           };
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -3310,30 +4198,35 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = {};
         let ddKafka = await DDC.runAndReadAll(
-          "SELECT name,clientId,username,password,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka WHERE id = '" +
+          "SELECT name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication FROM adminKafka WHERE id = '" +
             req.params.kafkaProducerId +
             "'"
         );
         let ddKafkaRows = ddKafka.getRows();
         if (ddKafkaRows.length > 0) {
+          let kafkaSecret = await getSecret(
+            "adminKafka",
+            req.params.kafkaProducerId,
+            OAS.secretTypePlain
+          );
           resJson = {
             kafkaProducerId: req.params.kafkaProducerId,
             name: ddKafkaRows[0][0],
             clientId: ddKafkaRows[0][1],
             producer: {
-              username: ddKafkaRows[0][2],
-              password: ddKafkaRows[0][3],
-              host: ddKafkaRows[0][4],
-              port: ddKafkaRows[0][5],
-              retryDelay: ddKafkaRows[0][6],
-              retries: ddKafkaRows[0][7],
-              acks: ddKafkaRows[0][8],
-              linger: ddKafkaRows[0][9],
-              batchSize: ddKafkaRows[0][10],
-              bufferMemory: ddKafkaRows[0][11],
-              maxInFlightRequestsPerConnection: ddKafkaRows[0][12],
-              compressionMethod: ddKafkaRows[0][13],
-              authentication: ddKafkaRows[0][14],
+              username: kafkaSecret.plain.username,
+              password: kafkaSecret.plain.password,
+              host: ddKafkaRows[0][2],
+              port: ddKafkaRows[0][3],
+              retryDelay: ddKafkaRows[0][4],
+              retries: ddKafkaRows[0][5],
+              acks: ddKafkaRows[0][6],
+              linger: ddKafkaRows[0][7],
+              batchSize: ddKafkaRows[0][8],
+              bufferMemory: ddKafkaRows[0][9],
+              maxInFlightRequestsPerConnection: ddKafkaRows[0][10],
+              compressionMethod: ddKafkaRows[0][11],
+              authentication: ddKafkaRows[0][12],
             },
           };
           // pass to replace to regenerate the record
@@ -3373,30 +4266,37 @@ var run = async () => {
         let ddKafkaRows = ddKafka.getRows();
         if (ddKafkaRows.length > 0) {
           // replacement, update existing
+          let kafkaSecret = {
+            scope: "adminKafka",
+            realm: req.params.kafkaProducerId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body.producer.username,
+              password: req.body.producer.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await updateSecret(kafkaSecret);
           let ddp = await DDC.prepare(
-            "UPDATE adminKafka SET name = $1, clientId = $2, username = $3, password = $4, host = $5, port = $6, " +
-              "retryDelay = $7, retries = $8, acks = $9, linger = $10, batchSize = $11, bufferMemory = $12, " +
-              "maxInFlightRequestsPerConnection = $13, compressionMethod = $14, authentication = $15 WHERE id = $16"
+            "UPDATE adminKafka SET name = $1, clientId = $2, host = $3, port = $4, retryDelay = $5, retries = $6, acks = $7, linger = $8, batchSize = $9, bufferMemory = $10, maxInFlightRequestsPerConnection = $11, compressionMethod = $12, authentication = $13 WHERE id = $14"
           );
           ddp.bindVarchar(1, req.body.name);
           ddp.bindVarchar(2, req.body.clientId);
-          ddp.bindVarchar(3, req.body.producer.username);
-          ddp.bindVarchar(4, req.body.producer.password);
-          ddp.bindVarchar(5, req.body.producer.host);
-          ddp.bindInteger(6, req.body.producer.port);
-          ddp.bindInteger(7, req.body.producer.retryDelay);
-          ddp.bindInteger(8, req.body.producer.retries);
-          ddp.bindVarchar(9, req.body.producer.acks);
-          ddp.bindInteger(10, req.body.producer.linger);
-          ddp.bindInteger(11, req.body.producer.batchSize);
-          ddp.bindInteger(12, req.body.producer.bufferMemory);
+          ddp.bindVarchar(3, req.body.producer.host);
+          ddp.bindInteger(4, req.body.producer.port);
+          ddp.bindInteger(5, req.body.producer.retryDelay);
+          ddp.bindInteger(6, req.body.producer.retries);
+          ddp.bindVarchar(7, req.body.producer.acks);
+          ddp.bindInteger(8, req.body.producer.linger);
+          ddp.bindInteger(9, req.body.producer.batchSize);
+          ddp.bindInteger(10, req.body.producer.bufferMemory);
           ddp.bindInteger(
-            13,
+            11,
             req.body.producer.maxInFlightRequestsPerConnection
           );
-          ddp.bindVarchar(14, req.body.producer.compressionMethod);
-          ddp.bindVarchar(15, req.body.producer.authentication);
-          ddp.bindVarchar(16, req.body.kafkaProducerId);
+          ddp.bindVarchar(12, req.body.producer.compressionMethod);
+          ddp.bindVarchar(13, req.body.producer.authentication);
+          ddp.bindVarchar(14, req.body.kafkaProducerId);
           await ddp.run();
           res.sendStatus(204);
         } else {
@@ -3425,28 +4325,33 @@ var run = async () => {
     try {
       let resJson = [];
       let ddMap = await DDC.runAndReadAll(
-        "SELECT id, vendor,systemDefault, renderUrl, credentialsIdentity, credentialsKey, identityProviderBase, identityProviderAuthorization, identityProviderToken, identityProviderWellKnown FROM adminMap"
+        "SELECT id,vendor,systemDefault,renderUrl,typeSecret FROM adminMap"
       );
       let ddMapRows = ddMap.getRows();
       if (ddMapRows.length > 0) {
         for (let idx in ddMapRows) {
+          let mapSecret = await getSecret(
+            "adminMap",
+            ddMapRows[idx][0],
+            ddMapRows[idx][4]
+          );
           let resObj = {
             mapProviderId: ddMapRows[idx][0],
             vendor: ddMapRows[idx][1],
             default: toBoolean(ddMapRows[idx][2]),
             renderUrl: ddMapRows[idx][3],
           };
-          if (ddMapRows[idx][5] != null) {
+          if (ddMapRows[idx][4] == OAS.secretTypeToken) {
             resObj.credentials = {
-              identity: ddMapRows[idx][4],
-              key: ddMapRows[idx][5],
+              identity: mapSecret.token.identity,
+              key: mapSecret.token.key,
             };
-          } else if (ddMapRows[idx][7] != null) {
+          } else if (ddMapRows[idx][4] == OAS.secretTypeIdentity) {
             resObj.identityProvider = {
-              base: ddMapRows[idx][6],
-              authorization: ddMapRows[idx][7],
-              token: ddMapRows[idx][8],
-              wellKnown: ddMapRows[idx][9],
+              base: mapSecret.identity.base,
+              authorization: mapSecret.identity.authorization,
+              token: mapSecret.identity.token,
+              wellKnown: mapSecret.identity.wellKnown,
             };
           }
           resJson.push(resObj);
@@ -3475,6 +4380,11 @@ var run = async () => {
           let dddRows = ddd.getRows();
           if (dddRows.length > 0) {
             await DDC.run(
+              "DELETE FROM secret WHERE scope = 'adminMap' AND realm = '" +
+                req.body[i].mapProviderId +
+                "'"
+            );
+            await DDC.run(
               "DELETE FROM adminMap WHERE id = '" +
                 req.body[i].mapProviderId +
                 "'"
@@ -3487,29 +4397,49 @@ var run = async () => {
             await DDC.run("UPDATE adminMap SET systemDefault = false");
           }
           if (req.body[i].credentials?.key != null) {
+            let mapSecret = {
+              scope: "adminMap",
+              realm: req.body[i].mapProviderId,
+              type: OAS.secretTypeToken,
+              token: {
+                identity: req.body[i].credentials.identity,
+                key: req.body[i].credentials.key,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await addSecret(mapSecret);
             let ddp = await DDC.prepare(
-              "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,credentialsIdentity,credentialsKey) VALUES ($1,$2,$3,$4,$5,$6)"
+              "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,typeSecret) VALUES ($1,$2,$3,$4,$5)"
             );
             ddp.bindVarchar(1, req.body[i].mapProviderId);
             ddp.bindVarchar(2, req.body[i].vendor);
             ddp.bindBoolean(3, toBoolean(req.body[i].default));
             ddp.bindVarchar(4, req.body[i].renderUrl);
-            ddp.bindVarchar(5, req.body[i].credentials.identity);
-            ddp.bindVarchar(6, req.body[i].credentials.key);
+            ddp.bindVarchar(5, OAS.secretTypeToken);
             await ddp.run();
             resJson.push(req.body[i].mapProviderId);
           } else if (req.body[i].identityProvider?.authorization != null) {
+            let mapSecret = {
+              scope: "adminMap",
+              realm: req.body[i].mapProviderId,
+              type: OAS.secretTypeIdentity,
+              identity: {
+                base: req.body[i].identityProvider.base,
+                authorization: req.body[i].identityProvider.authorization,
+                token: req.body[i].identityProvider.token,
+                wellKnown: req.body[i].identityProvider.wellKnown,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await addSecret(mapSecret);
             let ddp = await DDC.prepare(
-              "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,identityProviderBase,identityProviderAuthorization,identityProviderToken,identityProviderWellKnown) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
+              "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,typeSecret) VALUES ($1,$2,$3,$4,$5)"
             );
             ddp.bindVarchar(1, req.body[i].mapProviderId);
             ddp.bindVarchar(2, req.body[i].vendor);
             ddp.bindBoolean(3, toBoolean(req.body[i].default));
             ddp.bindVarchar(4, req.body[i].renderUrl);
-            ddp.bindVarchar(5, req.body[i].identityProvider.base);
-            ddp.bindVarchar(6, req.body[i].identityProvider.authorization);
-            ddp.bindVarchar(7, req.body[i].identityProvider.token);
-            ddp.bindVarchar(8, req.body[i].identityProvider.wellKnown);
+            ddp.bindVarchar(5, OAS.secretTypeIdentity);
             await ddp.run();
             resJson.push(req.body[i].mapProviderId);
           }
@@ -3599,15 +4529,25 @@ var run = async () => {
           if (toBoolean(req.body.default)) {
             await DDC.run("UPDATE adminMap SET systemDefault = false");
           }
+          let mapSecret = {
+            scope: "adminMap",
+            realm: mapProviderId,
+            type: OAS.secretTypeToken,
+            token: {
+              identity: req.body.credentials.identity,
+              key: req.body.credentials.key,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(mapSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,credentialsIdentity,credentialsKey) VALUES ($1,$2,$3,$4,$5,$6)"
+            "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,typeSecret) VALUES ($1,$2,$3,$4,$5)"
           );
           ddp.bindVarchar(1, mapProviderId);
           ddp.bindVarchar(2, req.body.vendor);
           ddp.bindBoolean(3, toBoolean(req.body.default));
           ddp.bindVarchar(4, req.body.renderUrl);
-          ddp.bindVarchar(5, req.body.credentials.identity);
-          ddp.bindVarchar(6, req.body.credentials.key);
+          ddp.bindVarchar(5, OAS.secretTypeToken);
           await ddp.run();
           res
             .contentType(OAS.mimeJSON)
@@ -3617,17 +4557,27 @@ var run = async () => {
           if (toBoolean(req.body.default)) {
             await DDC.run("UPDATE adminMap SET systemDefault = false");
           }
+          let mapSecret = {
+            scope: "adminMap",
+            realm: mapProviderId,
+            type: OAS.secretTypeIdentity,
+            identity: {
+              base: req.body.identityProvider.base,
+              authorization: req.body.identityProvider.authorization,
+              token: req.body.identityProvider.token,
+              wellKnown: req.body.identityProvider.wellKnown,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(mapSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,identityProviderBase,identityProviderAuthorization,identityProviderToken,identityProviderWellKnown) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
+            "INSERT INTO adminMap (id,vendor,systemDefault,renderUrl,typeSecret) VALUES ($1,$2,$3,$4,$5)"
           );
           ddp.bindVarchar(1, mapProviderId);
           ddp.bindVarchar(2, req.body.vendor);
           ddp.bindBoolean(3, toBoolean(req.body.default));
           ddp.bindVarchar(4, req.body.renderUrl);
-          ddp.bindVarchar(5, req.body.identityProvider.base);
-          ddp.bindVarchar(6, req.body.identityProvider.authorization);
-          ddp.bindVarchar(7, req.body.identityProvider.token);
-          ddp.bindVarchar(8, req.body.identityProvider.wellKnown);
+          ddp.bindVarchar(5, OAS.secretTypeIdentity);
           await ddp.run();
           res
             .contentType(OAS.mimeJSON)
@@ -3655,6 +4605,11 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         if (await dbIdExists(req.params.mapProviderId, "adminMap")) {
+          await DDC.run(
+            "DELETE FROM secret WHERE scope = 'adminMap' AND realm = '" +
+              req.params.mapProviderId +
+              "'"
+          );
           await DDC.run(
             "DELETE FROM adminMap WHERE id = '" + req.params.mapProviderId + "'"
           );
@@ -3685,29 +4640,34 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = [];
         let ddMap = await DDC.runAndReadAll(
-          "SELECT id, vendor, systemDefault, renderUrl, credentialsIdentity, credentialsKey, identityProviderBase, identityProviderAuthorization, identityProviderToken, identityProviderWellKnown FROM adminMap WHERE id = '" +
+          "SELECT id,vendor,systemDefault,renderUrl,typeSecret FROM adminMap WHERE id = '" +
             req.params.mapProviderId +
             "'"
         );
         let ddRows = ddMap.getRows();
         if (ddRows.length > 0) {
+          let mapSecret = await getSecret(
+            "adminMap",
+            req.params.mapProviderId,
+            ddRows[0][4]
+          );
           let resJson = {
             mapProviderId: req.params.mapProviderId,
             vendor: ddRows[0][1],
             default: toBoolean(ddRows[0][2]),
             renderUrl: ddRows[0][3],
           };
-          if (ddRows[0][5] != null) {
+          if (ddRows[0][4] == OAS.secretTypeToken) {
             resJson.credentials = {
-              identity: ddRows[0][4],
-              key: ddRows[0][5],
+              identity: mapSecret.token.identity,
+              key: mapSecret.token.key,
             };
-          } else if (ddRows[0][7] != null) {
+          } else if (ddRows[0][4] == OAS.secretTypeIdentity) {
             resJson.identityProvider = {
-              base: ddRows[0][6],
-              authorization: ddRows[0][7],
-              token: ddRows[0][8],
-              wellKnown: ddRows[0][9],
+              base: mapSecret.identity.base,
+              authorization: mapSecret.identity.authorization,
+              token: mapSecret.identity.token,
+              wellKnown: mapSecret.identity.wellKnown,
             };
           }
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -3737,29 +4697,34 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = {};
         let ddMap = await DDC.runAndReadAll(
-          "SELECT id, vendor, systemDefault, renderUrl, credentialsIdentity, credentialsKey, identityProviderBase, identityProviderAuthorization, identityProviderToken, identityProviderWellKnown FROM adminMap WHERE id = '" +
+          "SELECT id,vendor,systemDefault,renderUrl,typeSecret FROM adminMap WHERE id = '" +
             req.params.mapProviderId +
             "'"
         );
         let ddRows = ddMap.getRows();
         if (ddRows.length > 0) {
+          let mapSecret = await getSecret(
+            "adminMap",
+            req.params.mapProviderId,
+            ddRows[0][4]
+          );
           resJson = {
             mapProviderId: req.params.mapProviderId,
             vendor: ddRows[0][1],
             default: toBoolean(ddRows[0][2]),
             renderUrl: ddRows[0][3],
           };
-          if (ddRows[0][5] != null) {
+          if (ddRows[0][4] == OAS.secretTypeToken) {
             resJson.credentials = {
-              identity: ddRows[0][4],
-              key: ddRows[0][5],
+              identity: mapSecret.token.identity,
+              key: mapSecret.token.key,
             };
-          } else if (ddRows[0][7] != null) {
+          } else if (ddRows[0][4] == OAS.secretTypeIdentity) {
             resJson.identityProvider = {
-              base: ddRows[0][6],
-              authorization: ddRows[0][7],
-              token: ddRows[0][8],
-              wellKnown: ddRows[0][9],
+              base: mapSecret.identity.base,
+              authorization: mapSecret.identity.authorization,
+              token: mapSecret.identity.token,
+              wellKnown: mapSecret.identity.wellKnown,
             };
           }
           // pass to replace to regenerate the record
@@ -3801,32 +4766,41 @@ var run = async () => {
           }
           // replacement, update existing
           if (req.body.credentials?.key != null) {
-            let ddp = await DDC.prepare(
-              "UPDATE adminMap SET vendor = $1, systemDefault = $2, renderUrl = $3, credentialsIdentity = $4, credentialsKey = $5 WHERE id = $6"
-            );
-            ddp.bindVarchar(1, req.body.vendor);
-            ddp.bindBoolean(2, toBoolean(req.body.default));
-            ddp.bindVarchar(3, req.body.renderUrl);
-            ddp.bindVarchar(4, req.body.credentials.identity);
-            ddp.bindVarchar(5, req.body.credentials.key);
-            ddp.bindVarchar(6, req.body.mapProviderId);
-            await ddp.run();
-            res.sendStatus(204);
-          } else if (req.body.identityProvider?.authorization != null) {
-            let ddp = await DDC.prepare(
-              "UPDATE adminMap SET vendor = $1, systemDefault = $2, renderUrl = $3, identityProviderBase = $4, identityProviderAuthorization = $5, identityProviderToken = $6,identityProviderWellKnown = $7 WHERE id = $8"
-            );
-            ddp.bindVarchar(1, req.body.vendor);
-            ddp.bindBoolean(2, toBoolean(req.body.default));
-            ddp.bindVarchar(3, req.body.renderUrl);
-            ddp.bindVarchar(4, req.body.identityProvider.base);
-            ddp.bindVarchar(5, req.body.identityProvider.authorization);
-            ddp.bindVarchar(6, req.body.identityProvider.token);
-            ddp.bindVarchar(7, req.body.identityProvider.wellKnown);
-            ddp.bindVarchar(8, req.body.mapProviderId);
-            await ddp.run();
-            res.sendStatus(204);
+            let mapSecret = {
+              scope: "adminMap",
+              realm: req.params.mapProviderId,
+              type: OAS.secretTypeToken,
+              token: {
+                identity: req.body.credentials.identity,
+                key: req.body.credentials.key,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await updateSecret(mapSecret);
+          } else if (req.body[i].identityProvider?.authorization != null) {
+            let mapSecret = {
+              scope: "adminMap",
+              realm: req.params.mapProviderId,
+              type: OAS.secretTypeIdentity,
+              identity: {
+                base: req.body.identityProvider.base,
+                authorization: req.body.identityProvider.authorization,
+                token: req.body.identityProvider.token,
+                wellKnown: req.body.identityProvider.wellKnown,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await updateSecret(mapSecret);
           }
+          let ddp = await DDC.prepare(
+            "UPDATE adminMap SET vendor = $1, systemDefault = $2, renderUrl = $3 WHERE id = $4"
+          );
+          ddp.bindVarchar(1, req.body.vendor);
+          ddp.bindBoolean(2, toBoolean(req.body.default));
+          ddp.bindVarchar(3, encrypt(req.body.renderUrl));
+          ddp.bindVarchar(4, req.body.mapProviderId);
+          await ddp.run();
+          res.sendStatus(204);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -3851,19 +4825,24 @@ var run = async () => {
     try {
       let resJson = [];
       let ddWorkflow = await DDC.runAndReadAll(
-        "SELECT id, name, engineUrl, engineUsername, enginePassword, engineType FROM adminWorkflow"
+        "SELECT id, name, engineUrl, engineType FROM adminWorkflow"
       );
       let ddRows = ddWorkflow.getRows();
       if (ddRows.length > 0) {
         for (let idx in ddRows) {
+          let workflowSecret = await getSecret(
+            "adminWorkflow",
+            ddRows[idx][0],
+            OAS.secretTypePlain
+          );
           let resObj = {
             workflowEngineId: ddRows[idx][0],
             name: ddRows[idx][1],
             engine: {
               url: ddRows[idx][2],
-              username: ddRows[idx][3],
-              password: ddRows[idx][4],
-              type: ddRows[idx][5],
+              type: ddRows[idx][3],
+              username: workflowSecret.plain.username,
+              password: workflowSecret.plain.password,
             },
           };
           resJson.push(resObj);
@@ -3892,6 +4871,11 @@ var run = async () => {
           let dddRows = ddd.getRows();
           if (dddRows.length > 0) {
             await DDC.run(
+              "DELETE FROM secret WHERE scope = 'adminWorkflow' AND realm = '" +
+                req.body[i].workflowEngineId +
+                "'"
+            );
+            await DDC.run(
               "DELETE FROM adminWorkflow WHERE id = '" +
                 req.body[i].workflowEngineId +
                 "'"
@@ -3900,15 +4884,24 @@ var run = async () => {
         }
         let resJson = [];
         for (let i = 0; i < req.body.length; i++) {
+          let workflowSecret = {
+            scope: "adminWorkflow",
+            realm: req.body[i].workflowEngineId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body[i].engine.username,
+              password: req.body[i].engine.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await addSecret(workflowSecret);
           let ddp = await DDC.prepare(
-            "INSERT INTO adminWorkflow (id, name, engineUrl, engineUsername, enginePassword, engineType) VALUES ($1,$2,$3,$4,$5,$6)"
+            "INSERT INTO adminWorkflow (id, name, engineUrl, engineType) VALUES ($1,$2,$3,$4)"
           );
           ddp.bindVarchar(1, req.body[i].workflowEngineId);
           ddp.bindVarchar(2, req.body[i].name);
           ddp.bindVarchar(3, req.body[i].engine.url);
-          ddp.bindVarchar(4, req.body[i].engine.username);
-          ddp.bindVarchar(5, req.body[i].engine.password);
-          ddp.bindVarchar(6, req.body[i].engine.type);
+          ddp.bindVarchar(4, req.body[i].engine.type);
           await ddp.run();
           resJson.push(req.body[i].workflowEngineId);
         }
@@ -3963,15 +4956,24 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let workflowEngineId = uuidv4();
+        let workflowSecret = {
+          scope: "adminWorkflow",
+          realm: workflowEngineId,
+          type: OAS.secretTypePlain,
+          plain: {
+            username: req.body.engine.username,
+            password: req.body.engine.password,
+            expiration: OAS.secretExpiration,
+          },
+        };
+        let result = await addSecret(workflowSecret);
         let ddp = await DDC.prepare(
-          "INSERT INTO adminWorkflow (id, name, engineUrl, engineUsername, enginePassword, engineType) VALUES ($1,$2,$3,$4,$5,$6)"
+          "INSERT INTO adminWorkflow (id, name, engineUrl, engineType) VALUES ($1,$2,$3,$4)"
         );
         ddp.bindVarchar(1, workflowEngineId);
         ddp.bindVarchar(2, req.body.name);
         ddp.bindVarchar(3, req.body.engine.url);
-        ddp.bindVarchar(4, req.body.engine.username);
-        ddp.bindVarchar(5, req.body.engine.password);
-        ddp.bindVarchar(6, req.body.engine.type);
+        ddp.bindVarchar(4, req.body.engine.type);
         await ddp.run();
         res
           .contentType(OAS.mimeJSON)
@@ -3993,6 +4995,11 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         if (await dbIdExists(req.params.workflowEngineId, "adminWorkflow")) {
+          await DDC.run(
+            "DELETE FROM secret WHERE scope = 'adminWorkflow' AND realm = '" +
+              req.params.workflowEngineId +
+              "'"
+          );
           await DDC.run(
             "DELETE FROM alertWorkflow WHERE workflowEngineId = '" +
               req.params.workflowEngineId +
@@ -4032,20 +5039,25 @@ var run = async () => {
       let resJson = {};
       if (result.isEmpty()) {
         let ddWorkflow = await DDC.runAndReadAll(
-          "SELECT name, engineUrl, engineUsername, enginePassword, engineType FROM adminWorkflow WHERE id = '" +
+          "SELECT name, engineUrl, engineType FROM adminWorkflow WHERE id = '" +
             req.params.workflowEngineId +
             "'"
         );
         let ddRows = ddWorkflow.getRows();
         if (ddRows.length > 0) {
+          let workflowSecret = await getSecret(
+            "adminWorkflow",
+            req.params.workflowEngineId,
+            OAS.secretTypePlain
+          );
           resJson = {
             workflowEngineId: req.params.workflowEngineId,
             name: ddRows[0][0],
             engine: {
               url: ddRows[0][1],
-              username: ddRows[0][2],
-              password: ddRows[0][3],
-              type: ddRows[0][4],
+              type: ddRows[0][2],
+              username: workflowSecret.plain.username,
+              password: workflowSecret.plain.password,
             },
           };
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -4077,20 +5089,25 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = {};
         let ddWorkflow = await DDC.runAndReadAll(
-          "SELECT name, engineUrl, engineUsername, enginePassword, engineType FROM adminWorkflow WHERE id = '" +
+          "SELECT name, engineUrl, engineType FROM adminWorkflow WHERE id = '" +
             req.params.workflowEngineId +
             "'"
         );
         let ddRows = ddWorkflow.getRows();
         if (ddRows.length > 0) {
+          let workflowSecret = await getSecret(
+            "adminWorkflow",
+            req.params.workflowEngineId,
+            OAS.secretTypePlain
+          );
           resJson = {
             workflowEngineId: req.params.workflowEngineId,
             name: ddRows[0][0],
             engine: {
               url: ddRows[0][1],
-              username: ddRows[0][2],
-              password: ddRows[0][3],
-              type: ddRows[0][4],
+              type: ddRows[0][2],
+              username: workflowSecret.plain.username,
+              password: workflowSecret.plain.password,
             },
           };
           // pass to replace to regenerate the record
@@ -4130,15 +5147,24 @@ var run = async () => {
         let ddRows = ddWorkflow.getRows();
         if (ddRows.length > 0) {
           // replacement, update existing
+          let workflowSecret = {
+            scope: "adminWorkflow",
+            realm: req.params.workflowEngineId,
+            type: OAS.secretTypePlain,
+            plain: {
+              username: req.body.engine.username,
+              password: req.body.engine.password,
+              expiration: OAS.secretExpiration,
+            },
+          };
+          let result = await updateSecret(workflowSecret);
           let ddp = await DDC.prepare(
-            "UPDATE adminWorkflow SET name = $1, engineUrl = $2, engineUsername = $3, enginePassword = $4, engineType = $5 WHERE ID = $6"
+            "UPDATE adminWorkflow SET name = $1, engineUrl = $2, engineType = $3 WHERE ID = $4"
           );
           ddp.bindVarchar(1, req.body.name);
           ddp.bindVarchar(2, req.body.engine.url);
-          ddp.bindVarchar(3, req.body.engine.username);
-          ddp.bindVarchar(4, req.body.engine.password);
-          ddp.bindVarchar(5, req.body.engine.type);
-          ddp.bindVarchar(6, req.body.workflowEngineId);
+          ddp.bindVarchar(3, req.body.engine.type);
+          ddp.bindVarchar(4, req.body.workflowEngineId);
           await ddp.run();
           res.sendStatus(204);
         } else {
@@ -4257,6 +5283,13 @@ var run = async () => {
             .replace(")", "")
             .split(",");
           for (let idx in subscriptionIds) {
+            await DDC.run(
+              "DELETE FROM secret WHERE scope = 'alertCallback' AND realm = '" +
+                req.query.requestorId +
+                "/" +
+                subscriptionIds[idx] +
+                "'"
+            );
             let ddp = await DDC.prepare(
               "DELETE FROM alertCallback WHERE requestorId = $1 AND subscriptionId = $2"
             );
@@ -4300,22 +5333,31 @@ var run = async () => {
           if (ddRows.length > 0) {
             let alertCallbackId = uuidv4();
             let subscriptionId = uuidv4();
+            let callbackSecret = {
+              scope: "alertCallback",
+              realm: req.body.requestorId + "/" + subscriptionId,
+              type: OAS.secretTypePlain,
+              plain: {
+                username: req.body[i].username,
+                password: req.body[i].password,
+                expiration: OAS.secretExpiration,
+              },
+            };
+            let result = await addSecret(callbackSecret);
             let ddp = await DDC.prepare(
-              "INSERT INTO alertCallback (id,alertId,requestorId,subscriptionId,callbackUrl,username,password,authentication,retries,currentRetry,retryDelay,maxLifeRetries,currentLifeRetries) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)"
+              "INSERT INTO alertCallback (id,alertId,requestorId,subscriptionId,callbackUrl,authentication,retries,currentRetry,retryDelay,maxLifeRetries,currentLifeRetries) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)"
             );
             ddp.bindVarchar(1, alertCallbackId);
             ddp.bindVarchar(2, req.body[i].alertId);
             ddp.bindVarchar(3, req.body.requestorId);
             ddp.bindVarchar(4, subscriptionId);
             ddp.bindVarchar(5, req.body[i].callbackUrl);
-            ddp.bindVarchar(6, req.body[i].username);
-            ddp.bindVarchar(7, req.body[i].password);
-            ddp.bindVarchar(8, req.body[i].authentication);
-            ddp.bindInteger(9, req.body[i].retries);
-            ddp.bindInteger(10, 0);
-            ddp.bindInteger(11, req.body[i].retryDelay);
-            ddp.bindInteger(12, req.body[i].maxLifeRetries);
-            ddp.bindInteger(13, 0);
+            ddp.bindVarchar(6, req.body[i].authentication);
+            ddp.bindInteger(7, req.body[i].retries);
+            ddp.bindInteger(8, 0);
+            ddp.bindInteger(9, req.body[i].retryDelay);
+            ddp.bindInteger(10, req.body[i].maxLifeRetries);
+            ddp.bindInteger(11, 0);
             await ddp.run();
             resJson.alerts.push({
               alertId: req.body.alertId,
@@ -17519,33 +18561,48 @@ var run = async () => {
       if (result.isEmpty()) {
         let resJson = {};
         let ddRead = await DDC.runAndReadAll(
-          "SELECT vendor,renderUrl,credentialsIdentity,credentialsKey FROM adminMap WHERE systemDefault = true"
+          "SELECT id,vendor,renderUrl,typeSecret FROM adminMap WHERE systemDefault = true"
         );
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          switch (ddRows[0][0]) {
+          let mapSecret = await getSecret(
+            "adminMap",
+            ddRows[0][0],
+            ddRows[0][3]
+          );
+          let mapKey = null;
+          switch (ddRows[0][3]) {
+            case OAS.secretTypeToken:
+              mapKey = mapSecret.token.key;
+              break;
+            case OAS.secretTypeIdentity:
+              mapKey = mapSecret.identity.token;
+              break;
+          }
+
+          switch (ddRows[0][1]) {
             case OAS.mapVendorOpenStreetMap:
               resJson = {
                 vendor: OAS.mapVendorOpenStreetMap,
-                url: ddRows[0][1] + "?key=" + ddRows[0][3],
+                url: ddRows[0][2] + "?key=" + mapKey,
               };
               break;
             case OAS.mapVendorGoogleMaps:
               resJson = {
                 vendor: OAS.mapVendorGoogleMaps,
-                url: ddRows[0][1] + "?key=" + ddRows[0][3],
+                url: ddRows[0][2] + "?key=" + mapKey,
               };
               break;
             case OAS.mapVendorMicrosoftAzure:
               resJson = {
                 vendor: OAS.mapVendorMicrosoftAzure,
-                url: ddRows[0][1] + "?key=" + ddRows[0][3],
+                url: ddRows[0][2] + "?key=" + mapKey,
               };
               break;
             case OAS.mapVendorERSI:
               resJson = {
                 vendor: OAS.mapVendorERSI,
-                url: ddRows[0][1] + "?key=" + ddRows[0][3],
+                url: ddRows[0][2] + "?key=" + mapKey,
               };
               break;
           }
@@ -17554,7 +18611,7 @@ var run = async () => {
           res
             .contentType(OAS.mimeJSON)
             .status(404)
-            .json({ errors: "not found default map provider" });
+            .json({ errors: "default map provider not found" });
         }
       } else {
         res
@@ -18023,7 +19080,7 @@ var run = async () => {
     body("*.send.port").default(465).isPort(),
     body("*.send.protocol").default("smtp").isIn(OAS.emailSendProtocol),
     body("*.send.authentication")
-      .default("PLAIN")
+      .default(OAS.secretTypePlain)
       .isIn(OAS.emailSendAuthentication),
     body("*.send.encryption.enabled").default(true).isBoolean({ strict: true }),
     body("*.send.encryption.starttls")
@@ -18099,7 +19156,7 @@ var run = async () => {
     body("send.port").default(465).isPort(),
     body("send.protocol").default("smtp").isIn(OAS.emailSendProtocol),
     body("send.authentication")
-      .default("PLAIN")
+      .default(OAS.secretTypePlain)
       .isIn(OAS.emailSendAuthentication),
     body("send.encryption.enabled").default(true).isBoolean({ strict: true }),
     body("send.encryption.starttls").default(false).isBoolean({ strict: true }),
@@ -18232,7 +19289,7 @@ var run = async () => {
     body("send.port").default(465).isPort(),
     body("send.protocol").isIn(OAS.emailSendProtocol).default("imap4"),
     body("send.authentication")
-      .default("PLAIN")
+      .default(OAS.secretTypePlain)
       .isIn(OAS.emailSendAuthentication),
     body("send.encryption.enabled").default(true).isBoolean({ strict: true }),
     body("send.encryption.starttls").default(false).isBoolean({ strict: true }),
@@ -18502,51 +19559,44 @@ var run = async () => {
     body("*.vendor").isIn(OAS.mapVendorPlatform),
     body("*.default").default(false).isBoolean({ strict: true }),
     body("*.renderUrl").isURL({ protocols: OAS.url_protocols }),
-    /* oneOf not working with array in this context
-       https://github.com/express-validator/express-validator/issues/778
-       https://github.com/express-validator/express-validator/issues/950
-      
+    /*
     oneOf(
       [
-        [
-          body("*.credentials").isObject(),
-          body("*.credentials.identity").isString().trim(),
-          body("*.credentials.key").isString().trim(),
-        ],
-        [
-          body("*.identityProvider").isObject(),
-          body("*.identityProvider.base").isURL({
-            protocols: OAS.url_protocols,
-          }),
-          body("*.identityProvider.authorization").isURL({
-            require_protocol: false,
-            require_host: false,
-            require_port: false,
-            allow_protocol_relative_urls: true,
-            allow_fragments: true,
-            allow_query_components: false,
-          }),
-          body("*.identityProvider.token").isURL({
-            require_protocol: false,
-            require_host: false,
-            require_port: false,
-            allow_protocol_relative_urls: true,
-            allow_fragments: true,
-            allow_query_components: false,
-          }),
-          body("*.identityProvider.wellKnown").isURL({
-            require_protocol: false,
-            require_host: false,
-            require_port: false,
-            allow_protocol_relative_urls: true,
-            allow_fragments: true,
-            allow_query_components: false,
-          }),
-        ],
+        body("*.credentials.identity").isString().trim(),
+        body("*.credentials.key").isString().trim(),
+      ],
+      [
+        body("*.identityProvider.base").isURL({
+          protocols: OAS.url_protocols,
+        }),
+        body("*.identityProvider.authorization").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
+        body("*.identityProvider.token").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
+        body("*.identityProvider.wellKnown").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
       ],
       {
         message:
-          "either credential keys or identity provider URLs must be supplied"
+          "either credential keys or identity provider URLs must be supplied",
       }
     ),
     */
@@ -23390,6 +24440,152 @@ var run = async () => {
     fts
   );
 
+  /*
+       Tag:           Secrets
+       operationId:   getSingleSecret
+       exposed Route: /mni/v1/search
+       HTTP method:   GET
+       OpenID Scope:  read:mni_secret
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
+    // security("read:mni_secret"),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("scope").isString().trim(),
+    param("realm").isString().trim(),
+    param("type").isIn(OAS.secretType),
+    getSingleSecret
+  );
+
+  /*
+       Tag:           Secrets
+       operationId:   deleteSingleSecret
+       exposed Route: /mni/v1/search
+       HTTP method:   DELETE
+       OpenID Scope:  write:mni_secret
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
+    // security("write:mni_secret"),
+    param("scope").isString().trim(),
+    param("realm").isString().trim(),
+    param("type").isIn(OAS.secretType),
+    deleteSingleSecret
+  );
+
+  /*
+       Tag:           Secrets
+       operationId:   addSingleSecret
+       exposed Route: /mni/v1/search
+       HTTP method:   POST
+       OpenID Scope:  write:mni_secret
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/secret",
+    // security("write:mni_secret"),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    body("scope").isString().trim(),
+    body("realm").isString().trim(),
+    body("type").isIn(OAS.secretType),
+    oneOf(
+      [
+        body("plain.username").isString().trim(),
+        body("plain.password").isString().trim(),
+        body("plain.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      [
+        body("identity.base").isURL({
+          protocols: OAS.url_protocols,
+        }),
+        body("identity.authorization").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
+        body("identity.token").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
+        body("identity.wellKnown").isURL({
+          require_protocol: false,
+          require_host: false,
+          require_port: false,
+          allow_protocol_relative_urls: true,
+          allow_fragments: true,
+          allow_query_components: false,
+        }),
+        body("identity.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      [
+        body("snmp.version").default("v1").isIn(OAS.snmpVersion),
+        oneOf(
+          [
+            body("snmp.community.read").default("public").isString().trim(),
+            body("snmp.community.write").default("private").isString().trim(),
+            body("snmp.community.trap").default("public").isString().trim(),
+          ],
+          [
+            body("snmp.v3.username").isString().trim(),
+            body("snmp.v3.authorization.protocol").isIn(
+              OAS.snmpAuthorizationProtocol
+            ),
+            body("snmp.v3.authorization.password").isString().trim(),
+            body("snmp.v3.encryption.protocol").isIn(
+              OAS.snmpEncryptionProtocol
+            ),
+            body("snmp.v3.encryption.password").isString().trim(),
+          ],
+          {
+            message: "either v1,v2c or v3 SNMP payload must be supplied",
+          }
+        ),
+        body("snmp.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      [
+        body("ssh.username").isString().trim(),
+        body("ssh.key.passphrase").optional().isString().trim(),
+        body("ssh.key.private").isString().trim(),
+        body("ssh.key.public").isString().trim(),
+        body("ssh.key.hostCA").optional().isString().trim(),
+        body("ssh.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      [
+        body("ssl.private").isString().trim(),
+        body("ssl.ca").optional().isString().trim(),
+        body("ssl.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      [
+        body("token.key").isString().trim(),
+        body("token.identity").optional().isString().trim(),
+        body("token.expiration")
+          .default(OAS.secretExpiration)
+          .matches(OAS.dateTime),
+      ],
+      {
+        message:
+          "either identity, plain, snmp, ssh, ssl or token payload must be supplied",
+      }
+    ),
+    addSingleSecret
+  );
+
   // Express 404 handling ¯\_(ツ)_/¯
   app.use((req, res, next) => {
     res
@@ -23424,6 +24620,10 @@ var run = async () => {
       dbFile: duckDbFile,
       backup: jobBackupEnabled,
       extensions: duckDbExtensions,
+    },
+    encryption: {
+      key: encryptionKey.replace(allPrintableRegEx, "*"),
+      iv: encryptionIV.replace(allPrintableRegEx, "*"),
     },
     endpoint: {
       address: serveAddress,

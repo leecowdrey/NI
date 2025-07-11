@@ -369,38 +369,6 @@
         <div id="nextHop1" class="ne">next hop</div>
         <div id="nextHop2" class="ne">next hop</div>
     </div>
-    <div class="panel" id="mermaidPanel">
-
-        <div id="serviceFlow" class="mermaid">
-            ---
-            config:
-            theme: 'base'
-            themeVariables:
-            primaryColor: '#b3b3b3'
-            primaryTextColor: '#000000'
-            primaryBorderColor: '#ffffff'
-            background: '#f4f4f4'
-            lineColor: '#a2a2a2'
-            fontFamily: 'Courier New, Courier, monospace'
-            fontSize: '0.8em'
-            ---
-            graph LR
-            A[ABC] --> I1(1)
-            A[ABC] --> I2(2)
-            B[DEF] --> I3(3)
-            B[DEF] --> I4(4)
-            I1 -- VDSL 0/0/0 --> INE1(gbr-worc-cg1-01)
-            I2 -- VDSL 0/0/1 --> INE2(gbr-worc-cg1-01)
-            I3 -- VDSL 0/1/0 --> INE1(gbr-worc-cg1-02)
-            I4 -- VDSL 0/1/1 --> INE2(gbr-worc-cg1-02)
-            INE1 --> ENE1(5)
-            INE2 --> ENE2(6)
-            ENE1 -- GigaEthernet0/0/0 --> NH1[nexthop]
-            ENE2 -- GigaEthernet0/0/1 --> NH2[nexthop]
-            classDef customer fill:#0000ff,stroke:#ffffff,stroke-width:1px,color:white;
-            class A,B customer
-        </div>
-    </div>
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>

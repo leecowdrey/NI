@@ -13,8 +13,8 @@
 ---
 
 -- see https://duckdb.org/docs/extensions/inet
-INSTALL inet;
-LOAD inet;
+-- INSTALL inet;
+-- LOAD inet;
 
 -- see https://github.com/duckdb/duckdb-spatial/blob/main/docs/example.md
 INSTALL spatial;
@@ -55,6 +55,7 @@ CREATE TYPE kafkaProducerCompressionMethod AS ENUM ('none','gzip');
 CREATE TYPE languageCode AS ENUM ('aa' ,'ab' ,'ae' ,'af' ,'ak' ,'am' ,'an' ,'ar' ,'as' ,'av' ,'ay' ,'az' ,'ba' ,'be' ,'bg' ,'bh' ,'bi' ,'bm' ,'bn' ,'bo' ,'br' ,'bs' ,'ca' ,'ce' ,'ch' ,'co' ,'cr' ,'cs' ,'cu' ,'cv' ,'cy' ,'da' ,'de' ,'dv' ,'dz' ,'ee' ,'el' ,'en' ,'eo' ,'es' ,'et' ,'eu' ,'fa' ,'ff' ,'fi' ,'fj' ,'fo' ,'fr' ,'fy' ,'ga' ,'gd' ,'gl' ,'gn' ,'gu' ,'gv' ,'ha' ,'he' ,'hi' ,'ho' ,'hr' ,'ht' ,'hu' ,'hy' ,'hz' ,'ia' ,'id' ,'ie' ,'ig' ,'ii' ,'ik' ,'io' ,'is' ,'it' ,'iu' ,'ja' ,'jv' ,'ka' ,'kg' ,'ki' ,'kj' ,'kk' ,'kl' ,'km' ,'kn' ,'ko' ,'kr' ,'ks' ,'ku' ,'kv' ,'kw' ,'ky' ,'la' ,'lb' ,'lg' ,'li' ,'ln' ,'lo' ,'lt' ,'lu' ,'lv' ,'mg' ,'mh' ,'mi' ,'mk' ,'ml' ,'mn' ,'mr' ,'ms' ,'mt' ,'my' ,'na' ,'nb' ,'nd' ,'ne' ,'ng' ,'nl' ,'nn' ,'nr' ,'nv' ,'ny' ,'oc' ,'oj' ,'om' ,'or' ,'os' ,'pa' ,'pi' ,'pl' ,'ps' ,'pt' ,'qu' ,'rm' ,'rn' ,'ro' ,'ru' ,'rw' ,'sa' ,'sc' ,'sd' ,'se' ,'sg' ,'si' ,'sk' ,'sl' ,'sm' ,'sn' ,'so' ,'sq' ,'sr' ,'ss' ,'st' ,'su' ,'sv' ,'sw' ,'ta' ,'te' ,'tg' ,'th' ,'ti' ,'tk' ,'tl' ,'tn' ,'to' ,'tr' ,'ts' ,'tt' ,'tw' ,'ty' ,'ug' ,'uk' ,'ur' ,'uz' ,'ve' ,'vi' ,'vo' ,'wa' ,'wo' ,'xh' ,'yi' ,'yo' ,'za' ,'zh' ,'zu');
 CREATE TYPE languageName AS ENUM ('Afar (aar)' ,'Abkhaz (abk)' ,'Avestan (ave)' ,'Afrikaans (afr)' ,'Akan (aka)' ,'Amharic (amh)' ,'Aragonese (arg)' ,'Arabic (ara)' ,'Assamese (asm)' ,'Avaric (ava)' ,'Aymara (aym)' ,'Azerbaijani (aze)' ,'Bashkir (bak)' ,'Belarusian (bel)' ,'Bulgarian (bul)' ,'Bihari (bih)' ,'Bislama (bis)' ,'Bambara (bam)' ,'Bengali (ben)' ,'Tibetan (bod, tib)' ,'Breton (bre)' ,'Bosnian (bos)' ,'Catalan (cat)' ,'Chechen (che)' ,'Chamorro (cha)' ,'Corsican (cos)' ,'Cree (cre)' ,'Czech (ces, cze)' ,'Church Slavonic (chu)' ,'Chuvash (chv)' ,'Welsh (cym, wel)' ,'Danish (dan)' ,'German (deu, ger)' ,'Dhivehi (div)' ,'Dzongkha (dzo)' ,'Ewe (ewe)' ,'Greek (ell, gre)' ,'English (eng)' ,'Esperanto (epo)' ,'Spanish (spa)' ,'Estonian (est)' ,'Basque (eus, baq)' ,'Persian (fas, per)' ,'Fula (ful)' ,'Finnish (fin)' ,'Fijian (fij)' ,'Faroese (fao)' ,'French (fra, fre)' ,'West Frisian (fry)' ,'Irish (gle)' ,'Scottish Gaelic (gla)' ,'Galician (glg)' ,'Guaraní (grn)' ,'Gujarati (guj)' ,'Manx (glv)' ,'Hausa (hau)' ,'Hebrew (heb)' ,'Hindi (hin)' ,'Hiri Motu (hmo)' ,'Croatian (hrv)' ,'Haitian (hat)' ,'Hungarian (hun)' ,'Armenian (hye, arm)' ,'Herero (her)' ,'Interlingua (ina)' ,'Indonesian (ind)' ,'Interlingue (ile)' ,'Igbo (ibo)' ,'Nuosu (iii)' ,'Inupiaq (ipk)' ,'Ido (ido)' ,'Icelandic (isl, ice)' ,'Italian (ita)' ,'Inuktitut (iku)' ,'Japanese (jpn)' ,'Javanese (jav)' ,'Georgian (kat, geo)' ,'Kongo (kon)' ,'Kikuyu (kik)' ,'Kwanyama (kua)' ,'Kazakh (kaz)' ,'Kalaallisut (kal)' ,'Khmer (khm)' ,'Kannada (kan)' ,'Korean (kor)' ,'Kanuri (kau)' ,'Kashmiri (kas)' ,'Kurdish (kur)' ,'Komi (kom)' ,'Cornish (cor)' ,'Kyrgyz (kir)' ,'Latin (lat)' ,'Luxembourgish (ltz)' ,'Ganda (lug)' ,'Limburgish (lim)' ,'Lingala (lin)' ,'Lao (lao)' ,'Lithuanian (lit)' ,'Luba-Katanga (lub)' ,'Latvian (lav)' ,'Malagasy (mlg)' ,'Marshallese (mah)' ,'Māori (mir, mao)' ,'Macedonian (mkd, mac)' ,'Malayalam (mal)' ,'Mongolian (mon)' ,'Marathi (mar)' ,'Malay (msa, may)' ,'Maltese (mlt)' ,'Burmese (may, bur)' ,'Nauru (nau)' ,'Norwegian Bokmål (nob)' ,'Northern Ndebele (nde)' ,'Nepali (nep)' ,'Ndonga (ndo)' ,'Dutch (nld, dut)' ,'Norwegian Nynorsk (nno)' ,'Southern Ndebele (nbl)' ,'Navajo (nav)' ,'Chichewa (nya)' ,'Occitan (oci)' ,'Ojibwe (oji)' ,'Oromo (orm)' ,'Oriya (ori)' ,'Ossetian (oss)' ,'Punjabi (pan)' ,'Pāli (pli)' ,'Polish (pol)' ,'Pashto (pus)' ,'Portuguese (por)' ,'Quechua (que)' ,'Romansh (roh)' ,'Kirundi (run)' ,'Romanian (ron, rum)' ,'Russian (run)' ,'Kinyarwanda (kin)' ,'Sanskrit (san)' ,'Sardinian (srd)' ,'Sindhi (snd)' ,'Northern Sami (sme)' ,'Sango (sag)' ,'Sinhala (sin)' ,'Slovak (slk, slo)' ,'Slovene (slv)' ,'Samoan (smo)' ,'Shona (sna)' ,'Somali (som)' ,'Albanian (sqi, alb)' ,'Serbian (srp)' ,'Swati (ssw)' ,'Southern Sotho (sot)' ,'Sundanese (sun)' ,'Swedish (swe)' ,'Swahili (swa)' ,'Tamil (tam)' ,'Telugu (tel)' ,'Tajik (tgk)' ,'Thai (tha)' ,'Tigrinya (tir)' ,'Turkmen (tuk)' ,'Tagalog (tgl)' ,'Tswana (tsn)' ,'Tongan (ton)' ,'Turkish (tur)' ,'Tsonga (tso)' ,'Tatar (tat)' ,'Twi (twi)' ,'Tahitian (tah)' ,'Uighur (uig)' ,'Ukrainian (ukr)' ,'Urdu (urd)' ,'Uzbek (uzb)' ,'Venda (ven)' ,'Vietnamese (vie)' ,'Volapük (vol)' ,'Walloon (wln)' ,'Wolof (wol)' ,'Xhosa (xho)' ,'Yiddish (yid)' ,'Yoruba (yor)' ,'Zhuang (zha)' ,'Chinese (zho, chi)' ,'Zulu (zul)');
 CREATE TYPE mapVendorPlatform AS ENUM ('OpenStreet Map','Google Maps','Microsoft Azure','ERSI');
+CREATE TYPE managementProtocol AS ENUM ('https','netconf','snmp','ssh','telnet','none');
 CREATE TYPE polePurpose AS ENUM ('service/drop','link','backhaul','unclassified');
 CREATE TYPE poleState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE portCoaxConfigurationRate AS ENUM ('MHz','GHz');
@@ -70,6 +71,10 @@ CREATE TYPE predictResourceType AS ENUM ('cable','duct','ne','pole','rack','serv
 CREATE TYPE predictResourceStateType AS ENUM ('create','delete','update','undelete','read');
 CREATE TYPE serviceType AS ENUM ('broadband','circuit','ethernet','sogea','fttx','optical','unclassified','voice');
 CREATE TYPE siteType AS ENUM ('street','exchange','pop','dc','colo','unclassified');
+CREATE TYPE secretType AS ENUM ('identity','plain','snmp','ssh','ssl','token');
+CREATE TYPE snmpVersion AS ENUM ('v1','v2c','v3');
+CREATE TYPE snmpAuthorizationProtcol AS ENUM ('MD5','SHA');
+CREATE TYPE snmpEncryptionProtocol AS ENUM ('DES','AES-128');
 CREATE TYPE sizeUnit AS ENUM ('cm','mm','m','km','Mm','inch','feet');
 CREATE TYPE slotState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE source AS ENUM ('historical','predicted');
@@ -113,6 +118,38 @@ CREATE SEQUENCE IF NOT EXISTS seq_trenchCoordinate;
 ---
 --- parent referential tables
 ---
+
+CREATE TABLE IF NOT EXISTS secret (
+    scope VARCHAR NOT NULL,
+    realm VARCHAR NOT NULL,
+    type secretType NOT NULL,
+    expiration TIMESTAMP,
+    identityProviderBase VARCHAR,
+    identityProviderAuthorization VARCHAR,
+    identityProviderToken VARCHAR,
+    identityProviderWellKnown VARCHAR,
+    plainUsername VARCHAR,
+    plainPassword VARCHAR,
+    sshUsername VARCHAR,
+    sshKeyPassphrase VARCHAR,
+    sshKeyPublic VARCHAR USING COMPRESSION zstd,
+    sshKeyPrivate VARCHAR USING COMPRESSION zstd,
+    sshHostCA VARCHAR USING COMPRESSION zstd,
+    sslPrivate VARCHAR USING COMPRESSION zstd,
+    sslCA VARCHAR USING COMPRESSION zstd,
+    snmpVersion snmpVersion,
+    snmpCommunityRead VARCHAR,
+    snmpCommunityWrite VARCHAR,
+    snmpCommunityTrap VARCHAR,
+    snmpUsername VARCHAR,
+    snmpAuthorizationProtocol snmpAuthorizationProtcol,
+    snmpAuthorizationPassword VARCHAR,
+    snmpEncryptionProtocol snmpEncryptionProtocol,
+    snmpEncryptionPassword VARCHAR,
+    tokenIdentity VARCHAR,
+    tokenKey VARCHAR,
+    PRIMARY KEY (scope,realm,type)
+);
 
 CREATE TABLE IF NOT EXISTS currency (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
@@ -231,8 +268,6 @@ CREATE TABLE IF NOT EXISTS adminEmail (
 CREATE TABLE IF NOT EXISTS adminEmailSend (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     adminEmailId VARCHAR NOT NULL,
-    username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
     host VARCHAR NOT NULL,
     port INTEGER NOT NULL DEFAULT 465 CHECK (port >= 1 AND port <= 65535),
     protocol emailSendProtocol NOT NULL DEFAULT 'smtp',
@@ -244,8 +279,6 @@ CREATE TABLE IF NOT EXISTS adminEmailSend (
 CREATE TABLE IF NOT EXISTS adminEmailReceive (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     adminEmailId VARCHAR NOT NULL,
-    username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
     host VARCHAR NOT NULL,
     port INTEGER NOT NULL DEFAULT 993 CHECK (port >= 1 AND port <= 65535),
     protocol emailReceiveProtocol NOT NULL DEFAULT 'imap4',
@@ -259,8 +292,6 @@ CREATE TABLE IF NOT EXISTS adminKafka (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     name VARCHAR NOT NULL,
     clientId VARCHAR NOT NULL DEFAULT 'mni',
-    username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
     host VARCHAR NOT NULL,
     port INTEGER NOT NULL DEFAULT 9092 CHECK (port >= 1 AND port <= 65535),
     retryDelay INTEGER NOT NULL DEFAULT 10000 CHECK (retryDelay >= 0),
@@ -278,18 +309,11 @@ CREATE TABLE IF NOT EXISTS adminMap (
     vendor mapVendorPlatform NOT NULL,
     systemDefault BOOLEAN NOT NULL DEFAULT false,
     renderUrl VARCHAR NOT NULL,
-    credentialsIdentity VARCHAR,
-    credentialsKey VARCHAR,
-    identityProviderBase VARCHAR,
-    identityProviderAuthorization VARCHAR,
-    identityProviderToken VARCHAR,
-    identityProviderWellKnown VARCHAR
+    typeSecret secretType,
 );
 CREATE TABLE IF NOT EXISTS adminWorkflow (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
     name VARCHAR NOT NULL,
-    engineUsername VARCHAR NOT NULL,
-    enginePassword VARCHAR NOT NULL,
     engineUrl VARCHAR NOT NULL,
     engineType workflowEngineType NOT NULL DEFAULT 'bpmn'
 );
@@ -306,8 +330,6 @@ CREATE TABLE IF NOT EXISTS alertCallback (
     requestorId VARCHAR NOT NULL,
     subscriptionId VARCHAR NOT NULL,
     callbackUrl VARCHAR NOT NULL,
-    username VARCHAR,
-    password VARCHAR,
     authentication callbackAuthentication NOT NULL DEFAULT 'none',
     retries INTEGER NOT NULL DEFAULT 1 CHECK (retries >= 0 AND retries <= 8),
     currentRetry INTEGER NOT NULL DEFAULT 0 CHECK (currentRetry >= 0 AND currentRetry <= 8),
@@ -718,6 +740,9 @@ CREATE TABLE IF NOT EXISTS _rackSlot (
 
 ---
 
+---    inetHost INET,
+---    inetMgmtIP INET,
+
 CREATE TABLE IF NOT EXISTS _ne (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_ne') PRIMARY KEY,
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
@@ -725,8 +750,9 @@ CREATE TABLE IF NOT EXISTS _ne (
     source source NOT NULL DEFAULT 'historical',
     host VARCHAR NOT NULL CHECK (regexp_full_match(host,'(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])')), 
     mgmtIP VARCHAR NOT NULL CHECK (regexp_full_match(mgmtIP,'((?:(?:\d{1,3}\.){3}(?:\d{1,3}))|(?:(?:::)?(?:[\dA-Fa-f]{1,4}:{1,2}){1,7}(?:[\d\%A-Fa-z\.]+)?(?:::)?)|(?:::[\dA-Fa-f\.]{1,15})|(?:::))')),
-    inetHost INET,
-    inetMgmtIP INET,
+    protocol managementProtocol DEFAULT 'none',
+    port INTEGER NOT NULL DEFAULT 22 CHECK (port >= 1 AND port <= 65535),
+    typeSecret secretType,
     vendor VARCHAR NOT NULL, 
     model VARCHAR NOT NULL,
     image VARCHAR NOT NULL,
@@ -1145,6 +1171,10 @@ INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','l
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','micro','m',5.00);
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','narrow','m',10.00);
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','portable','m',25.00);
+
+--
+-- Experimental data population
+--
 
 --
 -- EOF

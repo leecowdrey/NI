@@ -127,6 +127,7 @@ export const datePeriodYearMonthDay = "[0-9]{8}";
 export const datePeriodYearQuarter = "[Q|q][1,2,3,4][0-9]{4}";
 export const dateTime = "[0-9]{8}T[0-9]{6}";
 export const dayjsFormat = "YYYYMMDD[T]HHmmss";
+export const secretExpiration = "20991231T235959";
 export const dayjsDateFormat = "YYYYMMDD";
 export const depthClassifier = ["low", "medium", "deep"];
 export const ductConfiguration = { min: 1, max: 48 };
@@ -704,6 +705,14 @@ export const mapVendorPlatform = [
   mapVendorMicrosoftAzure,
   mapVendorERSI,
 ];
+export const managementProtocol = [
+  "https",
+  "netconf",
+  "snmp",
+  "ssh",
+  "telnet",
+  "none",
+];
 export const pageNumber = { min: 1, max: Number.MAX_SAFE_INTEGER };
 export const pageSize = { min: 1, max: 128 };
 export const placement_horizontal = { min: 0, max: Number.MAX_VALUE };
@@ -758,6 +767,23 @@ export const rackSlotUsage = ["free", "used", "reserved", "faulty"];
 export const rackSlotPosition =
   "([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?";
 export const ribbons = { min: 1, max: 36 };
+export const secretTypeIdentity = "identity";
+export const secretTypePlain = "plain";
+export const secretTypeSnmp = "snmp";
+export const secretTypeSsh = "ssh";
+export const secretTypeSsl = "ssl";
+export const secretTypeToken = "token";
+export const secretType = [
+  secretTypeIdentity,
+  secretTypePlain,
+  secretTypeSnmp,
+  secretTypeSsh,
+  secretTypeSsl,
+  secretTypeToken,
+];
+export const snmpVersion = ["v1", "v2c", "v3"];
+export const snmpAuthorizationProtocol = ["MD5", "SHA"];
+export const snmpEncryptionProtocol = ["DES", "AES-128"];
 export const serviceType = [
   "broadband",
   "circuit",

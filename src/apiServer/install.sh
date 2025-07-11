@@ -46,6 +46,8 @@ LOG_FILE=$(grep -E "^APISERV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cu
 PORT=$(grep -E "^APISERV_PORT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SERVICE_USERNAME=$(grep -E "^APISERV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SERVICE_KEY=$(grep -E "^APISERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+ENCRYPTION_KEY=$(grep -E "^APISERV_ENCRYPTION_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+ENCRYPTION_IV==$(grep -E "^APISERV_ENCRYPTION_IV=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_CERT=$(grep -E "^APISERV_SSL_CERT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_CSR=$(grep -E "^APISERV_SSL_CSR=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_DAYS=$(grep -E "^APISERV_SSL_DAYS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -256,6 +258,22 @@ if [[ -z "${SERVICE_KEY}" ]] ; then
   doing "Generating service credential - key"
   SERVICE_KEY=$(openssl rand -base64 60 | tr -d '\n' | tr -d '"' | tr -d '|') && \
   sed -i -e "s|APISERV_SERVICE_KEY=.*|APISERV_SERVICE_KEY=\"${SERVICE_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
+
+if [[ -z "${ENCRYPTION_KEY}" ]] ; then
+  doing "Generating encryption - key"
+  ENCRYPTION_KEY=$(openssl rand -base64 32 | tr -d '\n' | tr -d '"' | tr -d '|') && \
+  sed -i -e "s|APISERV_ENCRYPTION_KEY=.*|APISERV_ENCRYPTION_KEY=\"${ENCRYPTION_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
+
+if [[ -z "${ENCRYPTION_IV}" ]] ; then
+  doing "Generating encryption - initialization vector"
+  ENCRYPTION_IV=$(openssl rand -base64 16 | tr -d '\n' | tr -d '"' | tr -d '|') && \
+  sed -i -e "s|APISERV_ENCRYPTION_IV=.*|APISERV_ENCRYPTION_IV=\"${ENCRYPTION_IV}\"|" ${CONFIG_DIRECTORY}/mni.ini
   RETVAL=$?
   [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 fi

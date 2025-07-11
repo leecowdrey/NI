@@ -159,7 +159,6 @@ function tick() {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.UISERV_DEBUG || false);
-  OAS.dayjsFormat = process.env.UISERV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";

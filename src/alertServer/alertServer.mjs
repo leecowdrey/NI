@@ -201,7 +201,6 @@ signalTraps.forEach((sigType) => {
 // load env
 function loadEnv() {
   DEBUG = toBoolean(process.env.ALERTSRV_DEBUG || false);
-  OAS.dayjsFormat = process.env.ALERTSRV_TIMESTAMP_FORMAT || "YYYYMMDD[T]HHmmssZ";
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
@@ -464,7 +463,7 @@ async function checkEndpointReadiness() {
           }
         })
         .then((data) => {
-          if (data.point != null) {
+          if (data?.point != null) {
             let datePoint = new RegExp("^[0-9]{8}T[0-9]{6}$");
             if (datePoint.test(data.point)) {
               ENDPOINT_READY = true;
