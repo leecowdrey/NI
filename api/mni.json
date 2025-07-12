@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1752334642"
+    "version": "1.0.0.1752336628"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -21315,7 +21315,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "anyOf": [
+                "oneOf": [
                   {
                     "required": [
                       "scope",
@@ -21415,12 +21415,24 @@
                     }
                   }
                 },
-                "token": {
+                "token without identity": {
                   "value": {
                     "scope": "example",
                     "realm": "edge01gw",
                     "type": "token",
                     "token": {
+                      "key": "lasklaksaska2K!38sdjaksj",
+                      "expiration": "20251231T235959"
+                    }
+                  }
+                },
+                "token with identity": {
+                  "value": {
+                    "scope": "example",
+                    "realm": "edge01gw",
+                    "type": "token",
+                    "token": {
+                      "identity": "mni",
                       "key": "lasklaksaska2K!38sdjaksj",
                       "expiration": "20251231T235959"
                     }
@@ -21474,29 +21486,130 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "oneOf": [
                     {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "identity"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "plain"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "snmp"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "ssh"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "ssl"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "scope",
+                        "realm",
+                        "type",
+                        "token"
+                      ]
+                    }
+                  ],
+                  "properties": {
+                    "scope": {
+                      "$ref": "#/components/schemas/secretScope"
+                    },
+                    "realm": {
+                      "$ref": "#/components/schemas/secretRealm"
+                    },
+                    "type": {
+                      "$ref": "#/components/schemas/secretType"
+                    },
+                    "identity": {
                       "$ref": "#/components/schemas/secretIdentity"
                     },
-                    {
+                    "plain": {
                       "$ref": "#/components/schemas/secretPlain"
                     },
-                    {
-                      "$ref": "#/components/schemas/secretSnmpV1V2c"
+                    "snmp": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/secretSnmpV1V2c"
+                        },
+                        {
+                          "$ref": "#/components/schemas/secretSnmpV3"
+                        }
+                      ]
                     },
-                    {
-                      "$ref": "#/components/schemas/secretSnmpV3"
-                    },
-                    {
+                    "ssh": {
                       "$ref": "#/components/schemas/secretSsh"
                     },
-                    {
+                    "ssl": {
                       "$ref": "#/components/schemas/secretSsl"
                     },
-                    {
+                    "token": {
                       "$ref": "#/components/schemas/secretToken"
                     }
-                  ]
+                  }
+                },
+                "examples": {
+                  "plain": {
+                    "value": {
+                      "scope": "example",
+                      "realm": "edge01gw",
+                      "type": "plain",
+                      "plain": {
+                        "username": "admin",
+                        "password": "admin",
+                        "expiration": "20251231T235959"
+                      }
+                    }
+                  },
+                  "token without identity": {
+                    "value": {
+                      "scope": "example",
+                      "realm": "edge01gw",
+                      "type": "token",
+                      "token": {
+                        "key": "lasklaksaska2K!38sdjaksj",
+                        "expiration": "20251231T235959"
+                      }
+                    }
+                  },
+                  "token with identity": {
+                    "value": {
+                      "scope": "example",
+                      "realm": "edge01gw",
+                      "type": "token",
+                      "token": {
+                        "identity": "mni",
+                        "key": "lasklaksaska2K!38sdjaksj",
+                        "expiration": "20251231T235959"
+                      }
+                    }
+                  }
                 }
               }
             }
