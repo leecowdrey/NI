@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1752332411
+  version: 1.0.0.1752334642
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -13740,14 +13740,35 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-              - $ref: "#/components/schemas/secretIdentity"
-              - $ref: "#/components/schemas/secretPlain"
-              - $ref: "#/components/schemas/secretSnmpV1V2c"
-              - $ref: "#/components/schemas/secretSnmpV3"
-              - $ref: "#/components/schemas/secretSsh"
-              - $ref: "#/components/schemas/secretSsl"
-              - $ref: "#/components/schemas/secretToken"
+              type: object
+              anyOf:
+              - required: [scope, realm, type, identity]
+              - required: [scope, realm, type, plain]
+              - required: [scope, realm, type, snmp]
+              - required: [scope, realm, type, ssh]
+              - required: [scope, realm, type, ssl]
+              - required: [scope, realm, type, token]
+              properties:
+                scope:
+                  $ref: "#/components/schemas/secretScope"
+                realm:
+                  $ref: "#/components/schemas/secretRealm"
+                type:
+                  $ref: "#/components/schemas/secretType"
+                identity:
+                  $ref: "#/components/schemas/secretIdentity"
+                plain:
+                  $ref: "#/components/schemas/secretPlain"
+                snmp:
+                  oneOf:
+                  - $ref: "#/components/schemas/secretSnmpV1V2c"
+                  - $ref: "#/components/schemas/secretSnmpV3"
+                ssh:
+                  $ref: "#/components/schemas/secretSsh"
+                ssl:
+                  $ref: "#/components/schemas/secretSsl"
+                token:
+                  $ref: "#/components/schemas/secretToken"
             examples:
               plain:
                 value:
@@ -15781,165 +15802,109 @@ components:
       description: OpenID/OAuth style credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - identity
+      - base
+      - authorization
+      - token
+      - wellKnown
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        identity:
-          type: object
-          required:
-          - base
-          - authorization
-          - token
-          - wellKnown
-          properties:
-            base:
-              type: string
-              format: url
-              description: base URL
-            authorization:
-              type: string
-              format: uri
-              description: authorization endpoint
-            token:
-              type: string
-              format: uri
-              description: access token endpoint
-            wellKnown:
-              type: string
-              format: uri
-              description: RFC8414 authorization server metadata
-            expiration:
-              $ref: "#/components/schemas/dateTime"
+        base:
+          type: string
+          format: url
+          description: base URL
+        authorization:
+          type: string
+          format: uri
+          description: authorization endpoint
+        token:
+          type: string
+          format: uri
+          description: access token endpoint
+        wellKnown:
+          type: string
+          format: uri
+          description: RFC8414 authorization server metadata
+        expiration:
+          $ref: "#/components/schemas/dateTime"
     secretPlain:
       description: Plain username/password style credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - plain
+      - username
+      - password
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        plain:
-          type: object
-          required:
-          - username
-          - password
-          properties:
-            username:
-              type: string
-              description: username
-            password:
-              type: string
-              format: password
-              description: password
-            expiration:
-              $ref: "#/components/schemas/dateTime"
+        username:
+          type: string
+          description: username
+        password:
+          type: string
+          format: password
+          description: password
+        expiration:
+          $ref: "#/components/schemas/dateTime"
     secretSnmpV1V2c:
       description: SNMP v1 or v2c style credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - snmp
+      - version
+      - community
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        snmp:
+        version:
+          $ref: "#/components/schemas/snmpVersion"
+        expiration:
+          $ref: "#/components/schemas/dateTime"
+        community:
           type: object
           required:
-          - version
-          - community
+          - read
+          - write
+          - trap
           properties:
-            version:
-              $ref: "#/components/schemas/snmpVersion"
-            expiration:
-              $ref: "#/components/schemas/dateTime"
-            community:
-              type: object
-              required:
-              - read
-              - write
-              - trap
-              properties:
-                read:
-                  type: string
-                  default: public
-                write:
-                  type: string
-                  default: public
-                trap:
-                  type: string
-                  default: public
+            read:
+              type: string
+              default: public
+            write:
+              type: string
+              default: public
+            trap:
+              type: string
+              default: public
     secretSnmpV3:
       description: SNMP v3 style credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - snmp
+      - version
+      - username
+      - authorization
+      - encryption
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        snmp:
+        version:
+          $ref: "#/components/schemas/snmpVersion"
+        expiration:
+          $ref: "#/components/schemas/dateTime"
+        username:
+          type: string
+        authorization:
           type: object
           required:
-          - version
-          - username
-          - authorization
-          - encryption
+          - protocol
+          - password
           properties:
-            version:
-              $ref: "#/components/schemas/snmpVersion"
-            expiration:
-              $ref: "#/components/schemas/dateTime"
-            username:
+            protocol:
+              $ref: "#/components/schemas/snmpAuthorizationProtocol"
+            password:
               type: string
-            authorization:
-              type: object
-              required:
-              - protocol
-              - password
-              properties:
-                protocol:
-                  $ref: "#/components/schemas/snmpAuthorizationProtocol"
-                password:
-                  type: string
-                  format: password
-            encryption:
-              type: object
-              required:
-              - protocol
-              - password
-              properties:
-                protocol:
-                  $ref: "#/components/schemas/snmpEncryptionProtocol"
-                password:
-                  type: string
-                  format: password
+              format: password
+        encryption:
+          type: object
+          required:
+          - protocol
+          - password
+          properties:
+            protocol:
+              $ref: "#/components/schemas/snmpEncryptionProtocol"
+            password:
+              type: string
+              format: password
     snmpVersion:
       description: |
         SNMP version, *note*: `v1` and `v2c` use community strings, where as `v3` uses authorization and encryption protocols for authentication
@@ -15964,101 +15929,59 @@ components:
       description: SSH style credential with optional host certificate authority (CA)
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - ssh
+      - username
+      - key
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        ssh:
+        username:
+          type: string
+          description: username
+        passphrase:
+          type: string
+          format: password
+          description: password
+        expiration:
+          $ref: "#/components/schemas/dateTime"
+        key:
           type: object
           required:
-          - username
-          - key
+          - private
+          - public
           properties:
-            username:
+            private:
               type: string
-              description: username
-            passphrase:
+            public:
               type: string
-              format: password
-              description: password
-            expiration:
-              $ref: "#/components/schemas/dateTime"
-            key:
-              type: object
-              required:
-              - private
-              - public
-              properties:
-                private:
-                  type: string
-                public:
-                  type: string
-                hostCA:
-                  description: non binary certificate
-                  type: string
+            hostCA:
+              description: non binary certificate
+              type: string
     secretSsl:
       description: SSL style credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - ssl
+      - private
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        ssl:
-          type: object
-          required:
-          - private
-          properties:
-            private:
-              type: string
-              format: Base64
-              description: non binary Base64 encoded PKCS#12 or PEM certificate
-            ca:
-              type: string
-              format: password
-              description: optional non binary Base64 encoded certificate authority (CA)
-            expiration:
-              $ref: "#/components/schemas/dateTime"
+        private:
+          type: string
+          format: Base64
+          description: non binary Base64 encoded PKCS#12 or PEM certificate
+        ca:
+          type: string
+          format: password
+          description: optional non binary Base64 encoded certificate authority (CA)
+        expiration:
+          $ref: "#/components/schemas/dateTime"
     secretToken:
       description: RESTful API style token credential
       type: object
       required:
-      - scope
-      - realm
-      - type
-      - token
+      - key
       properties:
-        scope:
-          $ref: "#/components/schemas/secretScope"
-        realm:
-          $ref: "#/components/schemas/secretRealm"
-        type:
-          $ref: "#/components/schemas/secretType"
-        token:
-          type: object
-          required:
-          - key
-          properties:
-            key:
-              type: string
-            identity:
-              type: string
-            expiration:
-              $ref: "#/components/schemas/dateTime"
+        key:
+          type: string
+        identity:
+          type: string
+        expiration:
+          $ref: "#/components/schemas/dateTime"
     serviceType:
       description: |
         intended offering of the suppplied service, *note*: 

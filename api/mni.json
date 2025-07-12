@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1752332411"
+    "version": "1.0.0.1752334642"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -21314,29 +21314,93 @@
           "content": {
             "application/json": {
               "schema": {
-                "oneOf": [
+                "type": "object",
+                "anyOf": [
                   {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "identity"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "plain"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "snmp"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "ssh"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "ssl"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "scope",
+                      "realm",
+                      "type",
+                      "token"
+                    ]
+                  }
+                ],
+                "properties": {
+                  "scope": {
+                    "$ref": "#/components/schemas/secretScope"
+                  },
+                  "realm": {
+                    "$ref": "#/components/schemas/secretRealm"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/secretType"
+                  },
+                  "identity": {
                     "$ref": "#/components/schemas/secretIdentity"
                   },
-                  {
+                  "plain": {
                     "$ref": "#/components/schemas/secretPlain"
                   },
-                  {
-                    "$ref": "#/components/schemas/secretSnmpV1V2c"
+                  "snmp": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/secretSnmpV1V2c"
+                      },
+                      {
+                        "$ref": "#/components/schemas/secretSnmpV3"
+                      }
+                    ]
                   },
-                  {
-                    "$ref": "#/components/schemas/secretSnmpV3"
-                  },
-                  {
+                  "ssh": {
                     "$ref": "#/components/schemas/secretSsh"
                   },
-                  {
+                  "ssl": {
                     "$ref": "#/components/schemas/secretSsl"
                   },
-                  {
+                  "token": {
                     "$ref": "#/components/schemas/secretToken"
                   }
-                ]
+                }
               },
               "examples": {
                 "plain": {
@@ -23229,54 +23293,34 @@
         "description": "OpenID/OAuth style credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "identity"
+          "base",
+          "authorization",
+          "token",
+          "wellKnown"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "base": {
+            "type": "string",
+            "format": "url",
+            "description": "base URL"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "authorization": {
+            "type": "string",
+            "format": "uri",
+            "description": "authorization endpoint"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
+          "token": {
+            "type": "string",
+            "format": "uri",
+            "description": "access token endpoint"
           },
-          "identity": {
-            "type": "object",
-            "required": [
-              "base",
-              "authorization",
-              "token",
-              "wellKnown"
-            ],
-            "properties": {
-              "base": {
-                "type": "string",
-                "format": "url",
-                "description": "base URL"
-              },
-              "authorization": {
-                "type": "string",
-                "format": "uri",
-                "description": "authorization endpoint"
-              },
-              "token": {
-                "type": "string",
-                "format": "uri",
-                "description": "access token endpoint"
-              },
-              "wellKnown": {
-                "type": "string",
-                "format": "uri",
-                "description": "RFC8414 authorization server metadata"
-              },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
-              }
-            }
+          "wellKnown": {
+            "type": "string",
+            "format": "uri",
+            "description": "RFC8414 authorization server metadata"
+          },
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           }
         }
       },
@@ -23284,41 +23328,21 @@
         "description": "Plain username/password style credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "plain"
+          "username",
+          "password"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "username": {
+            "type": "string",
+            "description": "username"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "password"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
-          },
-          "plain": {
-            "type": "object",
-            "required": [
-              "username",
-              "password"
-            ],
-            "properties": {
-              "username": {
-                "type": "string",
-                "description": "username"
-              },
-              "password": {
-                "type": "string",
-                "format": "password",
-                "description": "password"
-              },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
-              }
-            }
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           }
         }
       },
@@ -23326,55 +23350,35 @@
         "description": "SNMP v1 or v2c style credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "snmp"
+          "version",
+          "community"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "version": {
+            "$ref": "#/components/schemas/snmpVersion"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
-          },
-          "snmp": {
+          "community": {
             "type": "object",
             "required": [
-              "version",
-              "community"
+              "read",
+              "write",
+              "trap"
             ],
             "properties": {
-              "version": {
-                "$ref": "#/components/schemas/snmpVersion"
+              "read": {
+                "type": "string",
+                "default": "public"
               },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
+              "write": {
+                "type": "string",
+                "default": "public"
               },
-              "community": {
-                "type": "object",
-                "required": [
-                  "read",
-                  "write",
-                  "trap"
-                ],
-                "properties": {
-                  "read": {
-                    "type": "string",
-                    "default": "public"
-                  },
-                  "write": {
-                    "type": "string",
-                    "default": "public"
-                  },
-                  "trap": {
-                    "type": "string",
-                    "default": "public"
-                  }
-                }
+              "trap": {
+                "type": "string",
+                "default": "public"
               }
             }
           }
@@ -23384,70 +23388,50 @@
         "description": "SNMP v3 style credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "snmp"
+          "version",
+          "username",
+          "authorization",
+          "encryption"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "version": {
+            "$ref": "#/components/schemas/snmpVersion"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
+          "username": {
+            "type": "string"
           },
-          "snmp": {
+          "authorization": {
             "type": "object",
             "required": [
-              "version",
-              "username",
-              "authorization",
-              "encryption"
+              "protocol",
+              "password"
             ],
             "properties": {
-              "version": {
-                "$ref": "#/components/schemas/snmpVersion"
+              "protocol": {
+                "$ref": "#/components/schemas/snmpAuthorizationProtocol"
               },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
+              "password": {
+                "type": "string",
+                "format": "password"
+              }
+            }
+          },
+          "encryption": {
+            "type": "object",
+            "required": [
+              "protocol",
+              "password"
+            ],
+            "properties": {
+              "protocol": {
+                "$ref": "#/components/schemas/snmpEncryptionProtocol"
               },
-              "username": {
-                "type": "string"
-              },
-              "authorization": {
-                "type": "object",
-                "required": [
-                  "protocol",
-                  "password"
-                ],
-                "properties": {
-                  "protocol": {
-                    "$ref": "#/components/schemas/snmpAuthorizationProtocol"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password"
-                  }
-                }
-              },
-              "encryption": {
-                "type": "object",
-                "required": [
-                  "protocol",
-                  "password"
-                ],
-                "properties": {
-                  "protocol": {
-                    "$ref": "#/components/schemas/snmpEncryptionProtocol"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password"
-                  }
-                }
+              "password": {
+                "type": "string",
+                "format": "password"
               }
             }
           }
@@ -23482,58 +23466,38 @@
         "description": "SSH style credential with optional host certificate authority (CA)",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "ssh"
+          "username",
+          "key"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "username": {
+            "type": "string",
+            "description": "username"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "passphrase": {
+            "type": "string",
+            "format": "password",
+            "description": "password"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           },
-          "ssh": {
+          "key": {
             "type": "object",
             "required": [
-              "username",
-              "key"
+              "private",
+              "public"
             ],
             "properties": {
-              "username": {
-                "type": "string",
-                "description": "username"
+              "private": {
+                "type": "string"
               },
-              "passphrase": {
-                "type": "string",
-                "format": "password",
-                "description": "password"
+              "public": {
+                "type": "string"
               },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
-              },
-              "key": {
-                "type": "object",
-                "required": [
-                  "private",
-                  "public"
-                ],
-                "properties": {
-                  "private": {
-                    "type": "string"
-                  },
-                  "public": {
-                    "type": "string"
-                  },
-                  "hostCA": {
-                    "description": "non binary certificate",
-                    "type": "string"
-                  }
-                }
+              "hostCA": {
+                "description": "non binary certificate",
+                "type": "string"
               }
             }
           }
@@ -23543,41 +23507,21 @@
         "description": "SSL style credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "ssl"
+          "private"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "private": {
+            "type": "string",
+            "format": "Base64",
+            "description": "non binary Base64 encoded PKCS#12 or PEM certificate"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "ca": {
+            "type": "string",
+            "format": "password",
+            "description": "optional non binary Base64 encoded certificate authority (CA)"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
-          },
-          "ssl": {
-            "type": "object",
-            "required": [
-              "private"
-            ],
-            "properties": {
-              "private": {
-                "type": "string",
-                "format": "Base64",
-                "description": "non binary Base64 encoded PKCS#12 or PEM certificate"
-              },
-              "ca": {
-                "type": "string",
-                "format": "password",
-                "description": "optional non binary Base64 encoded certificate authority (CA)"
-              },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
-              }
-            }
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           }
         }
       },
@@ -23585,37 +23529,17 @@
         "description": "RESTful API style token credential",
         "type": "object",
         "required": [
-          "scope",
-          "realm",
-          "type",
-          "token"
+          "key"
         ],
         "properties": {
-          "scope": {
-            "$ref": "#/components/schemas/secretScope"
+          "key": {
+            "type": "string"
           },
-          "realm": {
-            "$ref": "#/components/schemas/secretRealm"
+          "identity": {
+            "type": "string"
           },
-          "type": {
-            "$ref": "#/components/schemas/secretType"
-          },
-          "token": {
-            "type": "object",
-            "required": [
-              "key"
-            ],
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "identity": {
-                "type": "string"
-              },
-              "expiration": {
-                "$ref": "#/components/schemas/dateTime"
-              }
-            }
+          "expiration": {
+            "$ref": "#/components/schemas/dateTime"
           }
         }
       },
