@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1752261937"
+    "version": "1.0.0.1752332411"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -21153,6 +21153,11 @@
         "tags": [
           "Search"
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/regexSearch"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -21168,7 +21173,7 @@
                     "$ref": "#/components/schemas/searchResourceType"
                   },
                   "query": {
-                    "description": "case insensitive query phrase specified with search",
+                    "description": "case insensitive query phrase specified with search, *note*: wildcards can also be included:\n  - `_` pattern matches single character\n  - `%` pattern matches any sequence of zero or more characters\n*example*: searching for resources containing `abc`\n- query:`a%` result:`found`\n- query:`_b_` result:`found`\n- query:`c` result:`not found`\n- query:`c%` result:`not found`\n- query:`%c` result:`found`\n- query:`abc` result:`found`\n",
                     "type": "string"
                   }
                 }
@@ -21189,19 +21194,25 @@
                 "ne": {
                   "value": {
                     "resource": "ne",
-                    "query": "Cisco"
+                    "query": "Cisco%"
                   }
                 },
                 "cve": {
                   "value": {
                     "resource": "cve",
-                    "query": "MX240"
+                    "query": "MX24__"
                   }
                 },
                 "currency": {
                   "value": {
                     "resource": "currency",
-                    "query": "sterl"
+                    "query": "sterl%"
+                  }
+                },
+                "currency (regex parameter included)": {
+                  "value": {
+                    "resource": "currency",
+                    "query": "EU[[:alpha:]]"
                   }
                 }
               }
@@ -24547,6 +24558,15 @@
         },
         "style": "form",
         "explode": false
+      },
+      "regexSearch": {
+        "name": "regex",
+        "in": "query",
+        "required": false,
+        "description": "Flag parameter used to indicate the supplied search phrase should be treated as a Regular Expression (RegEx), *note*: the `RE2` RegEx library is used please review `https://github.com/google/re2/wiki/Syntax` for further details.\n*example*: searching for currencies ISO code, in this case, containing `EUR`\n- query:`EU[[:alpha:]]` result:`found`\n- query:`EU[[:^alpha:]]` result:`not found`\n*note*: any `'` characters will be automatically escaped to `\\'`\n",
+        "schema": {
+          "type": "null"
+        }
       },
       "undeleteHistorical": {
         "name": "restore",

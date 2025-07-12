@@ -2101,10 +2101,15 @@ var run = async () => {
     return next();
   }
 
-  async function getFtsResults(resource, query) {
+  async function getFtsResults(resource, query, regexPattern = false) {
     let resResults = [];
     let sql = null;
     let next = null;
+    let comparator = "ILIKE";
+    if (regexPattern) {
+      comparator = "SIMILAR TO";
+    }
+    query = query.replace(/\'/g, "\\'");
     for (let t = 0; t < ftsTables.length; t++) {
       if (resource == ftsTables[t].table) {
         next = ftsTables[t].next;
@@ -2117,11 +2122,13 @@ var run = async () => {
             " WHERE";
           for (let f = 0; f < ftsTables[t].field.length; f++) {
             sql +=
-              " lower(" +
+              " " +
               ftsTables[t].field[f] +
-              ") LIKE lower('%" +
+              " " +
+              comparator +
+              " '" +
               query +
-              "%')";
+              "'";
             if (f < ftsTables[t].field.length - 1) {
               sql += " OR";
             }
@@ -2150,11 +2157,13 @@ var run = async () => {
                   " WHERE";
                 for (let f = 0; f < ftsTables[n].field.length; f++) {
                   sql +=
-                    " lower(" +
+                    " " +
                     ftsTables[n].field[f] +
-                    ") LIKE lower('%" +
+                    " " +
+                    comparator +
+                    " '" +
                     query +
-                    "%')";
+                    "'";
                   if (f < ftsTables[n].field.length - 1) {
                     sql += " OR";
                   }
@@ -2183,17 +2192,20 @@ var run = async () => {
   async function fts(req, res, next) {
     try {
       let result = validationResult(req);
-      let resJson = {};
-      let resResults = [];
       if (result.isEmpty()) {
         let resJson = {};
         let resResults = [];
+        let regexPattern = false;
+        if (req.query?.regex != null) {
+          regexPattern = true;
+        }
         if (req.body.resource == "*") {
           for (let l = 0; l < ftsTables.length; l++) {
             if (ftsTables[l].leader) {
               let resourceResults = await getFtsResults(
                 ftsTables[l].table,
-                req.body.query
+                req.body.query,
+                regexPattern
               );
               resourceResults.forEach((result) => {
                 resResults.push(result);
@@ -2203,7 +2215,8 @@ var run = async () => {
         } else {
           let resourceResults = await getFtsResults(
             req.body.resource,
-            req.body.query
+            req.body.query,
+            regexPattern
           );
           resourceResults.forEach((result) => {
             resResults.push(result);
@@ -24437,6 +24450,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("resource").isIn(OAS.fts_resources),
     body("query").isString().trim(),
+    query("regex").optional(),
     fts
   );
 

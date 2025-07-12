@@ -2592,7 +2592,7 @@
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}",
-      "@comment": "deleteSingleFiber",
+      "@comment": "deleteSingleCable",
       "output_encoding": "no-op",
       "input_headers": [],
       "input_query_strings": ["predicted", "restore"],
@@ -6659,7 +6659,7 @@
       "@comment": "search",
       "output_encoding": "no-op",
       "input_headers": ["Accept", "Content-Type"],
-      "input_query_strings": [],
+      "input_query_strings": ["regex"],
       "backend": [
         {
           "url_pattern": "/mni/v1/search",
