@@ -187,6 +187,7 @@
             if (id != null && id != "-1") {
                 fetch("<%=payload.gatewayUrl%>/admin/workflow/engine/" + id, {
                     method: "DELETE",
+                    keepalive: true,
                 })
                     .then((response) => {
                         if (response.ok) {
@@ -239,7 +240,8 @@
                                     "Content-Type": "application/json",
                                     "Accept": "application/json",
                                 },
-                                body: JSON.stringify(reqJson)
+                                body: JSON.stringify(reqJson),
+                                keepalive: true,
                             })
                                 .then((response) => {
                                     if (response.ok) {
@@ -267,7 +269,8 @@
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
-                                body: JSON.stringify(reqJson)
+                                body: JSON.stringify(reqJson),
+                                keepalive: true,
                             })
                                 .then((response) => {
                                     if (!response.ok) {
@@ -320,6 +323,7 @@
                     headers: {
                         "Accept": "application/json",
                     },
+                    keepalive: true,
                 })
                     .then((response) => {
                         if (response.ok) {
@@ -349,6 +353,7 @@
                 headers: {
                     "Accept": "application/json",
                 },
+                keepalive: true,
             })
                 .then((response) => {
                     if (response.ok) {

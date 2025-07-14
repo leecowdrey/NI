@@ -266,6 +266,14 @@ async function dnsSd() {
           " seconds",
       });
       dnsSdTimer = setTimeout(dnsSd, endpointRetryMs * 10);
+    } else if (e.code === "ETIMEOUT") {
+      LOGGER.warn(dayjs().format(OAS.dayjsFormat), "warn", "endpoint", {
+        dns:
+          "DNS resolution timed out, retrying in " +
+          Number(parseFloat(endpointRetryMs / 100).toFixed(0)) +
+          " seconds",
+      });
+      dnsSdTimer = setTimeout(dnsSd, endpointRetryMs * 10);
     } else {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint", {
         dns: "DNS resolution failed",
@@ -275,7 +283,6 @@ async function dnsSd() {
     }
   }
 }
-
 async function getDateBoundary() {
   if (dateBoundaryTimer != null) {
     clearTimeout(dateBoundaryTimer);
@@ -290,6 +297,7 @@ async function getDateBoundary() {
       headers: {
         Accept: OAS.mimeJSON,
       },
+      keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
@@ -372,10 +380,15 @@ async function getDateBoundary() {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "getDateBoundary", {
-          url: url,
-          error: err,
-        });
+        LOGGER.error(
+          dayjs().format(OAS.dayjsFormat),
+          "error",
+          "getDateBoundary",
+          {
+            url: url,
+            error: err,
+          }
+        );
       });
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "getDateBoundary", {
@@ -402,6 +415,7 @@ async function duplicate(bundle) {
       headers: {
         Accept: OAS.mimeJSON,
       },
+      keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
@@ -420,6 +434,7 @@ async function duplicate(bundle) {
       bundle.endpoint + "/" + bundle.resource + "/" + bundle.id + "?predicted";
     await fetch(url, {
       method: "DELETE",
+      keepalive: true,
       signal: AbortSignal.timeout(bundle.abortMs),
     })
       .then((response) => {
@@ -459,6 +474,7 @@ async function duplicate(bundle) {
         "Content-Type": OAS.mimeJSON,
       },
       body: JSON.stringify(body),
+      keepalive: true,
       signal: AbortSignal.timeout(bundle.abortMs),
     })
       .then((response) => {
@@ -497,6 +513,7 @@ async function queueDrain() {
         headers: {
           Accept: OAS.mimeJSON,
         },
+        keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
       })
         .then((response) => {
@@ -520,11 +537,16 @@ async function queueDrain() {
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
               queueEmpty = true;
             } else {
-              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
-                state: "unknown",
-                status: response.status,
-                statusText: response.statusText,
-              });
+              LOGGER.error(
+                dayjs().format(OAS.dayjsFormat),
+                "error",
+                "queueDrain",
+                {
+                  state: "unknown",
+                  status: response.status,
+                  statusText: response.statusText,
+                }
+              );
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
             }
           }
@@ -547,6 +569,7 @@ async function queueDrain() {
                   headers: {
                     Accept: OAS.mimeJSON,
                   },
+                  keepalive: true,
                   signal: AbortSignal.timeout(endpointRetryMs),
                 })
                   .then((timelineResponse) => {
@@ -622,7 +645,10 @@ async function queueDrain() {
                               qId: q.qId,
                               resource: q.resource,
                               id: q.id,
-                              point: historicalTimeline[ historicalTimeline.length - 1 ],
+                              point:
+                                historicalTimeline[
+                                  historicalTimeline.length - 1
+                                ],
                             });
                             //if (duplicateStatus) {
                             deleteQueueItem(q.qId);
@@ -737,6 +763,7 @@ async function deleteQueueItem(qId) {
     let url = ENDPOINT + "/predict/queue/" + qId;
     await fetch(url, {
       method: "DELETE",
+      keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
@@ -754,10 +781,15 @@ async function deleteQueueItem(qId) {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
-          url: url,
-          error: err,
-        });
+        LOGGER.error(
+          dayjs().format(OAS.dayjsFormat),
+          "error",
+          "deleteQueueItem",
+          {
+            url: url,
+            error: err,
+          }
+        );
       });
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
@@ -774,6 +806,7 @@ async function checkEndpointReadiness() {
         headers: {
           Accept: OAS.mimeJSON,
         },
+        keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
       })
         .then((response) => {
@@ -849,7 +882,11 @@ async function checkEndpointReadiness() {
     }
   } else {
     ENDPOINT_READY = false;
-    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint not resolved");
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "endpoint not resolved"
+    );
   }
   if (ENDPOINT_READY) {
     endpointTimer = setTimeout(checkEndpointReadiness, endpointKeepaliveMs);

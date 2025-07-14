@@ -283,6 +283,14 @@ async function dnsSd() {
           " seconds",
       });
       dnsSdTimer = setTimeout(dnsSd, endpointRetryMs * 10);
+    } else if (e.code === "ETIMEOUT") {
+      LOGGER.warn(dayjs().format(OAS.dayjsFormat), "warn", "endpoint", {
+        dns:
+          "DNS resolution timed out, retrying in " +
+          Number(parseFloat(endpointRetryMs / 100).toFixed(0)) +
+          " seconds",
+      });
+      dnsSdTimer = setTimeout(dnsSd, endpointRetryMs * 10);
     } else {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint", {
         dns: "DNS resolution failed",
@@ -306,6 +314,7 @@ async function queueDrain() {
         headers: {
           Accept: OAS.mimeJSON,
         },
+        keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
       })
         .then((response) => {
@@ -405,6 +414,7 @@ async function deleteQueueItem(qId) {
     let url = ENDPOINT + "/alert/queue/" + qId;
     await fetch(url, {
       method: "DELETE",
+      keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
@@ -442,6 +452,7 @@ async function checkEndpointReadiness() {
         headers: {
           Accept: OAS.mimeJSON,
         },
+        keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
       })
         .then((response) => {
@@ -549,6 +560,7 @@ async function sendMail(q) {
       headers: {
         Accept: OAS.mimeJSON,
       },
+      keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {

@@ -68,7 +68,8 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(reqJson)
+                body: JSON.stringify(reqJson),
+                keepalive: true,
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -89,6 +90,7 @@
                 headers: {
                     "Accept": "application/json",
                 },
+                keepalive: true,
             })
                 .then((response) => {
                     if (response.ok) {

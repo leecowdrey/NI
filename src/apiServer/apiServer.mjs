@@ -435,7 +435,9 @@ var serveUrlPrefix = null;
 var serveUrlVersion = null;
 var serveHost = null;
 var serveDomain = null;
+var serveKeepalive = null;
 var serveTimeOutRequest = null;
+var serveTimeOutKeepalive = null;
 var appName = null;
 var appVersion = null;
 var appBuild = null;
@@ -1762,8 +1764,10 @@ function loadEnv() {
   servePort = toInteger(process.env.APISERV_PORT) || 443;
   serveUrlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
   serveUrlVersion = process.env.APISERV_URL_VERSION || "/v1";
+  serveKeepalive = toBoolean(process.env.APISERV_KEEPALIVE || false);
   serveTimeOutRequest =
-    toInteger(process.env.APISERV_TIMEOUT_REQUEST) || 120000;
+    toInteger(process.env.APISERV_TIMEOUT_REQUEST) || 300000;
+  serveTimeOutKeepalive = toInteger(process.env.APISERV_TIMEOUT_KEEPALIVE) || 5000;
   sslKey = process.env.APISERV_SSL_KEY || "apiServer.key";
   sslCert = process.env.APISERV_SSL_CERT || "apiServer.crt";
   serviceUsername = process.env.APISERV_SERVICE_USERNAME || "internal";
@@ -24644,7 +24648,10 @@ var run = async () => {
       domain: serveDomain,
       fqdn: serveHost + "." + serveDomain,
       host: serveHost,
+      keepalive: serveKeepalive,
+      keepAliveTimeout: serveTimeOutKeepalive,
       port: servePort,
+      requestTimeout: serveTimeOutRequest,
       serviceDiscoveryName: serveName,
       urlPrefix: serveUrlPrefix,
       urlVersion: serveUrlVersion,
@@ -24731,6 +24738,9 @@ var run = async () => {
     {
       key: fs.readFileSync(path.join(configDirectory, sslKey), "utf-8"),
       cert: fs.readFileSync(path.join(configDirectory, sslCert), "utf-8"),
+      keepAlive: true,
+      keepAliveTimeout: serveTimeOutKeepalive,
+      requestTimeout: serveTimeOutRequest,
     },
     app
   );
