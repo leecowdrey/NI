@@ -18886,12 +18886,10 @@ var run = async () => {
        operationId:   getReadiness
        exposed Route: /mni/v1//api/readiness
        HTTP method:   GET
-       OpenID Scope:  read:mni_api
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/api/readiness",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getReadiness
   );
 
@@ -18900,12 +18898,10 @@ var run = async () => {
        operationId:   getOpenAPI
        exposed Route: /mni/v1/api
        HTTP method:   GET
-       OpenID Scope:  read:mni_api
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/api",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getOpenAPI
   );
 
@@ -18914,12 +18910,11 @@ var run = async () => {
      operationId:   getAllCurrencies
      exposed Route: /mni/v1/currency
      HTTP method:   GET
-     OpenID Scope:  read:mni_api
+     OpenID Scope:  read:mni_system
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/currency",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllCurrencies
   );
 
@@ -18928,12 +18923,11 @@ var run = async () => {
      operationId:   getDefaultCurrency
      exposed Route: /mni/v1/currency/default
      HTTP method:   GET
-     OpenID Scope:  read:mni_api
+     OpenID Scope:  read:mni_system
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/currency/default",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getDefaultCurrency
   );
 
@@ -18942,12 +18936,11 @@ var run = async () => {
      operationId:   updateCurrencyRate
      exposed Route: /mni/v1/currency/:currencyId
      HTTP method:   GET
-     OpenID Scope:  write:mni_admin
+     OpenID Scope:  write:mni_system
   */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("currencyId").isUUID(4),
     body("rate").isFloat(OAS.currency_rate),
     updateCurrencyRate
@@ -18958,12 +18951,11 @@ var run = async () => {
      operationId:   updateCurrencyDefault
      exposed Route: /mni/v1/currency/:currencyId
      HTTP method:   GET
-     OpenID Scope:  write:mni_admin
+     OpenID Scope:  write:mni_system
   */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
-    // security("write:mni_admin"),
-    param("currencyId").isUUID(4),
+        param("currencyId").isUUID(4),
     updateCurrencyDefault
   );
 
@@ -18972,12 +18964,11 @@ var run = async () => {
      operationId:   getAdminData
      exposed Route: /mni/v1/admin/data
      HTTP method:   GET
-     OpenID Scope:  read:mni_admin
+     OpenID Scope:  read:mni_system
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAdminData
   );
 
@@ -18986,12 +18977,10 @@ var run = async () => {
        operationId:   addAdminData
        exposed Route: /mni/v1/admin/data
        HTTP method:   POST
-       OpenID Scope:  read:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/data",
-    // security("read:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("historical.duration").default(0).isInt(OAS.duration),
     body("historical.unit").default("day").isString().isIn(OAS.durationUnit),
     body("predicted.duration").default(0).isInt(OAS.duration),
@@ -19004,12 +18993,10 @@ var run = async () => {
        operationId:   getMaxRetentionPeriodDuration
        exposed Route: /mni/v1/admin/data/historical/duration
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data/historical/duration",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMaxRetentionPeriodDuration
   );
 
@@ -19018,12 +19005,10 @@ var run = async () => {
        operationId:   updateMaxRetentionPeriodDuration
        exposed Route: /mni/v1/admin/data/historical/duration
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/data/historical/duration",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("duration").isInt(OAS.duration),
     body("unit").isString().isIn(OAS.durationUnit),
     updateMaxRetentionPeriodDuration
@@ -19034,12 +19019,10 @@ var run = async () => {
        operationId:   getMaxPredictedPeriodDuration
        exposed Route: /mni/v1/admin/data/predicted/duration
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data/predicted/duration",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMaxRetentionPeriodDuration
   );
 
@@ -19048,12 +19031,10 @@ var run = async () => {
        operationId:   updateMaxPredictedPeriodDuration
        exposed Route: /mni/v1/admin/data/predicted/duration
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/data/predicted/duration",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("duration").isInt(OAS.duration),
     body("unit").isIn(OAS.durationUnit),
     updateMaxPredictedPeriodDuration
@@ -19064,12 +19045,10 @@ var run = async () => {
        operationId:   getMultipleEmail
        exposed Route: /mni/v1/admin/email
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleEmail
   );
 
@@ -19078,12 +19057,10 @@ var run = async () => {
        operationId:   addMultipleEmail
        exposed Route: /mni/v1/admin/email
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/email",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.emailProviderId").isUUID(4),
@@ -19140,12 +19117,10 @@ var run = async () => {
        operationId:   getAllEmailProviders
        exposed Route: /mni/v1/admin/email/provider
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllEmailProviders
@@ -19156,12 +19131,10 @@ var run = async () => {
        operationId:   registerEmailProvider
        exposed Route: /mni/v1/admin/email/provider
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("vendor").isString().trim(),
     body("address").isEmail(),
@@ -19209,12 +19182,10 @@ var run = async () => {
        operationId:   deleteEmailProvider
        exposed Route: /mni/v1/admin/email/provider/:emailProviderId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_admin
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-    // security("write:mni_admin"),
-    param("emailProviderId").isUUID(4),
+        param("emailProviderId").isUUID(4),
     deleteEmailProvider
   );
 
@@ -19223,12 +19194,10 @@ var run = async () => {
        operationId:   getSingleEmailProvider
        exposed Route: /mni/v1/admin/email/provider/:emailProviderId
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("emailProviderId").isUUID(4),
     getSingleEmailProvider
   );
@@ -19238,12 +19207,10 @@ var run = async () => {
        operationId:   updateEmailProvider
        exposed Route: /mni/v1/admin/email/provider/:emailProviderId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("emailProviderId").isUUID(4),
     body("vendor").optional().isString().trim(),
     body("address").optional().isEmail(),
@@ -19289,12 +19256,10 @@ var run = async () => {
        operationId:   replaceEmailProvider
        exposed Route: /mni/v1/admin/email/provider/:emailProviderId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_admin
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("emailProviderId").isUUID(4),
     body("vendor").isString().trim(),
     body("address").isEmail(),
@@ -19343,12 +19308,10 @@ var run = async () => {
        operationId:   getMultipleKafka
        exposed Route: /mni/v1/admin/kafka
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleKafka
   );
 
@@ -19357,12 +19320,10 @@ var run = async () => {
        operationId:   addMultipleKafka
        exposed Route: /mni/v1/admin/kafka
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.kafkaProducerId").isUUID(4),
@@ -19399,12 +19360,10 @@ var run = async () => {
        operationId:   getAllKafkaBrokers
        exposed Route: /mni/v1/admin/kafka/broker
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllKafkaBrokers
@@ -19415,12 +19374,10 @@ var run = async () => {
        operationId:   registerKafkaBroker
        exposed Route: /mni/v1/admin/kafka/broker
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("name").isString().trim(),
     body("clientId").default("mni").isString().trim(),
@@ -19455,12 +19412,10 @@ var run = async () => {
        operationId:   deleteKafkaBroker
        exposed Route: /mni/v1/admin/kafka/broker/:kafkaProducerId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_admin
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-    // security("write:mni_admin"),
-    param("kafkaProducerId").isUUID(4),
+        param("kafkaProducerId").isUUID(4),
     deleteKafkaBroker
   );
 
@@ -19469,12 +19424,10 @@ var run = async () => {
        operationId:   getSingleKafkaBroker
        exposed Route: /mni/v1/admin/kafka/broker/:kafkaProducerId
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("kafkaProducerId").isUUID(4),
     getSingleKafkaBroker
   );
@@ -19484,12 +19437,10 @@ var run = async () => {
        operationId:   updateKafkaBroker
        exposed Route: /mni/v1/admin/kafka/broker/:kafkaProducerId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("name").optional().isString().trim(),
     body("clientId").optional().isString().trim(),
     body("producer").optional().isObject(),
@@ -19524,12 +19475,10 @@ var run = async () => {
        operationId:   replaceKafkaBroker
        exposed Route: /mni/v1/admin/kafka/broker/:kafkaProducerId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_admin
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("kafkaProducerId").isUUID(4),
     body("name").isString().trim(),
     body("clientId").isString().trim(),
@@ -19564,12 +19513,10 @@ var run = async () => {
        operationId:   addMultipleMap
        exposed Route: /mni/v1/admin/map
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/map",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.mapProviderId").isUUID(4),
@@ -19625,12 +19572,10 @@ var run = async () => {
        operationId:   getMultipleMap
        exposed Route: /mni/v1/admin/map
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleMap
   );
 
@@ -19639,12 +19584,10 @@ var run = async () => {
        operationId:   getAllMapProviders
        exposed Route: /mni/v1/admin/map/provider
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllMapProviders
@@ -19655,12 +19598,10 @@ var run = async () => {
        operationId:   registerMapProvider
        exposed Route: /mni/v1/admin/map/provider
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("vendor").isIn(OAS.mapVendorPlatform),
     body("default").default(false).isBoolean({ strict: true }),
@@ -19716,12 +19657,10 @@ var run = async () => {
        operationId:   deleteMapProvider
        exposed Route: /mni/v1/admin/map/provider/:mapProviderId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_admin
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-    // security("write:mni_admin"),
-    param("mapProviderId").isUUID(4),
+        param("mapProviderId").isUUID(4),
     deleteMapProvider
   );
 
@@ -19730,12 +19669,10 @@ var run = async () => {
        operationId:   getSingleMapProvider
        exposed Route: /mni/v1/admin/map/provider/:mapProviderId
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("mapProviderId").isUUID(4),
     getSingleMapProvider
   );
@@ -19745,12 +19682,10 @@ var run = async () => {
        operationId:   updateMapProvider
        exposed Route: /mni/v1/admin/map/provider
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").optional().isIn(OAS.mapVendorPlatform),
     body("default").optional().default(false).isBoolean({ strict: true }),
     body("renderUrl").optional().isURL({ protocols: OAS.url_protocols }),
@@ -19806,12 +19741,10 @@ var run = async () => {
        operationId:   replaceMapProvider
        exposed Route: /mni/v1/admin/map/provider
        HTTP method:   PUT
-       OpenID Scope:  write:mni_admin
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isIn(OAS.mapVendorPlatform),
     body("default").default(false).isBoolean({ strict: true }),
     body("renderUrl").isURL({ protocols: OAS.url_protocols }),
@@ -19866,12 +19799,10 @@ var run = async () => {
        operationId:   getDefaultMapProvider
        exposed Route: /mni/v1/admin/map/provider/default
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/default",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getDefaultMapProvider
   );
 
@@ -19880,12 +19811,10 @@ var run = async () => {
        operationId:   getMultipleWorkflow
        exposed Route: /mni/v1/admin/workflow
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleWorkflow
   );
 
@@ -19894,12 +19823,10 @@ var run = async () => {
        operationId:   addMultipleWorkflow
        exposed Route: /mni/v1/admin/workflow
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.workflowEngineId").isUUID(4),
@@ -19917,12 +19844,10 @@ var run = async () => {
        operationId:   getAllWorkflowEngines
        exposed Route: /mni/v1/admin/workflow/engine
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow/engine",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllWorkflowEngines
@@ -19933,12 +19858,10 @@ var run = async () => {
        operationId:   registerWorkflowEngine
        exposed Route: /mni/v1/admin/workflow/engine
        HTTP method:   POST
-       OpenID Scope:  write:mni_admin
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow/engine",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("name").isString().trim(),
     body("engine").isObject(),
@@ -19954,14 +19877,12 @@ var run = async () => {
        operationId:   deleteWorkflowEngine
        exposed Route: /mni/v1/admin/workflow/engine/:workflowEngineId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_admin
     */
   app.delete(
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-    // security("write:mni_admin"),
-    param("workflowEngineId").isUUID(4),
+        param("workflowEngineId").isUUID(4),
     deleteWorkflowEngine
   );
 
@@ -19970,14 +19891,12 @@ var run = async () => {
        operationId:   getSingleWorkflowEngine
        exposed Route: /mni/v1/admin/workflow/engine/:workflowEngineId
        HTTP method:   GET
-       OpenID Scope:  read:mni_admin
     */
   app.get(
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-    // security("read:mni_admin"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("workflowEngineId").isUUID(4),
     getSingleWorkflowEngine
   );
@@ -19987,14 +19906,12 @@ var run = async () => {
        operationId:   updateWorkflowEngine
        exposed Route: /mni/v1/admin/workflow/engine/:workflowEngineId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_admin
     */
   app.patch(
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("workflowEngineId").isUUID(4),
     body("name").optional().isString().trim(),
     body("engine").optional().isObject(),
@@ -20011,14 +19928,12 @@ var run = async () => {
        operationId:   replaceWorkflowEngine
        exposed Route: /mni/v1/admin/workflow/engine/:workflowEngineId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_admin
     */
   app.put(
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-    // security("write:mni_admin"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("workflowEngineId").isUUID(4),
     body("name").isString().trim(),
     body("engine").isObject(),
@@ -20034,11 +19949,9 @@ var run = async () => {
        operationId:   getMultipleAlerts
        exposed Route: /mni/v1/alerts
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alerts",
+        serveUrlPrefix + serveUrlVersion + "/alerts",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleAlerts
   );
@@ -20048,12 +19961,10 @@ var run = async () => {
        operationId:   getNextAlertQueueItem
        exposed Route: /mni/v1/alert/queue
        HTTP method:   GET
-       OpenID Scope:  read:mni_internal
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/alert/queue",
-    // security("read:mni_internal"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getNextAlertQueueItem
   );
 
@@ -20062,12 +19973,10 @@ var run = async () => {
        operationId:   deleteAlertQueueItem
        exposed Route: /mni/v1/alert/queue
        HTTP method:   DELETE
-       OpenID Scope:  read:mni_internal
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/queue/:qId",
-    // security("read:mni_internal"),
-    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+        param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
     deleteAlertQueueItem
   );
 
@@ -20076,11 +19985,9 @@ var run = async () => {
        operationId:   getAllAlerts
        exposed Route: /mni/v1/alert
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert",
+        serveUrlPrefix + serveUrlVersion + "/alert",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20092,11 +19999,9 @@ var run = async () => {
        operationId:   addSingleAlert
        exposed Route: /mni/v1/alert
        HTTP method:   GET
-       OpenID Scope:  write:mni_internal
     */
   app.post(
-    // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/alert",
+        serveUrlPrefix + serveUrlVersion + "/alert",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("description").isString().trim(),
@@ -20110,12 +20015,10 @@ var run = async () => {
        operationId:   unsubscribeAlert
        exposed Route: /mni/v1/alert/callback
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_alert
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/callback",
-    // security("write:mni_alert"),
-    query("requestorId").isUUID(4),
+        query("requestorId").isUUID(4),
     query("subscriptionId").matches(OAS.csv_uuids),
     unsubscribeAlert
   );
@@ -20125,12 +20028,10 @@ var run = async () => {
        operationId:   subscribeAlert
        exposed Route: /mni/v1/alert/callback
        HTTP method:   POST
-       OpenID Scope:  write:mni_alert
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/callback",
-    // security("write:mni_alert"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20154,12 +20055,10 @@ var run = async () => {
        operationId:   unNotifyAlert
        exposed Route: /mni/v1/alert/notify
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_alert
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-    // security("write:mni_alert"),
-    query("requestorId").isUUID(4),
+        query("requestorId").isUUID(4),
     query("notificationId").matches(OAS.csv_uuids),
     unNotifyAlert
   );
@@ -20169,12 +20068,10 @@ var run = async () => {
        operationId:   getNotifyAlert
        exposed Route: /mni/v1/alert/notify
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-    // security("read:mni_alert"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("notificationId").isUUID(4),
     getNotifyAlert
   );
@@ -20184,12 +20081,10 @@ var run = async () => {
        operationId:   notifyAlert
        exposed Route: /mni/v1/alert/notify
        HTTP method:   POST
-       OpenID Scope:  write:mni_alert
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-    // security("write:mni_alert"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20205,12 +20100,10 @@ var run = async () => {
        operationId:   unpublishAlert
        exposed Route: /mni/v1/alert/publish
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_alert
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/publish",
-    // security("write:mni_alert"),
-    query("requestorId").isUUID(4),
+        query("requestorId").isUUID(4),
     query("publicationId").matches(OAS.csv_uuids),
     unpublishAlert
   );
@@ -20220,12 +20113,10 @@ var run = async () => {
        operationId:   publishAlert
        exposed Route: /mni/v1/alert/publish
        HTTP method:   POST
-       OpenID Scope:  write:mni_alert
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/publish",
-    // security("write:mni_alert"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20240,12 +20131,10 @@ var run = async () => {
        operationId:   workflowAlertUnassign
        exposed Route: /mni/v1/alert/workflow
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_alert
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/workflow",
-    // security("write:mni_alert"),
-    query("requestorId").isUUID(4),
+        query("requestorId").isUUID(4),
     query("workflowRunnerId").matches(OAS.csv_uuids),
     workflowAlertUnassign
   );
@@ -20255,12 +20144,10 @@ var run = async () => {
        operationId:   workflowAlertAssign
        exposed Route: /mni/v1/alert/workflow
        HTTP method:   POST
-       OpenID Scope:  write:mni_alert
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/workflow",
-    // security("write:mni_alert"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20275,11 +20162,9 @@ var run = async () => {
        operationId:   getAllAlertContent
        exposed Route: /mni/v1/alert/content
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert/content",
+        serveUrlPrefix + serveUrlVersion + "/alert/content",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20291,11 +20176,9 @@ var run = async () => {
        operationId:   getSingleAlertContent
        exposed Route: /mni/v1/alert/content
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+        serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("alertContentId").isUUID(4),
     getSingleAlertContent
@@ -20306,11 +20189,9 @@ var run = async () => {
        operationId:   addSingleAlertContent
        exposed Route: /mni/v1/alert/content
        HTTP method:   POST
-       OpenID Scope:  write:mni_internal
     */
   app.post(
-    // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/alert/content",
+        serveUrlPrefix + serveUrlVersion + "/alert/content",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("alertId").isUUID(4),
@@ -20326,11 +20207,9 @@ var run = async () => {
        operationId:   deleteSingleAlertContent
        exposed Route: /mni/v1/alert/content
        HTTP method:   DELETE
-       OpenID Scope:  read:mni_internal
     */
   app.delete(
-    // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+        serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
     param("alertContentId").isUUID(4),
     deleteSingleAlertContent
   );
@@ -20340,11 +20219,9 @@ var run = async () => {
        operationId:   getAllCve
        exposed Route: /mni/v1/cve
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/cve",
+        serveUrlPrefix + serveUrlVersion + "/cve",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20356,11 +20233,9 @@ var run = async () => {
        operationId:   getSingleCve
        exposed Route: /mni/v1/cve
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
+        serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cveId").matches(OAS.cveId),
     getSingleCve
@@ -20371,11 +20246,9 @@ var run = async () => {
        operationId:   getCveByNe
        exposed Route: /mni/v1/cve/ne
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/cve/ne/:neId",
+        serveUrlPrefix + serveUrlVersion + "/cve/ne/:neId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     getCveByNe
@@ -20386,11 +20259,9 @@ var run = async () => {
        operationId:   addSingleCve
        exposed Route: /mni/v1/cve
        HTTP method:   POST
-       OpenID Scope:  write:mni_internal
     */
   app.post(
-    // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/cve",
+        serveUrlPrefix + serveUrlVersion + "/cve",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("cveId").matches(OAS.cveId),
@@ -20412,11 +20283,9 @@ var run = async () => {
        operationId:   deleteSingleCve
        exposed Route: /mni/v1/cve
        HTTP method:   DELETE
-       OpenID Scope:  read:mni_internal
     */
   app.delete(
-    // security("write:mni_internal"),
-    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
+        serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     param("cveId").matches(OAS.cveId),
     deleteSingleCve
   );
@@ -20426,11 +20295,9 @@ var run = async () => {
        operationId:   getSingleAlert
        exposed Route: /mni/v1/alert/{alertId}
        HTTP method:   GET
-       OpenID Scope:  read:mni_alert
     */
   app.get(
-    // security("read:mni_alert"),
-    serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
+        serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("alertId").isUUID(4),
     getSingleAlert
@@ -20441,12 +20308,10 @@ var run = async () => {
        operationId:   deleteSingleAlert
        exposed Route: /mni/v1/alert/:alertId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_internal
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
-    // security("write:mni_internal"),
-    param("alertId").isUUID(4),
+        param("alertId").isUUID(4),
     deleteSingleAlert
   );
 
@@ -20455,12 +20320,10 @@ var run = async () => {
        operationId:   updateSingleAlert
        exposed Route: /mni/v1/alert/:alertId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_internal
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
-    // security("write:mni_internal"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("alertId").isUUID(4),
     body("description").isString().trim(),
     body("delete").optional().isBoolean({ strict: true }),
@@ -20473,12 +20336,10 @@ var run = async () => {
        operationId:   getAllCables
        exposed Route: /mni/v1/cable
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllCables
@@ -20489,12 +20350,10 @@ var run = async () => {
        operationId:   getCablesSimpleStatistics
        exposed Route: /mni/v1/cables/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables/state",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getCablesSimpleStatistics
   );
@@ -20504,12 +20363,10 @@ var run = async () => {
        operationId:   addSingleCable
        exposed Route: /mni/v1/cable
        HTTP method:   POST
-       OpenID Scope:  write:mni_cable
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cable",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
@@ -20607,12 +20464,10 @@ var run = async () => {
        operationId:   getCablesCapacityState
        exposed Route: /mni/v1/cables/capacity/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables/capacity/state",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -20626,12 +20481,10 @@ var run = async () => {
        operationId:   deleteSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cable
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("write:mni_cable"),
-    param("cableId").isUUID(4),
+        param("cableId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -20643,12 +20496,10 @@ var run = async () => {
        operationId:   getSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cableId").isUUID(4),
     getSingleCable
   );
@@ -20658,12 +20509,10 @@ var run = async () => {
        operationId:   getCableTimeline
        exposed Route: /mni/v1/cable/timeline/:cableId
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable/timeline/:cableId",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cableId").isUUID(4),
     getCableTimeline
   );
@@ -20673,12 +20522,10 @@ var run = async () => {
        operationId:   updateSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf(
       [
@@ -20785,12 +20632,10 @@ var run = async () => {
        operationId:   replaceSingleCable
        exposed Route: /mni/v1/cable/:cableId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cable
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
@@ -20888,12 +20733,10 @@ var run = async () => {
        operationId:   updateSingleCableCoaxState
        exposed Route: /mni/v1/cable/:cableId/channel/:channel
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/channel/:channel",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("channel").isInt(OAS.cableConfiguration_coax_channels),
     body("state").isIn(OAS.cableState),
@@ -20905,14 +20748,12 @@ var run = async () => {
        operationId:   updateSingleCableRibbonStrandState
        exposed Route: /mni/v1/cable/:cableId/state/multi/:ribbon/:strand
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix +
       serveUrlVersion +
       "/cable/:cableId/state/multi/:ribbon/:strand",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("ribbon").isInt(OAS.ribbons),
     param("strand").isInt(OAS.cableConfiguration_single_fiber_strands),
@@ -20925,12 +20766,10 @@ var run = async () => {
        operationId:   updateSingleCableStrandState
        exposed Route: /mni/v1/cable/:cableId/state/single/:strand
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_cable
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/state/single/:strand",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("strand").isInt(OAS.cableConfiguration_single_fiber_strands),
     body("state").isIn(OAS.cableState),
@@ -20942,12 +20781,10 @@ var run = async () => {
        operationId:   getMultipleCables
        exposed Route: /mni/v1/cables
        HTTP method:   GET
-       OpenID Scope:  read:mni_cable
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables",
-    // security("read:mni_cable"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleCables
   );
 
@@ -20956,12 +20793,10 @@ var run = async () => {
        operationId:   addMultipleCables
        exposed Route: /mni/v1/cables
        HTTP method:   POST
-       OpenID Scope:  write:mni_cable
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cables",
-    // security("write:mni_cable"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.cableId").isUUID(4),
@@ -21061,12 +20896,10 @@ var run = async () => {
        operationId:   getAllDuct
        exposed Route: /mni/v1/duct
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21078,12 +20911,10 @@ var run = async () => {
        operationId:   getDuctsSimpleStatistics
        exposed Route: /mni/v1/ducts/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts/state",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getDuctsSimpleStatistics
   );
@@ -21093,12 +20924,10 @@ var run = async () => {
        operationId:   addSingleDuct
        exposed Route: /mni/v1/duct
        HTTP method:   POST
-       OpenID Scope:  write:mni_duct
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/duct",
-    // security("write:mni_duct"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
@@ -21125,12 +20954,10 @@ var run = async () => {
        operationId:   getDuctsCapacityState
        exposed Route: /mni/v1/ducts/capacity/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts/capacity/state",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21144,12 +20971,10 @@ var run = async () => {
        operationId:   deleteSingleDuct
        exposed Route: /mni/v1/duct/:ductId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_duct
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-    // security("write:mni_duct"),
-    param("ductId").isUUID(4),
+        param("ductId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -21161,12 +20986,10 @@ var run = async () => {
        operationId:   getSingleDuct
        exposed Route: /mni/v1/duct/:ductId
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("ductId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleDuct
@@ -21177,12 +21000,10 @@ var run = async () => {
        operationId:   getDuctTimeline
        exposed Route: /mni/v1/duct/timeline/:ductId
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct/timeline/:ductId",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("ductId").isUUID(4),
     getDuctTimeline
   );
@@ -21192,12 +21013,10 @@ var run = async () => {
        operationId:   updateSingleDuct
        exposed Route: /mni/v1/duct/:ductId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_duct
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-    // security("write:mni_duct"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("ductId").isUUID(4),
     body("trenchId").optional().isUUID(4),
     body("purpose").optional().isIn(OAS.ductPurpose),
@@ -21221,12 +21040,10 @@ var run = async () => {
        operationId:   replaceSingleDuct
        exposed Route: /mni/v1/duct/:ductId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_duct
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-    // security("write:mni_duct"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("ductId").isUUID(4),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
@@ -21253,12 +21070,10 @@ var run = async () => {
        operationId:   getMultipleDucts
        exposed Route: /mni/v1/ducts
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts",
-    // security("read:mni_duct"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleDucts
   );
 
@@ -21267,12 +21082,10 @@ var run = async () => {
        operationId:   addMultipleDucts
        exposed Route: /mni/v1/ducts
        HTTP method:   POST
-       OpenID Scope:  write:mni_duct
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/ducts",
-    // security("write:mni_duct"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.ductId").isUUID(4),
@@ -21301,12 +21114,10 @@ var run = async () => {
        operationId:   getAllNe
        exposed Route: /mni/v1/ne
        HTTP method:   GET
-       OpenID Scope:  read:mni_ne
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21318,12 +21129,10 @@ var run = async () => {
        operationId:   getNesSimpleStatistics
        exposed Route: /mni/v1/nes/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_duct
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes/state",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getNesSimpleStatistics
   );
@@ -21333,12 +21142,10 @@ var run = async () => {
        operationId:   getAllNesVendors
        exposed Route: /mni/v1/nes/vendors
        HTTP method:   GET
-       OpenID Scope:  read:mni_ne
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes/vendors",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllNesVendors
   );
 
@@ -21347,12 +21154,10 @@ var run = async () => {
        operationId:   addSingleNe
        exposed Route: /mni/v1/ne
        HTTP method:   POST
-       OpenID Scope:  write:mni_ne
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/ne",
-    // security("write:mni_ne"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -21480,12 +21285,10 @@ var run = async () => {
        operationId:   deleteSingleNe
        exposed Route: /mni/v1/ne/:neId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_ne
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-    // security("write:mni_ne"),
-    param("neId").isUUID(4),
+        param("neId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -21497,12 +21300,10 @@ var run = async () => {
        operationId:   getSingleNe
        exposed Route: /mni/v1/ne/:neId
        HTTP method:   GET
-       OpenID Scope:  read:mni_ne
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleNe
@@ -21513,12 +21314,10 @@ var run = async () => {
        operationId:   getNeTimeline
        exposed Route: /mni/v1/ne/timeline/:neId
        HTTP method:   GET
-       OpenID Scope:  read:mni_ne
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne/timeline/:neId",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     getNeTimeline
   );
@@ -21528,12 +21327,10 @@ var run = async () => {
        operationId:   updateSingleNe
        exposed Route: /mni/v1/ne/:neId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_ne
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-    // security("write:mni_ne"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").optional().isUUID(4),
     body("host")
       .optional()
@@ -21667,12 +21464,10 @@ var run = async () => {
        operationId:   replaceSingleNe
        exposed Route: /mni/v1/ne/:neId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_ne
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-    // security("write:mni_ne"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").isUUID(4),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -21797,12 +21592,10 @@ var run = async () => {
        operationId:   getMultipleNe
        exposed Route: /mni/v1/nes
        HTTP method:   GET
-       OpenID Scope:  read:mni_ne
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes",
-    // security("read:mni_ne"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleNe
   );
 
@@ -21811,12 +21604,10 @@ var run = async () => {
        operationId:   addMultipleNe
        exposed Route: /mni/v1/nes
        HTTP method:   POST
-       OpenID Scope:  write:mni_ne
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/nes",
-    // security("write:mni_ne"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.neId").isUUID(4),
@@ -21948,12 +21739,10 @@ var run = async () => {
        operationId:   getAllPole
        exposed Route: /mni/v1/pole
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21965,12 +21754,10 @@ var run = async () => {
        operationId:   getPolesSimpleStatistics
        exposed Route: /mni/v1/poles/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles/state",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getPolesSimpleStatistics
   );
@@ -21980,12 +21767,10 @@ var run = async () => {
        operationId:   addSinglePole
        exposed Route: /mni/v1/pole
        HTTP method:   POST
-       OpenID Scope:  write:mni_pole
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/pole",
-    // security("write:mni_pole"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
     body("reference").isString().trim(),
@@ -22069,12 +21854,10 @@ var run = async () => {
        operationId:   getPolesCapacityState
        exposed Route: /mni/v1/poles/capacity/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles/capacity/state",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22088,12 +21871,10 @@ var run = async () => {
        operationId:   deleteSinglePole
        exposed Route: /mni/v1/pole/:poleId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_pole
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-    // security("write:mni_pole"),
-    param("poleId").isUUID(4),
+        param("poleId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22105,12 +21886,10 @@ var run = async () => {
        operationId:   getSinglePole
        exposed Route: /mni/v1/pole/:poleId
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("poleId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSinglePole
@@ -22121,12 +21900,10 @@ var run = async () => {
        operationId:   getPoleTimeline
        exposed Route: /mni/v1/pole/timeline/:neId
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole/timeline/:poleId",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("poleId").isUUID(4),
     getPoleTimeline
   );
@@ -22136,12 +21913,10 @@ var run = async () => {
        operationId:   updateSinglePole
        exposed Route: /mni/v1/pole/:poleId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_pole
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-    // security("write:mni_pole"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").optional().isIn(OAS.polePurpose),
     body("reference").optional().isString().trim(),
@@ -22206,12 +21981,10 @@ var run = async () => {
        operationId:   replaceSinglePole
        exposed Route: /mni/v1/pole/:poleId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_pole
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-    // security("write:mni_pole"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
     body("reference").isString().trim(),
@@ -22303,12 +22076,10 @@ var run = async () => {
        operationId:   getMultiplePoles
        exposed Route: /mni/v1/poles
        HTTP method:   GET
-       OpenID Scope:  read:mni_pole
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles",
-    // security("read:mni_pole"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultiplePoles
   );
 
@@ -22317,12 +22088,10 @@ var run = async () => {
        operationId:   addMultiplePoles
        exposed Route: /mni/v1/poles
        HTTP method:   POST
-       OpenID Scope:  write:mni_pole
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/poles",
-    // security("write:mni_pole"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.poleId").isUUID(4),
@@ -22419,12 +22188,10 @@ var run = async () => {
        operationId:   getAllRacks
        exposed Route: /mni/v1/rack
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22436,12 +22203,10 @@ var run = async () => {
        operationId:   getRackTimeline
        exposed Route: /mni/v1/rack/timeline/:rackId
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/timeline/:rackId",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     getRackTimeline
   );
@@ -22451,12 +22216,10 @@ var run = async () => {
        operationId:   getRacksSimpleStatistics
        exposed Route: /mni/v1/racks/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/racks/state",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getRacksSimpleStatistics
   );
@@ -22466,12 +22229,10 @@ var run = async () => {
        operationId:   deleteSingleRack
        exposed Route: /mni/v1/rack/:rackId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_rack
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-    // security("write:mni_rack"),
-    param("rackId").isUUID(4),
+        param("rackId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22483,12 +22244,10 @@ var run = async () => {
        operationId:   getSingleRack
        exposed Route: /mni/v1/rack/:rackId
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleRack
@@ -22499,12 +22258,10 @@ var run = async () => {
        operationId:   updateSingleRack
        exposed Route: /mni/v1/rack/:rackId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_rack
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-    // security("write:mni_rack"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").optional().isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22540,12 +22297,10 @@ var run = async () => {
        operationId:   replaceSingleRack
        exposed Route: /mni/v1/rack/:rackId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_rack
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-    // security("write:mni_rack"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22582,12 +22337,10 @@ var run = async () => {
        operationId:   addSingleRack
        exposed Route: /mni/v1/rack
        HTTP method:   POST
-       OpenID Scope:  write:mni_rack
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/rack",
-    // security("write:mni_rack"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22624,12 +22377,10 @@ var run = async () => {
        operationId:   getMultipleRacks
        exposed Route: /mni/v1/racks
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/racks",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleRacks
   );
 
@@ -22638,12 +22389,10 @@ var run = async () => {
        operationId:   addMultipleRacks
        exposed Route: /mni/v1/racks
        HTTP method:   POST
-       OpenID Scope:  write:mni_rack
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/racks",
-    // security("write:mni_rack"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.rackId").isUUID(4),
@@ -22682,12 +22431,10 @@ var run = async () => {
        operationId:   getSingleRackSlots
        exposed Route: /mni/v1/rack/slots/:rackId
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleRackSlots
@@ -22698,12 +22445,10 @@ var run = async () => {
        operationId:   getSingleRackSlotUsage
        exposed Route: /mni/v1/rack/slots/:rackId/:slot
        HTTP method:   GET
-       OpenID Scope:  read:mni_rack
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId/:slot",
-    // security("read:mni_rack"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     param("slot").isInt(OAS.rackSlots),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22715,12 +22460,10 @@ var run = async () => {
        operationId:   getAllServices
        exposed Route: /mni/v1/service
        HTTP method:   GET
-       OpenID Scope:  read:mni_service
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service",
-    // security("read:mni_service"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllServices
   );
@@ -22730,12 +22473,10 @@ var run = async () => {
        operationId:   getServicesSimpleStatistics
        exposed Route: /mni/v1/services/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_service
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/services/state",
-    // security("read:mni_service"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getServicesSimpleStatistics
   );
@@ -22745,12 +22486,10 @@ var run = async () => {
        operationId:   addSingleService
        exposed Route: /mni/v1/service
        HTTP method:   POST
-       OpenID Scope:  write:mni_service
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/service",
-    // security("write:mni_service"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22786,12 +22525,10 @@ var run = async () => {
        operationId:   deleteSingleService
        exposed Route: /mni/v1/service/:serviceId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_service
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-    // security("write:mni_service"),
-    param("serviceId").isUUID(4),
+        param("serviceId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22803,12 +22540,10 @@ var run = async () => {
        operationId:   getSingleService
        exposed Route: /mni/v1/service/:serviceId
        HTTP method:   GET
-       OpenID Scope:  read:mni_service
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-    // security("read:mni_service"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("serviceId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleService
@@ -22819,12 +22554,10 @@ var run = async () => {
        operationId:   getServiceTimeline
        exposed Route: /mni/v1/service/timeline/:serviceId
        HTTP method:   GET
-       OpenID Scope:  read:mni_service
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service/timeline/:serviceId",
-    // security("read:mni_service"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("serviceId").isUUID(4),
     getServiceTimeline
   );
@@ -22834,12 +22567,10 @@ var run = async () => {
        operationId:   updateSingleService
        exposed Route: /mni/v1/service/:serviceId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_service
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-    // security("write:mni_service"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22874,12 +22605,10 @@ var run = async () => {
        operationId:   replaceSingleService
        exposed Route: /mni/v1/service/:serviceId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_service
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-    // security("write:mni_service"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22915,12 +22644,10 @@ var run = async () => {
        operationId:   getMultipleServices
        exposed Route: /mni/v1/services
        HTTP method:   GET
-       OpenID Scope:  read:mni_service
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/services",
-    // security("read:mni_service"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleServices
   );
 
@@ -22929,12 +22656,10 @@ var run = async () => {
        operationId:   addMultipleServices
        exposed Route: /mni/v1/services
        HTTP method:   POST
-       OpenID Scope:  write:mni_service
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/services",
-    // security("write:mni_service"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.serviceId").isUUID(4),
@@ -22972,12 +22697,10 @@ var run = async () => {
        operationId:   getAllSites
        exposed Route: /mni/v1/site
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22989,12 +22712,10 @@ var run = async () => {
        operationId:   getAllSitesOnNet
        exposed Route: /mni/v1/site/onnet
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/onnet",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSitesOnNet
@@ -23005,12 +22726,10 @@ var run = async () => {
        operationId:   getAllSitesOffNet
        exposed Route: /mni/v1/site/offnet
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/offnet",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSitesOffNet
@@ -23021,12 +22740,10 @@ var run = async () => {
        operationId:   getSitesSimpleStatistics
        exposed Route: /mni/v1/sites/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/sites/state",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSitesSimpleStatistics
   );
@@ -23036,12 +22753,10 @@ var run = async () => {
        operationId:   addSingleSite
        exposed Route: /mni/v1/site
        HTTP method:   POST
-       OpenID Scope:  write:mni_site
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/site",
-    // security("write:mni_site"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -23075,12 +22790,10 @@ var run = async () => {
        operationId:   deleteSingleSite
        exposed Route: /mni/v1/site/:siteId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_site
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-    // security("write:mni_site"),
-    param("siteId").isUUID(4),
+        param("siteId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -23092,12 +22805,10 @@ var run = async () => {
        operationId:   getSingleSite
        exposed Route: /mni/v1/site/:siteId
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("siteId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleSite
@@ -23108,12 +22819,10 @@ var run = async () => {
        operationId:   getSiteTimeline
        exposed Route: /mni/v1/site/timeline/:siteId
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/timeline/:siteId",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("siteId").isUUID(4),
     getSiteTimeline
   );
@@ -23123,12 +22832,10 @@ var run = async () => {
        operationId:   updateSingleSite
        exposed Route: /mni/v1/site/:siteId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_site
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-    // security("write:mni_site"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("siteId").isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23161,12 +22868,10 @@ var run = async () => {
        operationId:   replaceSingleSite
        exposed Route: /mni/v1/site/:siteId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_site
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-    // security("write:mni_site"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("siteId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -23200,12 +22905,10 @@ var run = async () => {
        operationId:   getMultipleSites
        exposed Route: /mni/v1/sites
        HTTP method:   GET
-       OpenID Scope:  read:mni_site
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/sites",
-    // security("read:mni_site"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleSites
   );
 
@@ -23214,12 +22917,10 @@ var run = async () => {
        operationId:   addMultipleSites
        exposed Route: /mni/v1/sites
        HTTP method:   POST
-       OpenID Scope:  write:mni_site
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/sites",
-    // security("write:mni_site"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.siteId").isUUID(4),
@@ -23255,12 +22956,10 @@ var run = async () => {
        operationId:   distanceSites
        exposed Route: /mni/v1/sites/distance
        HTTP method:   POST
-       OpenID Scope:  write:mni_site
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/sites",
-    // security("read:mni_site"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("from").isUUID(4),
     param("to").isUUID(4),
@@ -23272,12 +22971,10 @@ var run = async () => {
        operationId:   getAllTrench
        exposed Route: /mni/v1/trench
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23289,12 +22986,10 @@ var run = async () => {
        operationId:   getTrenchesSimpleStatistics
        exposed Route: /mni/v1/trenchs/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches/state",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchesSimpleStatistics
   );
@@ -23304,12 +22999,10 @@ var run = async () => {
        operationId:   addSingleTrench
        exposed Route: /mni/v1/trench
        HTTP method:   POST
-       OpenID Scope:  write:mni_trench
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/trench",
-    // security("write:mni_trench"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("reference").isString().trim(),
@@ -23390,12 +23083,10 @@ var run = async () => {
        operationId:   getTrenchesCapacityState
        exposed Route: /mni/v1/trenches/capacity/state
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches/capacity/state",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23409,12 +23100,10 @@ var run = async () => {
        operationId:   deleteSingleTrench
        exposed Route: /mni/v1/trench/:trenchId
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_trench
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-    // security("write:mni_trench"),
-    param("trenchId").isUUID(4),
+        param("trenchId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -23426,12 +23115,10 @@ var run = async () => {
        operationId:   getSingleTrench
        exposed Route: /mni/v1/trench/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleTrench
@@ -23442,12 +23129,10 @@ var run = async () => {
        operationId:   getTrenchPremisesPassed
        exposed Route: /mni/v1/trench/premises/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/premisesPassed/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchPremisesPassed
@@ -23458,12 +23143,10 @@ var run = async () => {
        operationId:   getTrenchGeometry
        exposed Route: /mni/v1/trench/geometry/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/geometry/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchGeometry
@@ -23474,12 +23157,10 @@ var run = async () => {
        operationId:   getTrenchGeometryLifetime
        exposed Route: /mni/v1/trench/geometry/lifetime/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/geometry/lifetime/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     getTrenchGeometryLifetime
   );
@@ -23489,12 +23170,10 @@ var run = async () => {
        operationId:   getTrenchDistance
        exposed Route: /mni/v1/trench/distance/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/distance/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchDistance
@@ -23505,12 +23184,10 @@ var run = async () => {
        operationId:   getTrenchTimeline
        exposed Route: /mni/v1/trench/timeline/:trenchId
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/timeline/:trenchId",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     getTrenchTimeline
   );
@@ -23520,12 +23197,10 @@ var run = async () => {
        operationId:   updateSingleTrench
        exposed Route: /mni/v1/trench/:trenchId
        HTTP method:   PATCH
-       OpenID Scope:  write:mni_trench
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-    // security("write:mni_trench"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").optional().isIn(OAS.trenchPurpose),
     body("reference").optional().isString().trim(),
@@ -23593,12 +23268,10 @@ var run = async () => {
        operationId:   replaceSingleTrench
        exposed Route: /mni/v1/trench/:trenchId
        HTTP method:   PUT
-       OpenID Scope:  write:mni_trench
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-    // security("write:mni_trench"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").isIn(OAS.trenchPurpose),
     body("reference").isString().trim(),
@@ -23688,7 +23361,6 @@ var run = async () => {
        operationId:   getMultipleTrenches
        exposed Route: /mni/v1/trenches
        HTTP method:   GET
-       OpenID Scope:  read:mni_trench
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches",
@@ -23702,12 +23374,10 @@ var run = async () => {
        operationId:   addMultipleTrench
        exposed Route: /mni/v1/trenches
        HTTP method:   POST
-       OpenID Scope:  write:mni_trench
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/trenches",
-    // security("write:mni_trench"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.trenchId").isUUID(4),
@@ -23803,12 +23473,10 @@ var run = async () => {
        operationId:   getAllCableCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllCableCosts
@@ -23819,12 +23487,10 @@ var run = async () => {
        operationId:   addCableCost
        exposed Route: /mni/v1/cost/cable
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     addCableCost
@@ -23835,12 +23501,10 @@ var run = async () => {
        operationId:   replaceCableCost
        exposed Route: /mni/v1/cost/cable
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("unit").isIn(OAS.sizeUnit),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23852,12 +23516,10 @@ var run = async () => {
        operationId:   deleteCableCost
        exposed Route: /mni/v1/cost/cable
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("type").optional().isIn(OAS.constructionType),
     deleteCableCost
@@ -23868,12 +23530,10 @@ var run = async () => {
        operationId:   getAllDuctCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllDuctCosts
@@ -23884,12 +23544,10 @@ var run = async () => {
        operationId:   addDuctCost
        exposed Route: /mni/v1/cost/duct
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("unit").isIn(OAS.sizeUnit),
@@ -23902,12 +23560,10 @@ var run = async () => {
        operationId:   replaceDuctCost
        exposed Route: /mni/v1/cost/duct
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("unit").isIn(OAS.sizeUnit),
@@ -23920,12 +23576,10 @@ var run = async () => {
        operationId:   deleteDuctCost
        exposed Route: /mni/v1/cost/duct
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("type").optional().isIn(OAS.constructionType),
@@ -23937,12 +23591,10 @@ var run = async () => {
        operationId:   getAllNeCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllNeCosts
@@ -23953,12 +23605,10 @@ var run = async () => {
        operationId:   addNeCost
        exposed Route: /mni/v1/cost/ne
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23970,12 +23620,10 @@ var run = async () => {
        operationId:   replaceNeCost
        exposed Route: /mni/v1/cost/ne
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23987,12 +23635,10 @@ var run = async () => {
        operationId:   deleteNeCost
        exposed Route: /mni/v1/cost/ne
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     deleteNeCost
@@ -24003,12 +23649,10 @@ var run = async () => {
        operationId:   getAllPoleCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllPoleCosts
@@ -24019,12 +23663,10 @@ var run = async () => {
        operationId:   addPoleCost
        exposed Route: /mni/v1/cost/pole
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -24036,12 +23678,10 @@ var run = async () => {
        operationId:   replacePoleCost
        exposed Route: /mni/v1/cost/pole
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -24053,12 +23693,10 @@ var run = async () => {
        operationId:   deletePoleCost
        exposed Route: /mni/v1/cost/pole
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     deletePoleCost
@@ -24069,12 +23707,10 @@ var run = async () => {
        operationId:   getAllRackCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllRackCosts
@@ -24085,12 +23721,10 @@ var run = async () => {
        operationId:   addRackCost
        exposed Route: /mni/v1/cost/rack
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     addRackCost
@@ -24101,12 +23735,10 @@ var run = async () => {
        operationId:   replaceRackCost
        exposed Route: /mni/v1/cost/rack
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     replaceRackCost
@@ -24117,12 +23749,10 @@ var run = async () => {
        operationId:   deleteRackCost
        exposed Route: /mni/v1/cost/rack
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     deleteRackCost
   );
@@ -24132,12 +23762,10 @@ var run = async () => {
        operationId:   getAllServiceCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllServiceCosts
@@ -24148,12 +23776,10 @@ var run = async () => {
        operationId:   addServiceCost
        exposed Route: /mni/v1/cost/service
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -24167,12 +23793,10 @@ var run = async () => {
        operationId:   replaceServiceCost
        exposed Route: /mni/v1/cost/service
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -24186,12 +23810,10 @@ var run = async () => {
        operationId:   deleteServiceCost
        exposed Route: /mni/v1/cost/service
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -24204,12 +23826,10 @@ var run = async () => {
        operationId:   getAllSiteCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSiteCosts
@@ -24220,12 +23840,10 @@ var run = async () => {
        operationId:   addSiteCost
        exposed Route: /mni/v1/cost/site
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -24237,12 +23855,10 @@ var run = async () => {
        operationId:   replaceSiteCost
        exposed Route: /mni/v1/cost/site
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -24254,12 +23870,10 @@ var run = async () => {
        operationId:   deleteSiteCost
        exposed Route: /mni/v1/cost/site
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     deleteSiteCost
@@ -24270,12 +23884,10 @@ var run = async () => {
        operationId:   getAllTrenchCosts
        exposed Route: /mni/v1/costs
        HTTP method:   GET
-       OpenID Scope:  read:mni_cost
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-    // security("read:mni_cost"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllTrenchCosts
@@ -24286,12 +23898,10 @@ var run = async () => {
        operationId:   addTrenchCost
        exposed Route: /mni/v1/cost/trench
        HTTP method:   POST
-       OpenID Scope:  write:mni_cost
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     body("unit").isIn(OAS.sizeUnit),
@@ -24304,12 +23914,10 @@ var run = async () => {
        operationId:   replaceTrenchCost
        exposed Route: /mni/v1/cost/trench
        HTTP method:   PUT
-       OpenID Scope:  write:mni_cost
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     body("unit").isIn(OAS.sizeUnit),
@@ -24322,12 +23930,10 @@ var run = async () => {
        operationId:   deleteTrenchCost
        exposed Route: /mni/v1/cost/trench
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_cost
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-    // security("write:mni_cost"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     deleteTrenchCost
@@ -24338,12 +23944,10 @@ var run = async () => {
        operationId:   q2cTrenchDistanceEstimate
        exposed Route: /mni/v1/q2c/trench
        HTTP method:   POST
-       OpenID Scope:  read:mni_q2c
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/q2c/trenchDistance",
-    // security("read:mni_trench"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").default("service/drop").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
@@ -24361,12 +23965,10 @@ var run = async () => {
        operationId:   getMapRender
        exposed Route: /mni/v1/ui/mapRender
        HTTP method:   GET
-       OpenID Scope:  read:mni_ui
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ui/mapRender",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMapRender
   );
 
@@ -24375,12 +23977,10 @@ var run = async () => {
        operationId:   getSimpleStatistics
        exposed Route: /mni/v1/ui/statistic
        HTTP method:   GET
-       OpenID Scope:  read:mni_ui
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ui/statistic",
-    // security("read:mni_api"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getSimpleStatistics
   );
 
@@ -24389,12 +23989,10 @@ var run = async () => {
        operationId:   getAllPredictedTimeline
        exposed Route: /mni/v1/predict/predictedTimeline
        HTTP method:   GET
-       OpenID Scope:  read:mni_predict
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/predictedTimeline",
-    // security("read:mni_predict"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllPredictedTimeline
   );
 
@@ -24403,12 +24001,10 @@ var run = async () => {
        operationId:   getAllHistoricalTimeline
        exposed Route: /mni/v1/predict/historicalTimeline
        HTTP method:   GET
-       OpenID Scope:  read:mni_predict
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/historicalTimeline",
-    // security("read:mni_predict"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllHistoricalTimeline
   );
 
@@ -24417,12 +24013,10 @@ var run = async () => {
        operationId:   getNextPredictQueueItem
        exposed Route: /mni/v1/predict/queue
        HTTP method:   GET
-       OpenID Scope:  read:mni_internal
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/queue",
-    // security("read:mni_internal"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getNextPredictQueueItem
   );
 
@@ -24431,12 +24025,10 @@ var run = async () => {
        operationId:   deletePredictQueueItem
        exposed Route: /mni/v1/predict/queue
        HTTP method:   DELETE
-       OpenID Scope:  read:mni_internal
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/predict/queue/:qId",
-    // security("read:mni_internal"),
-    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+        param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
     deletePredictQueueItem
   );
 
@@ -24445,12 +24037,10 @@ var run = async () => {
        operationId:   search
        exposed Route: /mni/v1/search
        HTTP method:   POST
-       OpenID Scope:  read:mni_search
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/search",
-    // security("read:mni_search"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("resource").isIn(OAS.fts_resources),
     body("query").isString().trim(),
@@ -24463,12 +24053,10 @@ var run = async () => {
        operationId:   getSingleSecret
        exposed Route: /mni/v1/search
        HTTP method:   GET
-       OpenID Scope:  read:mni_secret
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
-    // security("read:mni_secret"),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("scope").isString().trim(),
     param("realm").isString().trim(),
     param("type").isIn(OAS.secretType),
@@ -24480,12 +24068,10 @@ var run = async () => {
        operationId:   deleteSingleSecret
        exposed Route: /mni/v1/search
        HTTP method:   DELETE
-       OpenID Scope:  write:mni_secret
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
-    // security("write:mni_secret"),
-    param("scope").isString().trim(),
+        param("scope").isString().trim(),
     param("realm").isString().trim(),
     param("type").isIn(OAS.secretType),
     deleteSingleSecret
@@ -24496,12 +24082,10 @@ var run = async () => {
        operationId:   addSingleSecret
        exposed Route: /mni/v1/search
        HTTP method:   POST
-       OpenID Scope:  write:mni_secret
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/secret",
-    // security("write:mni_secret"),
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("scope").isString().trim(),
     body("realm").isString().trim(),
     body("type").isIn(OAS.secretType),

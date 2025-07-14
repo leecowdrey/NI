@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1752489208"
+    "version": "1.0.0.1752521429"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -35,7 +35,20 @@
         "security": [
           {
             "openId": [
-              "read:mni_api"
+              "mni_ui",
+              "mni_alert",
+              "mni_fetch",
+              "mni_predict",
+              "read:mni_admin",
+              "read:mni_cable",
+              "mni_fetch",
+              "read:mni_duct",
+              "read:mni_ne",
+              "read:mni_pole",
+              "read:mni_rack",
+              "read:mni_service",
+              "read:mni_site",
+              "read:mni_trench"
             ]
           }
         ],
@@ -82,7 +95,20 @@
         "security": [
           {
             "openId": [
-              "read:mni_api"
+              "mni_ui",
+              "mni_alert",
+              "mni_fetch",
+              "mni_predict",
+              "read:mni_admin",
+              "read:mni_cable",
+              "mni_fetch",
+              "read:mni_duct",
+              "read:mni_ne",
+              "read:mni_pole",
+              "read:mni_rack",
+              "read:mni_service",
+              "read:mni_site",
+              "read:mni_trench"
             ]
           }
         ],
@@ -131,7 +157,20 @@
         "security": [
           {
             "openId": [
-              "read:mni_ui"
+              "mni_ui",
+              "mni_alert",
+              "mni_fetch",
+              "mni_predict",
+              "read:mni_admin",
+              "read:mni_cable",
+              "mni_fetch",
+              "read:mni_duct",
+              "read:mni_ne",
+              "read:mni_pole",
+              "read:mni_rack",
+              "read:mni_service",
+              "read:mni_site",
+              "read:mni_trench"
             ]
           }
         ],
@@ -427,7 +466,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_ui"
+              "mni_ui"
             ]
           }
         ],
@@ -481,7 +520,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -544,7 +584,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -605,7 +646,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -686,7 +727,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -719,7 +760,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -780,7 +821,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -842,7 +884,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -897,7 +940,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -932,7 +975,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -986,7 +1030,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -1057,7 +1101,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -1140,7 +1185,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_cable"
             ]
           }
         ],
@@ -1205,7 +1250,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_cable"
             ]
           }
         ],
@@ -1270,7 +1315,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_cable"
             ]
           }
         ],
@@ -1325,7 +1370,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -1410,7 +1456,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_duct"
             ]
           }
         ],
@@ -1480,7 +1526,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_duct"
             ]
           }
         ],
@@ -1550,7 +1596,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_duct"
             ]
           }
         ],
@@ -1610,7 +1656,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -1683,7 +1730,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_ne"
             ]
           }
         ],
@@ -1748,7 +1795,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_ne"
             ]
           }
         ],
@@ -1813,7 +1860,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_ne"
             ]
           }
         ],
@@ -1873,7 +1920,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -1951,7 +1999,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_pole"
             ]
           }
         ],
@@ -2016,7 +2064,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_pole"
             ]
           }
         ],
@@ -2081,7 +2129,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_pole"
             ]
           }
         ],
@@ -2141,7 +2189,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -2212,7 +2261,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_rack"
             ]
           }
         ],
@@ -2272,7 +2321,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_rack"
             ]
           }
         ],
@@ -2332,7 +2381,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_rack"
             ]
           }
         ],
@@ -2387,7 +2436,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -2498,7 +2548,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_service"
             ]
           }
         ],
@@ -2581,7 +2631,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_service"
             ]
           }
         ],
@@ -2664,7 +2714,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_service"
             ]
           }
         ],
@@ -2742,7 +2792,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -2835,7 +2886,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_site"
             ]
           }
         ],
@@ -2900,7 +2951,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_site"
             ]
           }
         ],
@@ -2965,7 +3016,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_site"
             ]
           }
         ],
@@ -3025,7 +3076,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cost"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -3108,7 +3160,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_trench"
             ]
           }
         ],
@@ -3177,7 +3229,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_trench"
             ]
           }
         ],
@@ -3246,7 +3298,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_cost"
+              "write:mni_trench"
             ]
           }
         ],
@@ -3305,7 +3357,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -3374,7 +3427,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -3487,7 +3541,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "write:mni_ne"
             ]
           }
         ],
@@ -3522,7 +3576,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -3576,7 +3631,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "write:mni_ne"
             ]
           }
         ],
@@ -3718,7 +3773,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -3820,12 +3875,12 @@
                 "security": [
                   {
                     "openId": [
-                      "read:mni_alert"
+                      "read:mni_api"
                     ]
                   }
                 ],
                 "summary": "expected alert callback",
-                "operationId": "read:mni_alert",
+                "operationId": "read:mni_api",
                 "requestBody": {
                   "required": true,
                   "content": {
@@ -3919,7 +3974,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -3957,7 +4012,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4083,7 +4138,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4121,7 +4176,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_alert"
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -4193,7 +4249,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4334,7 +4390,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4372,7 +4428,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4500,7 +4556,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_alert"
+              "mni_alert"
             ]
           }
         ],
@@ -4538,7 +4594,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -4573,7 +4629,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_internal"
+              "mni_alert"
             ]
           }
         ],
@@ -4675,7 +4731,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -4910,7 +4967,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -5141,7 +5199,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -5206,7 +5265,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -5577,7 +5637,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -5907,7 +5968,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_cable"
+              "read:mni_cable",
+              "mni_ui"
             ]
           }
         ],
@@ -5986,7 +6048,9 @@
         "security": [
           {
             "openId": [
-              "read:mni_api"
+              "mni_fetch",
+              "mni_ui",
+              "read:mni_admin"
             ]
           }
         ],
@@ -6080,7 +6144,9 @@
         "security": [
           {
             "openId": [
-              "read:mni_api"
+              "mni_fetch",
+              "mni_ui",
+              "read:mni_admin"
             ]
           }
         ],
@@ -6140,6 +6206,7 @@
         "security": [
           {
             "openId": [
+              "mni_fetch",
               "write:mni_admin"
             ]
           }
@@ -6199,6 +6266,7 @@
         "security": [
           {
             "openId": [
+              "mni_fetch",
               "write:mni_admin"
             ]
           }
@@ -6234,7 +6302,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -6416,7 +6485,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -6597,7 +6667,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -6664,7 +6735,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -7024,7 +7096,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -7121,7 +7194,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_service"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -7476,7 +7550,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_duct"
+              "read:mni_duct",
+              "mni_ui"
             ]
           }
         ],
@@ -7555,7 +7630,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_service"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -7634,7 +7710,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_service"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -7699,7 +7776,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_service"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -8478,7 +8556,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_service"
+              "read:mni_service",
+              "mni_ui"
             ]
           }
         ],
@@ -8706,7 +8785,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -8943,7 +9023,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -9088,7 +9169,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -9309,7 +9391,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -9391,7 +9474,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -9795,7 +9879,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -9929,7 +10014,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_site"
+              "read:mni_site",
+              "mni_ui"
             ]
           }
         ],
@@ -10008,7 +10094,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -10219,7 +10306,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -10284,7 +10372,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -10835,7 +10924,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -11148,7 +11238,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -11231,7 +11322,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -11282,7 +11374,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_rack"
+              "read:mni_rack",
+              "mni_ui"
             ]
           }
         ],
@@ -11361,7 +11454,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -12016,7 +12110,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -12081,7 +12176,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -12155,7 +12251,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -12621,7 +12718,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -13428,7 +13526,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_ne"
+              "read:mni_ne",
+              "mni_ui"
             ]
           }
         ],
@@ -13507,7 +13606,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -13896,7 +13996,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -13961,7 +14062,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -14360,7 +14462,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -14875,7 +14978,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -15075,7 +15179,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_pole"
+              "read:mni_pole",
+              "mni_ui"
             ]
           }
         ],
@@ -15154,7 +15259,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -15554,7 +15660,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -15904,7 +16011,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -16475,7 +16583,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -16724,7 +16833,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -16782,7 +16892,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -16926,7 +17037,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -17005,7 +17117,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -17117,7 +17230,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -17188,7 +17302,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_trench"
+              "read:mni_trench",
+              "mni_ui"
             ]
           }
         ],
@@ -17244,7 +17359,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_q2c"
+              "mni_q2c",
+              "mni_ui"
             ]
           }
         ],
@@ -17389,7 +17505,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_predict"
             ]
           }
         ],
@@ -17462,7 +17579,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "mni_predict",
+              "write:mni_admin"
             ]
           }
         ],
@@ -17537,6 +17655,7 @@
         "security": [
           {
             "openId": [
+              "mni_predict",
               "read:mni_admin"
             ]
           }
@@ -17648,7 +17767,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_predict"
             ]
           }
         ],
@@ -17759,7 +17879,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -17944,7 +18065,9 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -18161,7 +18284,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -18416,7 +18540,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -18612,7 +18737,9 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -18793,7 +18920,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -19016,7 +19144,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -19333,7 +19462,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_ui"
             ]
           }
         ],
@@ -19554,7 +19684,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_ui"
             ]
           }
         ],
@@ -19635,7 +19766,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_ui"
             ]
           }
         ],
@@ -20054,7 +20186,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -20223,7 +20356,9 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert",
+              "mni_ui"
             ]
           }
         ],
@@ -20396,7 +20531,8 @@
         "security": [
           {
             "openId": [
-              "read:mni_admin"
+              "read:mni_admin",
+              "mni_alert"
             ]
           }
         ],
@@ -20600,7 +20736,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_predict"
+              "mni_predict"
             ]
           }
         ],
@@ -20806,7 +20942,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_predict"
+              "mni_predict"
             ]
           }
         ],
@@ -21012,7 +21148,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_internal"
+              "mni_predict"
             ]
           }
         ],
@@ -21047,7 +21183,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_internal"
+              "mni_predict"
             ]
           }
         ],
@@ -21145,7 +21281,7 @@
         "security": [
           {
             "openId": [
-              "read:mni_search"
+              "mni_ui"
             ]
           }
         ],
@@ -21301,7 +21437,7 @@
         "security": [
           {
             "openId": [
-              "write:mni_secret"
+              "write:mni_admin"
             ]
           }
         ],
@@ -21461,7 +21597,10 @@
         "security": [
           {
             "openId": [
-              "read:mni_secret"
+              "read:mni_admin",
+              "mni_alert",
+              "mni_fetch",
+              "mni_predict"
             ]
           }
         ],
@@ -24700,39 +24839,32 @@
   "security": [
     {
       "openId": [
+        "mni_alert",
+        "mni_fetch",
+        "mni_predict",
+        "mni_q2c",
+        "mni_ui",
+        "mni_search",
         "read:mni_admin",
-        "write:mni_admin",
-        "read:mni_alert",
-        "write:mni_alert",
-        "read:mni_api",
-        "write:mni_api",
         "read:mni_cable",
+        "read:mni_duct",
+        "read:mni_ne",
+        "read:mni_pole",
+        "read:mni_rack",
+        "read:mni_service",
+        "read:mni_site",
+        "read:mni_trench",
+        "write:mni_admin",
         "write:mni_cable",
-        "read:mni_cost",
-        "write:mni_cost",
         "read:mni_duct",
         "write:mni_duct",
-        "read:mni_ne",
         "write:mni_ne",
-        "read:mni_pole",
         "write:mni_pole",
-        "read:mni_predict",
-        "write:mni_predict",
-        "read:mni_q2c",
         "write:mni_q2c",
-        "read:mni_rack",
         "write:mni_rack",
-        "read:mni_search",
-        "read:mni_secret",
-        "write:mni_secret",
-        "read:mni_service",
         "write:mni_service",
-        "read:mni_site",
         "write:mni_site",
-        "read:mni_trench",
-        "write:mni_trench",
-        "read:mni_ui",
-        "write:mni_ui"
+        "write:mni_trench"
       ]
     }
   ]

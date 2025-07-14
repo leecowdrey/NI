@@ -58,6 +58,10 @@ SSL_SIZE=$(grep -E "^APIGW_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SERVICE_USERNAME=$(grep -E "^APISERV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SERVICE_KEY=$(grep -E "^APISERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 KRAKEND_VERSION=$(grep -E "^APIGW_KRAKEND_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+KARKEND_IGNORE_AUTH_VALIDATOR=$(grep -E "^APIGW_IGNORE_AUTH_VALIDATOR=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+IAM_ADDRESS=$(grep -E "^IAM_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+IAM_PORT_HTTPS=$(grep -E "^IAM_PORT_HTTPS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+IAM_URL_SUFFIX=$(grep -E "^IAM_URL_SUFFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 MNI_LOG_DIRECTORY=$(dirname ${LOG_FILE})
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
@@ -105,10 +109,17 @@ sed -i -e "s|\"max_rate\": 32767|\"max_rate\": ${RATE_LIMIT_REQUESTS}|g" ${WORKI
 sed -i -e "s|\"capacity\": 32767|\"capacity\": ${CAPACITY_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"every\": \"1m\"|\"every\": \"${RATE_LIMIT_EVERY}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json
-sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json
-
+sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
+sed -i -e "s|\"https://url/to/jwks.json\"|\"https://${IAM_ADDRESS}:${IAM_PORT_HTTPS}/${IAM_URL_SUFFIX}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+if [[ "${KARKEND_IGNORE_AUTH_VALIDATOR,,}" == "true" ]] ; then
+  doing "Removing OpenID auth/validation from API Gateway deployed config"
+  sed -i -e "/\"auth\/validator\":/,+11d" ${WORKING_DIRECTORY}/config/apiGateway.json
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
 doing "Validating API Gateway deployed config"
 ${WORKING_DIRECTORY}/bin/apigw audit -s CRITICAL -c ${WORKING_DIRECTORY}/config/apiGateway.json &>/dev/null

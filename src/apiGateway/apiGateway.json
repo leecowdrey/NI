@@ -6,6 +6,8 @@
     "@comment": "Skip SSL verification when connecting to backends",
     "allow_insecure_connections": false
   },
+  "dialer_keep_alive": "10s",
+  "disable_keep_alives": false,
   "extra_config": {
     "security/cors": {
       "allow_origins": ["*"],
@@ -27,11 +29,15 @@
     "security/http": {
       "allowed_hosts": [],
       "ssl_proxy_headers": {},
-      "sts_seconds": 31536000
+      "sts_seconds": 31536000,
+      "frame_deny": true
     }
   },
   "timeout": "3000ms",
   "cache_ttl": "300s",
+  "read_timeout": "90s",
+  "write_timeout": "180s",
+  "idle_timeout": "15s",
   "output_encoding": "json",
   "port": 8443,
   "listen_ip": "0.0.0.0",
@@ -66,11 +72,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/api/readiness",
@@ -93,11 +118,35 @@
                 "name": "Authorization",
                 "value": "Basic #"
               }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ui/mapRender",
@@ -120,11 +169,35 @@
                 "name": "Authorization",
                 "value": "Basic #"
               }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ui/statistic",
@@ -152,11 +225,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/predict/predictedTimeline",
@@ -184,11 +276,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/predict/historicalTimeline",
@@ -216,11 +327,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/predict/queue",
@@ -248,11 +378,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/predict/queue/{qId}",
@@ -281,10 +430,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/queue",
@@ -312,11 +474,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/queue/{qId}",
@@ -345,10 +526,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data",
@@ -376,11 +570,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["read:mni_admin","mni_predict"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data",
@@ -409,10 +622,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict","write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data/historical/duration",
@@ -440,11 +666,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data/historical/duration",
@@ -473,10 +718,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data/predicted/duration",
@@ -504,11 +762,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_predict","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/data/predicted/duration",
@@ -537,10 +814,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email",
@@ -568,11 +858,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email",
@@ -601,10 +910,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider",
@@ -632,11 +954,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["read:mni_admin","mni_alert","mni_ui"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider",
@@ -665,10 +1006,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider/{emailProviderId}",
@@ -697,10 +1051,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider/{emailProviderId}",
@@ -728,11 +1095,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider/{emailProviderId}",
@@ -761,10 +1147,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/email/provider/{emailProviderId}",
@@ -793,10 +1192,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka",
@@ -824,11 +1236,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka",
@@ -857,10 +1288,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker",
@@ -888,11 +1332,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","read:mni_admin","mni_alert"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker",
@@ -921,10 +1384,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker/{kafkaProducerId}",
@@ -953,10 +1429,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker/{kafkaProducerId}",
@@ -984,11 +1473,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker/{kafkaProducerId}",
@@ -1017,10 +1525,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/kafka/broker/{kafkaProducerId}",
@@ -1049,10 +1570,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/currency",
@@ -1080,11 +1614,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_fetch","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/currency/{currencyId}",
@@ -1113,10 +1666,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_fetch","write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/currency/{currencyId}",
@@ -1145,42 +1711,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
-    },
-    {
-      "endpoint": "/mni/v1/currency/default",
-      "@comment": "updateCurrencyDefault",
-      "output_encoding": "no-op",
-      "input_headers": ["Accept"],
-      "input_query_strings": [],
-      "backend": [
-        {
-          "url_pattern": "/mni/v1/currency/default",
-          "encoding": "no-op",
-          "sd": "dns",
-          "sd_scheme": "https",
-          "host": ["_https._tcp.apiserver.mni.merkator.local"],
-          "disable_host_sanitize": true,
-          "extra_config": {
-            "modifier/martian": {
-              "header.Modifier": {
-                "scope": ["request"],
-                "name": "Authorization",
-                "value": "Basic #"
-              }
-            },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            }
-          }
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_fetch","write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
         }
-      ],
-      "method": "GET"
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map",
@@ -1208,11 +1755,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map",
@@ -1241,10 +1807,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider",
@@ -1272,11 +1851,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider",
@@ -1305,10 +1903,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider/{mapProviderId}",
@@ -1337,10 +1948,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider/{mapProviderId}",
@@ -1368,11 +1992,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider/default",
@@ -1400,11 +2043,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider/{mapProviderId}",
@@ -1433,10 +2095,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/map/provider/{mapProviderId}",
@@ -1465,10 +2140,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow",
@@ -1496,11 +2184,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read_mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow",
@@ -1529,10 +2236,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine",
@@ -1560,11 +2280,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_ui","mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine",
@@ -1593,10 +2332,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine/{workflowEngineId}",
@@ -1625,10 +2377,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine/{workflowEngineId}",
@@ -1656,11 +2421,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine/{workflowEngineId}",
@@ -1689,10 +2473,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/admin/workflow/engine/{workflowEngineId}",
@@ -1721,10 +2518,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alerts",
@@ -1752,11 +2562,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert",
@@ -1784,11 +2613,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert",
@@ -1817,10 +2665,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/content",
@@ -1848,11 +2709,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/content/{alertContentId}",
@@ -1880,11 +2760,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/content/{alertContentId}",
@@ -1913,10 +2812,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/content",
@@ -1945,10 +2857,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cve",
@@ -1976,11 +2901,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cve/ne/{neId}",
@@ -2008,11 +2952,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cve/{cveId}",
@@ -2040,11 +3003,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cve/{cveId}",
@@ -2073,10 +3055,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cve",
@@ -2105,10 +3100,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/callback",
@@ -2137,10 +3145,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/callback",
@@ -2169,10 +3190,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/notify",
@@ -2201,10 +3235,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/notify/{notificationId}",
@@ -2232,11 +3279,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/notify",
@@ -2265,10 +3331,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/publish",
@@ -2297,10 +3376,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/publish",
@@ -2329,10 +3421,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/workflow",
@@ -2361,10 +3466,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/workflow",
@@ -2393,10 +3511,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/{alertId}",
@@ -2424,11 +3555,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/{alertId}",
@@ -2457,10 +3607,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/alert/{alertId}",
@@ -2489,10 +3652,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable",
@@ -2520,11 +3696,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable",
@@ -2553,10 +3748,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cables/capacity/state",
@@ -2584,11 +3792,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}",
@@ -2617,10 +3844,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}",
@@ -2648,11 +3888,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}",
@@ -2681,10 +3940,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}",
@@ -2713,10 +3985,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}/channel/{channel}",
@@ -2745,10 +4030,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}/state/multi/{ribbon}/{strand}",
@@ -2777,10 +4075,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/{cableId}/state/single/{strand}",
@@ -2809,10 +4120,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cables/state",
@@ -2840,11 +4164,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cables",
@@ -2872,11 +4215,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cables",
@@ -2905,10 +4267,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct",
@@ -2936,11 +4311,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct",
@@ -2969,10 +4363,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ducts/capacity/state",
@@ -3000,11 +4407,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct/{ductId}",
@@ -3033,10 +4459,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct/{ductId}",
@@ -3064,11 +4503,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct/{ductId}",
@@ -3097,10 +4555,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct/{ductId}",
@@ -3129,10 +4600,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ducts/state",
@@ -3160,11 +4644,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ducts",
@@ -3192,11 +4695,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ducts",
@@ -3225,10 +4747,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne",
@@ -3256,11 +4791,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne",
@@ -3289,10 +4843,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne/{neId}",
@@ -3321,10 +4888,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne/{neId}",
@@ -3352,11 +4932,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne/{neId}",
@@ -3385,10 +4984,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne/{neId}",
@@ -3417,10 +5029,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/nes/state",
@@ -3448,11 +5073,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/nes/vendors",
@@ -3480,11 +5124,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/nes",
@@ -3512,11 +5175,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/nes",
@@ -3545,10 +5227,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole",
@@ -3576,11 +5271,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole",
@@ -3609,10 +5323,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/poles/capacity/state",
@@ -3640,11 +5367,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole/{poleId}",
@@ -3673,10 +5419,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole/{poleId}",
@@ -3704,11 +5463,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole/{poleId}",
@@ -3737,10 +5515,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole/{poleId}",
@@ -3769,10 +5560,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/poles/state",
@@ -3800,11 +5604,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/poles",
@@ -3832,11 +5655,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/poles",
@@ -3865,10 +5707,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack",
@@ -3896,11 +5751,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack",
@@ -3929,10 +5803,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/slots/{rackId}",
@@ -3960,11 +5847,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/slots/{rackId}/{slot}",
@@ -3992,11 +5898,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/{rackId}",
@@ -4025,10 +5950,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/{rackId}",
@@ -4056,11 +5994,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/timeline/{rackId}",
@@ -4088,11 +6045,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/{rackId}",
@@ -4121,10 +6097,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/rack/{rackId}",
@@ -4153,10 +6142,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/racks/state",
@@ -4184,11 +6186,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/racks",
@@ -4216,11 +6237,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/racks",
@@ -4249,10 +6289,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service",
@@ -4280,11 +6333,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service",
@@ -4313,10 +6385,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service/{serviceId}",
@@ -4345,10 +6430,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service/{serviceId}",
@@ -4376,11 +6474,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service/{serviceId}",
@@ -4409,10 +6526,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service/{serviceId}",
@@ -4441,10 +6571,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/services/state",
@@ -4472,11 +6615,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/services",
@@ -4504,11 +6666,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/services",
@@ -4537,10 +6718,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site",
@@ -4568,11 +6762,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/onnet",
@@ -4600,11 +6813,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/offnet",
@@ -4632,11 +6864,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site",
@@ -4665,10 +6916,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/{siteId}",
@@ -4697,10 +6961,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/{siteId}",
@@ -4728,11 +7005,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/{siteId}",
@@ -4761,10 +7057,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/{siteId}",
@@ -4793,10 +7102,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/sites/state",
@@ -4824,11 +7146,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/sites",
@@ -4856,11 +7197,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/sites",
@@ -4889,10 +7249,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/sites/distance",
@@ -4921,10 +7294,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench",
@@ -4952,11 +7338,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench",
@@ -4985,10 +7390,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trenches/capacity/state",
@@ -5016,11 +7434,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/{trenchId}",
@@ -5049,10 +7486,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/{trenchId}",
@@ -5080,11 +7530,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/{trenchId}",
@@ -5113,10 +7582,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PATCH"
         }
       ],
-      "method": "PATCH"
+      "method": "PATCH",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/{trenchId}",
@@ -5145,10 +7627,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trenches/state",
@@ -5176,11 +7671,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trenches",
@@ -5208,11 +7722,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trenches",
@@ -5241,10 +7774,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cable/timeline/{cableId}",
@@ -5272,11 +7818,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/duct/timeline/{ductId}",
@@ -5304,11 +7869,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/service/timeline/{serviceId}",
@@ -5336,11 +7920,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/site/timeline/{siteId}",
@@ -5368,11 +7971,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/ne/timeline/{neId}",
@@ -5400,11 +8022,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/pole/timeline/{poleId}",
@@ -5432,11 +8073,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/premisesPassed/{trenchId}",
@@ -5464,11 +8124,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/geometry/{trenchId}",
@@ -5496,11 +8175,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/geometry/lifetime/{trenchId}",
@@ -5528,11 +8226,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/distance/{trenchId}",
@@ -5560,11 +8277,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/trench/timeline/{trenchId}",
@@ -5592,11 +8328,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/q2c/trenchDistance",
@@ -5625,10 +8380,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/duct",
@@ -5656,11 +8424,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/duct",
@@ -5689,10 +8476,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/duct",
@@ -5721,10 +8521,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/duct",
@@ -5753,10 +8566,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/ne",
@@ -5784,11 +8610,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/ne",
@@ -5817,10 +8662,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/ne",
@@ -5849,10 +8707,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/ne",
@@ -5881,10 +8752,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/pole",
@@ -5912,11 +8796,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/pole",
@@ -5945,10 +8848,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/pole",
@@ -5977,10 +8893,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/pole",
@@ -6009,10 +8938,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/rack",
@@ -6040,11 +8982,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/rack",
@@ -6073,10 +9034,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/rack",
@@ -6105,10 +9079,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/rack",
@@ -6137,10 +9124,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/service",
@@ -6168,11 +9168,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/service",
@@ -6201,10 +9220,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/service",
@@ -6233,10 +9265,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/service",
@@ -6265,10 +9310,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/site",
@@ -6296,11 +9354,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/site",
@@ -6329,10 +9406,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/site",
@@ -6361,10 +9451,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/site",
@@ -6393,10 +9496,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/cable",
@@ -6424,11 +9540,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/cable",
@@ -6457,10 +9592,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/cable",
@@ -6489,10 +9637,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/cable",
@@ -6521,10 +9682,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/trench",
@@ -6552,11 +9726,30 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/trench",
@@ -6585,10 +9778,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/trench",
@@ -6617,10 +9823,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "PUT"
         }
       ],
-      "method": "PUT"
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/cost/trench",
@@ -6649,10 +9868,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/search",
@@ -6681,10 +9913,23 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/secret",
@@ -6713,17 +9958,30 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "POST"
         }
       ],
-      "method": "POST"
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/secret/{scope}/{realm}/{type}",
       "@comment": "getSingleSecret",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["scope","realm","type"],
+      "input_query_strings": ["scope", "realm", "type"],
       "backend": [
         {
           "url_pattern": "/mni/v1/secret/{scope}/{realm}/{type}",
@@ -6744,18 +10002,37 @@
               "max_rate": 32767,
               "capacity": 32767,
               "every": "1m"
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
             }
-          }
+          },
+          "method": "GET"
         }
       ],
-      "method": "GET"
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": true,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     },
     {
       "endpoint": "/mni/v1/secret/{scope}/{realm}/{type}",
       "@comment": "getSingleSecret",
       "output_encoding": "no-op",
       "input_headers": [],
-      "input_query_strings": ["scope","realm","type"],
+      "input_query_strings": ["scope", "realm", "type"],
       "backend": [
         {
           "url_pattern": "/mni/v1/secret/{scope}/{realm}/{type}",
@@ -6777,7 +10054,8 @@
               "capacity": 32767,
               "every": "1m"
             }
-          }
+          },
+          "method": "DELETE"
         }
       ],
       "method": "DELETE"
