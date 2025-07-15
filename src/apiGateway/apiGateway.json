@@ -42,8 +42,12 @@
   "port": 8443,
   "listen_ip": "0.0.0.0",
   "tls": {
-    "public_key": "/etc/mni/apiGateway.crt",
-    "private_key": "/etc/mni/apiGateway.key"
+    "keys": [
+      {
+        "public_key": "/etc/mni/apiGateway.crt",
+        "private_key": "/etc/mni/apiGateway.key"
+      }
+    ]
   },
   "endpoints": [
     {
@@ -68,11 +72,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -86,10 +85,25 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes": [
+            "read:mni_ui",
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predict",
+            "read:mni_admin",
+            "read:mni_cable",
+            "read:mni_currency",
+            "read:mni_duct",
+            "read:mni_ne",
+            "read:mni_pole",
+            "read:mni_rack",
+            "read:mni_service",
+            "read:mni_site",
+            "read:mni_trench"
+          ],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -119,11 +133,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -137,10 +146,25 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes": [
+            "read:mni_ui",
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predict",
+            "read:mni_admin",
+            "read:mni_cable",
+            "read:mni_currency",
+            "read:mni_duct",
+            "read:mni_ne",
+            "read:mni_pole",
+            "read:mni_rack",
+            "read:mni_service",
+            "read:mni_site",
+            "read:mni_trench"
+          ],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -170,11 +194,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -188,10 +207,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui"],
+          "scopes": ["read:mni_ui"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -221,11 +240,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -239,10 +253,25 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_alert","mni_fetch","mni_predict","read:mni_admin","read:mni_cable","read:mni_currency","read:mni_duct","read:mni_ne","read:mni_pole","read:mni_rack","read:mni_service","read:mni_site","read:mni_trench"],
+          "scopes": [
+            "read:mni_ui",
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predict",
+            "read:mni_admin",
+            "read:mni_cable",
+            "read:mni_currency",
+            "read:mni_duct",
+            "read:mni_ne",
+            "read:mni_pole",
+            "read:mni_rack",
+            "read:mni_service",
+            "read:mni_site",
+            "read:mni_trench"
+          ],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -272,11 +301,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -290,10 +314,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict"],
+          "scopes": ["read:mni_predict"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -323,11 +347,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -341,10 +360,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict"],
+          "scopes": ["read:mni_predict"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -374,11 +393,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -392,10 +406,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict"],
+          "scopes": ["read:mni_predict"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -437,10 +451,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict"],
+          "scopes": ["write:mni_predict"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -470,11 +484,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -488,10 +497,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert"],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -533,10 +542,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert"],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -566,11 +575,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -584,10 +588,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["read:mni_admin","mni_predict"],
+          "scopes": ["read:mni_admin", "read:mni_predict"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -629,10 +633,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict","write:mni_admin"],
+          "scopes": ["write:mni_predict", "write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -662,11 +666,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -680,10 +679,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict","read:mni_admin"],
+          "scopes": ["read:mni_predict", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -728,7 +727,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -758,11 +757,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -776,10 +770,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_predict","read:mni_admin"],
+          "scopes": ["read:mni_predict", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -824,7 +818,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -854,11 +848,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -872,10 +861,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -920,7 +909,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -950,11 +939,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -968,10 +952,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["read:mni_admin","mni_alert","mni_ui"],
+          "scopes": ["read:mni_admin", "read:mni_alert", "read:mni_ui"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1016,7 +1000,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1061,7 +1045,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1091,11 +1075,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1109,10 +1088,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1157,7 +1136,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1202,7 +1181,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1232,11 +1211,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1250,10 +1224,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1298,7 +1272,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1328,11 +1302,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1346,10 +1315,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","read:mni_admin","mni_alert"],
+          "scopes": ["read:mni_ui", "read:mni_admin", "read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1394,7 +1363,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1439,7 +1408,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1469,11 +1438,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1487,10 +1451,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1535,7 +1499,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1580,7 +1544,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1610,11 +1574,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1628,10 +1587,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_fetch","read:mni_admin"],
+          "scopes": ["read:mni_ui", "read:mni_fetch", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1673,10 +1632,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_fetch","write:mni_admin"],
+          "scopes": ["write:mni_fetch", "write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1718,10 +1677,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_fetch","write:mni_admin"],
+          "scopes": ["write:mni_fetch", "write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1751,11 +1710,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1769,10 +1723,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1817,7 +1771,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1847,11 +1801,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -1865,10 +1814,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_ui", "read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1913,7 +1862,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1958,7 +1907,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -1988,11 +1937,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2006,10 +1950,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","read:mni_admin"],
+          "scopes": ["read:mni_ui", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2039,11 +1983,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2057,10 +1996,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","read:mni_admin"],
+          "scopes": ["read:mni_ui", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2105,7 +2044,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2150,7 +2089,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2180,11 +2119,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2198,10 +2132,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read_mni_admin"],
+          "scopes": ["read:mni_alert", "read_mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2246,7 +2180,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2276,11 +2210,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2294,10 +2223,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_ui","mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_ui", "read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2342,7 +2271,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2387,7 +2316,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2417,11 +2346,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2435,10 +2359,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": ["mni_alert","read:mni_admin"],
+          "scopes": ["read:mni_alert", "read:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2483,7 +2407,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2528,7 +2452,7 @@
           "scopes": ["write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2558,11 +2482,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2576,10 +2495,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert", "read:mni_ui"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2609,11 +2528,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2627,10 +2541,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2672,10 +2586,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2705,11 +2619,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2723,10 +2632,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2756,11 +2665,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2774,10 +2678,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2819,10 +2723,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2864,10 +2768,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2897,11 +2801,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2915,10 +2814,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_fetch", "read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2948,11 +2847,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -2966,10 +2860,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -2999,11 +2893,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3017,10 +2906,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_fetch", "read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3062,10 +2951,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_fetch", "write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3110,7 +2999,7 @@
           "scopes": [],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3152,10 +3041,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_fetch", "write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3197,10 +3086,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3242,10 +3131,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3275,11 +3164,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3293,10 +3177,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3338,10 +3222,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3383,10 +3267,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3428,10 +3312,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3473,10 +3357,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3518,10 +3402,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3551,11 +3435,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3569,10 +3448,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3614,10 +3493,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3659,10 +3538,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_alert"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3692,11 +3571,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3710,10 +3584,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3755,10 +3629,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3788,11 +3662,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3806,10 +3675,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3851,10 +3720,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3884,11 +3753,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -3902,10 +3766,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3947,10 +3811,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -3992,10 +3856,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4037,10 +3901,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4082,10 +3946,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4127,10 +3991,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4160,11 +4024,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4178,10 +4037,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4211,11 +4070,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4229,10 +4083,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4274,10 +4128,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4307,11 +4161,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4325,10 +4174,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4370,10 +4219,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4403,11 +4252,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4421,10 +4265,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4466,10 +4310,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4499,11 +4343,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4517,10 +4356,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read;mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4562,10 +4401,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4607,10 +4446,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4640,11 +4479,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4658,10 +4492,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4691,11 +4525,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4709,10 +4538,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4754,10 +4583,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4787,11 +4616,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4805,10 +4629,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4850,10 +4674,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4895,10 +4719,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4928,11 +4752,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -4946,10 +4765,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -4991,10 +4810,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5036,10 +4855,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5069,11 +4888,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5087,10 +4901,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5120,11 +4934,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5138,10 +4947,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5171,11 +4980,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5189,10 +4993,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5234,10 +5038,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5267,11 +5071,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5285,10 +5084,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5330,10 +5129,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5363,11 +5162,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5381,10 +5175,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5426,10 +5220,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5459,11 +5253,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5477,10 +5266,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5522,10 +5311,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5567,10 +5356,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5600,11 +5389,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5618,10 +5402,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5651,11 +5435,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5669,10 +5448,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5714,10 +5493,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5747,11 +5526,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5765,10 +5539,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5810,10 +5584,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5843,11 +5617,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5861,10 +5630,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5894,11 +5663,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -5912,10 +5676,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5957,10 +5721,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -5990,11 +5754,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6008,10 +5767,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6041,11 +5800,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6059,10 +5813,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6104,10 +5858,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6149,10 +5903,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6182,11 +5936,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6200,10 +5949,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6233,11 +5982,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6251,10 +5995,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6296,10 +6040,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6329,11 +6073,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6347,10 +6086,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6392,10 +6131,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6437,10 +6176,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6470,11 +6209,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6488,10 +6222,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6533,10 +6267,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6578,10 +6312,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6611,11 +6345,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6629,10 +6358,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6662,11 +6391,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6680,10 +6404,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6725,10 +6449,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6758,11 +6482,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6776,10 +6495,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6809,11 +6528,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6827,10 +6541,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6860,11 +6574,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -6878,10 +6587,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6923,10 +6632,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -6968,10 +6677,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7001,11 +6710,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7019,10 +6723,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7064,10 +6768,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7109,10 +6813,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7142,11 +6846,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7160,10 +6859,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7193,11 +6892,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7211,10 +6905,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7256,10 +6950,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7301,10 +6995,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7334,11 +7028,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7352,10 +7041,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7397,10 +7086,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7430,11 +7119,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7448,10 +7132,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7493,10 +7177,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7526,11 +7210,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7544,10 +7223,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7589,10 +7268,10 @@
       "method": "PATCH",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7634,10 +7313,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7667,11 +7346,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7685,10 +7359,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7718,11 +7392,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7736,10 +7405,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7781,10 +7450,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7814,11 +7483,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7832,10 +7496,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7865,11 +7529,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7883,10 +7542,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duck"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7916,11 +7575,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7934,10 +7588,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -7967,11 +7621,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -7985,10 +7634,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8018,11 +7667,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8036,10 +7680,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8069,11 +7713,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8087,10 +7726,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8120,11 +7759,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8138,10 +7772,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8171,11 +7805,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8189,10 +7818,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8222,11 +7851,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8240,10 +7864,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8273,11 +7897,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8291,10 +7910,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8324,11 +7943,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8342,10 +7956,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8387,10 +8001,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8400,7 +8014,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/duct",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllDuctCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -8420,11 +8034,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8438,10 +8047,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8483,10 +8092,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8528,10 +8137,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8573,10 +8182,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_duct"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8586,7 +8195,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/ne",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllNeCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -8606,11 +8215,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8624,10 +8228,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8669,10 +8273,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8714,10 +8318,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8759,10 +8363,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_ne"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8772,7 +8376,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/pole",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllPoleCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -8792,11 +8396,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8810,10 +8409,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8855,10 +8454,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8900,10 +8499,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8945,10 +8544,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_pole"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -8958,7 +8557,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/rack",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllRackCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -8978,11 +8577,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -8996,10 +8590,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9041,10 +8635,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9086,10 +8680,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9131,10 +8725,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_rack"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9144,7 +8738,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/service",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllServiceCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -9164,11 +8758,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -9182,10 +8771,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9227,10 +8816,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9272,10 +8861,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9317,10 +8906,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_service"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9330,7 +8919,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/site",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllSiteCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -9350,11 +8939,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -9368,10 +8952,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9413,10 +8997,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9458,10 +9042,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9503,10 +9087,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_site"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9516,7 +9100,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/cable",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllCableCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -9536,11 +9120,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -9554,10 +9133,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9599,10 +9178,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9644,10 +9223,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9689,10 +9268,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_cable"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9702,7 +9281,7 @@
     },
     {
       "endpoint": "/mni/v1/cost/trench",
-      "@comment": "getAllCurrencies",
+      "@comment": "getAllTrenchCosts",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
       "input_query_strings": [],
@@ -9722,11 +9301,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -9740,10 +9314,10 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["read:mni_ui", "read:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9785,10 +9359,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9830,10 +9404,10 @@
       "method": "PUT",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9875,10 +9449,10 @@
       "method": "DELETE",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_trench"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9920,10 +9494,24 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": [
+            "read:mni_ui",
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predict",
+            "read:mni_admin",
+            "read:mni_cable",
+            "read:mni_duct",
+            "read:mni_ne",
+            "read:mni_pole",
+            "read:mni_rack",
+            "read:mni_service",
+            "read:mni_site",
+            "read:mni_trench"
+          ],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9965,10 +9553,10 @@
       "method": "POST",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": ["write:mni_fetch", "write:mni_admin"],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -9998,11 +9586,6 @@
                 "value": "Basic #"
               }
             },
-            "qos/ratelimit/proxy": {
-              "max_rate": 32767,
-              "capacity": 32767,
-              "every": "1m"
-            },
             "qos/http-cache": {
               "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
               "shared": true,
@@ -10016,10 +9599,15 @@
       "method": "GET",
       "extra_config": {
         "auth/validator": {
-          "scopes": [],
+          "scopes": [
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predct",
+            "read:mni_admin"
+          ],
           "scopes_matcher": "any",
           "cache": true,
-          "disable_jwk_security": true,
+          "disable_jwk_security": false,
           "cookie_key": "TOKEN",
           "scopes_key": ".mni",
           "jwk_url": "https://url/to/jwks.json",
@@ -10029,7 +9617,7 @@
     },
     {
       "endpoint": "/mni/v1/secret/{scope}/{realm}/{type}",
-      "@comment": "getSingleSecret",
+      "@comment": "deleteSingleSecret",
       "output_encoding": "no-op",
       "input_headers": [],
       "input_query_strings": ["scope", "realm", "type"],
@@ -10058,7 +9646,19 @@
           "method": "DELETE"
         }
       ],
-      "method": "DELETE"
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_fetch", "write:mni_admin"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
     }
   ]
 }

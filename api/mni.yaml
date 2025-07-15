@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1752521429
+  version: 1.0.0.1752577283
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -27,13 +27,12 @@ paths:
       summary: Return either JSON or YAML OpenAPI definition
       security:
         - openId:
-            - mni_ui
-            - mni_alert
-            - mni_fetch
-            - mni_predict
+            - read:mni_ui
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
             - read:mni_admin
             - read:mni_cable
-            - mni_fetch
             - read:mni_duct
             - read:mni_ne
             - read:mni_pole
@@ -69,13 +68,12 @@ paths:
       summary: Returns a simple status response about the operational state of MNI (readiness)
       security:
         - openId:
-            - mni_ui
-            - mni_alert
-            - mni_fetch
-            - mni_predict
+            - read:mni_ui
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
             - read:mni_admin
             - read:mni_cable
-            - mni_fetch
             - read:mni_duct
             - read:mni_ne
             - read:mni_pole
@@ -111,13 +109,12 @@ paths:
       summary: Returns a simple resource statistics held in MNI
       security:
         - openId:
-            - mni_ui
-            - mni_alert
-            - mni_fetch
-            - mni_predict
+            - read:mni_ui
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
             - read:mni_admin
             - read:mni_cable
-            - mni_fetch
             - read:mni_duct
             - read:mni_ne
             - read:mni_pole
@@ -330,7 +327,7 @@ paths:
       summary: Get default Map render URL details for UI usage
       security:
         - openId:
-            - mni_ui
+            - read:mni_ui
       operationId: getMapRender
       tags:
         - UI Helpers
@@ -363,8 +360,8 @@ paths:
       summary: Export alerts in bulk
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getMultipleAlerts
       tags:
         - Alerts
@@ -402,8 +399,8 @@ paths:
       summary: List of all available alerts
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllAlerts
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -441,7 +438,7 @@ paths:
       summary: Add single alert
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: addSingleAlert
       tags:
         - Alerts
@@ -492,7 +489,7 @@ paths:
       summary: Remove single alert
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       parameters:
         - $ref: "#/components/parameters/alertId"
       operationId: deleteSingleAlert
@@ -511,7 +508,7 @@ paths:
       summary: Update aspects of a single alert
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: updateSingleAlert
       tags:
         - Alerts
@@ -547,8 +544,8 @@ paths:
       summary: Get specified alert details
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       parameters:
         - $ref: "#/components/parameters/alertId"
       operationId: getSingleAlert
@@ -585,8 +582,8 @@ paths:
       summary: List single alert content details
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getSingleAlertContent
       parameters:
         - $ref: "#/components/parameters/alertContentId"
@@ -619,7 +616,7 @@ paths:
       summary: Remove single alert content
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       parameters:
         - $ref: "#/components/parameters/alertContentId"
       operationId: deleteSingleAlertContent
@@ -639,8 +636,8 @@ paths:
       summary: List all alert content
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllAlertContent
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -671,7 +668,7 @@ paths:
       summary: Add single alert content
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: addSingleAlertContent
       tags:
         - Alerts
@@ -716,7 +713,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getAllCableCosts
       tags:
         - Costs - Cable
@@ -886,7 +883,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getAllDuctCosts
       tags:
         - Costs - Duct
@@ -1071,7 +1068,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getAllNeCosts
       tags:
         - Costs - Ne
@@ -1239,7 +1236,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getAllPoleCosts
       tags:
         - Costs - Pole
@@ -1410,7 +1407,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getAllRackCosts
       tags:
         - Costs - Rack
@@ -1563,7 +1560,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       operationId: getAllServiceCosts
       tags:
         - Costs - Service
@@ -1805,7 +1802,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getAllSiteCosts
       tags:
         - Costs - Site
@@ -1985,7 +1982,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getAllTrenchCosts
       tags:
         - Costs - Trench
@@ -2165,7 +2162,8 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_fetch
+            - read:mni_ui
       operationId: getCveByNe
       parameters:
         - $ref: "#/components/parameters/neId"
@@ -2207,7 +2205,8 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_fetch
+            - read:mni_ui
       operationId: getSingleCve
       parameters:
         - $ref: "#/components/parameters/cveId"
@@ -2301,7 +2300,8 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllCve
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -2333,6 +2333,7 @@ paths:
       security:
         - openId:
             - write:mni_ne
+            - write:mni_fetch
       operationId: addSingleCve
       tags:
         - Alerts
@@ -2426,7 +2427,7 @@ paths:
       summary: Subscribe to one or more alerts
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: subscribeAlert
       tags:
         - Alerts
@@ -2500,9 +2501,9 @@ paths:
             post:
               security:
                 - openId:
-                    - read:mni_api
+                    - write:mni_alert
               summary: expected alert callback
-              operationId: read:mni_api
+              operationId: callbackSample
               requestBody:
                 required: true
                 content:
@@ -2560,7 +2561,7 @@ paths:
       summary: Unsubscribe from one or more alerts
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: unsubscribeAlert
       tags:
         - Alerts
@@ -2581,7 +2582,7 @@ paths:
       summary: Publish one or more alerts to Kafka broker
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: publishAlert
       tags:
         - Alerts
@@ -2661,7 +2662,7 @@ paths:
       summary: Unpublish one or more alerts
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: unpublishAlert
       tags:
         - Alerts
@@ -2682,8 +2683,8 @@ paths:
       summary: get one alert definition
       security:
         - openId:
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getNotifyAlert
       tags:
         - Alerts
@@ -2729,7 +2730,7 @@ paths:
       summary: notify one or more alerts to Email recipient
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: notifyAlert
       tags:
         - Alerts
@@ -2821,7 +2822,7 @@ paths:
       summary: Unnotify one or more alerts
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: unNotifyAlert
       tags:
         - Alerts
@@ -2842,7 +2843,7 @@ paths:
       summary: Assign one or more alerts to a workflow runner
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: workflowAlertAssign
       tags:
         - Alerts
@@ -2924,7 +2925,7 @@ paths:
       summary: Unassign one or more alerts from a workflow runner
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       operationId: workflowAlertUnassign
       tags:
         - Alerts
@@ -2945,7 +2946,7 @@ paths:
       summary: Remove item from internal alert queue
       security:
         - openId:
-            - mni_alert
+            - write:mni_alert
       parameters:
         - $ref: "#/components/parameters/qId"
       operationId: deleteAlertQueueItem
@@ -2965,7 +2966,7 @@ paths:
       summary: Returns next item awaiting processing from internal alert queue
       security:
         - openId:
-            - mni_alert
+            - read:mni_alert
       operationId: getNextAlertQueueItem
       tags:
         - Alerts
@@ -3038,7 +3039,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleCables
       tags:
         - Cables
@@ -3189,7 +3190,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getAllCables
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -3339,7 +3340,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getCablesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -3380,7 +3381,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getCablesCapacityState
       parameters:
         - $ref: "#/components/parameters/dateFrom"
@@ -3609,7 +3610,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleCable
       tags:
         - Cables
@@ -3808,7 +3809,7 @@ paths:
       security:
         - openId:
             - read:mni_cable
-            - mni_ui
+            - read:mni_ui
       operationId: getCableTimeline
       parameters:
         - $ref: "#/components/parameters/cableId"
@@ -3852,8 +3853,8 @@ paths:
       summary: List of all defined currencies
       security:
         - openId:
-            - mni_fetch
-            - mni_ui
+            - read:mni_fetch
+            - read:mni_ui
             - read:mni_admin
       operationId: getAllCurrencies
       parameters:
@@ -3912,8 +3913,8 @@ paths:
       summary: Get default monetary currency
       security:
         - openId:
-            - mni_fetch
-            - mni_ui
+            - read:mni_fetch
+            - read:mni_ui
             - read:mni_admin
       operationId: getDefaultCurrency
       tags:
@@ -3951,7 +3952,7 @@ paths:
       summary: update currency conversion rate
       security:
         - openId:
-            - mni_fetch
+            - write:mni_fetch
             - write:mni_admin
       operationId: updateCurrencyRate
       parameters:
@@ -3987,7 +3988,7 @@ paths:
       summary: Change default currency
       security:
         - openId:
-            - mni_fetch
+            - write:mni_fetch
             - write:mni_admin
       operationId: updateCurrencyDefault
       parameters:
@@ -4009,7 +4010,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleDucts
       tags:
         - Ducts
@@ -4132,7 +4133,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getDuctsSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -4251,7 +4252,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getAllDuct
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -4293,7 +4294,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getDuctsCapacityState
       parameters:
         - $ref: "#/components/parameters/dateFrom"
@@ -4512,7 +4513,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleDuct
       tags:
         - Ducts
@@ -4576,7 +4577,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleServices
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -4817,7 +4818,7 @@ paths:
       security:
         - openId:
             - read:mni_duct
-            - mni_ui
+            - read:mni_ui
       operationId: getDuctTimeline
       parameters:
         - $ref: "#/components/parameters/ductId"
@@ -4862,7 +4863,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       operationId: getServiceTimeline
       parameters:
         - $ref: "#/components/parameters/serviceId"
@@ -4907,7 +4908,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       operationId: getServicesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -4948,7 +4949,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       operationId: getAllServices
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -5472,7 +5473,7 @@ paths:
       security:
         - openId:
             - read:mni_service
-            - mni_ui
+            - read:mni_ui
       parameters:
         - $ref: "#/components/parameters/serviceId"
         - $ref: "#/components/parameters/dateTime"
@@ -5627,7 +5628,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleSites
       tags:
         - Sites
@@ -5786,7 +5787,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getSitesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -5877,7 +5878,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getAllSites
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -6025,7 +6026,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getAllSitesOffNet
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -6075,7 +6076,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getAllSitesOnNet
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -6335,7 +6336,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleSite
       tags:
         - Sites
@@ -6424,7 +6425,7 @@ paths:
       security:
         - openId:
             - read:mni_site
-            - mni_ui
+            - read:mni_ui
       operationId: getSiteTimeline
       parameters:
         - $ref: "#/components/parameters/siteId"
@@ -6469,7 +6470,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleRacks
       tags:
         - Racks
@@ -6611,7 +6612,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getRacksSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -6652,7 +6653,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getAllracks
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -7008,7 +7009,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleRack
       tags:
         - Racks
@@ -7190,7 +7191,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleRackSlots
       parameters:
         - $ref: "#/components/parameters/rackId"
@@ -7237,7 +7238,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleRackSlotUsage
       parameters:
         - $ref: "#/components/parameters/rackId"
@@ -7267,7 +7268,7 @@ paths:
       security:
         - openId:
             - read:mni_rack
-            - mni_ui
+            - read:mni_ui
       operationId: getRackTimeline
       parameters:
         - $ref: "#/components/parameters/rackId"
@@ -7312,7 +7313,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleNe
       tags:
         - Network Equipment
@@ -7777,7 +7778,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getNesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -7818,7 +7819,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getAllNesVendors
       tags:
         - Network Equipment
@@ -7865,7 +7866,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getAllNe
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -8189,7 +8190,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleNe
       tags:
         - Network Equipment
@@ -8765,7 +8766,7 @@ paths:
       security:
         - openId:
             - read:mni_ne
-            - mni_ui
+            - read:mni_ui
       operationId: getNeTimeline
       parameters:
         - $ref: "#/components/parameters/neId"
@@ -8810,7 +8811,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getMultiplePoles
       tags:
         - Poles
@@ -9075,7 +9076,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getPolesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -9116,7 +9117,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getPolesCapacityState
       parameters:
         - $ref: "#/components/parameters/dateFrom"
@@ -9371,7 +9372,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getAllPole
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -9707,7 +9708,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getSinglePole
       tags:
         - Poles
@@ -9839,7 +9840,7 @@ paths:
       security:
         - openId:
             - read:mni_pole
-            - mni_ui
+            - read:mni_ui
       operationId: getPoleTimeline
       parameters:
         - $ref: "#/components/parameters/poleId"
@@ -9884,7 +9885,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getMultipleTrenches
       tags:
         - Trenches
@@ -10154,7 +10155,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: geTrenchesSimpleStatistics
       parameters:
         - $ref: "#/components/parameters/dateTime"
@@ -10389,7 +10390,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getAllTrench
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -10759,7 +10760,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getSingleTrench
       tags:
         - Trenches
@@ -10921,7 +10922,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchDistance
       parameters:
         - $ref: "#/components/parameters/trenchId"
@@ -10956,7 +10957,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchesCapacityState
       parameters:
         - $ref: "#/components/parameters/dateFrom"
@@ -11036,7 +11037,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchTimeline
       parameters:
         - $ref: "#/components/parameters/trenchId"
@@ -11082,7 +11083,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchGeometryLifetime
       parameters:
         - $ref: "#/components/parameters/trenchId"
@@ -11147,7 +11148,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchGeometry
       parameters:
         - $ref: "#/components/parameters/trenchId"
@@ -11188,7 +11189,7 @@ paths:
       security:
         - openId:
             - read:mni_trench
-            - mni_ui
+            - read:mni_ui
       operationId: getTrenchPremisesPassed
       parameters:
         - $ref: "#/components/parameters/trenchId"
@@ -11220,8 +11221,8 @@ paths:
       summary: simple trench distance estimate
       security:
         - openId:
-            - mni_q2c
-            - mni_ui
+            - read:mni_trench
+            - read:mni_ui
       operationId: q2cTrenchDistanceEstimate
       tags:
         - Q2C
@@ -11314,7 +11315,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_predict
+            - read:mni_predict
       operationId: getAdminData
       tags:
         - Administration - Data
@@ -11359,7 +11360,7 @@ paths:
       summary: Import data settings
       security:
         - openId:
-            - mni_predict
+            - write:mni_predict
             - write:mni_admin
       operationId: addAdminData
       tags:
@@ -11407,7 +11408,7 @@ paths:
       summary: Get maximum retention duration of active system historical data
       security:
         - openId:
-            - mni_predict
+            - read:mni_predict
             - read:mni_admin
       operationId: getMaxRetentionPeriodDuration
       tags:
@@ -11477,7 +11478,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_predict
+            - read:mni_predict
       operationId: getMaxPredictedPeriodDuration
       tags:
         - Administration - Data
@@ -11546,7 +11547,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       operationId: getMultipleEmail
       tags:
         - Administration - Email
@@ -11671,8 +11672,8 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllEmailProviders
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -11815,7 +11816,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       parameters:
         - $ref: "#/components/parameters/emailProviderId"
       operationId: getSingleEmailProvider
@@ -11982,7 +11983,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       operationId: getMultipleKafka
       tags:
         - Administration - Kafka
@@ -12116,8 +12117,8 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllKafkaBrokers
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -12230,7 +12231,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       parameters:
         - $ref: "#/components/parameters/kafkaProducerId"
       operationId: getSingleKafkaBroker
@@ -12374,7 +12375,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       operationId: getMultipleMap
       tags:
         - Administration - Maps
@@ -12590,7 +12591,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_ui
+            - read:mni_ui
       operationId: getAllMapProviders
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -12736,7 +12737,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_ui
+            - read:mni_ui
       operationId: getDefaultMapProvider
       tags:
         - Administration - Maps
@@ -12784,7 +12785,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_ui
+            - read:mni_ui
       parameters:
         - $ref: "#/components/parameters/mapProviderId"
       operationId: getSingleMapProvider
@@ -13063,7 +13064,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       operationId: getMultipleWorkflow
       tags:
         - Administration - Workflow Engine
@@ -13171,8 +13172,8 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
-            - mni_ui
+            - read:mni_alert
+            - read:mni_ui
       operationId: getAllWorkflowEngines
       parameters:
         - $ref: "#/components/parameters/pageSize"
@@ -13278,7 +13279,7 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
+            - read:mni_alert
       operationId: getSingleWorkflowEngine
       tags:
         - Administration - Workflow Engine
@@ -13404,7 +13405,7 @@ paths:
       summary: Returns list of every historical resource and correspoding points
       security:
         - openId:
-            - mni_predict
+            - read:mni_predict
       operationId: getAllHistoricalTimeline
       tags:
         - Predictive
@@ -13535,7 +13536,7 @@ paths:
       summary: Returns list of every predicted resource and correspoding points
       security:
         - openId:
-            - mni_predict
+            - read:mni_predict
       operationId: getAllPredictedTimeline
       tags:
         - Predictive
@@ -13666,7 +13667,7 @@ paths:
       summary: Remove item from internal predicton queue
       security:
         - openId:
-            - mni_predict
+            - write:mni_predict
       parameters:
         - $ref: "#/components/parameters/qId"
       operationId: deletePredictQueueItem
@@ -13686,7 +13687,7 @@ paths:
       summary: Returns next item awaiting processing from internal prediction queue
       security:
         - openId:
-            - mni_predict
+            - read:mni_predict
       operationId: getNextPredictQueueItem
       tags:
         - Predictive
@@ -13756,7 +13757,19 @@ paths:
       summary: search
       security:
         - openId:
-            - mni_ui
+            - read:mni_ui
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
+            - read:mni_admin
+            - read:mni_cable
+            - read:mni_duct
+            - read:mni_ne
+            - read:mni_pole
+            - read:mni_rack
+            - read:mni_service
+            - read:mni_site
+            - read:mni_trench
       operationId: search
       tags:
         - Search
@@ -13867,6 +13880,7 @@ paths:
       security:
         - openId:
             - write:mni_admin
+            - write:mni_fetch
       operationId: addSingleSecret
       tags:
         - Secrets
@@ -13945,9 +13959,9 @@ paths:
       security:
         - openId:
             - read:mni_admin
-            - mni_alert
-            - mni_fetch
-            - mni_predict
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
       operationId: getSingleSecret
       parameters:
         - $ref: "#/components/parameters/secretScope"
@@ -14028,7 +14042,8 @@ paths:
         Remove an authorization credential from the encrypted secret store, *note*: `scope`,`realm`,`type` must be known in advance
       security:
         - openId:
-            - write:mni_secret
+            - write:mni_admin
+            - write:mni_fetch
       parameters:
         - $ref: "#/components/parameters/secretScope"
         - $ref: "#/components/parameters/secretRealm"
@@ -17090,32 +17105,31 @@ components:
             type: object
 security:
   - openId:
-      # API functional components (read and write)
-      - mni_alert
-      - mni_fetch
-      - mni_predict
-      - mni_q2c
-      - mni_ui
-      - mni_search
-      # API resource specific (read or write as indicated by scheme)
       # {scheme}:{scope}
       - read:mni_admin
+      - read:mni_alert
       - read:mni_cable
       - read:mni_duct
+      - read:mni_duct
+      - read:mni_fetch
       - read:mni_ne
       - read:mni_pole
+      - read:mni_predict
       - read:mni_rack
       - read:mni_service
       - read:mni_site
       - read:mni_trench
+      - read:mni_ui
       - write:mni_admin
+      - write:mni_alert
       - write:mni_cable
-      - read:mni_duct
       - write:mni_duct
+      - write:mni_fetch
       - write:mni_ne
       - write:mni_pole
-      - write:mni_q2c
+      - write:mni_predict
       - write:mni_rack
       - write:mni_service
       - write:mni_site
       - write:mni_trench
+      - write:mni_ui
