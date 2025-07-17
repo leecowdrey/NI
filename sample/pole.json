@@ -3,6 +3,7 @@
     "poleId": "360236fb-15b1-48be-babf-6c433c387ed8",
     "purpose": "service/drop",
     "reference": "gbr-worc-cg-elmley",
+    "probability": 1,
     "construction": {
       "height": 20,
       "unit": "m",
@@ -38,6 +39,7 @@
     "poleId": "47d7ea0b-1307-477d-b462-73c3fdf0e4c5",
     "purpose": "backhaul",
     "reference": "bel-zel-m1-p1",
+    "probability": 1,
     "construction": {
       "height": 30,
       "unit": "m",

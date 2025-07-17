@@ -1,1 +1,1 @@
-common.sh
+../common.sh

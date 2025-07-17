@@ -26,6 +26,8 @@ HOST_SERVICE=$(grep -E "^IAM_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut
 LOG_FILE=$(grep -E "^IAM_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
 USERNAME=$(grep -E "^IAM_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
 WORKING_DIRECTORY=$(grep -E "^IAM_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SSL_CERT=$(grep -E "^IAM_SSL_CERT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SSL_KEY=$(grep -E "^IAM_SSL_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 doing "Removing systemD service"
 systemctl stop ${HOST_SERVICE} &>/dev/null && \
@@ -48,7 +50,6 @@ RETVAL=$?
 
 doing "Unlinking Self-Signed SSL certificate from deployment"
 [[ -f "${WORKING_DIRECTORY}/cert/${SSL_KEY}" ]] && unlink ${WORKING_DIRECTORY}/cert/${SSL_KEY} &>/dev/null
-[[ -f "${WORKING_DIRECTORY}/cert/${SSL_CSR}" ]] && unlink ${WORKING_DIRECTORY}/cert/${SSL_CSR} &>/dev/null
 [[ -f "${WORKING_DIRECTORY}/cert/${SSL_CERT}" ]] && unlink ${WORKING_DIRECTORY}/cert/${SSL_CERT} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"

@@ -487,6 +487,32 @@ function toDecimal(n, s = OAS.float_scale, p = OAS.float_precision) {
   return Number(parseFloat(n).toFixed(p));
 }
 
+function validateProbability(probability, source = "historical") {
+  probability = toDecimal(probability, OAS.probability_scale, OAS.probability_precision);
+  switch (source) {
+    case "historical":
+      probability = 1;
+      break;
+    case "planned":
+      if (probability < 0 || probability > 1) {
+        probability = 0.5;
+      }
+      break;
+    case "predicted":
+      if (probability < 0 || probability > 1) {
+        probability = 0.25;
+      }
+      break;
+    default:
+      if (probability > 1) {
+        probability = 1;
+      } else if (probability < 0) {
+        probability = 0;
+      }
+  }
+  return toDecimal(probability, OAS.probability_scale, OAS.probability_precision);
+}
+
 function encrypt(plain) {
   let encrypted = "";
   if (plain.length > 0) {
@@ -1767,7 +1793,8 @@ function loadEnv() {
   serveKeepalive = toBoolean(process.env.APISERV_KEEPALIVE || false);
   serveTimeOutRequest =
     toInteger(process.env.APISERV_TIMEOUT_REQUEST) || 300000;
-  serveTimeOutKeepalive = toInteger(process.env.APISERV_TIMEOUT_KEEPALIVE) || 5000;
+  serveTimeOutKeepalive =
+    toInteger(process.env.APISERV_TIMEOUT_KEEPALIVE) || 5000;
   sslKey = process.env.APISERV_SSL_KEY || "apiServer.key";
   sslCert = process.env.APISERV_SSL_CERT || "apiServer.crt";
   serviceUsername = process.env.APISERV_SERVICE_USERNAME || "internal";
@@ -2695,7 +2722,7 @@ var run = async () => {
             ddRead = await DDC.runAndReadAll(
               "SELECT strftime(expiration,'" +
                 pointFormat +
-                "'),identityProviderBase,identityProviderAuthorization,identityProviderTokenidentityProviderWellKnown FROM secret WHERE lower(scope) = lower('" +
+                "'),identityProviderBase,identityProviderAuthorization,identityProviderToken,identityProviderWellKnown FROM secret WHERE lower(scope) = lower('" +
                 scope +
                 "') AND lower(realm) = lower('" +
                 realm +
@@ -5884,11 +5911,11 @@ var run = async () => {
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        let alertContentId = uuidv4();
+        let alertdocumentId = uuidv4();
         let ddp = await DDC.prepare(
           "INSERT INTO alertContent (id, point, alertId, content) VALUES ($1,strptime($2,$3),$4,$5)"
         );
-        ddp.bindVarchar(1, alertContentId);
+        ddp.bindVarchar(1, alertdocumentId);
         ddp.bindVarchar(2, req.body.point);
         ddp.bindVarchar(3, pointFormat);
         ddp.bindVarchar(4, req.body.alertId);
@@ -5897,7 +5924,7 @@ var run = async () => {
         res
           .contentType(OAS.mimeJSON)
           .status(200)
-          .json({ alertContentId: alertContentId });
+          .json({ alertdocumentId: alertdocumentId });
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -5913,10 +5940,10 @@ var run = async () => {
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        if (await dbIdExists(req.params.alertContentId, "alertContent")) {
+        if (await dbIdExists(req.params.alertdocumentId, "alertContent")) {
           await DDC.run(
             "DELETE FROM alertContent WHERE id = '" +
-              req.params.alertContentId +
+              req.params.alertdocumentId +
               "'"
           );
           res.sendStatus(204);
@@ -5926,8 +5953,8 @@ var run = async () => {
             .status(404)
             .json({
               errors:
-                "alertContentId " +
-                req.params.alertContentId +
+                "alertdocumentId " +
+                req.params.alertdocumentId +
                 " does not exist",
             });
         }
@@ -5977,20 +6004,20 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT id FROM alertContent WHERE id = $1"
         );
-        ddp.bindVarchar(1, req.params.alertContentId);
+        ddp.bindVarchar(1, req.params.alertdocumentId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
           let ddp = await DDC.prepare(
             "SELECT strftime(point,$2),alertId,content FROM alertContent WHERE id = $1"
           );
-          ddp.bindVarchar(1, req.params.alertContentId);
+          ddp.bindVarchar(1, req.params.alertdocumentId);
           ddp.bindVarchar(2, pointFormat);
           let ddRead = await ddp.runAndReadAll();
           let ddRows = ddRead.getRows();
           if (ddRows.length > 0) {
             resJson = {
-              alertContentId: req.params.alertContentId,
+              alertdocumentId: req.params.alertdocumentId,
               point: ddRows[0][0],
               alertId: ddRows[0][1],
               content: ddRows[0][2],
@@ -6005,8 +6032,8 @@ var run = async () => {
             .status(404)
             .json({
               errors:
-                "alertContentId " +
-                req.params.alertContentId +
+                "alertdocumentId " +
+                req.params.alertdocumentId +
                 " does not exist",
             });
         }
@@ -8412,11 +8439,12 @@ var run = async () => {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddq = await DDC.runAndReadAll(
@@ -8472,7 +8500,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
             configTsCol +
-            ",reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+            ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -8483,6 +8511,10 @@ var run = async () => {
         ddp.bindVarchar(7, req.body.state);
         ddp.bindInteger(8, configTsId);
         ddp.bindVarchar(9, req.body.reference);
+        ddp.bindFloat(
+          10,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
 
         if (req.body?.ductId != null) {
@@ -8640,7 +8672,7 @@ var run = async () => {
           }
         } else {
           let ddp = await DDC.prepare(
-            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId,reference FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
+            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId,reference,probability FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
           );
           ddp.bindVarchar(1, req.params.cableId);
           let ddRead = await ddp.runAndReadAll();
@@ -8665,6 +8697,7 @@ var run = async () => {
             let poleId = ddRows[0][12];
             let point = dayjs().format(OAS.dayjsFormat);
             let reference = ddRows[0][13];
+            let prob = toDecimal(ddRows[0][14]);
 
             if (req.query?.predicted != null) {
               switch (technology) {
@@ -8742,6 +8775,9 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
@@ -8802,7 +8838,7 @@ var run = async () => {
               ddp = await DDC.prepare(
                 "INSERT INTO _cable (tsId,point,source,cableId,ductId,poleId,technology,state," +
                   configTsCol +
-                  "),reference SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4,reference FROM _cable WHERE tsId = $5"
+                  "),reference,probability SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4,reference,probability FROM _cable WHERE tsId = $5"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -8856,7 +8892,7 @@ var run = async () => {
     let ddRead = await DDC.runAndReadAll(
       "SELECT " +
         table +
-        ".id FROM " +
+        ".id,probability FROM " +
         table +
         ", _" +
         table +
@@ -8876,28 +8912,28 @@ var run = async () => {
         let resId = null;
         switch (table) {
           case "cable":
-            resId = { cableId: ddRows[idx][0], point: [] };
+            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "duct":
-            resId = { ductId: ddRows[idx][0], point: [] };
+            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "ne":
-            resId = { neId: ddRows[idx][0], point: [] };
+            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "pole":
-            resId = { poleId: ddRows[idx][0], point: [] };
+            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "rack":
-            resId = { rackId: ddRows[idx][0], point: [] };
+            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "service":
-            resId = { serviceId: ddRows[idx][0], point: [] };
+            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "site":
-            resId = { siteId: ddRows[idx][0], point: [] };
+            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "trench":
-            resId = { trenchId: ddRows[idx][0], point: [] };
+            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
         }
         let ddPoint = await DDC.runAndReadAll(
@@ -8934,7 +8970,108 @@ var run = async () => {
     return resJson;
   }
 
+  async function getPlannedTimelineById(table) {
+    let resJson = [];
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT " +
+        table +
+        ".id,probability FROM " +
+        table +
+        ", _" +
+        table +
+        " WHERE _" +
+        table +
+        "." +
+        table +
+        "Id = " +
+        table +
+        ".id AND source = 'planned' AND " +
+        table +
+        ".delete = false"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        let resId = null;
+        switch (table) {
+          case "cable":
+            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "duct":
+            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "ne":
+            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "pole":
+            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "rack":
+            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "service":
+            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "site":
+            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+          case "trench":
+            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            break;
+        }
+        let ddPoint = await DDC.runAndReadAll(
+          "SELECT strftime(point,'" +
+            pointFormat +
+            "') FROM " +
+            table +
+            ", _" +
+            table +
+            " WHERE " +
+            table +
+            ".id = '" +
+            ddRows[idx][0] +
+            "' AND _" +
+            table +
+            "." +
+            table +
+            "Id = id AND source = 'planned' AND delete = false ORDER BY _" +
+            table +
+            ".point DESC"
+        );
+        let ddPointRows = ddPoint.getRows();
+        if (ddPointRows.length > 0) {
+          for (let pdx in ddPointRows) {
+            resId.point.push(ddPointRows[pdx][0]);
+          }
+          resId.point = Array.from(new Set(resId.point.map(JSON.stringify)))
+            .map(JSON.parse)
+            .sort();
+        }
+        resJson.push(resId);
+      }
+    }
+    return resJson;
+  }
+
   async function getAllPredictedTimeline(req, res, next) {
+    try {
+      let resJson = {
+        cable: await getPredictedTimelineById("cable"),
+        duct: await getPredictedTimelineById("duct"),
+        ne: await getPredictedTimelineById("ne"),
+        pole: await getPredictedTimelineById("pole"),
+        rack: await getPredictedTimelineById("rack"),
+        service: await getPredictedTimelineById("service"),
+        site: await getPredictedTimelineById("site"),
+        trench: await getPredictedTimelineById("trench"),
+      };
+      res.contentType(OAS.mimeJSON).status(200).json(resJson);
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllPlannedTimeline(req, res, next) {
     try {
       let resJson = {
         cable: await getPredictedTimelineById("cable"),
@@ -8957,7 +9094,7 @@ var run = async () => {
     let ddRead = await DDC.runAndReadAll(
       "SELECT " +
         table +
-        ".id FROM " +
+        ".id,probability FROM " +
         table +
         ", _" +
         table +
@@ -8977,28 +9114,28 @@ var run = async () => {
         let resId = null;
         switch (table) {
           case "cable":
-            resId = { cableId: ddRows[idx][0], point: [] };
+            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "duct":
-            resId = { ductId: ddRows[idx][0], point: [] };
+            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "ne":
-            resId = { neId: ddRows[idx][0], point: [] };
+            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "pole":
-            resId = { poleId: ddRows[idx][0], point: [] };
+            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "rack":
-            resId = { rackId: ddRows[idx][0], point: [] };
+            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "service":
-            resId = { serviceId: ddRows[idx][0], point: [] };
+            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "site":
-            resId = { siteId: ddRows[idx][0], point: [] };
+            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
           case "trench":
-            resId = { trenchId: ddRows[idx][0], point: [] };
+            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
             break;
         }
         let ddPoint = await DDC.runAndReadAll(
@@ -9255,9 +9392,7 @@ var run = async () => {
         }
         let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,strftime(_cable.point,'" +
-            pointFormat +
-            "'),source FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false " +
+          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false " +
             datePoint +
             " ORDER BY _cable.point DESC LIMIT 1"
         );
@@ -9267,10 +9402,13 @@ var run = async () => {
         if (ddCableRows.length > 0) {
           resJson = {
             cableId: ddCableRows[0][0],
-            point: ddCableRows[0][13],
             technology: ddCableRows[0][1],
+            reference: ddCableRows[0][13],
             state: ddCableRows[0][2],
-            source: ddCableRows[0][14],
+            probability: validateProbability(
+              ddCableRows[0][14],
+              ddCableRows[0][13]
+            ),
             delete: toBoolean(ddCableRows[0][3]),
             configuration: {},
           };
@@ -9405,7 +9543,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,strftime(_cable.point,'" +
             pointFormat +
-            "'),source FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
+            "'),source,reference,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddCable = await ddp.runAndReadAll();
@@ -9436,6 +9574,11 @@ var run = async () => {
             point: ddCableRows[0][13],
             delete: toBoolean(ddCableRows[0][3]),
             source: ddCableRows[0][14],
+            reference: ddCableRows[0][15],
+            probability: validateProbability(
+              ddCableRows[0][15],
+              ddCableRows[0][13]
+            ),
             technology: ddCableRows[0][1],
             state: ddCableRows[0][2],
             configuration: {},
@@ -9569,7 +9712,7 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddp = await DDC.prepare(
-          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
+          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,source,reference,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddCable = await ddp.runAndReadAll();
@@ -9601,6 +9744,9 @@ var run = async () => {
           switch (req.body.source) {
             case "historical":
               tsCol = "historicalTsId";
+              break;
+            case "planned":
+              tsCol = "plannedTsId";
               break;
             case "predicted":
               tsCol = "predictedTsId";
@@ -9644,7 +9790,7 @@ var run = async () => {
           ddp = await DDC.prepare(
             "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
               configTsCol +
-              ") VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
+              ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -9654,6 +9800,11 @@ var run = async () => {
           ddp.bindVarchar(6, req.body.technology);
           ddp.bindVarchar(7, req.body.state);
           ddp.bindInteger(8, configTsId);
+          ddp.bindVarchar(9, req.body.reference);
+          ddp.bindFloat(
+            10,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
 
           if (req.body?.ductId != null) {
@@ -9795,7 +9946,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddCable = await DDC.runAndReadAll(
-        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
+        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
       );
       let ddCableRows = ddCable.getRows();
       if (ddCableRows.length > 0) {
@@ -9805,6 +9956,11 @@ var run = async () => {
             technology: ddCableRows[idx][1],
             reference: ddCableRows[idx][11],
             state: ddCableRows[idx][2],
+            reference: ddCableRows[idx][13],
+            probability: validateProbability(
+              ddCableRows[idx][14],
+              ddCableRows[idx][13]
+            ),
             delete: toBoolean(ddCableRows[idx][3]),
             configuration: {},
           };
@@ -9994,6 +10150,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -10053,7 +10212,7 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
               configTsCol +
-              ",reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9)"
+              ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -10064,6 +10223,10 @@ var run = async () => {
           ddp.bindVarchar(7, req.body[i].state);
           ddp.bindInteger(8, configTsId);
           ddp.bindVarchar(9, req.body[i].reference);
+          ddp.bindFloat(
+            10,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
 
           if (req.body[i].ductId != null) {
@@ -10250,11 +10413,12 @@ var run = async () => {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddq = await DDC.runAndReadAll(
@@ -10284,7 +10448,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)"
+          "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -10299,6 +10463,10 @@ var run = async () => {
         ddp.bindInteger(11, req.body.placement.vertical);
         ddp.bindInteger(12, req.body.placement.horizontal);
         ddp.bindVarchar(13, req.body.placement.unit);
+        ddp.bindFloat(
+          14,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
 
         if (req.body.within != null) {
@@ -10390,12 +10558,15 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
               }
               let ddClone = await DDC.prepare(
-                "INSERT INTO _duct (tsId,point,ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit) SELECT $1,strptime($2,$3),ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit FROM _duct WHERE tsId = $4"
+                "INSERT INTO _duct (tsId,point,ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) SELECT $1,strptime($2,$3),ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability FROM _duct WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -10455,7 +10626,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
             pointFormat +
-            "') FROM duct, _duct WHERE id = $1 AND _duct.ductId = duct.id AND duct.delete = false " +
+            "'),probability FROM duct, _duct WHERE id = $1 AND _duct.ductId = duct.id AND duct.delete = false " +
             datePoint +
             " ORDER BY _duct.point DESC LIMIT 1"
         );
@@ -10466,6 +10637,7 @@ var run = async () => {
           resJson = {
             ductId: req.params.ductId,
             point: ddRows[0][15],
+            probability: validateProbability(ddRows[0][16], ddRows[0][5]),
             trenchId: ddRows[0][6],
             purpose: ddRows[0][7],
             category: ddRows[0][8],
@@ -10550,7 +10722,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,ductId,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
             pointFormat +
-            "') FROM duct,_duct WHERE duct.id = $1 AND _duct.tsId = duct.historicalTsId AND duct.delete = false LIMIT 1"
+            "'),probability FROM duct,_duct WHERE duct.id = $1 AND _duct.tsId = duct.historicalTsId AND duct.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.ductId);
         let ddDuct = await ddp.runAndReadAll();
@@ -10579,6 +10751,7 @@ var run = async () => {
           resJson = {
             ductId: ddDuctRows[0][6],
             point: ddDuctRows[0][16],
+            probability: validateProbability(ddRows[0][18], ddRows[0][5]),
             trenchId: ddDuctRows[0][7],
             purpose: ddDuctRows[0][8],
             category: ddDuctRows[0][9],
@@ -10635,6 +10808,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -10651,7 +10827,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)"
+            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -10666,6 +10842,10 @@ var run = async () => {
           ddp.bindInteger(11, req.body.placement.vertical);
           ddp.bindInteger(12, req.body.placement.horizontal);
           ddp.bindVarchar(13, req.body.placement.unit);
+          ddp.bindFloat(
+            14,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
 
           if (req.body.within != null) {
@@ -10705,7 +10885,7 @@ var run = async () => {
       let ddDuct = await DDC.runAndReadAll(
         "SELECT id,delete,source,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
           pointFormat +
-          "') FROM duct,_duct WHERE _duct.ductId = duct.id ORDER BY _duct.point"
+          "'),probability FROM duct,_duct WHERE _duct.ductId = duct.id ORDER BY _duct.point"
       );
       let ddDuctRows = ddDuct.getRows();
       if (ddDuctRows.length > 0) {
@@ -10713,6 +10893,7 @@ var run = async () => {
           let resObj = {
             ductId: ddDuctRows[idx][0],
             point: ddDuctRows[idx][12],
+            probability: validateProbability(ddDuctRows[idx][13], ddDuctRows[idx][2]),
             trenchId: ddDuctRows[idx][3],
             purpose: ddDuctRows[idx][4],
             category: ddDuctRows[idx][5],
@@ -10783,6 +10964,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -10815,7 +10999,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)"
+            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -10830,6 +11014,10 @@ var run = async () => {
           ddp.bindInteger(11, req.body[i].placement.vertical);
           ddp.bindInteger(12, req.body[i].placement.horizontal);
           ddp.bindVarchar(13, req.body[i].placement.unit);
+          ddp.bindFloat(
+            14,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
 
           if (req.body[i].within != null) {
@@ -10956,11 +11144,12 @@ var run = async () => {
       case "historical":
         tsCol = "historicalTsId";
         break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
       case "predicted":
         tsCol = "predictedTsId";
         break;
-      default:
-        tsCol = "historicalTsId";
     }
 
     let ddq = await DDC.runAndReadAll(
@@ -10993,7 +11182,7 @@ var run = async () => {
       await ddp.run();
     }
     let ddp = await DDC.prepare(
-      "INSERT INTO _ne (tsId,point,neId,source,host,mgmtIP,vendor,model,image,version,commissioned,siteId,rackid,slotPosition) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,strptime($12,$13),$14,$15,$16)"
+      "INSERT INTO _ne (tsId,point,neId,source,host,mgmtIP,vendor,model,image,version,commissioned,siteId,rackid,slotPosition,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,strptime($12,$13),$14,$15,$16,$17)"
     );
     ddp.bindInteger(1, tsId);
     ddp.bindVarchar(2, body.point || point);
@@ -11011,6 +11200,7 @@ var run = async () => {
     ddp.bindVarchar(14, body.siteId);
     ddp.bindVarchar(15, body.rackId);
     ddp.bindVarchar(16, body.slotPosition);
+    ddp.bindFloat(17, validateProbability(body.probability, body.source));
     await ddp.run();
     if (body.config != null) {
       await DDC.run(
@@ -11376,7 +11566,9 @@ var run = async () => {
               "' AND source = 'predicted'"
           );
           await DDC.run(
-            "UPDATE ne SET predictedTsId = NULL WHERE id = '" + neId + "'"
+            "UPDATE ne SET predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+              neId +
+              "'"
           );
           return 204;
         } else {
@@ -11437,11 +11629,12 @@ var run = async () => {
       case "historical":
         tsCol = "historicalTsId";
         break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
       case "predicted":
         tsCol = "predictedTsId";
         break;
-      default:
-        tsCol = "historicalTsId";
     }
 
     let datePoint = "AND _ne.tsId = ne.historicalTsId";
@@ -11458,7 +11651,7 @@ var run = async () => {
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,rackId,slotPosition,tsId,config FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id " +
+        "'),siteId,rackId,slotPosition,tsId,config,probability FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id " +
         datePoint +
         " ORDER BY _ne.tsId DESC LIMIT 1"
     );
@@ -11469,6 +11662,7 @@ var run = async () => {
       resJson = {
         neId: neId,
         point: ddRows[0][6],
+        probability: validateProbability(ddRows[0][21], ddRows[0][5]),
         host: ddRows[0][8],
         commissioned: ddRows[0][14],
         siteId: ddRows[0][16],
@@ -11994,16 +12188,16 @@ var run = async () => {
         let poleId = uuidv4();
         let tsId = await getSeqNextValue("seq_pole");
         let tsCol = "historicalTsId";
-
         switch (req.body.source) {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddp = await DDC.prepare(
@@ -12019,7 +12213,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -12050,6 +12244,10 @@ var run = async () => {
         ddp.bindVarchar(18, req.body.build.planned.unit);
         ddp.bindVarchar(19, req.body.build.actual.unit);
         ddp.bindVarchar(20, req.body.reference);
+        ddp.bindFloat(
+          21,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
         if (req.body.build?.jobId != null) {
           await DDC.run(
@@ -12220,12 +12418,15 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
               }
               let ddp = await DDC.prepare(
-                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference FROM _pole WHERE tsId = $4"
+                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability FROM _pole WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -12294,7 +12495,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "'),reference FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
+            "'),reference,probability FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
             datePoint +
             " ORDER BY _pole.point DESC LIMIT 1"
         );
@@ -12305,6 +12506,7 @@ var run = async () => {
           resJson = {
             poleId: req.params.poleId,
             point: ddRows[0][30],
+            probability: validateProbability(ddRows[0][32], ddRows[0][5]),
             reference: ddRows[0][31],
             purpose: ddRows[0][6],
             construction: {
@@ -12480,7 +12682,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "'),reference FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
+            "'),reference,probability FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.poleId);
         let ddPole = await ddp.runAndReadAll();
@@ -12490,6 +12692,7 @@ var run = async () => {
             poleId: req.params.poleId,
             purpose: ddRows[0][6],
             reference: ddRows[0][31],
+            probability: validateProbability(ddRows[0][32], ddRows[0][5]),
             point: ddRows[0][30],
             construction: {
               height: toDecimal(ddRows[0][7]),
@@ -12628,6 +12831,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -12645,7 +12851,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -12677,6 +12883,10 @@ var run = async () => {
           ddp.bindVarchar(18, req.body.build.planned.unit);
           ddp.bindVarchar(19, req.body.build.actual.unit);
           ddp.bindVarchar(20, req.body.reference);
+          ddp.bindFloat(
+            21,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
           if (req.body.build?.jobId != null) {
             await DDC.run(
@@ -12804,7 +13014,7 @@ var run = async () => {
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
           "X,Y,Z,M,strftime(point,'" +
           pointFormat +
-          "'),reference FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
+          "'),reference,probability FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -12813,6 +13023,7 @@ var run = async () => {
             poleId: ddRows[idx][0],
             purpose: ddRows[idx][6],
             reference: ddRows[idx][31],
+            probability: validateProbability(ddRows[idx][32], ddRows[idx][5]),
             construction: {
               height: toDecimal(ddRows[idx][7]),
               unit: ddRows[idx][9],
@@ -12915,6 +13126,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -12947,7 +13161,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -12969,6 +13183,10 @@ var run = async () => {
           ddp.bindVarchar(18, req.body[i].build.planned.unit);
           ddp.bindVarchar(19, req.body[i].build.actual.unit);
           ddp.bindVarchar(20, req.body[i].reference);
+          ddp.bindFloat(
+            21,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
           if (req.body[i].build?.jobId != null) {
             await DDC.run(
@@ -13176,7 +13394,7 @@ var run = async () => {
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots,probability FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
         datePoint +
         " ORDER BY _rack.tsId DESC LIMIT 1"
     );
@@ -13187,6 +13405,7 @@ var run = async () => {
       resJson = {
         rackId: rackId,
         point: ddRows[0][5],
+        probability: validateProbability(ddRows[0][25], ddRows[0][5]),
         reference: ddRows[0][8],
         commissioned: ddRows[0][9],
         siteId: ddRows[0][11],
@@ -13259,11 +13478,12 @@ var run = async () => {
       case "historical":
         tsCol = "historicalTsId";
         break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
       case "predicted":
         tsCol = "predictedTsId";
         break;
-      default:
-        tsCol = "historicalTsId";
     }
 
     let ddq = await DDC.runAndReadAll(
@@ -13297,7 +13517,7 @@ var run = async () => {
     }
 
     let ddp = await DDC.prepare(
-      "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17)"
+      "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
     );
     ddp.bindInteger(1, tsId);
     ddp.bindVarchar(2, body.point);
@@ -13325,6 +13545,7 @@ var run = async () => {
     ddp.bindFloat(15, toDecimal(body.dimensions.width));
     ddp.bindVarchar(16, body.dimensions.unit);
     ddp.bindInteger(17, toInteger(body.slots));
+    ddp.bindFloat(18, validateProbability(body.probability, body.source));
     await ddp.run();
     if (body.decommissioned != null) {
       await DDC.run(
@@ -13455,11 +13676,12 @@ var run = async () => {
       case "historical":
         tsCol = "historicalTsId";
         break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
       case "predicted":
         tsCol = "predictedTsId";
         break;
-      default:
-        tsCol = "historicalTsId";
     }
     if (expunge) {
       let ddd = await DDC.runAndReadAll(
@@ -14016,16 +14238,16 @@ var run = async () => {
         let serviceId = uuidv4();
         let tsId = await getSeqNextValue("seq_service");
         let tsCol = "historicalTsId";
-
         switch (req.body.source) {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddp = await DDC.prepare(
@@ -14041,7 +14263,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
+          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -14053,6 +14275,10 @@ var run = async () => {
         ddp.bindInteger(8, req.body.rate);
         ddp.bindVarchar(9, req.body.unit);
         ddp.bindVarchar(10, req.body.reference);
+        ddp.bindFloat(
+          11,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
 
         if (req.body.reference != null) {
@@ -14109,12 +14335,6 @@ var run = async () => {
         if (req.body.link?.ingress != null) {
           for (let n = 0; n < req.body.link.ingress.length; n++) {
             let tsIngressId = await getSeqNextValue("seq_serviceIngress");
-            /*
-            let nePortId = await dbNePortIdFromName(
-              req.body.link.ingress[n].neId,
-              req.body.link.ingress[n].port
-            );
-            */
             ddp = await DDC.prepare(
               "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
             );
@@ -14181,12 +14401,6 @@ var run = async () => {
         if (req.body.link?.egress != null) {
           for (let n = 0; n < req.body.link.egress.length; n++) {
             let tsEgressId = await getSeqNextValue("seq_serviceEgress");
-            /*
-            let nePortId = await dbNePortIdFromName(
-              req.body.link.egress[n].neId,
-              req.body.link.egress[n].port
-            );
-            */
             ddp = await DDC.prepare(
               "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
             );
@@ -14342,13 +14556,16 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
               }
 
               let ddp = await DDC.prepare(
-                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference FROM _service WHERE tsId = $4"
+                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probability) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probabiltiy FROM _service WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -14456,7 +14673,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),rate,unit,reference FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
+            "'),rate,unit,reference,probability FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
             datePoint +
             " AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
@@ -14468,6 +14685,7 @@ var run = async () => {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
             reference: ddRows[0][16],
+            probability: validateProbability(ddRows[0][17], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
             rate: toInteger(ddRows[0][14]),
@@ -14633,7 +14851,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),tsId,rate,unit,reference FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
+            "'),tsId,rate,unit,reference,probability FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.serviceId);
         let ddRead = await ddp.runAndReadAll();
@@ -14643,6 +14861,7 @@ var run = async () => {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
             reference: ddRows[0][17],
+            probability: validateProbability(ddRows[0][18], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
             rate: toInteger(ddRows[0][15]),
@@ -14685,12 +14904,6 @@ var run = async () => {
               let resIngressObj = {
                 neId: ddIngressRows[pdx][0],
                 port: ddIngressRows[pdx][1],
-                /*
-                port: await dbNePortNameFromId(
-                  ddIngressRows[pdx][0],
-                  ddIngressRows[pdx][1]
-                ),
-                */
               };
               if (toInteger(ddIngressRows[pdx][2]) > 0) {
                 resIngressObj.cVlanId = toInteger(ddIngressRows[pdx][2]);
@@ -14716,12 +14929,6 @@ var run = async () => {
               let resEgressObj = {
                 neId: ddEgressRows[pdx][0],
                 port: ddEgressRows[pdx][1],
-                /*
-                port: await dbNePortNameFromId(
-                  ddEgressRows[pdx][0],
-                  ddEgressRows[pdx][1]
-                ),
-                */
               };
               if (toInteger(ddEgressRows[pdx][2]) > 0) {
                 resEgressObj.cVlanId = toInteger(
@@ -14844,6 +15051,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -14860,7 +15070,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -14872,6 +15082,10 @@ var run = async () => {
           ddp.bindInteger(8, req.body.rate);
           ddp.bindVarchar(9, req.body.unit);
           ddp.bindVarchar(10, req.body.reference);
+          ddp.bindFloat(
+            11,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
 
           if (req.body.reference != null) {
@@ -14928,12 +15142,6 @@ var run = async () => {
           if (req.body.link?.ingress != null) {
             for (let n = 0; n < req.body.link.ingress.length; n++) {
               let tsIngressId = await getSeqNextValue("seq_serviceIngress");
-              /*
-              let nePortId = await dbNePortIdFromName(
-                req.body.link.ingress[n].neId,
-                req.body.link.ingress[n].port
-              );
-              */
               ddp = await DDC.prepare(
                 "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
@@ -14997,12 +15205,6 @@ var run = async () => {
           if (req.body.link?.egress != null) {
             for (let n = 0; n < req.body.link.egress.length; n++) {
               let tsEgressId = await getSeqNextValue("seq_serviceEgress");
-              /*
-              let nePortId = await dbNePortIdFromName(
-                req.body.link.egress[n].neId,
-                req.body.link.egress[n].port
-              );
-              */
               ddp = await DDC.prepare(
                 "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
@@ -15100,7 +15302,7 @@ var run = async () => {
           dateFormat +
           "'),lagGroup,lagMembers,strftime(point,'" +
           pointFormat +
-          "'),tsId,rate,unit,reference FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
+          "'),tsId,rate,unit,reference,probability FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -15109,6 +15311,7 @@ var run = async () => {
             serviceId: ddRows[idx][0],
             point: ddRows[idx][13],
             reference: ddRows[idx][17],
+            probability: validateProbability(ddRows[idx][18], ddRows[idx][5]),
             customer: {},
             commissioned: ddRows[idx][9],
             rate: toInteger(ddRows[idx][15]),
@@ -15324,10 +15527,12 @@ var run = async () => {
         for (let i = 0; i < req.body.length; i++) {
           let tsId = await getSeqNextValue("seq_service");
           let tsCol = "historicalTsId";
-
           switch (req.body[i].source) {
             case "historical":
               tsCol = "historicalTsId";
+              break;
+            case "planned":
+              tsCol = "plannedTsId";
               break;
             case "predicted":
               tsCol = "predictedTsId";
@@ -15361,7 +15566,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -15373,6 +15578,10 @@ var run = async () => {
           ddp.bindInteger(8, req.body[i].rate);
           ddp.bindVarchar(9, req.body[i].unit);
           ddp.bindVarchar(10, req.body[i].reference);
+          ddp.bindFloat(
+            11,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
 
           if (req.body[i].reference != null) {
@@ -15429,12 +15638,6 @@ var run = async () => {
           if (req.body[i].link?.ingress != null) {
             for (let n = 0; n < req.body[i].link.ingress.length; n++) {
               let tsIngressId = await getSeqNextValue("seq_serviceIngress");
-              /*
-              let nePortId = await dbNePortIdFromName(
-                req.body[i].link.ingress[n].neId,
-                req.body[i].link.ingress[n].port
-              );
-              */
               ddp = await DDC.prepare(
                 "INSERT INTO _serviceIngress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
@@ -15504,12 +15707,6 @@ var run = async () => {
           if (req.body[i].link?.egress != null) {
             for (let n = 0; n < req.body[i].link.egress.length; n++) {
               let tsEgressId = await getSeqNextValue("seq_serviceEgress");
-              /*
-              let nePortId = await dbNePortIdFromName(
-                req.body[i].link.egress[n].neId,
-                req.body[i].link.egress[n].port
-              );
-              */
               ddp = await DDC.prepare(
                 "INSERT INTO _serviceEgress (tsId,point,source,serviceId,serviceTsId,neId,nePort) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8)"
               );
@@ -15742,11 +15939,12 @@ var run = async () => {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddq = await DDC.runAndReadAll(
@@ -15776,7 +15974,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+          "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -15819,6 +16017,10 @@ var run = async () => {
           )
         );
         ddp.bindBoolean(20, toBoolean(req.body.onNet));
+        ddp.bindFloat(
+          21,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
 
         if (req.body.location.district != null) {
@@ -15926,12 +16128,15 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
               }
               let ddClone = await DDC.prepare(
-                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m FROM _site WHERE tsId = $4"
+                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability FROM _site WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -16003,7 +16208,7 @@ var run = async () => {
             dateFormat +
             "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,strftime(point,'" +
             pointFormat +
-            "'),onNet FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
+            "'),onNet,probability FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
             datePoint +
             " ORDER BY _site.point DESC LIMIT 1"
         );
@@ -16015,6 +16220,7 @@ var run = async () => {
             siteId: req.params.siteId,
             point: ddRows[0][23],
             reference: ddRows[0][7],
+            probability: validateProbability(ddRows[0][25], ddRows[0][6]),
             commissioned: ddRows[0][8],
             onNet: ddRows[0][24],
             area: ddRows[0][10],
@@ -16116,7 +16322,7 @@ var run = async () => {
             dateFormat +
             "'),strftime(decommissioned,'" +
             dateFormat +
-            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
+            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.siteId);
         let ddSite = await ddp.runAndReadAll();
@@ -16125,6 +16331,7 @@ var run = async () => {
           resJson = {
             siteId: req.params.siteId,
             point: ddRows[0][5],
+            probability: validateProbability(ddRows[0][24], ddRows[0][6]),
             reference: ddRows[0][7],
             commissioned: ddRows[0][8],
             onNet: toBoolean(ddRows[0][23]),
@@ -16195,6 +16402,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -16211,7 +16421,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -16254,6 +16464,10 @@ var run = async () => {
             )
           );
           ddp.bindBoolean(20, toBoolean(req.body.onNet));
+          ddp.bindFloat(
+            21,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
 
           if (req.body.location.district != null) {
@@ -16318,7 +16532,7 @@ var run = async () => {
           dateFormat +
           "'),strftime(decommissioned,'" +
           dateFormat +
-          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
+          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
       );
       let ddRows = ddSite.getRows();
       if (ddRows.length > 0) {
@@ -16326,6 +16540,7 @@ var run = async () => {
           let resObj = {
             siteId: ddRows[idx][0],
             point: ddRows[idx][5],
+            probability: validateProbability(ddRows[idx][24], ddRows[idx][6]),
             reference: ddRows[idx][7],
             commissioned: ddRows[idx][8],
             onNet: ddRows[idx][23],
@@ -16397,6 +16612,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -16429,7 +16647,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)"
+            "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,area,type,country,region,town,street,premisesNameNumber,postalCode,x,y,z,onNet,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -16472,6 +16690,10 @@ var run = async () => {
             )
           );
           ddp.bindBoolean(20, toBoolean(req.body[i].onNet));
+          ddp.bindFloat(
+            21,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
 
           if (req.body[i].location.district != null) {
@@ -16699,11 +16921,12 @@ var run = async () => {
           case "historical":
             tsCol = "historicalTsId";
             break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
           case "predicted":
             tsCol = "predictedTsId";
             break;
-          default:
-            tsCol = "historicalTsId";
         }
 
         let ddq = await DDC.runAndReadAll(
@@ -16733,7 +16956,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _trench (tsId, point, trenchId, source, purpose, depth, classifier, unit, type, premisesPassed, area, plannedDuration, actualDuration, state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
+          "INSERT INTO _trench (tsId, point, trenchId, source, purpose, depth, classifier, unit, type, premisesPassed, area, plannedDuration, actualDuration, state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -16751,6 +16974,10 @@ var run = async () => {
         ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
         ddp.bindVarchar(15, req.body.state);
         ddp.bindVarchar(16, req.body.reference);
+        ddp.bindFloat(
+          17,
+          validateProbability(req.body.probability, req.body.source)
+        );
         await ddp.run();
 
         if (req.body.build?.jobId != null) {
@@ -16970,13 +17197,16 @@ var run = async () => {
                 case "historical":
                   tsCol = "historicalTsId";
                   break;
+                case "planned":
+                  tsCol = "plannedTsId";
+                  break;
                 case "predicted":
                   tsCol = "predictedTsId";
                   break;
               }
               let tsId = await getSeqNextValue("seq_trench");
               let ddClone = await DDC.prepare(
-                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId FROM _trench WHERE tsId = $4"
+                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability FROM _trench WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -17059,7 +17289,7 @@ var run = async () => {
             dateFormat +
             "'), actualDuration, actualUnit, state, connectsToSiteId, connectsToTrenchId, connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
+            "'),reference,probability FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
             datePoint +
             " ORDER BY _trench.point DESC LIMIT 1"
         );
@@ -17070,6 +17300,7 @@ var run = async () => {
           resJson = {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
+            probability: validateProbability(ddRows[0][30], ddRows[0][6]),
             source: ddRows[0][6],
             purpose: ddRows[0][7],
             reference: ddRows[0][29],
@@ -17739,7 +17970,7 @@ var run = async () => {
             dateFormat +
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+            "'),reference,probability FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddRead = await ddp.runAndReadAll();
@@ -17748,6 +17979,7 @@ var run = async () => {
           resJson = {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
+            probability: validateProbability(ddRows[0][30], ddRows[0][6]),
             reference: ddRows[0][29],
             purpose: ddRows[0][7],
             construction: {
@@ -17841,13 +18073,6 @@ var run = async () => {
               resJson.coordinates.push(resObj);
             }
           }
-          /*
-          LOGGER.debug({
-            delta: req.body,
-            before: resJson,
-            after: jsonDeepMerge(resJson, req.body),
-          });
-          */
           // pass to replace to regenerate the record
           req.body = jsonDeepMerge(resJson, req.body);
           return next();
@@ -17923,6 +18148,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -17939,7 +18167,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -17957,6 +18185,10 @@ var run = async () => {
           ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
           ddp.bindVarchar(15, req.body.state);
           ddp.bindVarchar(16, req.body.reference);
+          ddp.bindFloat(
+            17,
+            validateProbability(req.body.probability, req.body.source)
+          );
           await ddp.run();
 
           if (req.body.build?.jobId != null) {
@@ -18136,7 +18368,7 @@ var run = async () => {
           dateFormat +
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,tsId,strftime(point,'" +
           pointFormat +
-          "'),reference FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
+          "'),reference,probability FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -18144,6 +18376,7 @@ var run = async () => {
           let resObj = {
             trenchId: ddRows[idx][0],
             purpose: ddRows[idx][7],
+            probability: validateProbability(ddRows[idx][31], ddRows[idx][6]),
             reference: ddRows[idx][30],
             construction: {
               depth: toDecimal(ddRows[idx][8]),
@@ -18342,6 +18575,9 @@ var run = async () => {
             case "historical":
               tsCol = "historicalTsId";
               break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
             case "predicted":
               tsCol = "predictedTsId";
               break;
@@ -18374,7 +18610,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -18395,6 +18631,10 @@ var run = async () => {
           ddp.bindInteger(14, toInteger(req.body[i].build.actual.duration));
           ddp.bindVarchar(15, req.body[i].state);
           ddp.bindVarchar(16, req.body[i].reference);
+          ddp.bindFloat(
+            17,
+            validateProbability(req.body[i].probability, req.body[i].source)
+          );
           await ddp.run();
 
           if (req.body[i].build?.jobId != null) {
@@ -18668,6 +18908,337 @@ var run = async () => {
     }
   }
 
+  async function documentExists(id) {
+    let exists = false;
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT id FROM document WHERE id = '" + id + "' LIMIT 1"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      exists = true;
+    }
+    return exists;
+  }
+
+  async function documentType(documentId) {
+    let mimeType = "*/*";
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT mimeType FROM document WHERE id = '" + documentId + "' LIMIT 1"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      mimeType = ddRows[0][0];
+    }
+    return mimeType;
+  }
+
+  async function documentRead(
+    documentId,
+    { point = null, source = "historical" } = {}
+  ) {
+    let blob = null;
+    let tsCol = "historicalTsId";
+    switch (source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+    }
+
+    let datePoint = "AND _document.tsId = document.historicalTsId";
+    let ddp = await DDC.prepare(
+      "SELECT document.id, content FROM document,_document WHERE document.id = $1 AND _document.documentId = document.id AND document.delete = false " +
+        datePoint +
+        " ORDER BY _document.point DESC LIMIT 1"
+    );
+    ddp.bindVarchar(1, documentId);
+    let ddRead = await ddp.runAndReadAll();
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      blob = ddRows[0][0];
+    }
+    return { status: 200, blob: blob };
+  }
+
+  async function contentDelete(
+    documentId,
+    { predicted = null, expunge = false } = {}
+  ) {
+    if (expunge) {
+      let ddd = await DDC.runAndReadAll(
+        "SELECT id FROM document WHERE id = '" + documentId + "'"
+      );
+      let dddRows = ddd.getRows();
+      if (dddRows.length > 0) {
+        await DDC.run(
+          "DELETE FROM _document WHERE documentId = '" + documentId + "'"
+        );
+        await DDC.run(
+          "UPDATE content SET delete = true, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+            documentId +
+            "'"
+        );
+        return 204;
+      } else {
+        return 404;
+      }
+    } else {
+      let ddp = await DDC.prepare(
+        "SELECT id,tsPoint,historicalTsId,predictedTsId,source FROM document,_document WHERE document.id = $1 AND _document.tsId = document.historicalTsId AND document.delete = false"
+      );
+      ddp.bindVarchar(1, documentId);
+      let ddRead = await ddp.runAndReadAll();
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        if (predicted != null) {
+          await DDC.run(
+            "DELETE FROM _document WHERE documentId = '" +
+              documentId +
+              "' AND source = 'predicted'"
+          );
+          await DDC.run(
+            "UPDATE content SET predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+              documentId +
+              "'"
+          );
+          return 204;
+        } else {
+          let tsId = await getSeqNextValue("seq_document");
+          let point = dayjs().format(OAS.dayjsFormat);
+          let tsCol = "historicalTsId";
+          switch (ddRows[0][2]) {
+            case "historical":
+              tsCol = "historicalTsId";
+              break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
+            case "predicted":
+              tsCol = "predictedTsId";
+              break;
+          }
+          let ddp = await DDC.prepare(
+            "INSERT INTO _document (tsId,point,source,documentId,content) SELECT $1,strptime($2,$3),documentId,content FROM _document WHERE tsId = $4"
+          );
+          ddp.bindInteger(1, tsId);
+          ddp.bindVarchar(2, point);
+          ddp.bindVarchar(3, pointFormat);
+          ddp.bindInteger(4, ddRows[0][2]);
+          await ddp.run();
+          await DDC.run(
+            "UPDATE content SET " +
+              tsCol +
+              " = " +
+              tsId +
+              ", tsPoint = strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'), delete = true WHERE id = '" +
+              documentId +
+              "'"
+          );
+        }
+        return 204;
+      } else {
+        return 404;
+      }
+    }
+  }
+
+  async function documentWrite(
+    id,
+    blob,
+    contentMimeType,
+    { source = "historical", point = null }
+  ) {
+    let tsId = await getSeqNextValue("seq_document");
+    if (point == null) {
+      point = dayjs().format(OAS.dayjsFormat);
+    }
+    let tsCol = "historicalTsId";
+    switch (req.body.source) {
+      case "historical":
+        tsCol = "historicalTsId";
+        break;
+      case "planned":
+        tsCol = "plannedTsId";
+        break;
+      case "predicted":
+        tsCol = "predictedTsId";
+        break;
+    }
+    let ddq = await DDC.runAndReadAll(
+      "SELECT id FROM document WHERE id = '" + id + "'"
+    );
+    let ddqRows = ddq.getRows();
+    if (ddqRows.length == 0) {
+      let ddp = await DDC.prepare(
+        "INSERT INTO content (id,delete," +
+          tsCol +
+          ",tsPoint,mimeType) VALUES ($1,$2,$3,strptime($4,$5),$6)"
+      );
+      ddp.bindVarchar(1, id);
+      ddp.bindBoolean(2, false);
+      ddp.bindInteger(3, tsId);
+      ddp.bindVarchar(4, point);
+      ddp.bindVarchar(5, pointFormat);
+      ddp.bindVarchar(6, contentMimeType);
+      await ddp.run();
+    } else {
+      let ddp = await DDC.prepare(
+        "UPDATE document SET " + tsCol + " = $1 WHERE id = $2"
+      );
+      ddp.bindInteger(1, tsId);
+      ddp.bindVarchar(2, id);
+      await ddp.run();
+    }
+
+    let ddp = await DDC.prepare(
+      "INSERT INTO _document (tsId,point,source,documentId,content) VALUES ($1,strptime($2,$3),$4,$5,$6)"
+    );
+    ddp.bindInteger(1, tsId);
+    ddp.bindVarchar(2, point);
+    ddp.bindVarchar(3, pointFormat);
+    ddp.bindVarchar(4, source);
+    ddp.bindVarchar(5, documentId);
+    ddp.bindBlob(6, blob);
+    await ddp.run();
+    return 204;
+  }
+
+  async function getDocument(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await documentExists(req.params.documentId)) {
+          let { status, blob } = await documentRead(req.params.documentId, {
+            point: req.query.point,
+          });
+          if (status == 200) {
+            let mimeType = await documentType(req.params.documentType);
+            res.type(mimeType);
+            blob.arrayBuffer().then((buf) => {
+              res.status(200).send(Buffer.from(buf));
+            });
+          } else {
+            res.sendStatus(status);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "documentId " + req.params.documentId + " not found",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addDocument(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        //app.post('/raw/:cmd', express.raw({type: "*/*"}), async (req, res) => {
+        //    const buffer = req.body
+        //    const blob = new Blob([buffer], {type: "application/octet-stream"})
+        //})
+        let buf = req.body;
+        let contentType = req.get("Content-Type");
+        let blob = new Blob([buf], { type: contentType });
+        let documentId = uuidv4();
+        let source = "historical";
+        let status = await documentWrite(documentId, blob, contentType, {
+          source: source,
+        });
+        if (status == 204) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(200)
+            .json({ documentId: documentId });
+        } else {
+          res.sendStatus(status);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceDocument(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await documentExists(req.params.documentId)) {
+          res.sendStatus(
+            await documentWrite(
+              req.params.documentId,
+              req.body,
+              req.get("Content-Type")
+            )
+          );
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "documentId " + req.params.documentId + " not found",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteDocument(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (0 == 1) {
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "documentId " + req.params.documentId + " not found",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getSimpleStatistics(req, res, next) {
     try {
       let result = validationResult(req);
@@ -18889,7 +19460,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/api/readiness",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getReadiness
   );
 
@@ -18901,8 +19472,61 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/api",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getOpenAPI
+  );
+
+  /*
+       Tag:           Documents
+       operationId:   addDocument
+       exposed Route: /mni/v1/content
+       HTTP method:   POST
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/document",
+    header("Content-Type").isIn(OAS.mimeType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body().notEmpty(),
+    addDocument
+  );
+
+  /*
+       Tag:           Documents
+       operationId:   getDocument
+       exposed Route: /mni/v1/content/{documentId}
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/document/:documentId",
+    param("documentId").isUUID(4),
+    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    getDocument
+  );
+
+  /*
+       Tag:           Documents
+       operationId:   replaceDocument
+       exposed Route: /mni/v1/document/{documentId}
+       HTTP method:   PUT
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/document/:documentId",
+    header("Content-Type").isIn(OAS.mimeType),
+    param("documentId").isUUID(4),
+    body().notEmpty(),
+    replaceDocument
+  );
+
+  /*
+       Tag:           Documents
+       operationId:   deleteDocument
+       exposed Route: /mni/v1/document/{documentId}
+       HTTP method:   DELETE
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/document/:documentId",
+    param("documentId").isUUID(4),
+    deleteDocument
   );
 
   /*
@@ -18914,7 +19538,7 @@ var run = async () => {
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/currency",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllCurrencies
   );
 
@@ -18927,7 +19551,7 @@ var run = async () => {
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/currency/default",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getDefaultCurrency
   );
 
@@ -18940,7 +19564,7 @@ var run = async () => {
   */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("currencyId").isUUID(4),
     body("rate").isFloat(OAS.currency_rate),
     updateCurrencyRate
@@ -18955,7 +19579,7 @@ var run = async () => {
   */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/currency/:currencyId",
-        param("currencyId").isUUID(4),
+    param("currencyId").isUUID(4),
     updateCurrencyDefault
   );
 
@@ -18968,7 +19592,7 @@ var run = async () => {
   */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAdminData
   );
 
@@ -18980,7 +19604,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/data",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("historical.duration").default(0).isInt(OAS.duration),
     body("historical.unit").default("day").isString().isIn(OAS.durationUnit),
     body("predicted.duration").default(0).isInt(OAS.duration),
@@ -18996,7 +19620,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data/historical/duration",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMaxRetentionPeriodDuration
   );
 
@@ -19008,7 +19632,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/data/historical/duration",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("duration").isInt(OAS.duration),
     body("unit").isString().isIn(OAS.durationUnit),
     updateMaxRetentionPeriodDuration
@@ -19022,7 +19646,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/data/predicted/duration",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMaxRetentionPeriodDuration
   );
 
@@ -19034,7 +19658,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/data/predicted/duration",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("duration").isInt(OAS.duration),
     body("unit").isIn(OAS.durationUnit),
     updateMaxPredictedPeriodDuration
@@ -19048,7 +19672,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleEmail
   );
 
@@ -19060,7 +19684,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/email",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.emailProviderId").isUUID(4),
@@ -19120,7 +19744,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllEmailProviders
@@ -19134,7 +19758,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("vendor").isString().trim(),
     body("address").isEmail(),
@@ -19185,7 +19809,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-        param("emailProviderId").isUUID(4),
+    param("emailProviderId").isUUID(4),
     deleteEmailProvider
   );
 
@@ -19197,7 +19821,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("emailProviderId").isUUID(4),
     getSingleEmailProvider
   );
@@ -19210,7 +19834,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("emailProviderId").isUUID(4),
     body("vendor").optional().isString().trim(),
     body("address").optional().isEmail(),
@@ -19259,7 +19883,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/email/provider/:emailProviderId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("emailProviderId").isUUID(4),
     body("vendor").isString().trim(),
     body("address").isEmail(),
@@ -19311,7 +19935,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleKafka
   );
 
@@ -19323,7 +19947,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.kafkaProducerId").isUUID(4),
@@ -19363,7 +19987,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllKafkaBrokers
@@ -19377,7 +20001,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("name").isString().trim(),
     body("clientId").default("mni").isString().trim(),
@@ -19415,7 +20039,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-        param("kafkaProducerId").isUUID(4),
+    param("kafkaProducerId").isUUID(4),
     deleteKafkaBroker
   );
 
@@ -19427,7 +20051,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("kafkaProducerId").isUUID(4),
     getSingleKafkaBroker
   );
@@ -19440,7 +20064,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("name").optional().isString().trim(),
     body("clientId").optional().isString().trim(),
     body("producer").optional().isObject(),
@@ -19478,7 +20102,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/kafka/broker/:kafkaProducerId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("kafkaProducerId").isUUID(4),
     body("name").isString().trim(),
     body("clientId").isString().trim(),
@@ -19516,7 +20140,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/map",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.mapProviderId").isUUID(4),
@@ -19575,7 +20199,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleMap
   );
 
@@ -19587,7 +20211,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllMapProviders
@@ -19601,7 +20225,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("vendor").isIn(OAS.mapVendorPlatform),
     body("default").default(false).isBoolean({ strict: true }),
@@ -19660,7 +20284,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-        param("mapProviderId").isUUID(4),
+    param("mapProviderId").isUUID(4),
     deleteMapProvider
   );
 
@@ -19672,7 +20296,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("mapProviderId").isUUID(4),
     getSingleMapProvider
   );
@@ -19685,7 +20309,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").optional().isIn(OAS.mapVendorPlatform),
     body("default").optional().default(false).isBoolean({ strict: true }),
     body("renderUrl").optional().isURL({ protocols: OAS.url_protocols }),
@@ -19744,7 +20368,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isIn(OAS.mapVendorPlatform),
     body("default").default(false).isBoolean({ strict: true }),
     body("renderUrl").isURL({ protocols: OAS.url_protocols }),
@@ -19802,7 +20426,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/map/provider/default",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getDefaultMapProvider
   );
 
@@ -19814,7 +20438,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleWorkflow
   );
 
@@ -19826,7 +20450,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.workflowEngineId").isUUID(4),
@@ -19847,7 +20471,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow/engine",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllWorkflowEngines
@@ -19861,7 +20485,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/admin/workflow/engine",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("name").isString().trim(),
     body("engine").isObject(),
@@ -19882,7 +20506,7 @@ var run = async () => {
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-        param("workflowEngineId").isUUID(4),
+    param("workflowEngineId").isUUID(4),
     deleteWorkflowEngine
   );
 
@@ -19896,7 +20520,7 @@ var run = async () => {
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("workflowEngineId").isUUID(4),
     getSingleWorkflowEngine
   );
@@ -19911,7 +20535,7 @@ var run = async () => {
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("workflowEngineId").isUUID(4),
     body("name").optional().isString().trim(),
     body("engine").optional().isObject(),
@@ -19933,7 +20557,7 @@ var run = async () => {
     serveUrlPrefix +
       serveUrlVersion +
       "/admin/workflow/engine/:workflowEngineId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("workflowEngineId").isUUID(4),
     body("name").isString().trim(),
     body("engine").isObject(),
@@ -19951,7 +20575,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/alerts",
+    serveUrlPrefix + serveUrlVersion + "/alerts",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleAlerts
   );
@@ -19964,7 +20588,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/alert/queue",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getNextAlertQueueItem
   );
 
@@ -19976,7 +20600,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/queue/:qId",
-        param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
     deleteAlertQueueItem
   );
 
@@ -19987,7 +20611,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/alert",
+    serveUrlPrefix + serveUrlVersion + "/alert",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20001,7 +20625,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.post(
-        serveUrlPrefix + serveUrlVersion + "/alert",
+    serveUrlPrefix + serveUrlVersion + "/alert",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("description").isString().trim(),
@@ -20018,7 +20642,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/callback",
-        query("requestorId").isUUID(4),
+    query("requestorId").isUUID(4),
     query("subscriptionId").matches(OAS.csv_uuids),
     unsubscribeAlert
   );
@@ -20031,7 +20655,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/callback",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20058,7 +20682,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-        query("requestorId").isUUID(4),
+    query("requestorId").isUUID(4),
     query("notificationId").matches(OAS.csv_uuids),
     unNotifyAlert
   );
@@ -20071,7 +20695,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("notificationId").isUUID(4),
     getNotifyAlert
   );
@@ -20084,7 +20708,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/notify",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20103,7 +20727,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/publish",
-        query("requestorId").isUUID(4),
+    query("requestorId").isUUID(4),
     query("publicationId").matches(OAS.csv_uuids),
     unpublishAlert
   );
@@ -20116,7 +20740,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/publish",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20134,7 +20758,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/workflow",
-        query("requestorId").isUUID(4),
+    query("requestorId").isUUID(4),
     query("workflowRunnerId").matches(OAS.csv_uuids),
     workflowAlertUnassign
   );
@@ -20147,7 +20771,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/alert/workflow",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("requestorId").isUUID(4),
     body("alerts").isArray({ min: 1 }),
@@ -20164,7 +20788,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/alert/content",
+    serveUrlPrefix + serveUrlVersion + "/alert/content",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20178,9 +20802,9 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertdocumentId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    param("alertContentId").isUUID(4),
+    param("alertdocumentId").isUUID(4),
     getSingleAlertContent
   );
 
@@ -20191,7 +20815,7 @@ var run = async () => {
        HTTP method:   POST
     */
   app.post(
-        serveUrlPrefix + serveUrlVersion + "/alert/content",
+    serveUrlPrefix + serveUrlVersion + "/alert/content",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("alertId").isUUID(4),
@@ -20209,8 +20833,8 @@ var run = async () => {
        HTTP method:   DELETE
     */
   app.delete(
-        serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
-    param("alertContentId").isUUID(4),
+    serveUrlPrefix + serveUrlVersion + "/alert/content/:alertdocumentId",
+    param("alertdocumentId").isUUID(4),
     deleteSingleAlertContent
   );
 
@@ -20221,7 +20845,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/cve",
+    serveUrlPrefix + serveUrlVersion + "/cve",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -20235,7 +20859,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
+    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cveId").matches(OAS.cveId),
     getSingleCve
@@ -20248,7 +20872,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/cve/ne/:neId",
+    serveUrlPrefix + serveUrlVersion + "/cve/ne/:neId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     getCveByNe
@@ -20261,7 +20885,7 @@ var run = async () => {
        HTTP method:   POST
     */
   app.post(
-        serveUrlPrefix + serveUrlVersion + "/cve",
+    serveUrlPrefix + serveUrlVersion + "/cve",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("cveId").matches(OAS.cveId),
@@ -20285,7 +20909,7 @@ var run = async () => {
        HTTP method:   DELETE
     */
   app.delete(
-        serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
+    serveUrlPrefix + serveUrlVersion + "/cve/:cveId",
     param("cveId").matches(OAS.cveId),
     deleteSingleCve
   );
@@ -20297,7 +20921,7 @@ var run = async () => {
        HTTP method:   GET
     */
   app.get(
-        serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
+    serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("alertId").isUUID(4),
     getSingleAlert
@@ -20311,7 +20935,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
-        param("alertId").isUUID(4),
+    param("alertId").isUUID(4),
     deleteSingleAlert
   );
 
@@ -20323,7 +20947,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/alert/:alertId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("alertId").isUUID(4),
     body("description").isString().trim(),
     body("delete").optional().isBoolean({ strict: true }),
@@ -20339,7 +20963,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllCables
@@ -20353,7 +20977,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getCablesSimpleStatistics
   );
@@ -20366,7 +20990,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cable",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
@@ -20455,6 +21079,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleCable
   );
@@ -20467,7 +21094,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables/capacity/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -20484,7 +21111,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-        param("cableId").isUUID(4),
+    param("cableId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -20499,7 +21126,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cableId").isUUID(4),
     getSingleCable
   );
@@ -20512,7 +21139,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cable/timeline/:cableId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("cableId").isUUID(4),
     getCableTimeline
   );
@@ -20525,7 +21152,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf(
       [
@@ -20635,7 +21262,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     oneOf([body("poleId").isUUID(4), body("ductId").isUUID(4)], {
       message: "either pole or duct identifier must be supplied",
@@ -20724,6 +21351,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleCable
   );
@@ -20736,7 +21366,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/channel/:channel",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("channel").isInt(OAS.cableConfiguration_coax_channels),
     body("state").isIn(OAS.cableState),
@@ -20753,7 +21383,7 @@ var run = async () => {
     serveUrlPrefix +
       serveUrlVersion +
       "/cable/:cableId/state/multi/:ribbon/:strand",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("ribbon").isInt(OAS.ribbons),
     param("strand").isInt(OAS.cableConfiguration_single_fiber_strands),
@@ -20769,7 +21399,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/cable/:cableId/state/single/:strand",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("cableId").isUUID(4),
     param("strand").isInt(OAS.cableConfiguration_single_fiber_strands),
     body("state").isIn(OAS.cableState),
@@ -20784,7 +21414,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleCables
   );
 
@@ -20796,7 +21426,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cables",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.cableId").isUUID(4),
@@ -20887,6 +21517,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleCables
   );
@@ -20899,7 +21532,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -20914,7 +21547,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getDuctsSimpleStatistics
   );
@@ -20927,7 +21560,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/duct",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
@@ -20945,6 +21578,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleDuct
   );
@@ -20957,7 +21593,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts/capacity/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -20974,7 +21610,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-        param("ductId").isUUID(4),
+    param("ductId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -20989,7 +21625,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("ductId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleDuct
@@ -21003,7 +21639,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/duct/timeline/:ductId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("ductId").isUUID(4),
     getDuctTimeline
   );
@@ -21016,7 +21652,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("ductId").isUUID(4),
     body("trenchId").optional().isUUID(4),
     body("purpose").optional().isIn(OAS.ductPurpose),
@@ -21043,7 +21679,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("ductId").isUUID(4),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
@@ -21061,6 +21697,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleDuct
   );
@@ -21073,7 +21712,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleDucts
   );
 
@@ -21085,7 +21724,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/ducts",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.ductId").isUUID(4),
@@ -21105,6 +21744,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleDucts
   );
@@ -21117,7 +21759,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21132,7 +21774,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getNesSimpleStatistics
   );
@@ -21145,7 +21787,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes/vendors",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllNesVendors
   );
 
@@ -21157,7 +21799,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/ne",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -21276,6 +21918,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleNe
   );
@@ -21288,7 +21933,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-        param("neId").isUUID(4),
+    param("neId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -21303,7 +21948,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleNe
@@ -21317,7 +21962,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ne/timeline/:neId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
     getNeTimeline
   );
@@ -21330,7 +21975,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").optional().isUUID(4),
     body("host")
       .optional()
@@ -21467,7 +22112,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").isUUID(4),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -21583,6 +22228,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleNe
   );
@@ -21595,7 +22243,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleNe
   );
 
@@ -21607,7 +22255,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/nes",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.neId").isUUID(4),
@@ -21730,6 +22378,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleNe
   );
@@ -21742,7 +22393,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21757,7 +22408,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getPolesSimpleStatistics
   );
@@ -21770,7 +22421,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/pole",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
     body("reference").isString().trim(),
@@ -21845,6 +22496,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSinglePole
   );
@@ -21857,7 +22511,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles/capacity/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -21874,7 +22528,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-        param("poleId").isUUID(4),
+    param("poleId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -21889,7 +22543,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("poleId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSinglePole
@@ -21903,7 +22557,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/pole/timeline/:poleId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("poleId").isUUID(4),
     getPoleTimeline
   );
@@ -21916,7 +22570,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").optional().isIn(OAS.polePurpose),
     body("reference").optional().isString().trim(),
@@ -21984,7 +22638,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
     body("reference").isString().trim(),
@@ -22067,6 +22721,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSinglePole
   );
@@ -22079,7 +22736,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultiplePoles
   );
 
@@ -22091,7 +22748,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/poles",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.poleId").isUUID(4),
@@ -22179,6 +22836,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultiplePoles
   );
@@ -22191,7 +22851,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22206,7 +22866,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/timeline/:rackId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     getRackTimeline
   );
@@ -22219,7 +22879,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/racks/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getRacksSimpleStatistics
   );
@@ -22232,7 +22892,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-        param("rackId").isUUID(4),
+    param("rackId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22247,7 +22907,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleRack
@@ -22261,7 +22921,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").optional().isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22300,7 +22960,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22328,6 +22988,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleRack
   );
@@ -22340,7 +23003,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/rack",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22368,6 +23031,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleRack
   );
@@ -22380,7 +23046,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/racks",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleRacks
   );
 
@@ -22392,7 +23058,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/racks",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.rackId").isUUID(4),
@@ -22422,6 +23088,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleRacks
   );
@@ -22434,7 +23103,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleRackSlots
@@ -22448,7 +23117,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId/:slot",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     param("slot").isInt(OAS.rackSlots),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22463,7 +23132,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllServices
   );
@@ -22476,7 +23145,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/services/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getServicesSimpleStatistics
   );
@@ -22489,7 +23158,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/service",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22516,6 +23185,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleService
   );
@@ -22528,7 +23200,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-        param("serviceId").isUUID(4),
+    param("serviceId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22543,7 +23215,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("serviceId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleService
@@ -22557,7 +23229,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service/timeline/:serviceId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("serviceId").isUUID(4),
     getServiceTimeline
   );
@@ -22570,7 +23242,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22608,7 +23280,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22635,6 +23307,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleService
   );
@@ -22647,7 +23322,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/services",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleServices
   );
 
@@ -22659,7 +23334,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/services",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.serviceId").isUUID(4),
@@ -22688,6 +23363,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleServices
   );
@@ -22700,7 +23378,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22715,7 +23393,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/onnet",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSitesOnNet
@@ -22729,7 +23407,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/offnet",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSitesOffNet
@@ -22743,7 +23421,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/sites/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSitesSimpleStatistics
   );
@@ -22756,7 +23434,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/site",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22781,6 +23459,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleSite
   );
@@ -22793,7 +23474,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-        param("siteId").isUUID(4),
+    param("siteId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -22808,7 +23489,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("siteId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleSite
@@ -22822,7 +23503,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/site/timeline/:siteId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("siteId").isUUID(4),
     getSiteTimeline
   );
@@ -22835,7 +23516,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("siteId").isUUID(4),
     body("reference").optional().isString().trim(),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22871,7 +23552,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("siteId").isUUID(4),
     body("reference").isString().trim(),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
@@ -22896,6 +23577,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleSite
   );
@@ -22908,7 +23592,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/sites",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMultipleSites
   );
 
@@ -22920,7 +23604,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/sites",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.siteId").isUUID(4),
@@ -22947,6 +23631,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleSites
   );
@@ -22959,7 +23646,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/sites",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("from").isUUID(4),
     param("to").isUUID(4),
@@ -22974,7 +23661,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
@@ -22989,7 +23676,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchesSimpleStatistics
   );
@@ -23002,7 +23689,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/trench",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("reference").isString().trim(),
@@ -23074,6 +23761,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     addSingleTrench
   );
@@ -23086,7 +23776,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches/capacity/state",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("from").optional().matches(OAS.datePeriodYearMonthDay),
     query("to").optional().matches(OAS.datePeriodYearMonthDay),
     query("before").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23103,7 +23793,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-        param("trenchId").isUUID(4),
+    param("trenchId").isUUID(4),
     oneOf([query("predicted").optional()], [query("restore").optional()], {
       message: "predicted or restore query parameters can not be mixed",
     }),
@@ -23118,7 +23808,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getSingleTrench
@@ -23132,7 +23822,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/premisesPassed/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchPremisesPassed
@@ -23146,7 +23836,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/geometry/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchGeometry
@@ -23160,7 +23850,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/geometry/lifetime/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     getTrenchGeometryLifetime
   );
@@ -23173,7 +23863,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/distance/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getTrenchDistance
@@ -23187,7 +23877,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trench/timeline/:trenchId",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
     getTrenchTimeline
   );
@@ -23200,7 +23890,7 @@ var run = async () => {
     */
   app.patch(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").optional().isIn(OAS.trenchPurpose),
     body("reference").optional().isString().trim(),
@@ -23271,7 +23961,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").isIn(OAS.trenchPurpose),
     body("reference").isString().trim(),
@@ -23352,6 +24042,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
     body("source").default("historical").isIn(OAS.source),
+    body("probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("delete").default(false).isBoolean({ strict: true }),
     replaceSingleTrench
   );
@@ -23377,7 +24070,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/trenches",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.trenchId").isUUID(4),
@@ -23464,6 +24157,9 @@ var run = async () => {
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.datePeriodYearMonthDay),
     body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleTrench
   );
@@ -23476,7 +24172,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllCableCosts
@@ -23490,7 +24186,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     addCableCost
@@ -23504,7 +24200,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("unit").isIn(OAS.sizeUnit),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23519,7 +24215,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/cable",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("technology").isIn(OAS.cableTechnology),
     body("type").optional().isIn(OAS.constructionType),
     deleteCableCost
@@ -23533,7 +24229,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllDuctCosts
@@ -23547,7 +24243,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("unit").isIn(OAS.sizeUnit),
@@ -23563,7 +24259,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("unit").isIn(OAS.sizeUnit),
@@ -23579,7 +24275,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/duct",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("type").optional().isIn(OAS.constructionType),
@@ -23594,7 +24290,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllNeCosts
@@ -23608,7 +24304,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23623,7 +24319,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23638,7 +24334,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/ne",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("vendor").isString().trim(),
     body("model").isString().trim(),
     deleteNeCost
@@ -23652,7 +24348,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllPoleCosts
@@ -23666,7 +24362,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23681,7 +24377,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23696,7 +24392,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/pole",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.polePurpose),
     body("classifier").isIn(OAS.heightClassifier),
     deletePoleCost
@@ -23710,7 +24406,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllRackCosts
@@ -23724,7 +24420,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     addRackCost
@@ -23738,7 +24434,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     body("costPerUnit").isFloat(OAS.costPerUnit),
     replaceRackCost
@@ -23752,7 +24448,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/rack",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("slots").isInt(OAS.rackSlots),
     deleteRackCost
   );
@@ -23765,7 +24461,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllServiceCosts
@@ -23779,7 +24475,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -23796,7 +24492,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -23813,7 +24509,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/service",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("type").isIn(OAS.serviceType),
     body("rate").isInt(OAS.portConfiguration_ethernet_rate),
     body("unit").isIn(OAS.portEthernetConfigurationRate),
@@ -23829,7 +24525,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllSiteCosts
@@ -23843,7 +24539,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23858,7 +24554,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     body("costPerUnit").isFloat(OAS.costPerUnit),
@@ -23873,7 +24569,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/site",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("area").isIn(OAS.areaType),
     body("type").isIn(OAS.siteType),
     deleteSiteCost
@@ -23887,7 +24583,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllTrenchCosts
@@ -23901,7 +24597,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     body("unit").isIn(OAS.sizeUnit),
@@ -23917,7 +24613,7 @@ var run = async () => {
     */
   app.put(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     body("unit").isIn(OAS.sizeUnit),
@@ -23933,7 +24629,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/cost/trench",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
     deleteTrenchCost
@@ -23947,7 +24643,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/q2c/trenchDistance",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("purpose").default("service/drop").isIn(OAS.trenchPurpose),
     body("type").optional().isIn(OAS.constructionType),
@@ -23968,7 +24664,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ui/mapRender",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getMapRender
   );
 
@@ -23980,7 +24676,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ui/statistic",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getSimpleStatistics
   );
 
@@ -23992,7 +24688,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/predictedTimeline",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllPredictedTimeline
   );
 
@@ -24004,7 +24700,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/historicalTimeline",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getAllHistoricalTimeline
   );
 
@@ -24016,7 +24712,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/predict/queue",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     getNextPredictQueueItem
   );
 
@@ -24028,7 +24724,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/predict/queue/:qId",
-        param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
     deletePredictQueueItem
   );
 
@@ -24040,7 +24736,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/search",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("resource").isIn(OAS.fts_resources),
     body("query").isString().trim(),
@@ -24056,7 +24752,7 @@ var run = async () => {
     */
   app.get(
     serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
-        header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("scope").isString().trim(),
     param("realm").isString().trim(),
     param("type").isIn(OAS.secretType),
@@ -24071,7 +24767,7 @@ var run = async () => {
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/secret/:scope/:realm/:type",
-        param("scope").isString().trim(),
+    param("scope").isString().trim(),
     param("realm").isString().trim(),
     param("type").isIn(OAS.secretType),
     deleteSingleSecret
@@ -24085,7 +24781,7 @@ var run = async () => {
     */
   app.post(
     serveUrlPrefix + serveUrlVersion + "/secret",
-        header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     body("scope").isString().trim(),
     body("realm").isString().trim(),
     body("type").isIn(OAS.secretType),

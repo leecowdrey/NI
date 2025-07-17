@@ -325,16 +325,7 @@ async function queueDrain() {
             ) {
               return response.json();
             } else if (response.status == 204) {
-              if (DEBUG) {
-                LOGGER.debug(
-                  dayjs().format(OAS.dayjsFormat),
-                  "debug",
-                  "queueDrain",
-                  {
-                    state: "empty",
-                  }
-                );
-              }
+              noop();
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
               queueEmpty = true;
             } else {

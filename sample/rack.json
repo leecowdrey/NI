@@ -3,6 +3,7 @@
     "rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
     "point": "20250509T165841",
     "reference": "gbr-worc-cg1-1",
+    "probability": 1,
     "commissioned": "20250509",
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "coordinate": {
@@ -31,6 +32,7 @@
     "rackId": "441f85e4-ef84-424f-ba7a-a0a856445244",
     "point": "20250509T165842",
     "reference": "gbr-worc-cg1-2",
+    "probability": 1,
     "commissioned": "20250509",
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "coordinate": {
@@ -61,6 +63,7 @@
     "rackId": "bad39d92-1e96-475f-ae3f-813b2c434e79",
     "point": "20241008T174124",
     "reference": "bel-asse-zel-1",
+    "probability": 1,
     "commissioned": "20241011",
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "coordinate": {

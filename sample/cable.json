@@ -2,6 +2,7 @@
 	{
 		"cableId": "4f58b5fd-81a9-44d8-a653-22733eba4f21",
 		"reference": "gbr-worc-cg-elmley-00000001",
+		"probability": 1,
 		"technology": "ethernet",
 		"state": "used",
 		"delete": false,

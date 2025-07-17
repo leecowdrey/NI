@@ -166,7 +166,6 @@ fi
 
 doing "Linking SSL certificate to deployment"
 [[ -f "${CONFIG_DIRECTORY}/${SSL_KEY}" ]] && ln -s ${CONFIG_DIRECTORY}/${SSL_KEY} ${WORKING_DIRECTORY}/certs/${SSL_KEY} &>/dev/null
-[[ -f "${CONFIG_DIRECTORY}/${SSL_CSR}" ]] && ln -s ${CONFIG_DIRECTORY}/${SSL_CSR} ${WORKING_DIRECTORY}/certs/${SSL_CSR} &>/dev/null
 [[ -f "${CONFIG_DIRECTORY}/${SSL_CERT}" ]] && ln -s ${CONFIG_DIRECTORY}/${SSL_CERT} ${WORKING_DIRECTORY}/certs/${SSL_CERT} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"

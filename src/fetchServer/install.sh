@@ -35,6 +35,8 @@ USERNAME=$(grep -E "^FETCHSRV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|c
 WORKING_DIRECTORY=$(grep -E "^FETCHSRV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 CVE_SCAN=$(grep -E "^FETCHSRV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 CVE_DIRECTORY=$(grep -E "^FETCHSRV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_USERNAME=$(grep -E "^FETCHSRV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_KEY=$(grep -E "^FETCHSRV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -82,6 +84,22 @@ if [[ -d "${CONFIG_DIRECTORY}" ]] ; then
   RETVAL=$?
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+if [[ -z "${SERVICE_USERNAME}" ]] ; then
+  doing "Generating service credential - username"
+  SERVICE_USERNAME=$(openssl rand -hex 24 | tr -d '\n'| tr -d '"' | tr -d '|') && \
+  sed -i -e "s|FETCHSRV_SERVICE_USERNAME=.*|FETCHSRV_SERVICE_USERNAME=\"${SERVICE_USERNAME}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
+
+if [[ -z "${SERVICE_KEY}" ]] ; then
+  doing "Generating service credential - key"
+  SERVICE_KEY=$(openssl rand -base64 60 | tr -d '\n' | tr -d '"' | tr -d '|') && \
+  sed -i -e "s|FETCHSRV_SERVICE_KEY=.*|FETCHSRV_SERVICE_KEY=\"${SERVICE_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
 doing "Setting directory permissions"
 chown root:${GROUP} ${CONFIG_DIRECTORY} && chmod 770 ${CONFIG_DIRECTORY} && \

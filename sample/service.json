@@ -8,6 +8,7 @@
     },
     "commissioned": "20250512",
     "reference": "gbr-worc-cg1-sample-0001",
+    "probability": 1,
     "rate": 1,
     "unit": "Gbps",
     "lag": {
@@ -56,6 +57,7 @@
     },
     "commissioned": "20250514",
     "reference": "gbr-worc-cg1sample-0002",
+    "probability": 1,
     "rate": 1,
     "unit": "Gbps",
     "lag": {

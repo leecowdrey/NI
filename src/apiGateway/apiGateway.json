@@ -42,6 +42,7 @@
   "port": 8443,
   "listen_ip": "0.0.0.0",
   "tls": {
+    "disabled": false,
     "keys": [
       {
         "public_key": "/etc/mni/apiGateway.crt",
@@ -393,11 +394,10 @@
                 "value": "Basic #"
               }
             },
-            "qos/http-cache": {
-              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
-              "shared": true,
-              "max_items": 100,
-              "max_size": 32000000
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
             }
           },
           "method": "GET"
@@ -484,11 +484,10 @@
                 "value": "Basic #"
               }
             },
-            "qos/http-cache": {
-              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
-              "shared": true,
-              "max_items": 100,
-              "max_size": 32000000
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
             }
           },
           "method": "GET"
@@ -9508,6 +9507,239 @@
             "read:mni_service",
             "read:mni_site",
             "read:mni_trench"
+          ],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
+      "endpoint": "/mni/v1/document",
+      "@comment": "addDocument",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type", "Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/document",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          },
+          "method": "POST"
+        }
+      ],
+      "method": "POST",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [
+            "write:mni_alert",
+            "write:mni_fetch",
+            "write:mni_predict",
+            "write:mni_admin",
+            "write:mni_cable",
+            "write:mni_duct",
+            "write:mni_ne",
+            "write:mni_pole",
+            "write:mni_rack",
+            "write:mni_service",
+            "write:mni_site",
+            "write:mni_trench"
+          ],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
+      "endpoint": "/mni/v1/document/{documentId}",
+      "@comment": "replaceDocument",
+      "output_encoding": "no-op",
+      "input_headers": ["Content-Type"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/document/{documentId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          },
+          "method": "PUT"
+        }
+      ],
+      "method": "PUT",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [
+            "write:mni_alert",
+            "write:mni_fetch",
+            "write:mni_predict",
+            "write:mni_admin",
+            "write:mni_cable",
+            "write:mni_duct",
+            "write:mni_ne",
+            "write:mni_pole",
+            "write:mni_rack",
+            "write:mni_service",
+            "write:mni_site",
+            "write:mni_trench"
+          ],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
+      "endpoint": "/mni/v1/document/{documentId}",
+      "@comment": "getDocument",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": ["documentId", "point"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/document/{documentId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
+            }
+          },
+          "method": "GET"
+        }
+      ],
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [
+            "read:mni_alert",
+            "read:mni_fetch",
+            "read:mni_predict",
+            "read:mni_admin",
+            "read:mni_cable",
+            "read:mni_duct",
+            "read:mni_ne",
+            "read:mni_pole",
+            "read:mni_rack",
+            "read:mni_service",
+            "read:mni_site",
+            "read:mni_trench"
+          ],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
+      "endpoint": "/mni/v1/document/{documentId}",
+      "@comment": "deleteDocument",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": ["documentId"],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/document/{documentId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          },
+          "method": "DELETE"
+        }
+      ],
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": [
+            "write:mni_alert",
+            "write:mni_fetch",
+            "write:mni_predict",
+            "write:mni_admin",
+            "write:mni_cable",
+            "write:mni_duct",
+            "write:mni_ne",
+            "write:mni_pole",
+            "write:mni_rack",
+            "write:mni_service",
+            "write:mni_site",
+            "write:mni_trench"
           ],
           "scopes_matcher": "any",
           "cache": true,

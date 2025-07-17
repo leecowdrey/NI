@@ -33,6 +33,8 @@ HOST_SERVICE=$(grep -E "^PREDICTSERV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' 
 LOG_FILE=$(grep -E "^PREDICTSERV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 USERNAME=$(grep -E "^PREDICTSERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 WORKING_DIRECTORY=$(grep -E "^PREDICTSERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_USERNAME=$(grep -E "^PREDICTSERV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_KEY=$(grep -E "^PREDICTSERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -80,6 +82,22 @@ if [[ -d "${CONFIG_DIRECTORY}" ]] ; then
   RETVAL=$?
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+if [[ -z "${SERVICE_USERNAME}" ]] ; then
+  doing "Generating service credential - username"
+  SERVICE_USERNAME=$(openssl rand -hex 24 | tr -d '\n'| tr -d '"' | tr -d '|') && \
+  sed -i -e "s|PREDICTSERV_SERVICE_USERNAME=.*|PREDICTSERV_SERVICE_USERNAME=\"${SERVICE_USERNAME}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
+
+if [[ -z "${SERVICE_KEY}" ]] ; then
+  doing "Generating service credential - key"
+  SERVICE_KEY=$(openssl rand -base64 60 | tr -d '\n' | tr -d '"' | tr -d '|') && \
+  sed -i -e "s|PREDICTSERV_SERVICE_KEY=.*|PREDICTSERV_SERVICE_KEY=\"${SERVICE_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
 doing "Setting directory permissions"
 chown root:${GROUP} ${CONFIG_DIRECTORY} && chmod 770 ${CONFIG_DIRECTORY} && \

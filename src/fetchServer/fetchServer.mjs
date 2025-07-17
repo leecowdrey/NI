@@ -386,17 +386,17 @@ async function fetchTokenSecretKey(realm) {
             return response.json();
           }
         } else {
-                  LOGGER.error(
-          dayjs().format(OAS.dayjsFormat),
-          "error",
-          "fetchTokenSecretKey",
-          {
-            scope: secretScope,
-            realm: realm,
-            status: response.status,
-            error: response.statusText,
-          }
-        );
+          LOGGER.error(
+            dayjs().format(OAS.dayjsFormat),
+            "error",
+            "fetchTokenSecretKey",
+            {
+              scope: secretScope,
+              realm: realm,
+              status: response.status,
+              error: response.statusText,
+            }
+          );
         }
       })
       .then(async (data) => {
@@ -770,16 +770,7 @@ async function jobCveListBuild(target = cveDirectory) {
           ) {
             return response.json();
           } else if (response.status == 204) {
-            if (DEBUG) {
-              LOGGER.debug(
-                dayjs().format(OAS.dayjsFormat),
-                "debug",
-                "jobCveListBuild",
-                {
-                  state: "empty",
-                }
-              );
-            }
+            noop();
           } else {
             LOGGER.error(
               dayjs().format(OAS.dayjsFormat),
