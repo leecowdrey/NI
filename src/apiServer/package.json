@@ -10,6 +10,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
+    "express-fileupload": "^1.5.2",
     "express-validator": "^7.2.1",
     "js-base64": "^3.7.7",
     "morgan": "^1.10.0",

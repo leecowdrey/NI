@@ -17,6 +17,7 @@ import duckdb from "@duckdb/node-api";
 import { DuckDBInstance } from "@duckdb/node-api";
 import { MAX, v4 as uuidv4 } from "uuid";
 import express from "express";
+import fileUpload from "express-fileupload";
 import {
   body,
   header,
@@ -36,6 +37,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "node:url";
 import dayjs from "dayjs";
 import { compare, compareVersions } from "compare-versions";
+import { type } from "node:os";
 const { default: crypto } = await import("crypto");
 
 const allPrintableRegEx = /[ -~]/gi;
@@ -48,7 +50,7 @@ var pointFormat = "%Y%m%dT%H%M%S";
 var dateFormat = "%Y%m%d";
 
 const cipherAlgorithm = "aes-256-gcm";
-const queueTables = ["predictQueue", "alertQueue"];
+const queueTables = ["predictQueue", "alertQueue", "fetchQueue"];
 const pruneTables = [
   { table: "cable", shadow: "_cableCoax", key: "cableId" },
   { table: "cable", shadow: "_cableCopper", key: "cableId" },
@@ -451,6 +453,8 @@ var encryptionKey = null;
 var encryptionIV = null;
 var server = null;
 var premisesPassedBoundaryDistance = 10;
+var uploadDirectory = null;
+var documentDirectory = null;
 
 function noop() {}
 
@@ -488,7 +492,11 @@ function toDecimal(n, s = OAS.float_scale, p = OAS.float_precision) {
 }
 
 function validateProbability(probability, source = "historical") {
-  probability = toDecimal(probability, OAS.probability_scale, OAS.probability_precision);
+  probability = toDecimal(
+    probability,
+    OAS.probability_scale,
+    OAS.probability_precision
+  );
   switch (source) {
     case "historical":
       probability = 1;
@@ -510,7 +518,11 @@ function validateProbability(probability, source = "historical") {
         probability = 0;
       }
   }
-  return toDecimal(probability, OAS.probability_scale, OAS.probability_precision);
+  return toDecimal(
+    probability,
+    OAS.probability_scale,
+    OAS.probability_precision
+  );
 }
 
 function encrypt(plain) {
@@ -1780,6 +1792,8 @@ function loadEnv() {
   jobBackupEnabled = toBoolean(process.env.APISERV_DUCKDB_BACKUP || false);
   backupCronTime = process.env.APISERV_DUCKDB_BACKUP_CRONTIME || "0 2 * * 0";
   backupDirectory = path.resolve(process.env.APISERV_BACKUP_DIRECTORY);
+  uploadDirectory = path.resolve(process.env.APISERV_UPLOAD_DIRECTORY);
+  documentDirectory = path.resolve(process.env.APISERV_DOCUMENT_DIRECTORY);
   premisesPassedBoundaryDistance =
     toInteger(process.env.APISERV_PREMISES_PASSED_BOUNDARY_DISTANCE) || 10;
   serveHost = process.env.DNSSERV_HOST || "mni";
@@ -2021,6 +2035,16 @@ var run = async () => {
     express.json({
       limit: "1Mb",
       type: OAS.mimeJSON,
+    })
+  );
+
+  app.use(
+    fileUpload({
+      useTempFiles: true,
+      tempFileDir: uploadDirectory,
+      createParentPath: true,
+      abortOnLimit: true,
+      debug: false,
     })
   );
 
@@ -8912,28 +8936,60 @@ var run = async () => {
         let resId = null;
         switch (table) {
           case "cable":
-            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              cableId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "duct":
-            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              ductId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "ne":
-            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              neId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "pole":
-            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              poleId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "rack":
-            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              rackId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "service":
-            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              serviceId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "site":
-            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              siteId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "trench":
-            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              trenchId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
         }
         let ddPoint = await DDC.runAndReadAll(
@@ -8995,28 +9051,60 @@ var run = async () => {
         let resId = null;
         switch (table) {
           case "cable":
-            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              cableId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "duct":
-            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              ductId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "ne":
-            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              neId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "pole":
-            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              poleId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "rack":
-            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              rackId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "service":
-            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              serviceId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "site":
-            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              siteId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "trench":
-            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              trenchId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
         }
         let ddPoint = await DDC.runAndReadAll(
@@ -9114,28 +9202,60 @@ var run = async () => {
         let resId = null;
         switch (table) {
           case "cable":
-            resId = { cableId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              cableId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "duct":
-            resId = { ductId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              ductId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "ne":
-            resId = { neId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              neId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "pole":
-            resId = { poleId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              poleId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "rack":
-            resId = { rackId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              rackId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "service":
-            resId = { serviceId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              serviceId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "site":
-            resId = { siteId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              siteId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
           case "trench":
-            resId = { trenchId: ddRows[idx][0], probability:ddRows[idx][1], point: [] };
+            resId = {
+              trenchId: ddRows[idx][0],
+              probability: ddRows[idx][1],
+              point: [],
+            };
             break;
         }
         let ddPoint = await DDC.runAndReadAll(
@@ -9326,6 +9446,186 @@ var run = async () => {
               errors: "qId " + req.params.qId + " does not exist",
             });
         }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getNextFetchQueueItem(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT qId,strftime(point,'" +
+            pointFormat +
+            "'),fetchJobId FROM fetchQueue WHERE delete = false ORDER BY random() LIMIT 1"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          resJson = {
+            qId: toInteger(ddRows[0][0]),
+            point: ddRows[0][1],
+            fetchJobId: ddROws[0][2],
+          };
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else if (ddRows.length == 0) {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteFetchQueueItem(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT rowid FROM fetchQueue WHERE qId = " + req.params.qId
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let point = dayjs().format(OAS.dayjsFormat);
+          await DDC.run(
+            "UPDATE fetchQueue SET point = strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'), delete = true WHERE qId = " +
+              req.params.qId
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "qId " + req.params.qId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllFetchJobs(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM fetchJob WHERE delete = false"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push(ddRows[idx][0]);
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteSingleFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddp = await DDC.prepare(
+          "SELECT id FROM fetchJob WHERE id = $1 AND delete = false"
+        );
+        ddp.bindVarchar(1, req.params.fetchJobId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          await DDC.run(
+            "DELETE FROM fetchJob WHERE id = '" + req.params.fetchJobId + "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "fetchJobId " + req.params.fetchJobId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addMultipleFetchJobs(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        for (let i = 0; i < req.body.length; i++) {
+          let ddd = await DDC.runAndReadAll(
+            "SELECT id FROM fetchJob WHERE id = '" +
+              req.body[i].fetchJobId +
+              "'"
+          );
+          let dddRows = ddd.getRows();
+          if (dddRows.length > 0) {
+            await DDC.run(
+              "DELETE FROM fetchJob WHERE id = '" + req.body[i].fetchJobId + "'"
+            );
+          }
+        }
+        for (let i = 0; i < req.body.length; i++) {
+          let ddp = await DDC.prepare(
+            "INSERT INTO fetchJob (id,delete,fetchJobId) VALUES ($1,$2,$3)"
+          );
+          ddp.bindVarchar(1, req.body[i].fetchJobId);
+          ddp.bindBoolean(2, toBoolean(req.body[i].delete));
+          ddp.bindInteger(3, req.body[i].fetchJobId);
+          await ddp.run();
+          resJson.push(req.body[i].fetchJobId);
+        }
+        resJson = Array.from(new Set(resJson.map(JSON.stringify)))
+          .map(JSON.parse)
+          .sort();
+        res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -10893,7 +11193,10 @@ var run = async () => {
           let resObj = {
             ductId: ddDuctRows[idx][0],
             point: ddDuctRows[idx][12],
-            probability: validateProbability(ddDuctRows[idx][13], ddDuctRows[idx][2]),
+            probability: validateProbability(
+              ddDuctRows[idx][13],
+              ddDuctRows[idx][2]
+            ),
             trenchId: ddDuctRows[idx][3],
             purpose: ddDuctRows[idx][4],
             category: ddDuctRows[idx][5],
@@ -19150,33 +19453,103 @@ var run = async () => {
 
   async function addDocument(req, res, next) {
     try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        //app.post('/raw/:cmd', express.raw({type: "*/*"}), async (req, res) => {
-        //    const buffer = req.body
-        //    const blob = new Blob([buffer], {type: "application/octet-stream"})
-        //})
-        let buf = req.body;
-        let contentType = req.get("Content-Type");
-        let blob = new Blob([buf], { type: contentType });
-        let documentId = uuidv4();
-        let source = "historical";
-        let status = await documentWrite(documentId, blob, contentType, {
-          source: source,
-        });
-        if (status == 204) {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        return res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: "No files were uploaded." });
+      }
+      if (req.files.document != null) {
+        if (!req.files.document.truncated) {
+          let documentId = uuidv4();
+          let tsId = await getSeqNextValue("seq_document");
+          let point = dayjs().format(OAS.dayjsFormat);
+          let source = "historical";
+          let tsCol = "historicalTsId";
+          switch (source) {
+            case "historical":
+              tsCol = "historicalTsId";
+              break;
+            case "planned":
+              tsCol = "plannedTsId";
+              break;
+            case "predicted":
+              tsCol = "predictedTsId";
+              break;
+          }
+
+          let docNewPath = path.join(
+            documentDirectory,
+            documentId,
+            tsId.toString()
+          );
+          let docName = req.files.document.name;
+          let docMimeType = req.files.document.mimetype;
+          let docSize = toInteger(req.files.document.size);
+          let docMd5 = req.files.document.md5;
+
+          req.files.document.mv(path.join(docNewPath, docName), function (err) {
+            if (err) return res.status(500).send(err);
+          });
+
+          let ddp = await DDC.prepare(
+            "INSERT INTO document (id,delete," +
+              tsCol +
+              ",tsPoint) VALUES ($1,$2,$3,strptime($4,$5))"
+          );
+          ddp.bindVarchar(1, documentId);
+          ddp.bindBoolean(2, false);
+          ddp.bindInteger(3, tsId);
+          ddp.bindVarchar(4, point);
+          ddp.bindVarchar(5, pointFormat);
+          await ddp.run();
+
+          ddp = await DDC.run(
+            "INSERT INTO _document (tsId,point,source,documentId,mimeType,path,name,sizeBytes,md5Hash) VALUES (" +
+              tsId.toString() +
+              ",strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'),'" +
+              source +
+              "','" +
+              documentId +
+              "','" +
+              docMimeType +
+              "','" +
+              docNewPath +
+              "','" +
+              docName +
+              "'," +
+              docSize +
+              ",'" +
+              docMd5 +
+              "')"
+          );
+          /*
+        ddp.bindInteger(1, tsId);
+        ddp.bindVarchar(2, point);
+        ddp.bindVarchar(3, pointFormat);
+        ddp.bindVarchar(4, source);
+        ddp.bindVarchar(5, documentId);
+        ddp.bindVarchar(6, docMimeType);
+        ddp.bindVarchar(7, docNewPath);
+        ddp.bindVarchar(8, docName);
+        //ddp.bindInteger(9, docSize);
+        //ddp.bindVarchar(10, docFile.md5);
+        await ddp.run();
+        */
           res
             .contentType(OAS.mimeJSON)
             .status(200)
             .json({ documentId: documentId });
         } else {
-          res.sendStatus(status);
+          res.sendStatus(400);
         }
       } else {
-        res
-          .contentType(OAS.mimeJSON)
-          .status(400)
-          .json({ errors: result.array() });
+        res.sendStatus(413); // incomplete upload file truncated
+        // TODO: remove uploaded file
       }
     } catch (e) {
       return next(e);
@@ -19282,8 +19655,9 @@ var run = async () => {
               premises: await allTrenchPremisesPassed(),
             },
             queues: {
-              predict: await dbQueueCounts("predictQueue"),
               alert: await dbQueueCounts("alertQueue"),
+              fetch: await dbQueueCounts("fetchQueue"),
+              predict: await dbQueueCounts("predictQueue"),
             },
             resources: {
               cables: await dbActiveInactiveCounts("cable"),
@@ -19482,13 +19856,7 @@ var run = async () => {
        exposed Route: /mni/v1/content
        HTTP method:   POST
     */
-  app.post(
-    serveUrlPrefix + serveUrlVersion + "/document",
-    header("Content-Type").isIn(OAS.mimeType),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    body().notEmpty(),
-    addDocument
-  );
+  app.post(serveUrlPrefix + serveUrlVersion + "/document", addDocument);
 
   /*
        Tag:           Documents
@@ -20665,7 +21033,7 @@ var run = async () => {
     body("alerts.*.password").optional().isString().trim(),
     body("alerts.*.authentication")
       .default("none")
-      .isIn(OAS.callbackAuthentication),
+      .isIn(OAS.restAuthentication),
     body("alerts.*.retires").default(0).isInt(OAS.callback_retries),
     body("alerts.*.retryDelay").isInt(OAS.callback_retryDelay).default(60),
     body("alerts.*.maxLifeRetries")
@@ -20953,6 +21321,104 @@ var run = async () => {
     body("delete").optional().isBoolean({ strict: true }),
     body("funtion").optional().isString().trim(),
     updateSingleAlert
+  );
+
+  /*
+       Tag:           Fetch
+       operationId:   getAllFetchJobs
+       exposed Route: /mni/v1/fetchJob
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetchJobs",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllFetchJobs
+  );
+
+  /*
+       Tag:           Fetch
+       operationId:   getSingleFetchJob
+       exposed Route: /mni/v1/fetchJob/{fetchJobId}
+       HTTP method:   GET
+    */
+  /*
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("fetchJobId").isUUID(4),
+    getSingleFetchJob
+  );
+  */
+
+  /*
+       Tag:           Fetch
+       operationId:   deleteSingleFetchJob
+       exposed Route: /mni/v1/fetchJob/{fetchJobId}
+       HTTP method:   GET
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
+    param("fetchJobId").isUUID(4),
+    deleteSingleFetchJob
+  );
+
+  /*
+       Tag:           Fetch
+       operationId:   addSingleFetchJob
+       exposed Route: /mni/v1/fetchJob
+       HTTP method:   POST
+    */
+  /*
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/fetchJob",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    addSingleFetchJob
+  );
+  */
+
+  /*
+       Tag:           Fetch
+       operationId:   addMultipleFetchJobs
+       exposed Route: /mni/v1/fetchJob
+       HTTP method:   POST
+    */
+  /*
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/fetchJob",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body().isArray({ min: 1 }),
+    body("*.delete").default(false).isBoolean({ strict: true }),
+    body("*.fetchJobId").isUUID(4),
+    addMultipleFetchJobs
+  );
+  */
+
+  /*
+       Tag:           Fetch
+       operationId:   getNextFetchQueueItem
+       exposed Route: /mni/v1/fetch/queue
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetch/queue",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getNextFetchQueueItem
+  );
+
+  /*
+       Tag:           Fetch
+       operationId:   deleteFetchQueueItem
+       exposed Route: /mni/v1/fetch/queue
+       HTTP method:   DELETE
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/fetch/queue/:qId",
+    param("qId").default(0).isInt({ min: 0, max: Number.MAX_SAFE_INTEGER }),
+    deleteFetchQueueItem
   );
 
   /*
@@ -24941,6 +25407,8 @@ var run = async () => {
       apiDirectory: apiDirectory,
       backupDirectory: backupDirectory,
       configDirectory: configDirectory,
+      docoumentDirectory: documentDirectory,
+      uploadDirectory: uploadDirectory,
       tickInterval: tickIntervalMs,
       timestamp: OAS.dayjsFormat,
     },

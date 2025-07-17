@@ -55,6 +55,8 @@ SSL_KEY=$(grep -E "^APISERV_SSL_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_SIZE=$(grep -E "^APISERV_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 USERNAME=$(grep -E "^APISERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 WORKING_DIRECTORY=$(grep -E "^APISERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+DOCUMENT_DIRECTORY==$(grep -E "^APISERV_DOCUMENT_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+UPLOAD_DIRECTORY=$(grep -E "^APISERV_UPLOAD_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
@@ -121,6 +123,29 @@ doing "Adding working backup directory"
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+doing "Adding document directory"
+[[ -d "${DOCUMENT_DIRECTORY}" ]] || (mkdir -p ${DOCUMENT_DIRECTORY})
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding upload directory"
+[[ -d "${UPLOAD_DIRECTORY}" ]] || (mkdir -p ${UPLOAD_DIRECTORY})
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Cleaning upload directory"
+if [[ -d "${UPLOAD_DIRECTORY}" ]] ; then
+  if [[ -f  "${UPLOAD_DIRECTORY}/*" ]] ; then
+    rm -R -f "${UPLOAD_DIRECTORY}/*" &>/dev/null
+    RETVAL=$?
+  else
+   RETVAL=0
+  fi
+ else
+  RETVAL=0
+fi
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
 doing "Adding Config to config directory"
 if [[ -d "${CONFIG_DIRECTORY}" ]] ; then
   if [[ ! -f "${CONFIG_DIRECTORY}/mni.ini" ]] ; then
@@ -139,6 +164,8 @@ chown root:${GROUP} $(dirname ${WORKING_DIRECTORY}) && chmod 770 $(dirname ${WOR
 chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY} && chmod 770 ${WORKING_DIRECTORY} && \
 chown ${USERNAME}:${GROUP} ${API_DIRECTORY} && chmod 770 ${API_DIRECTORY} && \
 chown ${USERNAME}:${GROUP} ${BACKUP_DIRECTORY} && chmod 770 ${BACKUP_DIRECTORY} && \
+chown ${USERNAME}:${GROUP} ${DOCUMENT_DIRECTORY} && chmod 770 ${DOCUMENT_DIRECTORY} && \
+chown ${USERNAME}:${GROUP} ${UPLOAD_DIRECTORY} && chmod 770 ${UPLOAD_DIRECTORY} && \
 chown root:${GROUP} ${MNI_LOG_DIRECTORY} && chmod 770 ${MNI_LOG_DIRECTORY} && \
 chown root:${GROUP} ${CONFIG_DIRECTORY} && chmod 770 ${CONFIG_DIRECTORY}
 RETVAL=$?

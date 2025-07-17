@@ -553,6 +553,96 @@
       }
     },
     {
+      "endpoint": "/mni/v1/fetch/queue",
+      "@comment": "getNextFetchQueueItem",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/fetch/queue",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          },
+          "method": "GET"
+        }
+      ],
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["read:mni_fetch"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
+      "endpoint": "/mni/v1/fetch/queue/{qId}",
+      "@comment": "deleteFetchQueueItem",
+      "output_encoding": "no-op",
+      "input_headers": [],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/fetch/queue/{qId}",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/ratelimit/proxy": {
+              "max_rate": 32767,
+              "capacity": 32767,
+              "every": "1m"
+            }
+          },
+          "method": "DELETE"
+        }
+      ],
+      "method": "DELETE",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["write:mni_fetch"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
       "endpoint": "/mni/v1/admin/data",
       "@comment": "getAdminData",
       "output_encoding": "no-op",

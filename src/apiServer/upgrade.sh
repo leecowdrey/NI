@@ -53,6 +53,8 @@ SSL_KEY=$(grep -E "^APISERV_SSL_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_SIZE=$(grep -E "^APISERV_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 USERNAME=$(grep -E "^APISERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 WORKING_DIRECTORY=$(grep -E "^APISERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+DOCUMENT_DIRECTORY==$(grep -E "^APISERV_DOCUMENT_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+UPLOAD_DIRECTORY=$(grep -E "^APISERV_UPLOAD_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 CVE_SCAN=$(grep -E "^APISERV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -103,6 +105,19 @@ RETVAL=$?
 doing "Updating NodeJS libraries"
 su --shell /bin/bash -l - -c "npm update --omit=dev" ${USERNAME} &>/dev/null
 RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Cleaning upload directory"
+if [[ -d "${UPLOAD_DIRECTORY}" ]] ; then
+  if [[ -f  "${UPLOAD_DIRECTORY}/*" ]] ; then
+    rm -R -f "${UPLOAD_DIRECTORY}/*" &>/dev/null
+    RETVAL=$?
+  else
+   RETVAL=0
+  fi
+ else
+  RETVAL=0
+fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating OpenAPI definitions for target"

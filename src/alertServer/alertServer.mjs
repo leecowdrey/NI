@@ -302,6 +302,9 @@ async function dnsSd() {
 }
 
 async function queueDrain() {
+  if (queueDrainTimer != null) {
+    clearTimeout(queueDrainTimer);
+  }
   let queueEmpty = false;
   do {
     try {
@@ -325,15 +328,19 @@ async function queueDrain() {
             ) {
               return response.json();
             } else if (response.status == 204) {
-              noop();
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
               queueEmpty = true;
             } else {
-              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
-                state: "unknown",
-                status: response.status,
-                statusText: response.statusText,
-              });
+              LOGGER.error(
+                dayjs().format(OAS.dayjsFormat),
+                "error",
+                "queueDrain",
+                {
+                  state: "unknown",
+                  status: response.status,
+                  statusText: response.statusText,
+                }
+              );
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
             }
           }
@@ -423,10 +430,15 @@ async function deleteQueueItem(qId) {
         }
       })
       .catch((err) => {
-        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
-          url: url,
-          error: err,
-        });
+        LOGGER.error(
+          dayjs().format(OAS.dayjsFormat),
+          "error",
+          "deleteQueueItem",
+          {
+            url: url,
+            error: err,
+          }
+        );
       });
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
@@ -519,7 +531,11 @@ async function checkEndpointReadiness() {
     }
   } else {
     ENDPOINT_READY = false;
-    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "endpoint not resolved");
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "endpoint not resolved"
+    );
   }
   if (ENDPOINT_READY) {
     endpointTimer = setTimeout(checkEndpointReadiness, endpointKeepaliveMs);

@@ -59,6 +59,9 @@ var fxRateApiUrl = null;
 var fxUpdateCron = null;
 var fxRateCronTime = null;
 var fxRateUpdate = null;
+var queueDrainTimer = null;
+var queueDrainIntervalMs = 30000;
+var endpointTimer = null;
 
 function noop() {}
 
@@ -252,6 +255,9 @@ function quit() {
   if (cveRepoCron != null) {
     cveRepoCron.stop();
   }
+  if (queueDrainTimer != null) {
+    clearTimeout(queueDrainTimer);
+  }
   if (endpointTimer != null) {
     clearTimeout(endpointTimer);
   }
@@ -355,6 +361,7 @@ async function dnsSd() {
     }
   }
 }
+
 async function fetchTokenSecretKey(realm) {
   let secret = null;
   try {
@@ -1053,6 +1060,124 @@ async function checkEndpointReadiness() {
   }
 }
 
+async function queueDrain() {
+  if (queueDrainTimer != null) {
+    clearTimeout(queueDrainTimer);
+  }
+  let queueEmpty = false;
+  do {
+    try {
+      while (!ENDPOINT_READY) {
+        await sleep(endpointRetryMs);
+      }
+      let url = ENDPOINT + "/fetch/queue";
+      await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: OAS.mimeJSON,
+        },
+        keepalive: true,
+        signal: AbortSignal.timeout(endpointRetryMs),
+      })
+        .then((response) => {
+          if (response.ok) {
+            if (
+              response.status == 200 &&
+              toInteger(response.headers.get("Content-Length")) > 0
+            ) {
+              return response.json();
+            } else if (response.status == 204) {
+              queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
+              queueEmpty = true;
+            } else {
+              LOGGER.error(
+                dayjs().format(OAS.dayjsFormat),
+                "error",
+                "queueDrain",
+                {
+                  state: "unknown",
+                  status: response.status,
+                  statusText: response.statusText,
+                }
+              );
+              queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
+            }
+          }
+        })
+        .then((data) => {
+          if (data != null) {
+            if (data.qId != null) {
+              let q = {
+                qId: toInteger(data.qId),
+                point: data.point,
+                id: data.fetchJobId,
+              };
+
+              // do something
+
+              //
+              deleteQueueItem(q.qId);
+            }
+          }
+        })
+        .catch((err) => {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
+            url: url,
+            error: err,
+          });
+        });
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "queueDrain", {
+        error: err,
+      });
+    }
+    await sleep(1000); // 1 second delay between processing queue entries
+  } while (!queueEmpty);
+}
+
+async function deleteQueueItem(qId) {
+  try {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url = ENDPOINT + "/fetch/queue/" + qId;
+    await fetch(url, {
+      method: "DELETE",
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          LOGGER.error(
+            dayjs().format(OAS.dayjsFormat),
+            "error",
+            "deleteQueueItem",
+            {
+              url: url,
+              status: response.status,
+              response: response.statusText,
+            }
+          );
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(
+          dayjs().format(OAS.dayjsFormat),
+          "error",
+          "deleteQueueItem",
+          {
+            url: url,
+            error: err,
+          }
+        );
+      });
+  } catch (err) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
+      error: err,
+    });
+  }
+}
+
 //
 var run = async () => {
   // load env
@@ -1108,6 +1233,7 @@ var run = async () => {
       }
     );
   }
+
   if (cveScan) {
     cveRepoCron = cron.schedule(
       cveRepoPullCronTime,
@@ -1132,6 +1258,9 @@ var run = async () => {
       }
     );
   }
+
+  // process a queue item
+  await queueDrain();
 
   // sleep
   while (true) {

@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1752747853
+  version: 1.0.0.1752787830
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -2461,7 +2461,7 @@ paths:
                       password:
                         type: string
                       authentication:
-                        $ref: "#/components/schemas/callbackAuthentication"
+                        $ref: "#/components/schemas/restAuthentication"
                       retries:
                         description: maximum retries in any single alert callback
                         type: integer
@@ -14422,6 +14422,7 @@ components:
       description: IANA approved list of MIME types
       type: string
       enum:
+        - "*/*"
         - "application/1d-interleaved-parityfec"
         - "application/3gpdash-qoe-report+xml"
         - "application/3gpp-ims+xml"
@@ -16683,15 +16684,15 @@ components:
       description: internal currency identifier
       type: string
       format: uuid
-    callbackAuthentication:
+    restAuthentication:
       type: string
       description: |
-        HTTP authentication scheme:
-        - `none`
-        - `basic`
+        HTTP authentication scheme
       enum:
         - none
         - basic
+        - oidc
+        - token
       default: none
     datePeriodYear:
       type: string
