@@ -29,15 +29,16 @@ draft: true
   - [1.5. Patent marking notice](#15-patent-marking-notice)
 - [2. Target Audience](#2-target-audience)
 - [3. Introduction](#3-introduction)
-  - [Functional Architecture](#functional-architecture)
+  - [3.1. Functional Architecture](#31-functional-architecture)
 - [4. DNS Resolution](#4-dns-resolution)
 - [5. MNI Compute Configuration](#5-mni-compute-configuration)
-- [5.1 Configuration File](#51-configuration-file)
-- [5. Merkator Technical Services](#5-merkator-technical-services)
-  - [5.1. By email](#51-by-email)
-  - [5.2. On the web](#52-on-the-web)
-  - [5.3. Technical documentation](#53-technical-documentation)
-- [6. Corporate Headquarters](#6-corporate-headquarters)
+  - [5.1. MNI Wildcard SSL Certificates](#51-mni-wildcard-ssl-certificates)
+  - [5.2. - 1. Merkator Legal Statements](#52---1-merkator-legal-statements)
+- [6. Merkator Technical Services](#6-merkator-technical-services)
+  - [6.1. By email](#61-by-email)
+  - [6.2. On the web](#62-on-the-web)
+  - [6.3. Technical documentation](#63-technical-documentation)
+- [7. Corporate Headquarters](#7-corporate-headquarters)
 
 ---
 
@@ -85,7 +86,7 @@ It is expected Network Engineering IT/Developer resources will undertake any int
 
 TBD.
 
-## Functional Architecture
+## 3.1. Functional Architecture
 
 Suitable for standalone integration, lab, proof of concepts and low-yield production usage.
 
@@ -142,9 +143,38 @@ Each compute environment hosting MNI components must contain a MNI configuration
 
 > *note*: The contents of the configuration file should be manually updated and synchronised between all compute environments as the MNI functional components will read some of the configuration of other components.
 
-# 5.1 Configuration File
+## 5.1. MNI Wildcard SSL Certificates
+
+MNI requires either a wildcard SSL certificate, other a suitable SSL certificate for every compute environment hosting the following MNI components:
+
+ - API Gateway (`APIGW_*`)
+ - API Server (`APISERV_*`)
+ - UI Server (`UISERV_*`)
+ - Identity and Access Management (`IAM_*`)
+
+
+## 5.2. - [1. Merkator Legal Statements](#1-merkator-legal-statements)
+- [1. Merkator Legal Statements](#1-merkator-legal-statements)
+  - [1.1. Export restrictions](#11-export-restrictions)
+  - [1.2. Disclaimer](#12-disclaimer)
+  - [1.3. Limitation of liability](#13-limitation-of-liability)
+  - [1.4. Trademarks](#14-trademarks)
+  - [1.5. Patent marking notice](#15-patent-marking-notice)
+- [2. Target Audience](#2-target-audience)
+- [3. Introduction](#3-introduction)
+  - [3.1. Functional Architecture](#31-functional-architecture)
+- [4. DNS Resolution](#4-dns-resolution)
+- [5. MNI Compute Configuration](#5-mni-compute-configuration)
+  - [5.1. MNI Wildcard SSL Certificates](#51-mni-wildcard-ssl-certificates)
+  - [5.2. - 1. Merkator Legal Statements](#52---1-merkator-legal-statements)
+- [6. Merkator Technical Services](#6-merkator-technical-services)
+  - [6.1. By email](#61-by-email)
+  - [6.2. On the web](#62-on-the-web)
+  - [6.3. Technical documentation](#63-technical-documentation)
+- [7. Corporate Headquarters](#7-corporate-headquarters)
 
 The file `/etc/mni/mni.ini` supports the following MNI functional components:
+
  - Alert Service (`ALERTSRV_*`)
  - API Gateway (`APIGW_*`)
  - API Server (`APISERV_*`)
@@ -152,6 +182,8 @@ The file `/etc/mni/mni.ini` supports the following MNI functional components:
  - UI Server (`UISERV_*`)
  - Identity and Access Management (`IAM_*`)
  - Local DNS Server (`DNSSERV_*`)
+
+> *note*: Some of the configuration items are automatically determined during installation, these include hostname/address and service credentials.
 
 ```bash
 #=====================================================================
@@ -169,114 +201,132 @@ The file `/etc/mni/mni.ini` supports the following MNI functional components:
 CONFIG_DIRECTORY="/etc/mni"
 HOST_SERVICE_GROUP="mni"
 MNI_NAME="MarlinDT Network Intelligence"
-MNI_BUILD="20250228.47"
+MNI_BUILD="1752853637"
 MNI_VERSION="1.0.0"
+#
+# alertService
+#
+ALERTSRV_DEBUG=true
+ALERTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
+ALERTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
+ALERTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/alert.log"
+ALERTSRV_HOST_SERVICE_SYSTEMD="mnialert.service"
+ALERTSRV_HOST_SERVICE_USERNAME="mnialert"
+ALERTSRV_SERVICE_KEY=""
+ALERTSRV_SERVICE_USERNAME=""
+ALERTSRV_TLS_INSECURE_CONNECTIONS=true
+ALERTSRV_WORKING_DIRECTORY="/usr/local/mni/alertService"
 #
 # apiGateway
 #
-APIGW_ADDRESS="127.0.0.1"
-APIGW_HOST_SERVICE_LOG_FILE="/var/log/mni/apiGateway.log"
-APIGW_HOST_SERVICE_SYSTEMD="apiGateway.service"
+APIGW_ADDRESS=
+APIGW_HOST_SERVICE_LOG_FILE="/var/log/mni/apigw.log"
+APIGW_HOST_SERVICE_SYSTEMD="mniapigw.service"
 APIGW_HOST_SERVICE_USERNAME="mniapigw"
+APIGW_IGNORE_AUTH_VALIDATOR=true
 APIGW_PORT=8443
 APIGW_PROXY_RATE_LIMIT_REQUESTS=32767
 APIGW_PROXY_CAPACITY_REQUESTS=32767
 APIGW_PROXY_RATE_LIMIT_EVERY="1m"
 APIGW_TLS_INSECURE_CONNECTIONS=true
-APIGW_SSL_CERT="apiGateway.crt"
-APIGW_SSL_CSR="apiGateway.csr"
+APIGW_SSL_CERT="apigw.crt"
+APIGW_SSL_CSR="apigw.csr"
 APIGW_SSL_DAYS=90
-APIGW_SSL_KEY="apiGateway.key"
+APIGW_SSL_KEY="apigw.key"
 APIGW_SSL_SIZE=4096
 APIGW_VERSION="0.0.1"
 APIGW_KRAKEND_VERSION="2.9.1"
-APIGW_WORKING_DIRECTORY="/usr/local/mni/apiGateway"
-#
-# alertService
-#
-ALERTSRV_CVE_SCAN=true
-ALERTSRV_CVE_DIRECTORY="/usr/local/mni/cvelistV5"
-ALERTSRV_CVE_PULL_CRONTIME="00 20 * * *"
-ALERTSRV_DEBUG=true
-ALERTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
-ALERTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
-ALERTSRV_FX_KEY="e4019019382030ba138a0ebf0f006bce"
-ALERTSRV_FX_URL="https://api.exchangeratesapi.io/v1/latest"
-ALERTSRV_FX_CRONTIME="0 9 * * 1-5"
-ALERTSRV_FX_UPDATE=true
-ALERTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/alertService.log"
-ALERTSRV_HOST_SERVICE_SYSTEMD="alertService.service"
-ALERTSRV_HOST_SERVICE_USERNAME="mnialert"
-ALERTSRV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
-ALERTSRV_TLS_INSECURE_CONNECTIONS=true
-ALERTSRV_WORKING_DIRECTORY="/usr/local/mni/alertService"
+APIGW_WORKING_DIRECTORY="/usr/local/mni/apigw"
 #
 # apiServer
 #
-APISERV_ADDRESS="0.0.0.0"
-APISERV_API_DIRECTORY="/usr/local/mni/apiServer/api"
-APISERV_BACKUP_DIRECTORY="/usr/local/mni/apiServer/backup"
+APISERV_ADDRESS="127.0.0.1"
+APISERV_API_DIRECTORY="/usr/local/mni/api/openapi"
+APISERV_BACKUP_DIRECTORY="/usr/local/mni/api/backup"
 APISERV_DEBUG=true
-APISERV_PRUNE_CRONTIME="0 * * * *"
-APISERV_DUCKDB_VERSION="v1.2.2"
 APISERV_DUCKDB_BACKUP_CRONTIME="0 2 * * *"
 APISERV_DUCKDB_BACKUP=true
-APISERV_DUCKDB_PRUNE=true
-APISERV_DUCKDB_FILE="/Users/lee/mni/mni.duckdb"
+APISERV_DUCKDB_FILE="/usr/local/mni/api/mni.duckdb"
 APISERV_DUCKDB_MAX_MEMORY="1GB"
+APISERV_DUCKDB_PRUNE=true
 APISERV_DUCKDB_THREADS=4
-APISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/apiServer.log"
-APISERV_HOST_SERVICE_SYSTEMD="apiServer.service"
+APISERV_DUCKDB_VERSION="v1.2.2"
+APISERV_ENCRYPTION_KEY=""
+APISERV_ENCRYPTION_IV=""
+APISERV_KEEPALIVE=true
+APISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/api.log"
+APISERV_HOST_SERVICE_SYSTEMD="mniapi.service"
 APISERV_HOST_SERVICE_USERNAME="mniapi"
 APISERV_PORT=7443
-APISERV_PREMISES_PASSED_BOUNDARY_DISTANCE=50
-APISERV_WEBSOCKET_ADDRESS="192.168.1.16"
-APISERV_WEBSOCKET_PORT=5443
-APISERV_SERVICE_USERNAME="364912b2af3d4da4275ef6b9886380f6caf274b5aacb812e"
-APISERV_SERVICE_KEY="kveOtGzA5y75a6I8MhSW97iEKIGVwt2NFZbbqGBJBprG6ndA7kR3xVpZy/mp26MKtTJjb+O86TCYFWkW"
+APISERV_PREMISES_PASSED_BOUNDARY_DISTANCE=25
+APISERV_SERVICE_KEY=""
+APISERV_SERVICE_USERNAME=""
 APISERV_SPATIAL_UPDATE_GEOMETRY_CRONTIME="*/5 * * * *"
-APISERV_SSL_CERT="apiServer.crt"
-APISERV_SSL_CSR="apiServer.csr"
+APISERV_SSL_CERT="api.crt"
+APISERV_SSL_CSR="api.csr"
 APISERV_SSL_DAYS=90
-APISERV_SSL_KEY="apiServer.key"
+APISERV_SSL_KEY="api.key"
 APISERV_SSL_SIZE=4096
-APISERV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
-APISERV_TIMEOUT_REQUEST=120000
 APISERV_TICK_INTERVAL_MS=60000
+APISERV_TIMEOUT_KEEPALIVE=5000
+APISERV_TIMEOUT_REQUEST=300000
+APISERV_DOCUMENT_DIRECTORY="/usr/local/mni/api/document"
+APISERV_UPLOAD_DIRECTORY="/usr/local/mni/api/upload"
 APISERV_URL_PREFIX="/mni"
 APISERV_URL_VERSION="/v1"
 APISERV_USE_DNS_SD=false
-APISERV_WORKING_DIRECTORY="/usr/local/mni/apiServer"
+APISERV_WORKING_DIRECTORY="/usr/local/mni/api"
+#
+# fetchService
+#
+FETCHSRV_SERVICE_KEY=""
+FETCHSRV_SERVICE_USERNAME=""
+FETCHSRV_CVE_SCAN=true
+FETCHSRV_CVE_DIRECTORY="/usr/local/mni/cvelistV5"
+FETCHSRV_CVE_PULL_CRONTIME="00 20 * * *"
+FETCHSRV_CVE_BUILD_CRONTIME="30 20 * * *"
+FETCHSRV_DEBUG=true
+FETCHSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
+FETCHSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
+FETCHSRV_FX_URL="https://api.exchangeratesapi.io/v1/latest"
+FETCHSRV_FX_CRONTIME="0 9 * * 1-5"
+FETCHSRV_FX_UPDATE=true
+FETCHSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/fetch.log"
+FETCHSRV_HOST_SERVICE_SYSTEMD="mnifetch.service"
+FETCHSRV_HOST_SERVICE_USERNAME="mnifetch"
+FETCHSRV_SERVICE_KEY=""
+FETCHSRV_SERVICE_USERNAME=""
+FETCHSRV_TLS_INSECURE_CONNECTIONS=true
+FETCHSRV_WORKING_DIRECTORY="/usr/local/mni/fetch"
 #
 # uiServer
 #
-UISERV_ADDRESS="127.0.0.1"
+UISERV_ADDRESS=""
+UISERV_DIST_DIRECTORY="/usr/local/mni/ui/dist"
 UISERV_DEBUG=true
 UISERV_DNS_RESOLVE=300000
-UISERV_DIST_DIRECTORY="/usr/local/mni/apiServer/dist"
-UISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/uiServer.log"
-UISERV_HOST_SERVICE_SYSTEMD="uiServer.service"
+UISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/ui.log"
+UISERV_HOST_SERVICE_SYSTEMD="mniui.service"
 UISERV_HOST_SERVICE_USERNAME="mniui"
 UISERV_PORT=4443
-UISERV_SSL_CERT="uiServer.crt"
-UISERV_SSL_CSR="uiServer.csr"
+UISERV_SSL_CERT="ui.crt"
+UISERV_SSL_CSR="ui.csr"
 UISERV_SSL_DAYS=90
-UISERV_SSL_KEY="uiServer.key"
+UISERV_SSL_KEY="ui.key"
 UISERV_SSL_SIZE=4096
-UISERV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
 UISERV_TIMEOUT_REQUEST=120000
 UISERV_TICK_INTERVAL_MS=60000
 UISERV_URL_PREFIX="/mni"
 UISERV_USE_DNS_SD=false
-UISERV_WORKING_DIRECTORY="/usr/local/mni/uiServer"
+UISERV_WORKING_DIRECTORY="/usr/local/mni/ui"
 #
 # IAM
 #
 IAM_ADDRESS="127.0.0.1"
-IAM_AUTHENTIK_SECRET_KEY="H9MDP6dK64fsYa/dkP4Gi8pUKEP2OuvRxM0XqjXZ23JM9MKOUlTEKztgimamkXMN/ELfyu/stc6aiAse"
-IAM_BOOTSTRAP_PASSWORD="akadmin"
-IAM_BOOTSTRAP_TOKEN="qlcALCld8UQpNrkiAN1WVg2Qu4ztiDL2kPEN2Sui9ai740UL"
+IAM_AUTHENTIK_SECRET_KEY=
 IAM_BOOTSTRAP_EMAIL="admin@marlindt.net"
+IAM_BOOTSTRAP_PASSWORD="akadmin"
+IAM_BOOTSTRAP_TOKEN=""
 IAM_DEBUG=true
 IAM_EMAIL_FROM="ni@marlindt.net"
 IAM_EMAIL_HOST="smtp.fastmail.com"
@@ -286,63 +336,67 @@ IAM_EMAIL_TIMEOUT=10
 IAM_EMAIL_USE_SSL=true
 IAM_EMAIL_USE_TLS=false
 IAM_EMAIL_USERNAME="ni@marlindt.net"
-IAM_HOST_SERVICE_LOG_FILE="/var/log/mni/iamServer.log"
-IAM_HOST_SERVICE_SYSTEMD="iamServer.service"
+IAM_HOST_SERVICE_LOG_FILE="/var/log/mni/iam.log"
+IAM_HOST_SERVICE_SYSTEMD="mniiam.service"
 IAM_HOST_SERVICE_USERNAME="mniiam"
-IAM_PG_PASS="DjqKw+yxgShTUKf/qqeRXKxVl1uwdvLNszowO9lToEGLUfvA"
+IAM_PG_PASS=
 IAM_PORT_HTTP=6000
 IAM_PORT_HTTPS=6443
-IAM_SSL_CERT="iamServer.crt"
-IAM_SSL_CSR="iamServer.csr"
+IAM_SSL_CERT="iam.crt"
+IAM_SSL_CSR="iam.csr"
 IAM_SSL_DAYS=90
-IAM_SSL_KEY="iamServer.key"
+IAM_SSL_KEY="iam.key"
 IAM_SSL_SIZE=4096
-IAM_WORKING_DIRECTORY="/usr/local/mni/iamServer"
+IAM_URL_SUFFIX="/application/o/marlin/.well-known/openid-configuration"
+#https://authentik.merkator.com/application/saml/marlin-blazor/sso/binding/init/
+IAM_WORKING_DIRECTORY="/usr/local/mni/iam"
 #
-# predictSrv
+# predictService
 #
 PREDICTSRV_CRONTIME="0 0 * * *"
 PREDICTSRV_DEBUG=true
-PREDICTSRV_TLS_INSECURE_CONNECTIONS=true
-PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
 PREDICTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
-PREDICTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/predictSrv.log"
-PREDICTSRV_HOST_SERVICE_SYSTEMD="PREDICT.service"
+PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
+PREDICTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/predict.log"
+PREDICTSRV_HOST_SERVICE_SYSTEMD="mnipredict.service"
 PREDICTSRV_HOST_SERVICE_USERNAME="mnipredict"
-PREDICTSRV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
-PREDICTSRV_WORKING_DIRECTORY="/usr/local/mni/predictSrv"
+PREDICTSRV_SERVICE_KEY=""
+PREDICTSRV_SERVICE_USERNAME=""
+PREDICTSRV_TLS_INSECURE_CONNECTIONS=true
+PREDICTSRV_WORKING_DIRECTORY="/usr/local/mni/predict"
 #
 # dnsServer
 #
-DNSSERV_INSTALL=true
-DNSSERV_ADDRESS="127.0.0.1"
-DNSSERV_VERSION="2.70"
-DNSSERV_HOST_SERVICE_LOG_FILE="/var/log/mni/dnsServer.log"
-DNSSERV_HOST_SERVICE_SYSTEMD="dnsServer.service"
+DNSSERV_ADDRESS=
+DNSSERV_DOMAIN="merkator.local"
+DNSSERV_HOST_SERVICE_LOG_FILE="/var/log/mni/dns.log"
+DNSSERV_HOST_SERVICE_SYSTEMD="mnidns.service"
 DNSSERV_HOST_SERVICE_USERNAME="mnidns"
+DNSSERV_HOST="mni"
+DNSSERV_INSTALL=false
 DNSSERV_PORT=53
-DNSSERV_HOST="marlinintegration"
-DNSSERV_DOMAIN="merkator.com"
+DNSSERV_RESOLVCONF=1
 DNSSERV_SYSTEMD_RESOLVE=1
-DNSSERV_RESOLVCONF=0
+DNSSERV_VERSION="2.70"
+DNSSERV_WORKING_DIRECTORY="/usr/local/mni/dns"
 #
 ```
 
 ---
 
-# 5. Merkator Technical Services
+# 6. Merkator Technical Services
 
 For technical support, you can contact Merkator by email, or on the web.
 
-## 5.1. By email
+## 6.1. By email
 
 Customer Service Management may be reached at: [support@marlindt.net](mailto:support@marlindt.net).
 
-## 5.2. On the web
+## 6.2. On the web
 
 Please visit [https://support.marlindt.net/](https://support.marlindt.net/). To obtain access, you must provide your support contracted email address.
 
-## 5.3. Technical documentation
+## 6.3. Technical documentation
 
 The latest technical documentation for products is now available on the [Customer Service Management](https://support.marlindt.net/).
 Make sure you have an account to access the content. 
@@ -350,7 +404,7 @@ Make sure you have an account to access the content.
 
 ---
 
-# 6. Corporate Headquarters
+# 7. Corporate Headquarters
 
 Merkator nv/sa · Vliegwezenlaan 48 · 1731 Zellik · Belgium<br>
 [+3223092112](tel:+3223092112)<br>
