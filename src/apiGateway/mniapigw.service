@@ -1,0 +1,18 @@
+[Unit]
+Description=MNI API Gateway
+After=multi-user.target
+
+[Service]
+UMask=007
+Type=simple
+User=mniapigw
+Group=mni
+Restart=always
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+WorkingDirectory=/usr/local/mni/apigw
+StandardOutput=append:/var/log/mni/apigw.log
+StandardError=append:/var/log/mni/apigw.log
+ExecStart=/usr/local/mni/apigw/bin/apigw run -c /usr/local/mni/apigw/config/apiGateway.json
+
+[Install]
+WantedBy=multi-user.target

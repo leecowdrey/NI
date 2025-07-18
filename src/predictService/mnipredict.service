@@ -1,0 +1,19 @@
+[Unit]
+Description=MNI Predict Service
+After=multi-user.target
+
+[Service]
+UMask=007
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=mni
+LimitNOFILE=infinity
+Restart=always
+StandardError=append:/var/log/mni/predict.log
+StandardOutput=append:/var/log/mni/predict.log
+Type=simple
+User=mnipredict
+WorkingDirectory=/usr/local/mni/predict
+
+[Install]
+WantedBy=multi-user.target
