@@ -30,11 +30,14 @@ draft: true
 - [2. Target Audience](#2-target-audience)
 - [3. Introduction](#3-introduction)
   - [Functional Architecture](#functional-architecture)
-- [4. Merkator Technical Services](#4-merkator-technical-services)
-  - [4.1. By email](#41-by-email)
-  - [4.2. On the web](#42-on-the-web)
-  - [4.3. Technical documentation](#43-technical-documentation)
-- [5. Corporate Headquarters](#5-corporate-headquarters)
+- [4. DNS Resolution](#4-dns-resolution)
+- [5. MNI Compute Configuration](#5-mni-compute-configuration)
+- [5.1 Configuration File](#51-configuration-file)
+- [5. Merkator Technical Services](#5-merkator-technical-services)
+  - [5.1. By email](#51-by-email)
+  - [5.2. On the web](#52-on-the-web)
+  - [5.3. Technical documentation](#53-technical-documentation)
+- [6. Corporate Headquarters](#6-corporate-headquarters)
 
 ---
 
@@ -92,7 +95,10 @@ Suitable for standalone integration, lab, proof of concepts and low-yield produc
 
 ---
 
-I will also need some DNS entries added to merkator.com (I believe that it what the server/VM was listed under):
+# 4. DNS Resolution
+
+MNI makes use of DNS resolution via DNS server (`SRV`) records to locate MNI components. This is used for both horizontal and vertical scaling.
+
  
 ``` 
 Type	
@@ -130,19 +136,213 @@ $ dig +short ni.marlindt.net A
 
 ---
 
-# 4. Merkator Technical Services
+# 5. MNI Compute Configuration
+
+Each compute environment hosting MNI components must contain a MNI configuration file. This file can be found at `/etc/mni/mni.ini` and is automatically created if not found during installation.
+
+> *note*: The contents of the configuration file should be manually updated and synchronised between all compute environments as the MNI functional components will read some of the configuration of other components.
+
+# 5.1 Configuration File
+
+The file `/etc/mni/mni.ini` supports the following MNI functional components:
+ - Alert Service (`ALERTSRV_*`)
+ - API Gateway (`APIGW_*`)
+ - API Server (`APISERV_*`)
+ - Fetch Service (`FETCHSRV_*`)
+ - UI Server (`UISERV_*`)
+ - Identity and Access Management (`IAM_*`)
+ - Local DNS Server (`DNSSERV_*`)
+
+```bash
+#=====================================================================
+# MarlinDT Network Intelligence (MNI) - Deployment Environment File
+#
+# Corporate Headquarters:
+# Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
+# https://www.merkator.com/
+#
+# © 2024-2025 Merkator nv/sa. All rights reserved.
+#=====================================================================
+#
+# Common
+#
+CONFIG_DIRECTORY="/etc/mni"
+HOST_SERVICE_GROUP="mni"
+MNI_NAME="MarlinDT Network Intelligence"
+MNI_BUILD="20250228.47"
+MNI_VERSION="1.0.0"
+#
+# apiGateway
+#
+APIGW_ADDRESS="127.0.0.1"
+APIGW_HOST_SERVICE_LOG_FILE="/var/log/mni/apiGateway.log"
+APIGW_HOST_SERVICE_SYSTEMD="apiGateway.service"
+APIGW_HOST_SERVICE_USERNAME="mniapigw"
+APIGW_PORT=8443
+APIGW_PROXY_RATE_LIMIT_REQUESTS=32767
+APIGW_PROXY_CAPACITY_REQUESTS=32767
+APIGW_PROXY_RATE_LIMIT_EVERY="1m"
+APIGW_TLS_INSECURE_CONNECTIONS=true
+APIGW_SSL_CERT="apiGateway.crt"
+APIGW_SSL_CSR="apiGateway.csr"
+APIGW_SSL_DAYS=90
+APIGW_SSL_KEY="apiGateway.key"
+APIGW_SSL_SIZE=4096
+APIGW_VERSION="0.0.1"
+APIGW_KRAKEND_VERSION="2.9.1"
+APIGW_WORKING_DIRECTORY="/usr/local/mni/apiGateway"
+#
+# alertService
+#
+ALERTSRV_CVE_SCAN=true
+ALERTSRV_CVE_DIRECTORY="/usr/local/mni/cvelistV5"
+ALERTSRV_CVE_PULL_CRONTIME="00 20 * * *"
+ALERTSRV_DEBUG=true
+ALERTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
+ALERTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
+ALERTSRV_FX_KEY="e4019019382030ba138a0ebf0f006bce"
+ALERTSRV_FX_URL="https://api.exchangeratesapi.io/v1/latest"
+ALERTSRV_FX_CRONTIME="0 9 * * 1-5"
+ALERTSRV_FX_UPDATE=true
+ALERTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/alertService.log"
+ALERTSRV_HOST_SERVICE_SYSTEMD="alertService.service"
+ALERTSRV_HOST_SERVICE_USERNAME="mnialert"
+ALERTSRV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
+ALERTSRV_TLS_INSECURE_CONNECTIONS=true
+ALERTSRV_WORKING_DIRECTORY="/usr/local/mni/alertService"
+#
+# apiServer
+#
+APISERV_ADDRESS="0.0.0.0"
+APISERV_API_DIRECTORY="/usr/local/mni/apiServer/api"
+APISERV_BACKUP_DIRECTORY="/usr/local/mni/apiServer/backup"
+APISERV_DEBUG=true
+APISERV_PRUNE_CRONTIME="0 * * * *"
+APISERV_DUCKDB_VERSION="v1.2.2"
+APISERV_DUCKDB_BACKUP_CRONTIME="0 2 * * *"
+APISERV_DUCKDB_BACKUP=true
+APISERV_DUCKDB_PRUNE=true
+APISERV_DUCKDB_FILE="/Users/lee/mni/mni.duckdb"
+APISERV_DUCKDB_MAX_MEMORY="1GB"
+APISERV_DUCKDB_THREADS=4
+APISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/apiServer.log"
+APISERV_HOST_SERVICE_SYSTEMD="apiServer.service"
+APISERV_HOST_SERVICE_USERNAME="mniapi"
+APISERV_PORT=7443
+APISERV_PREMISES_PASSED_BOUNDARY_DISTANCE=50
+APISERV_WEBSOCKET_ADDRESS="192.168.1.16"
+APISERV_WEBSOCKET_PORT=5443
+APISERV_SERVICE_USERNAME="364912b2af3d4da4275ef6b9886380f6caf274b5aacb812e"
+APISERV_SERVICE_KEY="kveOtGzA5y75a6I8MhSW97iEKIGVwt2NFZbbqGBJBprG6ndA7kR3xVpZy/mp26MKtTJjb+O86TCYFWkW"
+APISERV_SPATIAL_UPDATE_GEOMETRY_CRONTIME="*/5 * * * *"
+APISERV_SSL_CERT="apiServer.crt"
+APISERV_SSL_CSR="apiServer.csr"
+APISERV_SSL_DAYS=90
+APISERV_SSL_KEY="apiServer.key"
+APISERV_SSL_SIZE=4096
+APISERV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
+APISERV_TIMEOUT_REQUEST=120000
+APISERV_TICK_INTERVAL_MS=60000
+APISERV_URL_PREFIX="/mni"
+APISERV_URL_VERSION="/v1"
+APISERV_USE_DNS_SD=false
+APISERV_WORKING_DIRECTORY="/usr/local/mni/apiServer"
+#
+# uiServer
+#
+UISERV_ADDRESS="127.0.0.1"
+UISERV_DEBUG=true
+UISERV_DNS_RESOLVE=300000
+UISERV_DIST_DIRECTORY="/usr/local/mni/apiServer/dist"
+UISERV_HOST_SERVICE_LOG_FILE="/var/log/mni/uiServer.log"
+UISERV_HOST_SERVICE_SYSTEMD="uiServer.service"
+UISERV_HOST_SERVICE_USERNAME="mniui"
+UISERV_PORT=4443
+UISERV_SSL_CERT="uiServer.crt"
+UISERV_SSL_CSR="uiServer.csr"
+UISERV_SSL_DAYS=90
+UISERV_SSL_KEY="uiServer.key"
+UISERV_SSL_SIZE=4096
+UISERV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
+UISERV_TIMEOUT_REQUEST=120000
+UISERV_TICK_INTERVAL_MS=60000
+UISERV_URL_PREFIX="/mni"
+UISERV_USE_DNS_SD=false
+UISERV_WORKING_DIRECTORY="/usr/local/mni/uiServer"
+#
+# IAM
+#
+IAM_ADDRESS="127.0.0.1"
+IAM_AUTHENTIK_SECRET_KEY="H9MDP6dK64fsYa/dkP4Gi8pUKEP2OuvRxM0XqjXZ23JM9MKOUlTEKztgimamkXMN/ELfyu/stc6aiAse"
+IAM_BOOTSTRAP_PASSWORD="akadmin"
+IAM_BOOTSTRAP_TOKEN="qlcALCld8UQpNrkiAN1WVg2Qu4ztiDL2kPEN2Sui9ai740UL"
+IAM_BOOTSTRAP_EMAIL="admin@marlindt.net"
+IAM_DEBUG=true
+IAM_EMAIL_FROM="ni@marlindt.net"
+IAM_EMAIL_HOST="smtp.fastmail.com"
+IAM_EMAIL_PASSWORD="password123&#"
+IAM_EMAIL_PORT=465
+IAM_EMAIL_TIMEOUT=10
+IAM_EMAIL_USE_SSL=true
+IAM_EMAIL_USE_TLS=false
+IAM_EMAIL_USERNAME="ni@marlindt.net"
+IAM_HOST_SERVICE_LOG_FILE="/var/log/mni/iamServer.log"
+IAM_HOST_SERVICE_SYSTEMD="iamServer.service"
+IAM_HOST_SERVICE_USERNAME="mniiam"
+IAM_PG_PASS="DjqKw+yxgShTUKf/qqeRXKxVl1uwdvLNszowO9lToEGLUfvA"
+IAM_PORT_HTTP=6000
+IAM_PORT_HTTPS=6443
+IAM_SSL_CERT="iamServer.crt"
+IAM_SSL_CSR="iamServer.csr"
+IAM_SSL_DAYS=90
+IAM_SSL_KEY="iamServer.key"
+IAM_SSL_SIZE=4096
+IAM_WORKING_DIRECTORY="/usr/local/mni/iamServer"
+#
+# predictSrv
+#
+PREDICTSRV_CRONTIME="0 0 * * *"
+PREDICTSRV_DEBUG=true
+PREDICTSRV_TLS_INSECURE_CONNECTIONS=true
+PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS=5000
+PREDICTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS=120000
+PREDICTSRV_HOST_SERVICE_LOG_FILE="/var/log/mni/predictSrv.log"
+PREDICTSRV_HOST_SERVICE_SYSTEMD="PREDICT.service"
+PREDICTSRV_HOST_SERVICE_USERNAME="mnipredict"
+PREDICTSRV_TIMESTAMP_FORMAT="YYYYMMDD[T]HHmmss"
+PREDICTSRV_WORKING_DIRECTORY="/usr/local/mni/predictSrv"
+#
+# dnsServer
+#
+DNSSERV_INSTALL=true
+DNSSERV_ADDRESS="127.0.0.1"
+DNSSERV_VERSION="2.70"
+DNSSERV_HOST_SERVICE_LOG_FILE="/var/log/mni/dnsServer.log"
+DNSSERV_HOST_SERVICE_SYSTEMD="dnsServer.service"
+DNSSERV_HOST_SERVICE_USERNAME="mnidns"
+DNSSERV_PORT=53
+DNSSERV_HOST="marlinintegration"
+DNSSERV_DOMAIN="merkator.com"
+DNSSERV_SYSTEMD_RESOLVE=1
+DNSSERV_RESOLVCONF=0
+#
+```
+
+---
+
+# 5. Merkator Technical Services
 
 For technical support, you can contact Merkator by email, or on the web.
 
-## 4.1. By email
+## 5.1. By email
 
 Customer Service Management may be reached at: [support@marlindt.net](mailto:support@marlindt.net).
 
-## 4.2. On the web
+## 5.2. On the web
 
 Please visit [https://support.marlindt.net/](https://support.marlindt.net/). To obtain access, you must provide your support contracted email address.
 
-## 4.3. Technical documentation
+## 5.3. Technical documentation
 
 The latest technical documentation for products is now available on the [Customer Service Management](https://support.marlindt.net/).
 Make sure you have an account to access the content. 
@@ -150,7 +350,7 @@ Make sure you have an account to access the content.
 
 ---
 
-# 5. Corporate Headquarters
+# 6. Corporate Headquarters
 
 Merkator nv/sa · Vliegwezenlaan 48 · 1731 Zellik · Belgium<br>
 [+3223092112](tel:+3223092112)<br>

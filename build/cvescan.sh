@@ -231,43 +231,43 @@ else
   done
 fi
 
-doing "Scanning: predictServer (NodeJS)"
-nodejs_scan "predictServer"
+doing "Scanning: predictService (NodeJS)"
+nodejs_scan "predictService"
 RETVAL=$?
 if [[ ${RETVAL} -eq 0 ]] ; then
   success "- ok"
 else
   CVE_FOUND=1
   CVEs=()
-  IFS=' ' read -r -a CVEs <<< $(cat src/predictServer/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
+  IFS=' ' read -r -a CVEs <<< $(cat src/predictService/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
   for CVE in ${CVEs[@]}; do
     alert "- found ${CVE}"
   done
 fi
 
-doing "Scanning: alertServer (NodeJS)"
-nodejs_scan "alertServer"
+doing "Scanning: alertService (NodeJS)"
+nodejs_scan "alertService"
 RETVAL=$?
 if [[ ${RETVAL} -eq 0 ]] ; then
   success "- ok"
 else
   CVE_FOUND=1
   CVEs=()
-  IFS=' ' read -r -a CVEs <<< $(cat src/alertServer/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
+  IFS=' ' read -r -a CVEs <<< $(cat src/alertService/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
   for CVE in ${CVEs[@]}; do
     alert "- found ${CVE}"
   done
 fi
 
-doing "Scanning: fetchServer (NodeJS)"
-nodejs_scan "fetchServer"
+doing "Scanning: fetchService (NodeJS)"
+nodejs_scan "fetchService"
 RETVAL=$?
 if [[ ${RETVAL} -eq 0 ]] ; then
   success "- ok"
 else
   CVE_FOUND=1
   CVEs=()
-  IFS=' ' read -r -a CVEs <<< $(cat src/fetchServer/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
+  IFS=' ' read -r -a CVEs <<< $(cat src/fetchService/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
   for CVE in ${CVEs[@]}; do
     alert "- found ${CVE}"
   done

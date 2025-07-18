@@ -71,7 +71,7 @@ RETVAL=$?
 doing "Updating environment"
 cp -f ${CLI_PATH}/*.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/*.mjs && chmod 660 ${WORKING_DIRECTORY}/*.mjs && \
 cp -f ${CLI_PATH}/package.json ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/package.json && chmod 660 ${WORKING_DIRECTORY}/package.json && \
-cp -f ${CLI_PATH}/mni.yaml ${WORKING_DIRECTORY}/api/ && chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml
+cp -f ${CLI_PATH}/mni.yaml ${API_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -97,7 +97,7 @@ fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating NodeJS package for target"
-sed -i -e "s|/usr/local/mni/apiServer.mjs|${WORKING_DIRECTORY}/apiServer.mjs|" ${WORKING_DIRECTORY}/package.json && \
+sed -i -e "s|/usr/local/mni/api/apiServer.mjs|${WORKING_DIRECTORY}/apiServer.mjs|" ${WORKING_DIRECTORY}/package.json && \
 sed -i -e "s|/etc/mni/mni.ini|${CONFIG_DIRECTORY}/mni.ini|" ${WORKING_DIRECTORY}/package.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
@@ -124,7 +124,7 @@ doing "Updating OpenAPI definitions for target"
 if [ "${API_DIRECTORY}/mni.yaml" ] ; then
  curl --silent -L --output yq "https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64" && \
  chmod 700 ./yq && \
- ./yq --exit-status -i ".servers[].url = \"https://${APIGW_ADDRESS}:${APIGW_PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}\"" ${WORKING_DIRECTORY}/api/mni.yaml &>/dev/null && \
+ ./yq --exit-status -i ".servers[].url = \"https://${APIGW_ADDRESS}:${APIGW_PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}\"" ${API_DIRECTORY}/mni.yaml &>/dev/null && \
  ./yq --exit-status "." -o=json ${API_DIRECTORY}/mni.yaml > ${API_DIRECTORY}/mni.json && \
  chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.json && chmod 660 ${API_DIRECTORY}/mni.json && \
  chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml && \

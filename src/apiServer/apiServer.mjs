@@ -9645,7 +9645,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM cable, _cable WHERE id = $1 AND cableId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM cable, _cable WHERE id = $1 AND cableId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddRead = await ddp.runAndReadAll();
@@ -9653,7 +9653,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -10982,7 +10986,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM duct, _duct WHERE id = $1 AND ductId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM duct, _duct WHERE id = $1 AND ductId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.ductId);
         let ddRead = await ddp.runAndReadAll();
@@ -10990,7 +10994,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -12171,7 +12179,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM ne, _ne WHERE id = $1 AND neId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM ne, _ne WHERE id = $1 AND neId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.neId);
         let ddRead = await ddp.runAndReadAll();
@@ -12179,7 +12187,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -12901,7 +12913,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM pole, _pole WHERE id = $1 AND poleId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM pole, _pole WHERE id = $1 AND poleId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.poleId);
         let ddRead = await ddp.runAndReadAll();
@@ -12909,7 +12921,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -13630,7 +13646,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.rackId);
         let ddRead = await ddp.runAndReadAll();
@@ -13638,7 +13654,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -15110,7 +15130,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM service, _service WHERE id = $1 AND serviceId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM service, _service WHERE id = $1 AND serviceId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.serviceId);
         let ddRead = await ddp.runAndReadAll();
@@ -15118,7 +15138,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -16581,7 +16605,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM site, _site WHERE id = $1 AND siteId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM site, _site WHERE id = $1 AND siteId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.siteId);
         let ddRead = await ddp.runAndReadAll();
@@ -16589,7 +16613,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -18190,7 +18218,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM trench, _trench WHERE id = $1 AND trenchId = id AND delete = false ORDER BY point DESC"
+            "'),source,probability FROM trench, _trench WHERE id = $1 AND trenchId = id AND delete = false ORDER BY point DESC"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddRead = await ddp.runAndReadAll();
@@ -18198,7 +18226,11 @@ var run = async () => {
         if (ddRows.length > 0) {
           let resJson = [];
           for (let idx in ddRows) {
-            resJson.push({ point: ddRows[idx][0], source: ddRows[idx][1] });
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
           }
           resJson = Array.from(new Set(resJson.map(JSON.stringify)))
             .map(JSON.parse)
@@ -19355,6 +19387,39 @@ var run = async () => {
     }
   }
 
+  async function getAllDocuments(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM document WHERE delete = false"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push(ddRows[idx][0]);
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getDocument(req, res, next) {
     let datePoint = "AND _document.tsId = document.historicalTsId";
     try {
@@ -19687,6 +19752,50 @@ var run = async () => {
     }
   }
 
+  async function getDocumentTimeline(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddp = await DDC.prepare(
+          "SELECT strftime(point,'" +
+            pointFormat +
+            "'),source,probability FROM document, _document WHERE id = $1 AND documentId = id AND delete = false ORDER BY point DESC"
+        );
+        ddp.bindVarchar(1, req.params.documentId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let resJson = [];
+          for (let idx in ddRows) {
+            resJson.push({
+              point: ddRows[idx][0],
+              source: ddRows[idx][1],
+              probability: validateProbability(ddRows[idx][2], ddRows[idx][1]),
+            });
+          }
+          resJson = Array.from(new Set(resJson.map(JSON.stringify)))
+            .map(JSON.parse)
+            .sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "documentId " + req.params.documentId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function getSimpleStatistics(req, res, next) {
     try {
       let result = validationResult(req);
@@ -19927,6 +20036,18 @@ var run = async () => {
 
   /*
        Tag:           Documents
+       operationId:   getAllDocuments
+       exposed Route: /mni/v1/content
+       HTTP method:   POST
+    */
+  app.get(serveUrlPrefix + serveUrlVersion + "/document",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllDocuments);
+
+  /*
+       Tag:           Documents
        operationId:   addDocument
        exposed Route: /mni/v1/content
        HTTP method:   POST
@@ -19970,6 +20091,19 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/document/:documentId",
     param("documentId").isUUID(4),
     deleteDocument
+  );
+
+  /*
+       Tag:           Documents
+       operationId:   getDocumentTimeline
+       exposed Route: /mni/v1/document/timeline/:documentId
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/document/timeline/:documentId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("documentId").isUUID(4),
+    getDocumentTimeline
   );
 
   /*
@@ -22076,7 +22210,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllDuct
   );
 
@@ -22303,7 +22436,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllNe
   );
 
@@ -22937,7 +23069,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllPole
   );
 
@@ -23395,7 +23526,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllRacks
   );
 
@@ -23674,7 +23804,8 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/service",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
     getAllServices
   );
 
@@ -23922,7 +24053,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllSites
   );
 
@@ -24205,7 +24335,6 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
     getAllTrench
   );
 

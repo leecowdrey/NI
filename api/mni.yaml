@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1752840665
+  version: 1.0.0.1752853637
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -3203,7 +3203,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Cables
       responses:
@@ -4305,7 +4304,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Ducts
       responses:
@@ -5972,7 +5970,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Sites
       responses:
@@ -6769,7 +6766,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Racks
       responses:
@@ -8006,7 +8002,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Network Equipment
       responses:
@@ -9537,7 +9532,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Poles
       responses:
@@ -10577,7 +10571,6 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
-        - $ref: "#/components/parameters/dateTime"
       tags:
         - Trenches
       responses:
@@ -14336,6 +14329,48 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "413":
           $ref: "#/components/responses/TooLarge"
+    get:
+      summary: List of all known documents
+      security:
+        - openId:
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
+            - read:mni_admin
+            - read:mni_cable
+            - read:mni_duct
+            - read:mni_ne
+            - read:mni_pole
+            - read:mni_rack
+            - read:mni_service
+            - read:mni_site
+            - read:mni_trench
+      operationId: getAllDocuments
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+      tags:
+        - Cables
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/documentId"
+              examples:
+                sample:
+                  value:
+                    - 5520aca1-4727-431a-aa9c-23f2e54b8a41
+                    - df4600ba-c46f-428a-855d-eb84caf9b59c
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /document/{documentId}:
     get:
       summary: |
@@ -14471,6 +14506,68 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /document/timeline/{documentId}:
+    get:
+      summary: timeline points for specified document
+      security:
+        - openId:
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
+            - read:mni_admin
+            - read:mni_cable
+            - read:mni_duct
+            - read:mni_ne
+            - read:mni_pole
+            - read:mni_rack
+            - read:mni_service
+            - read:mni_site
+            - read:mni_trench
+      operationId: getDocumentTimeline
+      parameters:
+        - $ref: "#/components/parameters/documentId"
+      tags:
+        - Documents
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    point:
+                      $ref: "#/components/schemas/dateTime"
+                    source:
+                      $ref: "#/components/schemas/source"
+                    probability:
+                      $ref: "#/components/schemas/probability"
+              examples:
+                sample:
+                  value:
+                    - point: 20250102T000000
+                      source: historical
+                      probability: 1
+                    - point: 20250118T000000
+                      source: historical
+                      probability: 1
+                    - point: 20250202T000000
+                      source: historical
+                      probability: 1
+                    - point: 20250309T000000
+                      source: historical
+                      probability: 1
+                    - point: 20260401T000000
+                      source: planned
+                      probability: 0.5
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":

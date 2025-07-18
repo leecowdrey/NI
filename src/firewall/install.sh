@@ -45,7 +45,7 @@ IAM_PORT_HTTPS=$(grep -E "^IAM_PORT_HTTPS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' 
 UISERV_ADDRESS=$(grep -E "^UISERV_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 UISERV_PORT=$(grep -E "^UISERV_PORT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
-# APISERV & PREDICTSERV should be limited to loopback (127.0.0.1)
+# APISERV & PREDICTSRV should be limited to loopback (127.0.0.1)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
