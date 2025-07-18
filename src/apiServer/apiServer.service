@@ -3,6 +3,7 @@ Description=MNI API Server
 After=multi-user.target
 
 [Service]
+UMask=007
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/node --run start

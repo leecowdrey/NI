@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1752787830
+  version: 1.0.0.1752840665
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -14288,10 +14288,16 @@ paths:
       requestBody:
         required: true
         content:
-          "*/*":
+          multipart/form-data:
             schema:
-              type: string
-              format: binary
+              type: object
+              properties:
+                document:
+                  description: document filename that is being uploaded
+                  type: string
+                form-content:
+                  type: string
+                  format: binary
       responses:
         "200":
           description: OK
@@ -14301,17 +14307,35 @@ paths:
                 type: object
                 required:
                   - documentId
+                  - hash
+                  - size
+                  - mimeType
                 properties:
                   documentId:
                     $ref: "#/components/schemas/documentId"
+                  hash:
+                    type: string
+                    description: MD5 Hash of uploaded file
+                  size:
+                    type: number
+                    format: integer
+                    description: size in bytes of uploaded file
+                    minimum: 0
+                  mimeType:
+                    $ref: "#/components/schemas/ianaMimeType"
               examples:
                 sample:
                   value:
                     documentId: d94641c3-4507-4589-882e-3d31621b3a0e
+                    hash: c96970e2220bf6385edc6b56d9682e4a
+                    size: 4286
+                    mimeType: "image/vnd.microsoft.icon"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "413":
+          $ref: "#/components/responses/TooLarge"
   /document/{documentId}:
     get:
       summary: |
@@ -14374,17 +14398,54 @@ paths:
       requestBody:
         required: true
         content:
-          "*/*":
+          multipart/form-data:
             schema:
-              type: string
-              format: binary
+              type: object
+              properties:
+                document:
+                  description: document filename that is being uploaded
+                  type: string
+                form-content:
+                  type: string
+                  format: binary
       responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - documentId
+                  - hash
+                  - size
+                  - mimeType
+                properties:
+                  documentId:
+                    $ref: "#/components/schemas/documentId"
+                  hash:
+                    type: string
+                    description: MD5 Hash of uploaded file
+                  size:
+                    type: number
+                    format: integer
+                    description: size in bytes of uploaded file
+                    minimum: 0
+                  mimeType:
+                    $ref: "#/components/schemas/ianaMimeType"
+              examples:
+                sample:
+                  value:
+                    documentId: d94641c3-4507-4589-882e-3d31621b3a0e
+                    hash: c96970e2220bf6385edc6b56d9682e4a
+                    size: 5145
+                    mimeType: "image/vnd.microsoft.icon"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+        "413":
+          $ref: "#/components/responses/TooLarge"
     delete:
       summary: |
         Remove specified content from the document store
@@ -19676,6 +19737,8 @@ components:
           schema:
             description: specified media type was not found or not supported
             type: object
+    TooLarge:
+      description: Request Entity Too Large
 security:
   - openId:
       # {scheme}:{scope}

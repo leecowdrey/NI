@@ -43,15 +43,17 @@ export const XY_precision = 6;
 export const Z_precision = 2;
 export const fetchProtocol = [
   "email",
-  "http",
-  "netconf",
-  "snmp",
-  "scp",
   "ftp",
+  "http",
+  "mysql",
+  "netconf",
+  "none",
+  "oracle",
+  "scp",
+  "snmp",
   "ssh",
   "telnet",
   "workflow",
-  "none",
 ];
 export const float_scale = 6;
 export const float_precision = 2;

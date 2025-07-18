@@ -196,6 +196,16 @@ curl --silent --insecure --connect-timeout 5 \
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+doing "Adding document - favicon.ico"
+curl --silent --insecure --connect-timeout 5 \
+     -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/document" \
+     -H "Accept: application/json" \
+     -H "Content-Type: multipart/form-data" \
+     -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+     -F "document=@sample/favicon.ico" &>/dev/null
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
 # tidy
 clean_tmp_files
 

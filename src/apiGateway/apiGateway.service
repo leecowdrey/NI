@@ -3,6 +3,7 @@ Description=MNI API Gateway
 After=multi-user.target
 
 [Service]
+UMask=007
 Type=simple
 User=apigw
 Group=mni

@@ -3,7 +3,7 @@
 The data required for MNI must be expanded overtime during normal operations as MNI requires a historical dataset in order to predict the future changes, this requires certain adjustments to normal Create-Read-Update-Delete (CRUD) concepts in addition to all non-administrative datasets including metadata fields:
 
 1. `point` a timestamp (specific point in time)
-2. `source` to indicate if either supplied (historical), generated (predicted) via machine learning predictive algorithms
+2. `source` to indicate if either supplied as actual (`historical`), supplied as proposed (`planned`), or generated (`predicted`) internally via machine learning predictive algorithms
 3. `delete` to indicate if marked for deletion
 
 All records, regardless of type, are subject to the administrative data pruning mechanisms when the historical retention period ( HTTP GET `/mni/v1/admin/data/historical/duration`)  of the record has been exceeded 

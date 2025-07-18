@@ -2033,13 +2033,14 @@ var run = async () => {
   // request bodies
   app.use(
     express.json({
-      limit: "1Mb",
+      limit: "10Mb",
       type: OAS.mimeJSON,
     })
   );
 
   app.use(
     fileUpload({
+      limits: { fileSize: 100 * 1024 * 1024 }, // 100Mb
       useTempFiles: true,
       tempFileDir: uploadDirectory,
       createParentPath: true,
@@ -19354,84 +19355,40 @@ var run = async () => {
     }
   }
 
-  async function documentWrite(
-    id,
-    blob,
-    contentMimeType,
-    { source = "historical", point = null }
-  ) {
-    let tsId = await getSeqNextValue("seq_document");
-    if (point == null) {
-      point = dayjs().format(OAS.dayjsFormat);
-    }
-    let tsCol = "historicalTsId";
-    switch (req.body.source) {
-      case "historical":
-        tsCol = "historicalTsId";
-        break;
-      case "planned":
-        tsCol = "plannedTsId";
-        break;
-      case "predicted":
-        tsCol = "predictedTsId";
-        break;
-    }
-    let ddq = await DDC.runAndReadAll(
-      "SELECT id FROM document WHERE id = '" + id + "'"
-    );
-    let ddqRows = ddq.getRows();
-    if (ddqRows.length == 0) {
-      let ddp = await DDC.prepare(
-        "INSERT INTO content (id,delete," +
-          tsCol +
-          ",tsPoint,mimeType) VALUES ($1,$2,$3,strptime($4,$5),$6)"
-      );
-      ddp.bindVarchar(1, id);
-      ddp.bindBoolean(2, false);
-      ddp.bindInteger(3, tsId);
-      ddp.bindVarchar(4, point);
-      ddp.bindVarchar(5, pointFormat);
-      ddp.bindVarchar(6, contentMimeType);
-      await ddp.run();
-    } else {
-      let ddp = await DDC.prepare(
-        "UPDATE document SET " + tsCol + " = $1 WHERE id = $2"
-      );
-      ddp.bindInteger(1, tsId);
-      ddp.bindVarchar(2, id);
-      await ddp.run();
-    }
-
-    let ddp = await DDC.prepare(
-      "INSERT INTO _document (tsId,point,source,documentId,content) VALUES ($1,strptime($2,$3),$4,$5,$6)"
-    );
-    ddp.bindInteger(1, tsId);
-    ddp.bindVarchar(2, point);
-    ddp.bindVarchar(3, pointFormat);
-    ddp.bindVarchar(4, source);
-    ddp.bindVarchar(5, documentId);
-    ddp.bindBlob(6, blob);
-    await ddp.run();
-    return 204;
-  }
-
   async function getDocument(req, res, next) {
+    let datePoint = "AND _document.tsId = document.historicalTsId";
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        if (await documentExists(req.params.documentId)) {
-          let { status, blob } = await documentRead(req.params.documentId, {
-            point: req.query.point,
-          });
-          if (status == 200) {
-            let mimeType = await documentType(req.params.documentType);
-            res.type(mimeType);
-            blob.arrayBuffer().then((buf) => {
-              res.status(200).send(Buffer.from(buf));
-            });
-          } else {
-            res.sendStatus(status);
-          }
+        if (req.query?.point != null) {
+          datePoint =
+            "AND strftime(_document.point,'" +
+            pointFormat +
+            "') = '" +
+            req.query.point +
+            "'";
+        }
+        let ddp = await DDC.prepare(
+          "SELECT mimeType,path,name,sizeBytes,md5Hash FROM document,_document WHERE document.id = $1 AND _document.documentId = document.id AND document.delete = false " +
+            datePoint +
+            " ORDER BY _document.point DESC LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.documentId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          /*
+            .json({
+              documentId: req.params.documentId,
+              hash: ddRows[0][4],
+              size: toInteger(ddRows[0][3]),
+              mimeType: ddRows[0][0],
+            })
+          */
+          res
+            .status(200)
+            .contentType(ddRows[0][0])
+            .sendFile(ddRows[0][2], { root: ddRows[0][1] });
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -19457,41 +19414,49 @@ var run = async () => {
         return res
           .contentType(OAS.mimeJSON)
           .status(400)
-          .json({ errors: "No files were uploaded." });
+          .json({ errors: "No file was uploaded" });
       }
       if (req.files.document != null) {
-        if (!req.files.document.truncated) {
-          let documentId = uuidv4();
-          let tsId = await getSeqNextValue("seq_document");
-          let point = dayjs().format(OAS.dayjsFormat);
-          let source = "historical";
-          let tsCol = "historicalTsId";
-          switch (source) {
-            case "historical":
-              tsCol = "historicalTsId";
-              break;
-            case "planned":
-              tsCol = "plannedTsId";
-              break;
-            case "predicted":
-              tsCol = "predictedTsId";
-              break;
-          }
+        let documentId = uuidv4();
+        let tsId = await getSeqNextValue("seq_document");
+        let point = dayjs().format(OAS.dayjsFormat);
+        let source = "historical";
+        let tsCol = "historicalTsId";
+        switch (source) {
+          case "historical":
+            tsCol = "historicalTsId";
+            break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
+          case "predicted":
+            tsCol = "predictedTsId";
+            break;
+        }
 
-          let docNewPath = path.join(
-            documentDirectory,
-            documentId,
-            tsId.toString()
-          );
-          let docName = req.files.document.name;
-          let docMimeType = req.files.document.mimetype;
-          let docSize = toInteger(req.files.document.size);
-          let docMd5 = req.files.document.md5;
+        let docNewPath = path.join(documentDirectory, documentId, String(tsId));
+        let docName = req.files.document.name;
+        let docTmpPath = req.files.document.tempFilePath;
+        let docMimeType = req.files.document.mimetype;
+        let docSize = toInteger(req.files.document.size);
+        let docMd5 = req.files.document.md5;
+        let docTruncated = req.files.document.truncated;
 
+        if (!docTruncated) {
           req.files.document.mv(path.join(docNewPath, docName), function (err) {
-            if (err) return res.status(500).send(err);
+            if (err) {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                event: "addDocument",
+                state: "move",
+                source: docTmpPath,
+                target: docNewPath,
+                file: docName,
+                error: err,
+              });
+              return res.sendStatus(500);
+            }
           });
-
+          // note: using systemD Service unit unask definition to control created file permissions
           let ddp = await DDC.prepare(
             "INSERT INTO document (id,delete," +
               tsCol +
@@ -19506,7 +19471,7 @@ var run = async () => {
 
           ddp = await DDC.run(
             "INSERT INTO _document (tsId,point,source,documentId,mimeType,path,name,sizeBytes,md5Hash) VALUES (" +
-              tsId.toString() +
+              tsId +
               ",strptime('" +
               point +
               "','" +
@@ -19527,29 +19492,28 @@ var run = async () => {
               docMd5 +
               "')"
           );
-          /*
-        ddp.bindInteger(1, tsId);
-        ddp.bindVarchar(2, point);
-        ddp.bindVarchar(3, pointFormat);
-        ddp.bindVarchar(4, source);
-        ddp.bindVarchar(5, documentId);
-        ddp.bindVarchar(6, docMimeType);
-        ddp.bindVarchar(7, docNewPath);
-        ddp.bindVarchar(8, docName);
-        //ddp.bindInteger(9, docSize);
-        //ddp.bindVarchar(10, docFile.md5);
-        await ddp.run();
-        */
-          res
-            .contentType(OAS.mimeJSON)
-            .status(200)
-            .json({ documentId: documentId });
+          res.contentType(OAS.mimeJSON).status(200).json({
+            documentId: documentId,
+            hash: docMd5,
+            size: docSize,
+            mimeType: docMimeType,
+          });
         } else {
-          res.sendStatus(400);
+          fs.unlink(path.join(docTmpPath, docName), (err) => {
+            if (err) {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                event: "addDocument",
+                state: "remove",
+                source: docTmpPath,
+                file: docName,
+                error: err,
+              });
+            }
+          });
+          res.sendStatus(413); // incomplete upload file truncated
         }
       } else {
-        res.sendStatus(413); // incomplete upload file truncated
-        // TODO: remove uploaded file
+        res.sendStatus(400);
       }
     } catch (e) {
       return next(e);
@@ -19558,29 +19522,130 @@ var run = async () => {
 
   async function replaceDocument(req, res, next) {
     try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        if (await documentExists(req.params.documentId)) {
-          res.sendStatus(
-            await documentWrite(
-              req.params.documentId,
-              req.body,
-              req.get("Content-Type")
-            )
-          );
-        } else {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        return res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: "No file was uploaded" });
+      }
+      if (req.files.document != null) {
+        let tsId = await getSeqNextValue("seq_document");
+        let point = dayjs().format(OAS.dayjsFormat);
+        let source = "historical";
+        let tsCol = "historicalTsId";
+        switch (source) {
+          case "historical":
+            tsCol = "historicalTsId";
+            break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
+          case "predicted":
+            tsCol = "predictedTsId";
+            break;
+        }
+
+        let docNewPath = path.join(
+          documentDirectory,
+          req.params.documentId,
+          String(tsId)
+        );
+        let docName = req.files.document.name;
+        let docTmpPath = req.files.document.tempFilePath;
+        let docMimeType = req.files.document.mimetype;
+        let docSize = toInteger(req.files.document.size);
+        let docMd5 = req.files.document.md5;
+        let docTruncated = req.files.document.truncated;
+
+        if (!(await documentExists(req.params.documentId))) {
+          fs.unlink(path.join(docTmpPath, docName), (err) => {
+            if (err) {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                event: "replaceDocument",
+                state: "remove",
+                source: docTmpPath,
+                file: docName,
+                error: err,
+              });
+            }
+          });
           res
             .contentType(OAS.mimeJSON)
             .status(404)
             .json({
               errors: "documentId " + req.params.documentId + " not found",
             });
+        } else if (!docTruncated) {
+          req.files.document.mv(path.join(docNewPath, docName), function (err) {
+            if (err) {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                event: "replaceDocument",
+                state: "move",
+                source: docTmpPath,
+                target: docNewPath,
+                file: docName,
+                error: err,
+              });
+              return res.sendStatus(500);
+            }
+          });
+          // note: using systemD Service unit unask definition to control created file permissions
+          let ddp = await DDC.prepare(
+            "UPDATE document SET " +
+              tsCol +
+              " = $1, tsPoint = strptime($2,$3) WHERE id = $4"
+          );
+          ddp.bindInteger(1, tsId);
+          ddp.bindVarchar(2, point);
+          ddp.bindVarchar(3, pointFormat);
+          ddp.bindVarchar(4, req.params.documentId);
+          await ddp.run();
+
+          ddp = await DDC.run(
+            "INSERT INTO _document (tsId,point,source,documentId,mimeType,path,name,sizeBytes,md5Hash) VALUES (" +
+              tsId +
+              ",strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'),'" +
+              source +
+              "','" +
+              req.params.documentId +
+              "','" +
+              docMimeType +
+              "','" +
+              docNewPath +
+              "','" +
+              docName +
+              "'," +
+              docSize +
+              ",'" +
+              docMd5 +
+              "')"
+          );
+          res.contentType(OAS.mimeJSON).status(200).json({
+            documentId: req.params.documentId,
+            hash: docMd5,
+            size: docSize,
+            mimeType: docMimeType,
+          });
+        } else {
+          fs.unlink(path.join(docTmpPath, docName), (err) => {
+            if (err) {
+              LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                event: "replaceDocument",
+                state: "remove",
+                source: docTmpPath,
+                file: docName,
+                error: err,
+              });
+            }
+          });
+          res.sendStatus(413); // incomplete upload file truncated
         }
       } else {
-        res
-          .contentType(OAS.mimeJSON)
-          .status(400)
-          .json({ errors: result.array() });
+        res.sendStatus(400);
       }
     } catch (e) {
       return next(e);
@@ -19591,7 +19656,17 @@ var run = async () => {
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
-        if (0 == 1) {
+        if (await documentExists(req.params.documentId)) {
+          let point = dayjs().format(OAS.dayjsFormat);
+          await DDC.run(
+            "UPDATE document SET tsPoint = strptime('" +
+              point +
+              "','" +
+              pointFormat +
+              "'), delete = true WHERE id = '" +
+              req.params.documentId +
+              "'"
+          );
           res.sendStatus(204);
         } else {
           res

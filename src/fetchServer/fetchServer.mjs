@@ -21,6 +21,8 @@ import fs from "fs";
 import simpleGit from "simple-git";
 import { glob } from "glob";
 import { URL } from "node:url";
+import { oracledb } from "oracledb";
+import mysql from "mysql2/promise";
 
 const allPrintableRegEx = /[ -~]/gi;
 const secretScope = "fetch";

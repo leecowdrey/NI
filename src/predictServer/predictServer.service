@@ -3,7 +3,7 @@ Description=MNI Predict Server
 After=multi-user.target
 
 [Service]
-AmbientCapabilities=CAP_NET_BIND_SERVICE
+UMask=007
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/node --run start
 Group=mni
