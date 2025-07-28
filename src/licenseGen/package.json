@@ -1,0 +1,21 @@
+{
+  "bugs": {
+    "url": "https://help.marlindt.net/",
+    "email": "support@marlindt.net"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
+    "js-base64": "^3.7.7",
+    "software-license-key": "^1.0.2",
+    "yargs": "^18.0.0"
+  },
+  "type": "module",
+  "description": "MarlinDT Network Intelligence (MNI) License Key Generator",
+  "homepage": "https://www.merkator.com/",
+  "license": "Proprietary License",
+  "main": "licenseGen.mjs",
+  "name": "mni-license-generator",
+  "private": true,
+  "version": "1.0.0"
+}
