@@ -3052,3 +3052,19 @@ export const bannerGraffti = [
   95, 124, 32, 124, 95, 124, 92, 95, 47, 95, 47, 32, 124, 95, 95, 95, 47, 92,
   95, 95, 44, 95, 124, 10, 10,
 ];
+//
+export const mniMasterPublicKey =
+  "-----BEGIN PUBLIC KEY-----\n" +
+  "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEApsd8yoJ7ai0qVyO+X3pc\n" +
+  "a5r1TXAIA90UcURDD+lvc89MUjGdqGv9OKefWplKhs5ZwzZ6l+OokYe/bc8jX9JK\n" +
+  "efdt3bEGYa4rv+TJredeKUjL9+GmIAO5xZiyGvY9dGSmj4Z7bZ5whl9S/8fHDOGc\n" +
+  "4VHNj3WAeOsD9U+2lh2z34tUOl58mgp62BE/GF+fbdXtzOemst7+I8e4dPX/xagm\n" +
+  "MxCGEXD+e+yBky9Irf3yUScdMttRUSamPHxkylQbvuBK/lwSlcImxa/Z5La70DvA\n" +
+  "FiHbAMmSaR0Az20hxpZgs+pYNM0+OyT4Mu9mFkD/dxH3FYYKJcq3gM2N3ozg7bMw\n" +
+  "LHG6lXnJmyUaKwTOJCg9f3kA9YtIxrt/UdjabCNcxn0MQ1S7A+MpqBsDEFW9MnCJ\n" +
+  "MXu8yW4yCvRK7LHcVmyX9yJOCNXkM6Jyj8CdvKegbHR5cb6T565JUvI6/h4Uf8g+\n" +
+  "e4gIn3ESFwaw7S4gTvCNszhgOmCLl7gJX7trexu1V+sojaXHW5XnhIw6O1Zh3rBa\n" +
+  "SV0yQhkzMj8IAu35bYXtwS2T44PxDKQkFc6ldXh+Flqgsb2q+CInrI75JiYHCwiB\n" +
+  "N57VOqQRtrKUKau90zMkbdLsX5kB3JqLpeumi8hHNbQdq14PD0UVlkiLnSWZk9gO\n" +
+  "/c0Dkgp0+FhFyvUrxT9dJasCAwEAAQ==\n" +
+  "-----END PUBLIC KEY-----";

@@ -16,6 +16,7 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "serve-favicon": "^2.5.0",
+    "software-license-key": "^1.0.2",
     "uuid": "^11.0.5"
   },
   "type": "module",

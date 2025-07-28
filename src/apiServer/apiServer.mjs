@@ -11,6 +11,7 @@
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import { Base64 } from "js-base64";
+import SoftwareLicenseKey from "software-license-key";
 import dns from "dns";
 import cron from "node-cron";
 import duckdb from "@duckdb/node-api";
@@ -31,6 +32,7 @@ import morgan from "morgan";
 import https from "https";
 //import { WebSocketServer } from "ws";
 import path from "path";
+import os from "os";
 import fs from "fs";
 import { Console } from "node:console";
 import { dirname } from "path";
@@ -416,7 +418,9 @@ var duckDbVerison = null;
 var jobBackupEnabled = false;
 var backupCron = null;
 var backupCronTime = null;
-
+var hwClockCheck = new Date();
+var licenseTimer = null;
+var licenseIntervalMs = 86399000; // 23 hours, 59 minutes and 59 seconds
 var updateGeometryTimer = null;
 var updateGeometryIntervalMs = 300000; // 5 minutes
 var updatePremisesPassedTimer = null;
@@ -1827,11 +1831,165 @@ function loadEnv() {
   }
 }
 
+function validateLicense() {
+  if (licenseTimer != null) {
+    clearTimeout(licenseTimer);
+  }
+  let valid = false;
+  let containerEnv = false;
+
+  // check for running inside K8S, Docker etc. as hostname/domain name match needs to be ignored
+  if (
+    process.env.KUBERNETES_SERVICE_HOST != null ||
+    process.env.COMPOSE_PROGRESS != null
+  ) {
+    containerEnv = true;
+  }
+  //
+  let mniLicenseKey = process.env.MNI_KEY;
+  if (mniLicenseKey != null) {
+    try {
+      if (Base64.isValid(mniLicenseKey)) {
+        let key = Base64.decode(mniLicenseKey);
+        if (key != null) {
+          let validator = new SoftwareLicenseKey(OAS.mniMasterPublicKey);
+          try {
+            let keyData = JSON.parse(
+              JSON.stringify(validator.validateLicense(key))
+            );
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(OAS.dayjsFormat),
+                "debug",
+                "license",
+                {
+                  host: keyData.host,
+                  domain: keyData.domain,
+                  start: keyData.start,
+                  expiry: keyData.expiry,
+                }
+              );
+            }
+            // check system clock
+            let uptime = Math.floor(os.uptime() * 1000);
+            let newTime = new Date();
+            let timeDiff = Math.abs(newTime - hwClockCheck);
+            hwClockCheck = newTime;
+            if (timeDiff >= 93600000 && uptime < 93600000) {
+              // 26 hour leniency
+              LOGGER.error(
+                dayjs().format(OAS.dayjsFormat),
+                "error",
+                "license",
+                "hardware clock jumped more than permitted leniency"
+              );
+              valid = false;
+            } else {
+              // check start
+              if (dayjs().isBefore(dayjs(keyData.start, OAS.dayjsFormat))) {
+                LOGGER.error(
+                  dayjs().format(OAS.dayjsFormat),
+                  "error",
+                  "license",
+                  "before permitted start timestamp"
+                );
+                valid = false;
+              }
+              // check expiry
+              if (dayjs().isAfter(dayjs(keyData.expiry, OAS.dayjsFormat))) {
+                LOGGER.error(
+                  dayjs().format(OAS.dayjsFormat),
+                  "error",
+                  "license",
+                  "past expiry timestamp"
+                );
+                valid = false;
+              }
+              // check host and domain (of API server not environment)
+              if (!containerEnv) {
+                if (
+                  os.hostname().toLowerCase() !=
+                  keyData.host.toLowerCase() +
+                    "." +
+                    keyData.domain.toLowerCase()
+                ) {
+                  valid = false;
+                }
+              } else {
+                LOGGER.info(
+                  dayjs().format(OAS.dayjsFormat),
+                  "info",
+                  "license",
+                  "running within containerized environment, ignoring host/domain name check"
+                );
+              }
+              //
+              valid = true;
+            }
+          } catch (err) {
+            LOGGER.error(
+              dayjs().format(OAS.dayjsFormat),
+              "error",
+              "license",
+              "key missing, corrupt or invalid"
+            );
+            valid = false;
+          }
+        } else {
+          LOGGER.error(
+            dayjs().format(OAS.dayjsFormat),
+            "error",
+            "license",
+            "invalid key"
+          );
+          valid = false;
+        }
+      } else {
+        LOGGER.error(
+          dayjs().format(OAS.dayjsFormat),
+          "error",
+          "license",
+          "invalid Base64 encoded key"
+        );
+        valid = false;
+      }
+    } catch (err) {
+      LOGGER.error(
+        dayjs().format(OAS.dayjsFormat),
+        "error",
+        "license",
+        "key not found",
+        err
+      );
+      valid = false;
+    }
+  } else {
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "license",
+      "key missing"
+    );
+    valid = false;
+  }
+  if (valid) {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", "license", "valid");
+  }
+  if (!valid) {
+    quit();
+  } else {
+    licenseTimer = setTimeout(validateLicense, licenseIntervalMs);
+  }
+}
+
 // quit
 function quit() {
   LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "quit",
   });
+  if (licenseTimer != null) {
+    clearTimeout(licenseTimer);
+  }
   if (backupCron != null) {
     backupCron.stop();
   }
@@ -1979,8 +2137,8 @@ async function dnsSD() {
 
 //
 var run = async () => {
-  // load env
   loadEnv();
+  validateLicense();
 
   // use DNS service discovery to determine own listening address:port
   // these values will override local .env
@@ -20040,11 +20198,13 @@ var run = async () => {
        exposed Route: /mni/v1/content
        HTTP method:   POST
     */
-  app.get(serveUrlPrefix + serveUrlVersion + "/document",
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/document",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
-    getAllDocuments);
+    getAllDocuments
+  );
 
   /*
        Tag:           Documents
@@ -25600,6 +25760,7 @@ var run = async () => {
       host: serveHost,
       keepalive: serveKeepalive,
       keepAliveTimeout: serveTimeOutKeepalive,
+      osHostname: os.hostname().toLowerCase(),
       port: servePort,
       requestTimeout: serveTimeOutRequest,
       serviceDiscoveryName: serveName,

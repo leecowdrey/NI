@@ -273,6 +273,20 @@ else
   done
 fi
 
+doing "Scanning: licenseGen (NodeJS)"
+nodejs_scan "licenseGen"
+RETVAL=$?
+if [[ ${RETVAL} -eq 0 ]] ; then
+  success "- ok"
+else
+  CVE_FOUND=1
+  CVEs=()
+  IFS=' ' read -r -a CVEs <<< $(cat src/licenseGen/cve.json |jq -r ".[].vulnerabilities[].id"|xargs)
+  for CVE in ${CVEs[@]}; do
+    alert "- found ${CVE}"
+  done
+fi
+
 #
 unset CVEs
 popd &>/dev/null
