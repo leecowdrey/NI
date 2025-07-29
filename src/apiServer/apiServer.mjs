@@ -1870,7 +1870,7 @@ function validateLicense() {
                 }
               );
             }
-            // check system clock
+            // check system clock for tampering
             let uptime = Math.floor(os.uptime() * 1000);
             let newTime = new Date();
             let timeDiff = Math.abs(newTime - hwClockCheck);

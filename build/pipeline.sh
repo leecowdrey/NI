@@ -162,7 +162,8 @@ build/buildtag.sh && \
 build/cvescan.sh && \
 build/openapi.sh && \
 build/erd2svg.sh && \
-build/buildui.sh
+build/buildui.sh && \
+build/release.sh
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
