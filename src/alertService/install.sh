@@ -116,7 +116,7 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating NodeJS package for target"
-sed -i -e "s|/usr/local/mni/alertService.mjs|${WORKING_DIRECTORY}/alertService.mjs|" ${WORKING_DIRECTORY}/package.json && \
+sed -i -e "s|/usr/local/mni/alert/alertService.mjs|${WORKING_DIRECTORY}/alertService.mjs|" ${WORKING_DIRECTORY}/package.json && \
 sed -i -e "s|/etc/mni/mni.ini|${CONFIG_DIRECTORY}/mni.ini|" ${WORKING_DIRECTORY}/package.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"

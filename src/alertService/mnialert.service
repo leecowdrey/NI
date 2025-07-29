@@ -9,11 +9,11 @@ ExecStart=/usr/bin/node --run start
 Group=mni
 LimitNOFILE=infinity
 Restart=always
-StandardError=append:/var/log/mni/alertService.log
-StandardOutput=append:/var/log/mni/alertService.log
+StandardError=append:/var/log/mni/alert.log
+StandardOutput=append:/var/log/mni/alert.log
 Type=simple
-User=predict
-WorkingDirectory=/usr/local/mni/alertService
+User=mnialert
+WorkingDirectory=/usr/local/mni/alert
 
 [Install]
 WantedBy=multi-user.target
