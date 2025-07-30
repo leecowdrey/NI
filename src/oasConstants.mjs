@@ -27,6 +27,7 @@ export const fts_resources = [
   "cable",
   "currency",
   "cve",
+  "document",
   "duct",
   "ne",
   "pole",

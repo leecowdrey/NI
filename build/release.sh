@@ -158,7 +158,7 @@ set +x
 
 ## NodeJS/BrowserJS Obfuscation
 # 1 - src folder suffix
-# 2 - extension (ejs,mjs,js)
+# 2 - file pattern (*.ejs,*.mjs,*.js etc.)
 # 3 - target (node,browser)
 # 4 - preset (low,medium,high)
 function js_obfuscate() {
@@ -176,15 +176,16 @@ function js_obfuscate() {
   local JS_TMP=$(mktemp -q -p ./ mniXXXXXXXX)
   [[ -f "${JS_TMP}" ]] && mv -f ${JS_TMP} ${JS_TMP}.js &>/dev/null
   JS_TMP="${JS_TMP}.js"
-  for JS in $(find ../src/${1} -type f -maxdepth 1 -name "*.${2}") ; do
-    local JS_FILE=$(basename ${JS})
-    if [[ "${JS_FILE}" != "oasConstants.mjs" ]] ; then
-      cat > ${JS_TMP} <<EOF
+  for JS in $(find ../src/${1} -type f -maxdepth 1 -name "${2}") ; do
+      local JS_SRC="../src/"
+      local JS_REL="${JS/$JS_SRC/}"
+      if [[ "${JS}" != *"oasConstants.mjs"* ]] ; then
+        cat > ${JS_TMP} <<EOF
 const JSConfuser = require("js-confuser");
 const { readFileSync, writeFileSync } = require("fs");
 
 // Read input code
-const sourceCode = readFileSync("../src/${1}/${JS_FILE}", "utf8");
+const sourceCode = readFileSync("${JS}", "utf8");
 const options = {
   target: "${3}",
   preset: "low",
@@ -226,7 +227,7 @@ const options = {
 JSConfuser.obfuscate(sourceCode, options)
   .then((result) => {
     // Write output code
-    writeFileSync("${1}/${JS_FILE}", result.code);
+    writeFileSync("${JS_REL}", result.code);
   })
   .catch((err) => {
     // Error occurred
@@ -234,10 +235,10 @@ JSConfuser.obfuscate(sourceCode, options)
     process.exit(1);
   });
 EOF
-    node ${JS_TMP}
-    RETVAL=$?
-    [[ ${RETVAL} -ne 0 ]] && break
-    [[ -f "${JS_TMP}" ]] && rm -f ${JS_TMP} &>/dev/null
+        node ${JS_TMP}
+        RETVAL=$?
+        [[ ${RETVAL} -ne 0 ]] && break
+        [[ -f "${JS_TMP}" ]] && rm -f ${JS_TMP} &>/dev/null
     fi
   done
   return ${RETVAL}
@@ -308,11 +309,12 @@ RETVAL=$?
 
 ## run the Obfuscation
 doing "Obfuscating JavaScript"
-js_obfuscate "alertService" "mjs" "node" "low" && \
-js_obfuscate "apiServer" "mjs" "node" "low" && \
-js_obfuscate "fetchService" "mjs" "node" "low" && \
-js_obfuscate "predictService" "mjs" "node" "low"  && \
-js_obfuscate "uiServer" "mjs" "node" "low" 
+js_obfuscate "alertService" "*.mjs" "node" "low" && \
+js_obfuscate "apiServer" "*.mjs" "node" "low" && \
+js_obfuscate "fetchService" "*.mjs" "node" "low" && \
+js_obfuscate "predictService" "*.mjs" "node" "low" && \
+js_obfuscate "ui/dist/js" "mni*.js" "browser" "low" && \
+js_obfuscate "uiServer" "*.mjs" "node" "low" 
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

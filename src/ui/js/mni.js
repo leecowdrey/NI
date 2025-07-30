@@ -9,20 +9,21 @@
 //=====================================================================
 //
 var mmdReady = null;
+var mniAppShortName = "MNI";
+var mniAppIcon = "/favicon.ico";
+var mniAppNotificationIcon = "/favicon.ico";
+var mniAppName = null;
+var mniAppVersion = null;
+var mniAppBuild = null;
+var mniRootUrl = "/";
+var mniGatewayUrl = null;
+var mniGatewayUrlIp = null;
+var mniGatewayUrlDns = null;
+var mniRetryMs = 1000;
+var mniRefreshMs = 60000;
+var mniReadinessAttempts = 10;
 
 function mniMetadata() {
-  var mniAppShortName = "MNI";
-  var mniAppIcon = "/favicon.ico";
-  var mniAppNotificationIcon = "/favicon.ico";
-  var mniAppName = null;
-  var mniAppVersion = null;
-  var mniAppBuild = null;
-  var mniRootUrl = "/";
-  var mniGatewayUrl = null;
-  var mniGatewayUrlDns = null;
-  var mniRetryMs = 1000;
-  var mniRefreshMs = 60000;
-  var mniReadinessAttempts = 10;
   try {
     if (mmdReady != null) {
       clearTimeout(mmdReady);
@@ -49,6 +50,7 @@ function mniMetadata() {
         localStorage.setItem("mni.appBuild", data.build);
         localStorage.setItem("mni.rootUrl", data.rootUrl);
         localStorage.setItem("mni.gatewayUrl", data.gatewayUrl);
+        localStorage.setItem("mni.gatewayUrlIp", data.gatewayUrlIp);
         localStorage.setItem("mni.gatewayUrlDns", data.gatewayUrlDns);
         localStorage.setItem("mni.retryMs", data.retryMs);
         localStorage.setItem("mni.refreshMs", data.refreshMs);
@@ -66,6 +68,7 @@ function mniMetadata() {
     mniAppBuild = localStorage.getItem("mni.appBuild");
     mniRootUrl = localStorage.getItem("mni.rootUrl");
     mniGatewayUrl = localStorage.getItem("mni.gatewayUrl");
+    mniGatewayUrlIp = localStorage.getItem("mni.gatewayUrlIp");
     mniGatewayUrlDns = localStorage.getItem("mni.gatewayUrlDns");
     mniRetryMs = localStorage.getItem("mni.retryMs");
     mniRefreshMs = localStorage.getItem("mni.refreshMs");
@@ -83,6 +86,8 @@ function clearSessionStorage() {
   localStorage.removeItem("mni.readinessAttempts");
   localStorage.removeItem("mni.rootUrl");
   localStorage.removeItem("mni.gatewayUrl");
+  localStorage.removeItem("mni.gatewayUrlIp");
+  localStorage.removeItem("mni.gatewayUrlDns");
   localStorage.removeItem("mni.appName");
   localStorage.removeItem("mni.appShortName");
   localStorage.removeItem("mni.appVersion");
@@ -119,6 +124,10 @@ function notify(m, t = "MNI", i = "/favicon.ico") {
 }
 function jump(jumpTo) {
   window.location = jumpTo;
+  return false;
+}
+function menuJump(jumpTo) {
+  window.location = localStorage.getItem("mni.rootUrl")+"/"+jumpTo;
   return false;
 }
 function logout() {

@@ -479,16 +479,6 @@ var run = async () => {
     };
     res.render("index", { payload: payload });
   });
-  // dynamic page with injected payload to include API Gateway service discovery
-  app.post(serveUrlPrefix, function (req, res, next) {
-    let payload = {
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-      rootUrl: serveUrlPrefix,
-    };
-    res.render("readiness", { payload: payload });
-  });
 
   app.get(serveUrlPrefix + "/metadata", function (req, res, next) {
     let resJson = {
@@ -509,17 +499,12 @@ var run = async () => {
     res.contentType(OAS.mimeJSON).status(200).json(resJson);
   });
 
+  app.post(serveUrlPrefix, function (req, res, next) {
+    res.render("readiness");
+  });
+
   app.get(serveUrlPrefix + "/dashboard", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("dashboard", { payload: payload });
+    res.render("dashboard");
   });
 
   app.get(serveUrlPrefix + "/cable/:cableId", function (req, res, next) {
@@ -528,13 +513,6 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       cableId: cableId,
       point: point,
     };
@@ -542,16 +520,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/cable", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("cable", { payload: payload });
+    res.render("cable");
   });
 
   app.get(serveUrlPrefix + "/duct/:ductId", function (req, res, next) {
@@ -560,13 +529,6 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       ductId: ductId,
       point: point,
     };
@@ -574,16 +536,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/duct", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("duct", { payload: payload });
+    res.render("duct");
   });
 
   app.get(serveUrlPrefix + "/pole/:poleId", function (req, res, next) {
@@ -592,13 +545,6 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       poleId: poleId,
       point: point,
     };
@@ -606,16 +552,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/pole", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("pole", { payload: payload });
+    res.render("pole");
   });
 
   app.get(serveUrlPrefix + "/ne/:neId", function (req, res, next) {
@@ -624,13 +561,6 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       neId: req.params.neId,
       point: point,
     };
@@ -638,16 +568,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/ne", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("ne", { payload: payload });
+    res.render("ne");
   });
 
   app.get(serveUrlPrefix + "/rack/:rackId", function (req, res, next) {
@@ -655,15 +576,7 @@ var run = async () => {
     if (req.query?.point != null) {
       point = req.query.point;
     }
-
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       rackId: rackId,
       point: point,
     };
@@ -671,16 +584,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/rack", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("rack", { payload: payload });
+    res.render("rack");
   });
 
   app.get(serveUrlPrefix + "/site/:siteId", function (req, res, next) {
@@ -688,15 +592,7 @@ var run = async () => {
     if (req.query?.point != null) {
       point = req.query.point;
     }
-
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       siteId: siteId,
       point: point,
     };
@@ -704,16 +600,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/site", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("site", { payload: payload });
+    res.render("site");
   });
 
   app.get(serveUrlPrefix + "/service/:serviceId", function (req, res, next) {
@@ -721,15 +608,7 @@ var run = async () => {
     if (req.query?.point != null) {
       point = req.query.point;
     }
-
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       serviceId: serviceId,
       point: point,
     };
@@ -737,16 +616,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/service", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("service", { payload: payload });
+    res.render("service");
   });
 
   app.get(serveUrlPrefix + "/trench/:trenchId", function (req, res, next) {
@@ -754,15 +624,7 @@ var run = async () => {
     if (req.query?.point != null) {
       point = req.query.point;
     }
-
     let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
       trenchId: trenchId,
       point: point,
     };
@@ -770,16 +632,7 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/trench", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("trench", { payload: payload });
+    res.render("trench");
   });
 
   app.get(
@@ -789,15 +642,7 @@ var run = async () => {
       if (req.query?.point != null) {
         point = req.query.point;
       }
-
       let payload = {
-        appName: appName,
-        appVersion: appVersion,
-        appBuild: appBuild,
-        rootUrl: serveUrlPrefix,
-        gatewayUrl: apiGatewayDns,
-        gatewayUrlIp: apiGatewayIp,
-        gatewayUrlDns: apiGatewayDns,
         trenchId: trenchId,
         point: point,
       };
@@ -806,211 +651,63 @@ var run = async () => {
   );
 
   app.get(serveUrlPrefix + "/trenchLifetime", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("trenchLifetime", { payload: payload });
+    res.render("trenchLifetime");
   });
 
   app.get(serveUrlPrefix + "/q2c", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("q2c", { payload: payload });
+    res.render("q2c");
   });
 
   app.get(serveUrlPrefix + "/email", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("email", { payload: payload });
+    res.render("email");
   });
 
   app.get(serveUrlPrefix + "/map", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("map", { payload: payload });
-  });
-
-  app.get(serveUrlPrefix + "/map", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("map", { payload: payload });
+    res.render("map");
   });
 
   app.get(serveUrlPrefix + "/provider", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("provider", { payload: payload });
+    res.render("provider");
   });
 
   app.get(serveUrlPrefix + "/kafka", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("kafka", { payload: payload });
+    res.render("kafka");
   });
 
   app.get(serveUrlPrefix + "/workflow", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("workflow", { payload: payload });
+    res.render("workflow");
   });
 
   app.get(serveUrlPrefix + "/alert", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("alert", { payload: payload });
+    res.render("alert");
   });
 
   app.get(serveUrlPrefix + "/workalert", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("workalert", { payload: payload });
+    res.render("workalert");
   });
 
   app.get(serveUrlPrefix + "/callbackalert", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("callbackalert", { payload: payload });
+    res.render("callbackalert");
   });
 
   app.get(serveUrlPrefix + "/publishalert", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("publishalert", { payload: payload });
+    res.render("publishalert");
   });
 
   app.get(serveUrlPrefix + "/notifyalert", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("notifyalert", { payload: payload });
+    res.render("notifyalert");
   });
 
   app.get(serveUrlPrefix + "/setting", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("setting", { payload: payload });
+    res.render("setting");
   });
 
   app.get(serveUrlPrefix + "/openapi", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("openapi", { payload: payload });
+    res.render("openapi");
   });
 
   app.get(serveUrlPrefix + "/help", function (req, res, next) {
-    let payload = {
-      appName: appName,
-      appVersion: appVersion,
-      appBuild: appBuild,
-      rootUrl: serveUrlPrefix,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
-      gatewayUrlDns: apiGatewayDns,
-    };
-    res.render("help", { payload: payload });
+    res.render("help");
   });
 
   // Express 404 handling ¯\_(ツ)_/¯

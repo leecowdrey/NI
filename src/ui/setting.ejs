@@ -25,42 +25,42 @@
             display: inline-block;
         }
     </style>
-    <script async src="/mni/js/mni.js"></script>
+    <script src="/mni/js/mni.js"></script>
 </head>
 
 <body>
     <div class="icon-bar" id="icon-bar">
         <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
                 width="25%" height="25%"></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('dashboard');"
             title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('cable');"
             title="Cables"><i class="fa fa-plug"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('duct');"
             title="Ducts"><i class="fa fa-superpowers"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('pole');"
             title="Poles"><i class="fa fa-arrows-v"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('ne');"
             title="Network Equipment"><i class="fa fa-server"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('rack');"
             title="Racks"><i class="fa fa-list-ol"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/site');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('site');"
             title="Sites"><i class="fa fa-building-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/service');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('service');"
             title="Services"><i class="fa fa-tty"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trench');"
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Settings"><i class="fa fa-cog"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('openapi');"
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
@@ -111,140 +111,10 @@
         </div>
     </div>
     <hr />
-    <script>
-        let fadReady = null;
-        let sadReady = null;
-        let retryMs = 1000;
-        function resetMinMax(w) {
-            let u = document.getElementById(w + "Unit");
-            let v = u.options[u.selectedIndex].value;
-            let d = document.getElementById(w + "Duration");
-            switch (v) {
-                case "day":
-                    d.setAttribute("min", "1");
-                    d.setAttribute("max", "31");
-                    break;
-                case "week":
-                    d.setAttribute("min", "1");
-                    d.setAttribute("max", "52");
-                    break;
-                case "month":
-                    d.setAttribute("min", "1");
-                    d.setAttribute("max", "12");
-                    break;
-                case "quarter":
-                    d.setAttribute("min", "1");
-                    d.setAttribute("max", "4");
-                    break;
-                case "year":
-                    d.setAttribute("min", "1");
-                    d.setAttribute("max", "10");
-                    break;
-                default:
-                    u.setAttribute("min", "1");
-                    u.setAttribute("max", "99");
-            }
-        }
-        function saveAdminData() {
-            if (sadReady != null) {
-                clearTimeout(sadReady);
-            }
-            let a = document.getElementById("historicalDuration");
-            let b = document.getElementById("historicalUnit");
-            let c = document.getElementById("predictedDuration");
-            let d = document.getElementById("historicalUnit");
-            let hD = a.value;
-            let hU = b.options[b.selectedIndex].value;
-            let pD = c.value;
-            let pU = d.options[d.selectedIndex].value;
-            let reqJson = {
-                historical: {
-                    duration: toInteger(hD),
-                    unit: hU,
-                },
-                predicted: {
-                    duration: toInteger(pD),
-                    unit: pU,
-                }
-            };
-            fetch("<%=payload.gatewayUrl%>/admin/data", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(reqJson),
-                keepalive: true,
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        sadReady = setTimeout(saveAdminData, retryMs);
-                    }
-                })
-                .catch((e) => {
-                    sadReady = setTimeout(saveAdminData, retryMs);
-                });
-
-        }
-        function fetchAdminData() {
-            if (fadReady != null) {
-                clearTimeout(fadReady);
-            }
-            fetch("<%=payload.gatewayUrl%>/admin/data", {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                },
-                keepalive: true,
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        fadReady = setTimeout(fetchAdminData, retryMs);
-                    }
-                })
-                .then((data) => {
-                    let hD = 3;
-                    let hU = "month";
-                    let pD = 1;
-                    let pU = "week";
-                    if (data.historical?.duration != null) {
-                        hD = data.historical.duration;
-                    }
-                    if (data.historical?.unit != null) {
-                        hU = data.historical.unit;
-                    }
-                    if (data.predicted?.duration != null) {
-                        pD = data.predicted.duration;
-                    }
-                    if (data.predicted?.unit != null) {
-                        pU = data.predicted.unit;
-                    }
-                    document.getElementById("historicalDuration").value = hD;
-                    document.getElementById("historicalUnit").value = hU;
-                    document.getElementById("predictedDuration").value = pD;
-                    document.getElementById("predictedUnit").value = pU;
-                })
-                .catch((e) => {
-                    fadReady = setTimeout(fetchAdminData, retryMs);
-                });
-
-        }
-        try {
-            resetMinMax("historical");
-            resetMinMax("predicted");
-        } catch (e) {
-        }
-        try {
-            fetchAdminData();
-        } catch (e) {
-            fadReady = setTimeout(fetchAdminData, retryMs);
-        }
-    </script>
-
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>
+    <script defer="defer" src="/mni/js/mni-setting.js"></script>
 </body>
 
 </html>

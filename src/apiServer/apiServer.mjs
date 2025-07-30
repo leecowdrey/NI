@@ -222,6 +222,19 @@ const ftsTables = [
     next: null,
   },
   {
+    table: "document",
+    key: "id",
+    leader: true,
+    field: null,
+    next: "_document",
+  },
+  {
+    table: "_document",
+    leader: false,
+    key: "documentId",
+    field: ["path", "name", "md5Hash"],
+  },
+  {
     table: "duct",
     key: "id",
     leader: true,
@@ -233,7 +246,6 @@ const ftsTables = [
     leader: false,
     key: "ductId",
     field: ["purpose", "category", "state"],
-    key: "ductId",
   },
   {
     table: "ne",

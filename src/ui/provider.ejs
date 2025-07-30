@@ -33,44 +33,44 @@
     </style>
     <script src="js/color.esm.min.js"></script>
     <script src="js/chart.umd.min.js"></script>
-    <script async src="/mni/js/mni.js"></script>
+    <script src="/mni/js/mni.js"></script>
 </head>
 
 <body>
     <div class="icon-bar" id="icon-bar">
         <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
                 width="25%" height="25%"></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('dashboard');"
             title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('cable');"
             title="Cables"><i class="fa fa-plug"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('duct');"
             title="Ducts"><i class="fa fa-superpowers"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('pole');"
             title="Poles"><i class="fa fa-arrows-v"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('ne');"
             title="Network Equipment"><i class="fa fa-server"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('rack');"
             title="Racks"><i class="fa fa-list-ol"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/site');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('site');"
             title="Sites"><i class="fa fa-building-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/service');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('service');"
             title="Services"><i class="fa fa-tty"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trench');"
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('q2c');"
             title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Providers"><i
                 class="fa fa-handshake-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('openapi');"
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
@@ -78,13 +78,13 @@
             title="Toggle Bar | Mac <ctrl><opt>H | Windows: <alt><shift> |"><i class="fa fa-bars"></i></a>
     </div>
     <div class="icon-bar" id="icon-bar">
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/email');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('email');"
             title="Email Providers"><i class="fa fa-envelope"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/map');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('map');"
             title="Map Providers"><i class="fa fa-map-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/kafka');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('kafka');"
             title="Kafka Providers"><i class="fa fa-share-alt"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/workflow');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('workflow');"
             title="Workflow Engines"><i class="fa fa-sitemap"></i></a>
     </div>
     <div class="panel" id="providerPanel"><a accesskey="@" nohref onclick="fetchProviderStats();" onmouseover=""
@@ -96,120 +96,7 @@
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>
-    <script>
-        let ready = null;
-        let retryMs = 5000;
-        let refreshMs = 300000;
-        let chartProvider = null;
-        let emailProvider = 0;
-        let kafkaProvider = 0;
-        let mapProvider = 0;
-        let workflowProvider = 0;
-        function fetchProviderStats() {
-            if (ready != null) {
-                clearTimeout(ready);
-            }
-
-            fetch("<%=payload.gatewayUrl%>/ui/statistic", {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                },
-                keepalive: true,
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        ready = setTimeout(fetchProviderStats, retryMs);
-                    }
-                })
-                .then((data) => {
-                    if (data.providers != null) {
-                        {
-                            if (data.providers?.email != null) {
-                                emailProvider = toInteger(data.providers.email);
-                            }
-                            if (data.providers?.kafka != null) {
-                                kafkaProvider = toInteger(data.providers.kafka);
-                            }
-                            if (data.providers?.map != null) {
-                                mapProvider = toInteger(data.providers.map);
-                            }
-                            if (data.providers?.workflow != null) {
-                                workflowProvider = toInteger(data.providers.workflow);
-                            }
-                        }
-                    }
-                    Chart.defaults.font.family = "Lato";
-                    if (chartProvider != null) {
-                        chartProvider.data.datasets[0].data[0] = emailProvider;
-                        chartProvider.data.datasets[0].data[1] = kafkaProvider;
-                        chartProvider.data.datasets[0].data[2] = mapProvider;
-                        chartProvider.data.datasets[0].data[3] = workflowProvider;
-                        chartProvider.update();
-                    } else {
-                        chartProvider = new Chart("providerSummary", {
-                            type: "bar",
-                            options: {
-                                indexAxis: "y",
-                                responsive: true,
-                                scales: {
-                                    x: {
-                                        display: false,
-                                        stacked: true,
-                                        grid: {
-                                            display: false,
-                                        },
-                                        scales: {
-                                            x: {
-                                                display: false,
-                                            },
-                                        },
-                                    },
-                                    y: {
-                                        stacked: true,
-                                        grid: {
-                                            display: false,
-                                        },
-                                    },
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: false,
-                                    },
-                                },
-                            },
-                            data: {
-                                labels: [
-                                    "Email",
-                                    "Kafka",
-                                    "Map",
-                                    "Workflow",
-                                ],
-                                datasets: [
-                                    {
-                                        data: [emailProvider, kafkaProvider, mapProvider, workflowProvider],
-                                        backgroundColor: "rgba(109,43,220,1)",
-                                        hoverBackgroundColor: "rgba(73,16,171,1)",
-                                    },
-                                ],
-                            },
-                        });
-                    }
-                    ready = setTimeout(fetchProviderStats, refreshMs);
-                })
-                .catch((e) => {
-                    ready = setTimeout(fetchProviderStats, retryMs);
-                });
-        }
-        try {
-            fetchProviderStats();
-        } catch (e) {
-            ready = setTimeout(fetchProviderStats, retryMs);
-        }
-    </script>
-
+    <script defer="defer" src="/mni/js/mni-provider.js"></script>
 </body>
 
 </html>

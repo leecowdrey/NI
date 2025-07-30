@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1753810863
+  version: 1.0.0.1753892117
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -18327,6 +18327,7 @@ components:
         - cable
         - currency
         - cve
+        - document
         - duct
         - ne
         - pole

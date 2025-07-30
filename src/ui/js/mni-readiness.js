@@ -1,0 +1,59 @@
+let ready = null;
+let attempt = 0;
+let maxAttempt = 10;
+document.getElementById("graffiti").innerHTML = String.fromCharCode( 32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 10, 124, 32, 32, 92, 47, 32, 32, 124, 32, 95, 95, 95, 32, 95, 32, 95, 95, 124, 32, 124, 32, 95, 95, 95, 95, 32, 95, 124, 32, 124, 95, 32, 95, 95, 95, 32, 32, 95, 32, 95, 95, 32, 32, 32, 95, 32, 95, 95, 95, 95, 32, 32, 32, 95, 95, 47, 32, 47, 95, 95, 32, 32, 95, 95, 32, 95, 32, 10, 124, 32, 124, 92, 47, 124, 32, 124, 47, 32, 95, 32, 92, 32, 39, 95, 95, 124, 32, 124, 47, 32, 47, 32, 95, 96, 32, 124, 32, 95, 95, 47, 32, 95, 32, 92, 124, 32, 39, 95, 95, 124, 32, 124, 32, 39, 95, 32, 92, 32, 92, 32, 47, 32, 47, 32, 47, 32, 95, 95, 124, 47, 32, 95, 96, 32, 124, 10, 124, 32, 124, 32, 32, 124, 32, 124, 32, 32, 95, 95, 47, 32, 124, 32, 32, 124, 32, 32, 32, 60, 32, 40, 95, 124, 32, 124, 32, 124, 124, 32, 40, 95, 41, 32, 124, 32, 124, 32, 32, 32, 32, 124, 32, 124, 32, 124, 32, 92, 32, 86, 32, 47, 32, 47, 92, 95, 95, 32, 92, 32, 40, 95, 124, 32, 124, 10, 124, 95, 124, 32, 32, 124, 95, 124, 92, 95, 95, 95, 124, 95, 124, 32, 32, 124, 95, 124, 92, 95, 92, 95, 95, 44, 95, 124, 92, 95, 95, 92, 95, 95, 95, 47, 124, 95, 124, 32, 32, 32, 32, 124, 95, 124, 32, 124, 95, 124, 92, 95, 47, 95, 47, 32, 124, 95, 95, 95, 47, 92, 95, 95, 44, 95, 124, 10, 10 );
+function readiness() {
+  attempt++;
+  let counter = ".".repeat(attempt);
+  document.getElementById( "readiness" ).innerHTML = `<center><div class="loader"></div>${counter}</center>`;
+  fetch(localStorage.getItem("mni.gatewayUrl")+"/api/readiness", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    keepalive: true,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        if (attempt >= maxAttempt) {
+          logout();
+        }
+        ready = setTimeout(readiness, 1000);
+      }
+    })
+    .then((data) => {
+      if (data?.point != null) {
+        let datePoint = new RegExp("^[0-9]{8}T[0-9]{6}$");
+        if (datePoint.test(data.point)) {
+          window.location.replace(localStorage.getItem("mni.rootUrl")+"/dashboard");
+        } else {
+          if (attempt >= maxAttempt) {
+            logout();
+          }
+          ready = setTimeout(readiness, 1000);
+        }
+      } else {
+        if (attempt >= maxAttempt) {
+          logout();
+        }
+        ready = setTimeout(readiness, 1000);
+      }
+    })
+    .catch((e) => {
+      if (attempt >= maxAttempt) {
+        logout();
+      }
+      ready = setTimeout(readiness, 1000);
+    });
+}
+try {
+  readiness();
+} catch (e) {
+  notify(e);
+  if (attempt >= maxAttempt) {
+    logout();
+  }
+  ready = setTimeout(readiness, 10000);
+}

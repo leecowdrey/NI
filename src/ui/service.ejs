@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="img/icon.png">
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    </script>
     <style>
         .panel {
             width: 30%;
@@ -263,81 +260,42 @@
             color: #ffffff;
         }
     </style>
-    <script async src="/mni/js/mni.js"></script>
-    <script>
-        function adjustLine(from, to, line) {
-
-            var fT = from.offsetTop + from.offsetHeight / 2;
-            var tT = to.offsetTop + to.offsetHeight / 2;
-            var fL = from.offsetLeft + from.offsetWidth;// / 2;
-            var tL = to.offsetLeft;// + to.offsetWidth / 2;
-
-            var CA = Math.abs(tT - fT);
-            var CO = Math.abs(tL - fL);
-            var H = Math.sqrt(CA * CA + CO * CO);
-            var ANG = 180 / Math.PI * Math.acos(CA / H);
-
-            if (tT > fT) {
-                var top = (tT - fT) / 2 + fT;
-            } else {
-                var top = (fT - tT) / 2 + tT;
-            }
-            if (tL > fL) {
-                var left = (tL - fL) / 2 + fL;
-            } else {
-                var left = (fL - tL) / 2 + tL;
-            }
-
-            if ((fT < tT && fL < tL) || (tT < fT && tL < fL) || (fT > tT && fL > tL) || (tT > fT && tL > fL)) {
-                ANG *= -1;
-            }
-            top -= H / 2;
-
-            line.style["-webkit-transform"] = 'rotate(' + ANG + 'deg)';
-            line.style["-moz-transform"] = 'rotate(' + ANG + 'deg)';
-            line.style["-ms-transform"] = 'rotate(' + ANG + 'deg)';
-            line.style["-o-transform"] = 'rotate(' + ANG + 'deg)';
-            line.style["-transform"] = 'rotate(' + ANG + 'deg)';
-            line.style.top = top + 'px';
-            line.style.left = left + 'px';
-            line.style.height = H + 'px';
-        }
-    </script>
+    <script src="/mni/js/mni.js"></script>
 </head>
 
 <body>
     <div class="icon-bar" id="icon-bar">
         <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
                 width="25%" height="25%"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('dashboard');"
             title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('cable');"
             title="Cables"><i class="fa fa-plug"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('duct');"
             title="Ducts"><i class="fa fa-superpowers"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('pole');"
             title="Poles"><i class="fa fa-arrows-v"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('ne');"
             title="Network Equipment"><i class="fa fa-server"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('rack');"
             title="Racks"><i class="fa fa-list-ol"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/site');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('site');"
             title="Sites"><i class="fa fa-building-o"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref class="active" title="ports"><i class="fa fa-tty"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trench');"
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-       <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+       <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('openapi');"
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
@@ -372,68 +330,7 @@
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>
-    <script>
-        adjustLine(
-            document.getElementById('customer1'),
-            document.getElementById('ingress1'),
-            document.getElementById('customer1Cable1')
-        );
-        adjustLine(
-            document.getElementById('customer1'),
-            document.getElementById('ingress2'),
-            document.getElementById('customer1Cable2')
-        );
-        adjustLine(
-            document.getElementById('customer2'),
-            document.getElementById('ingress3'),
-            document.getElementById('customer2Cable1')
-        );
-        adjustLine(
-            document.getElementById('customer2'),
-            document.getElementById('ingress4'),
-            document.getElementById('customer2Cable2')
-        );
-        adjustLine(
-            document.getElementById('ingress1'),
-            document.getElementById('ingress'),
-            document.getElementById('ingressCable1')
-        );
-        adjustLine(
-            document.getElementById('ingress2'),
-            document.getElementById('ingress'),
-            document.getElementById('ingressCable2')
-        );
-        adjustLine(
-            document.getElementById('ingress3'),
-            document.getElementById('ingress'),
-            document.getElementById('ingressCable3')
-        );
-        adjustLine(
-            document.getElementById('ingress4'),
-            document.getElementById('ingress'),
-            document.getElementById('ingressCable4')
-        );
-        adjustLine(
-            document.getElementById('ingress'),
-            document.getElementById('egress1'),
-            document.getElementById('egressCable1')
-        );
-        adjustLine(
-            document.getElementById('ingress'),
-            document.getElementById('egress2'),
-            document.getElementById('egressCable2')
-        );
-        adjustLine(
-            document.getElementById('egress1'),
-            document.getElementById('nextHop1'),
-            document.getElementById('nextHopCable1')
-        );
-        adjustLine(
-            document.getElementById('egress2'),
-            document.getElementById('nextHop2'),
-            document.getElementById('nextHopCable2')
-        );
-    </script>
+    <script defer="defer" src="/mni/js/mni-service.js"></script>
 </body>
 
 </html>

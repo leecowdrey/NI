@@ -36,217 +36,44 @@
             min-height: 86vh;
         }
     </style>
-    <script async src="/mni/js/mni.js"></script>
+    <script src="/mni/js/mni.js"></script>
 </head>
 
 <body>
-    <script>
-        var map;
-        var polePath;
-        var lineSymbol;
-        let fmrReady = null;
-        let ftgReady = null;
-        let flsReady = null;
-        let fppReady = null;
-        let retryMs = 5000;
-        let siteId = null;
-        let point = null;
-        let mapVendor = null;
-        let siteX = 0;
-        let siteY = 0;
-        let marker = null;
-        let endMarker = null;
-        let mapCenter = { lat: 0, lng: 0 };
-        let mapRenderUrl = null;
-        let urlOnOffNetSuffix = "";
-        function fetchListSites() {
-            if (flsReady != null) {
-                clearTimeout(flsReady);
-            }
-            if (document.getElementById("onNet").checked) {
-                urlOnOffNetSuffix = "onnet";
-            } else {
-                urlOnOffNetSuffix = "offnet";
-            }
-
-            fetch("<%=payload.gatewayUrl%>/site/"+urlOnOffNetSuffix, {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                },
-                keepalive: true,
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        flsReady = setTimeout(fetchListSites, retryMs);
-                    }
-                })
-                .then((data) => {
-                    let siteIds = "<option disabled value='-1' selected='selected'> -- select a site -- </option>";
-                    for (var i = 0; i < data.length; i++) {
-                        siteIds += "<option value='" + data[i].siteId + "' >" + data[i].reference + "</option>"
-                    }
-                    document.getElementById("siteId").innerHTML = siteIds;
-                    document.getElementById("siteArea").setAttribute("value", "");
-                    document.getElementById("siteType").setAttribute("value", "");
-                })
-                .catch((e) => {
-                    flsReady = setTimeout(fetchListSites, retryMs);
-                });
-
-        }
-        function fetchMapRender() {
-            if (fmrReady != null) {
-                clearTimeout(fmrReady);
-            }
-
-            fetch("<%=payload.gatewayUrl%>/ui/mapRender", {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                },
-                keepalive: true,
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        fmrReady = setTimeout(fetchMapRender, retryMs);
-                    }
-                })
-                .then((data) => {
-                    if (data.vendor != null) {
-                        document.getElementById("mapVendor").innerHTML = "<option value='" + data.vendor + "' selected='selected'>" + data.vendor + "</option>";
-                        // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
-                        // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
-                        // <option disabled value='ERSI'>ERSI</option>
-                    }
-                    if (data.url != null) {
-                        mapRenderUrl = data.url + "&loading=async&callback=displayMap&v=weekly";
-                    }
-                })
-                .catch((e) => {
-                    fmrReady = setTimeout(fetchMapRender, retryMs);
-                });
-
-        }
-        function fetchSite() {
-            if (ftgReady != null) {
-                clearTimeout(ftgReady);
-            }
-            let t = document.getElementById("siteId");
-            siteId = t.options[t.selectedIndex].value;
-            poleCoordinates = [];
-            mapCenter = { lat: 0, lng: 0 };
-            if (siteId != "-1" && point != "-1") {
-                fetch("<%=payload.gatewayUrl%>/site/" + siteId, {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json",
-                    },
-                    keepalive: true,
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            ftgReady = setTimeout(fetchSite, retryMs);
-                        }
-                    })
-                    .then((data) => {
-                        if (data != null) {
-                            siteX = data.location.coordinate.x;
-                            siteY = data.location.coordinate.y;
-                            if (document.getElementById("mapRender") !== undefined && document.getElementById("mapRender") != null) {
-                                map.setCenter({ lat: siteX, lng: siteY });
-                                if (marker != null) {
-                                    marker.setMap(null);
-                                }
-                                marker.setPosition({ lat: siteX, lng: siteY });
-                                marker.setMap(map);
-                            }
-                            if (data.area != null) {
-                                document.getElementById("siteArea").setAttribute("value", data.area);
-                            }
-                            if (data.type != null) {
-                                document.getElementById("siteType").setAttribute("value", data.type);
-                            }
-                        }
-                    })
-                    .catch((e) => {
-                        ftgReady = setTimeout(fetchSite, retryMs);
-                    });
-                loadScript(mapRenderUrl, function () {
-                    function displayMap() {
-                        map = new google.maps.Map(document.getElementById("map"), {
-                            zoom: 17,
-                            center: { lat: siteX, lng: siteY },
-                            mapTypeId: "hybrid",
-                            disableDefaultUI: true,
-                        });
-
-                        marker = new google.maps.Marker({
-                            position: { lat: siteX, lng: siteY },
-                            label: {
-                                text: "\ue7ee", // codepoint from https://fonts.google.com/icons
-                                fontFamily: "Material Symbols Outlined",
-                                color: "#ffffff",
-                                fontSize: "18px",
-                            },
-                            map: map,
-                        });
-                    }
-                    window.displayMap = displayMap;
-                });
-            }
-        }
-        try {
-            fetchMapRender();
-        } catch (e) {
-            fmrReady = setTimeout(fetchMapRender, retryMs);
-        }
-        try {
-            fetchListSites();
-        } catch (e) {
-            flsReady = setTimeout(fetchListSites, retryMs);
-        }
-    </script>
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
     <div class="icon-bar" id="icon-bar">
         <a nohref onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico"
                 width="25%" height="25%"></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/dashboard');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('dashboard');"
             title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/cable');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('cable');"
             title="Cables"><i class="fa fa-plug"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/duct');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('duct');"
             title="Ducts"><i class="fa fa-superpowers"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/pole');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('pole');"
             title="Poles"><i class="fa fa-arrows-v"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/ne');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('ne');"
             title="Network Equipment"><i class="fa fa-server"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/rack');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('rack');"
             title="Racks"><i class="fa fa-list-ol"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Sites"><i
                 class="fa fa-building-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/service');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('service');"
             title="Services"><i class="fa fa-tty"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trench');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trench');"
             title="Trenches"><i class="fa fa-arrows-h"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/trenchLifetime');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trenchLifetime');"
             title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/provider');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('provider');"
             title="Providers"><i class="fa fa-handshake-o"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/alert');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('alert');"
             title="Alerts"><i class="fa fa-bullhorn"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/setting');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('setting');"
             title="Settings"><i class="fa fa-cog"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/openapi');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('openapi');"
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="return jump('<%=payload.rootUrl%>/help');"
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
@@ -275,6 +102,7 @@
     <div class="footer">
         <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>
+    <script defer="defer" src="/mni/js/mni-site.js"></script>
 </body>
 
 </html>
