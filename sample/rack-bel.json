@@ -1,0 +1,33 @@
+[
+  {
+    "rackId": "bad39d92-1e96-475f-ae3f-813b2c434e79",
+    "point": "20241008T174124",
+    "reference": "bel-asse-zel-1",
+    "probability": 1,
+    "commissioned": "20241011",
+    "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+    "coordinate": {
+      "x": 50.889117,
+      "y": 4.271668,
+      "z": 56
+    },
+    "dimensions": {
+      "depth": 600,
+      "height": 1370,
+      "width": 1200,
+      "unit": "mm"
+    },
+    "slots": 42,
+    "slotUsage": [
+      { "slot": 1, "usage": "reserved" },
+      { "slot": 41, "usage": "faulty" },
+      { "slot": 42, "usage": "reserved" }
+    ],
+    "source": "historical",
+    "delete": false,
+    "floor": 0,
+    "area": "exchange",
+    "row": 1,
+    "column": 1
+  }
+]

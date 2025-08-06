@@ -1,0 +1,169 @@
+[
+  {
+    "trenchId": "b55fcbef-6d4f-4803-8755-0d920835de85",
+    "purpose": "service/drop",
+    "reference": "bel-zel-vliegezenlaan",
+    "probability": 1,
+    "construction": {
+      "depth": 914.4,
+      "classifier": "low",
+      "unit": "mm",
+      "type": "narrow"
+    },
+    "demographics": {
+      "premises": {
+        "passed": 0,
+        "area": "unclassified"
+      }
+    },
+    "build": {
+      "planned": {
+        "duration": 0,
+        "unit": "day"
+      },
+      "actual": {
+        "duration": 0,
+        "unit": "day"
+      }
+    },
+    "state": "free",
+    "coordinates": [
+      {
+        "x": 50.888336,
+        "y": 4.267963,
+        "z": 47
+      },
+      {
+        "x": 50.888577,
+        "y": 4.269052,
+        "z": 47
+      },
+      {
+        "x": 50.888878,
+        "y": 4.270193,
+        "z": 47
+      },
+      {
+        "x": 50.888991,
+        "y": 4.270661,
+        "z": 48
+      },
+      {
+        "x": 50.889195,
+        "y": 4.271426,
+        "z": 49
+      },
+      {
+        "x": 50.889453,
+        "y": 4.272551,
+        "z": 49
+      },
+      {
+        "x": 50.889562,
+        "y": 4.272882,
+        "z": 50
+      },
+      {
+        "x": 50.889566,
+        "y": 4.27289,
+        "z": 50
+      },
+      {
+        "x": 50.889675,
+        "y": 4.27332,
+        "z": 50
+      },
+      {
+        "x": 50.889714,
+        "y": 4.273481,
+        "z": 50
+      },
+      {
+        "x": 50.889879,
+        "y": 4.274175,
+        "z": 50
+      },
+      {
+        "x": 50.890055,
+        "y": 4.2749,
+        "z": 50
+      },
+      {
+        "x": 50.890127,
+        "y": 4.275121,
+        "z": 50
+      },
+      {
+        "x": 50.890128,
+        "y": 4.275114,
+        "z": 50
+      },
+      {
+        "x": 50.89043,
+        "y": 4.276452,
+        "z": 50
+      },
+      {
+        "x": 50.890422,
+        "y": 4.276491,
+        "z": 51
+      }
+    ],
+    "point": "20250403T000000",
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "trenchId": "2b41db28-5db7-4ec1-a1e3-33a8d4d95727",
+    "purpose": "service/drop",
+    "reference": "bel-zel-m1-t1",
+    "probability": 1,
+    "construction": {
+      "depth": 914.4,
+      "classifier": "low",
+      "unit": "mm",
+      "type": "narrow"
+    },
+    "demographics": {
+      "premises": {
+        "passed": 0,
+        "area": "unclassified"
+      }
+    },
+    "build": {
+      "planned": {
+        "duration": 0,
+        "unit": "day"
+      },
+      "actual": {
+        "duration": 0,
+        "unit": "day"
+      }
+    },
+    "state": "free",
+    "connectsTo": {
+      "siteId": "07ebecfd-5341-4f02-88f8-4f5330398f69",
+      "trenchId": "b55fcbef-6d4f-4803-8755-0d920835de85"
+    },
+    "coordinates": [
+      {
+        "x": 50.889512,
+        "y": 4.271829,
+        "z": 56
+      },
+      {
+        "x": 50.889515,
+        "y": 4.271866,
+        "z": 56
+      },
+      {
+        "x": 50.889319,
+        "y": 4.271987,
+        "z": 52
+      }
+    ],
+    "point": "20250403T000000",
+    "source": "historical",
+    "delete": false
+  }
+]

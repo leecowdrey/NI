@@ -1,0 +1,119 @@
+[
+  {
+    "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+    "point": "20250510T165841",
+    "host": "gbr-worc-cg1-02",
+    "commissioned": "20250510",
+    "probability": 1,
+    "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
+    "rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",
+    "slotPosition": "2",
+    "mgmtIP": "10.23.72.2",
+    "mgmtProtocol": "ssh",
+    "mgmtPort": 22,
+    "vendor": "Cisco Systems, Inc.",
+    "model": "C8300-1N1S-4T2X",
+    "image": "IOS-XE SD-WAN",
+    "version": "17.7.1a",
+    "ports": [
+      {
+        "name": "VDSL 0/0/0",
+        "macAddress": "00:fe:c8:e3:06:00",
+        "technology": "xdsl",
+        "state": "free",
+        "configuration": {
+          "category": "VDSL2",
+          "rate": 100,
+          "unit": "Mbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "VDSL 0/0/1",
+        "macAddress": "00:fe:c8:e3:06:01",
+        "technology": "xdsl",
+        "state": "free",
+        "configuration": {
+          "category": "VDSL2",
+          "rate": 100,
+          "unit": "Mbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "VDSL 0/0/2",
+        "macAddress": "00:fe:c8:e3:06:02",
+        "technology": "xdsl",
+        "state": "free",
+        "configuration": {
+          "category": "VDSL2",
+          "rate": 100,
+          "unit": "Mbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "VDSL 0/0/3",
+        "macAddress": "00:fe:c8:e3:06:03",
+        "technology": "xdsl",
+        "state": "free",
+        "configuration": {
+          "category": "VDSL2",
+          "rate": 100,
+          "unit": "Mbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "GigabitEthernet0/0/0",
+        "macAddress": "00:fe:c8:e3:15:00",
+        "technology": "fiber",
+        "state": "free",
+        "configuration": {
+          "rate": 10,
+          "unit": "Gbps",
+          "mode": "SMOF",
+          "width": 1,
+          "channels": 1
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "GigabitEthernet0/0/1",
+        "macAddress": "00:fe:c8:e3:15:01",
+        "technology": "fiber",
+        "state": "free",
+        "configuration": {
+          "rate": 10,
+          "unit": "Gbps",
+          "mode": "SMOF",
+          "width": 1,
+          "channels": 1
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "Loopback0",
+        "technology": "loopback",
+        "state": "free",
+        "configuration": {
+          "rate": 10,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "Null0",
+        "technology": "virtual",
+        "state": "free",
+        "configuration": {
+          "rate": 10,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      }
+    ],
+    "source": "historical",
+    "delete": false
+  }
+]

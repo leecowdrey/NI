@@ -1,0 +1,253 @@
+[
+  ,
+  {
+    "siteId": "07ebecfd-5341-4f02-88f8-4f5330398f69",
+    "point": "20241010T174124",
+    "reference": "bel-zel-m1",
+    "probability": 1,
+    "commissioned": "20241010",
+    "onNet": true,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "48",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889512,
+        "y": 4.271829,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "2f5bd660-be28-4419-a56e-569c7ed0cbfd",
+    "point": "20250508T174124",
+    "reference": "bel-46 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "46",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889445,
+        "y": 4.271573,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "4570193c-13dc-40ec-98b8-077cb2880a44",
+    "point": "20250508T174124",
+    "reference": "bel-44 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "44",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889373,
+        "y": 4.271271,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "e780875e-bc1b-4f80-99fe-01dfc36a327f",
+    "point": "20250508T174124",
+    "reference": "bel-40 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "40",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889254,
+        "y": 4.270722,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "509aaf74-c979-4633-aefe-a2efd27083ae",
+    "point": "20250508T174124",
+    "reference": "bel-40 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "40",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889254,
+        "y": 4.270742,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "5469292d-9b2d-40a7-998e-7dfd6117ba6d",
+    "point": "20250508T174124",
+    "reference": "bel-29 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "29",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889312,
+        "y": 4.272455,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "13e3a087-f4cd-4332-9cde-29593e72a7fe",
+    "point": "20250508T174124",
+    "reference": "bel-27 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "27",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889256,
+        "y": 4.27221,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "942f26a7-9375-40a1-8740-5839262e5861",
+    "point": "20250508T174124",
+    "reference": "bel-25 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "25",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.88918,
+        "y": 4.271901,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "9938da84-51e1-4d5e-9feb-51da767e3bfb",
+    "point": "20250508T174124",
+    "reference": "bel-23 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "23",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889117,
+        "y": 4.271668,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "853d9959-dde0-4b86-8277-fde73ccdc0ac",
+    "point": "20250508T174124",
+    "reference": "bel-21 Vliegwezenlaan, 1731",
+    "probability": 1,
+    "commissioned": "19850101",
+    "onNet": false,
+    "area": "urban",
+    "type": "street",
+    "location": {
+      "country": "BEL",
+      "region": "Asse",
+      "town": "Zellix",
+      "street": "Vliegwezenlaan",
+      "premisesNameNumber": "21",
+      "postalCode": "1731",
+      "coordinate": {
+        "x": 50.889052,
+        "y": 4.271449,
+        "z": 56
+      }
+    },
+    "source": "historical",
+    "delete": false
+  }
+]
