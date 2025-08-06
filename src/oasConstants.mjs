@@ -54,19 +54,31 @@ export const correlationType = [
   "trench",
   "unknown",
 ];
+export const fetchProtocolEmail = "email";
+export const fetchProtocolFtp = "ftp";
+export const fetchProtocolHttp = "http";
+export const fetchProtocolMysql = "mysql";
+export const fetchProtocolNetconf = "netconf";
+export const fetchProtocolNone = "none";
+export const fetchProtocolOracle = "oracle";
+export const fetchProtocolScp = "scp";
+export const fetchProtocolSnmp = "snmp";
+export const fetchProtocolSsh = "ssh";
+export const fetchProtocolTelnet = "telnet";
+export const fetchProtocolWorkflow = "workflow"
 export const fetchProtocol = [
-  "email",
-  "ftp",
-  "http",
-  "mysql",
-  "netconf",
-  "none",
-  "oracle",
-  "scp",
-  "snmp",
-  "ssh",
-  "telnet",
-  "workflow",
+  fetchProtocolEmail,
+  fetchProtocolFtp,
+  fetchProtocolHttp,
+  fetchProtocolMysql,
+  fetchProtocolNetconf,
+  fetchProtocolNone,
+  fetchProtocolOracle,
+  fetchProtocolScp,
+  fetchProtocolSnmp,
+  fetchProtocolSsh,
+  fetchProtocolTelnet,
+  fetchProtocolWorkflow,
 ];
 export const float_scale = 6;
 export const float_precision = 2;

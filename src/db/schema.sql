@@ -482,7 +482,6 @@ CREATE TABLE IF NOT EXISTS service (
 );
 CREATE TABLE IF NOT EXISTS fetchJob (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
-    point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     description VARCHAR NOT NULL,
     protocol fetchProtocol NOT NULL,
     cronTime VARCHAR NOT NULL DEFAULT '0 0 * * *' CHECK (regexp_full_match(cronTime,'^(((\d+,)+\d+|((\d+|[*])[/]\d+|((JAN|FEB|APR|MA[RY]|JU[LN]|AUG|SEP|OCT|NOV|DEC)(-(JAN|FEB|APR|MA[RY]|JU[LN]|AUG|SEP|OCT|NOV|DEC))?))|(\d+-\d+)|\d+(-\d+)?[/]\d+(-\d+)?|\d+|[*]|(MON|TUE|WED|THU|FRI|SAT|SUN)(-(MON|TUE|WED|THU|FRI|SAT|SUN))?) ?){5}$')),
@@ -505,7 +504,7 @@ CREATE TABLE IF NOT EXISTS fetchJob (
     oraclePort INTEGER NOT NULL DEFAULT 1521 CHECK (oraclePort >= 1 AND oraclePort <= 65535),
     oracleSchema VARCHAR,
     snmpReadOid VARCHAR,
-    snmpMib BLOB USING COMPRESSION zstd,
+    snmpMibDocumentId VARCHAR,
     workflowEngineId VARCHAR,
     workflowRunnerId VARCHAR,
     workflowName VARCHAR,
@@ -519,6 +518,7 @@ CREATE TABLE IF NOT EXISTS fetchJob (
     FOREIGN KEY (emailId) REFERENCES adminEmail (id),
     FOREIGN KEY (kafkaId) REFERENCES adminKafka (id),
     FOREIGN KEY (workflowEngineId) REFERENCES adminWorkflow (id),
+    FOREIGN KEY (snmpMibDocumentId) REFERENCES document (id)
 );
 CREATE TABLE IF NOT EXISTS correlate (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
@@ -1090,10 +1090,15 @@ INSERT INTO alert (id,description,function) VALUES ('126a7d5a-77af-4e99-9b6e-31b
 INSERT INTO alert (id,description,function) VALUES ('c54f88d9-d355-46e0-8fb2-9fa6ccdc4083','Data Quality - site','jobAlertDqSite();');
 INSERT INTO alert (id,description,function) VALUES ('b034d9e8-da77-4b8c-8f44-d6eb6b6076a5','Data Quality - offNet Postal Addresses','jobAlertDqOffNetPAF();');
 
-INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES ('cbb3b421-d6fc-4bfa-9661-b7854654138b','No Operation',true,'none','0 0 * * *','noop();');
+INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES ('cbb3b421-d6fc-4bfa-9661-b7854654138b','No Fetch Operation',true,'none','0 0 * * *','noop();');
+
 INSERT INTO fetchJob (id,description,enabled,protocol,mysqlHost,mysqlDatabase,mysqlPort,mysqlSchema,cronTime,function) VALUES ('747ded39-4273-423b-8550-d2009f2d6575','Merkator NetworkMining LNI',false,'mysql','192.168.20.10','NM',3306,'gnd','0 0 * * *','noop();');
 INSERT INTO fetchJob (id,description,enabled,protocol,oracleHost,oracleSid,oraclePort,oracleSchema,cronTime,function) VALUES ('4810b82c-961f-4949-92f7-550ceaff594b','Merkator Marlin PNI',false,'oracle','192.168.20.20','MARLIN',1521,'MARLIN','0 0 * * *','noop();');
-INSERT INTO fetchJob (id,description,enabled,protocol,httpUrl,crontime,function) VALUES ('2bbe3d5b-6975-45f4-a6ed-f1b67f990240','FX Currency Update',true,'http','https://api.exchangeratesapi.io/v1/latest','0 9 * * 1-5','jobFxRateUpdate();');
+
+INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('86c954a9-efb6-4a8b-85bb-13de5504c97a','CVE Pull',true,'none','00 20 * * *','jobCveRepoPull(cveDirectory);');
+INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('24c449a6-f838-4e12-9427-bc484191f92e','CVE Build',true,'none','30 20 * * *','jobCveListBuild(cveDirectory);');
+
+INSERT INTO fetchJob (id,description,enabled,protocol,httpUrl,crontime,function) VALUES ('2bbe3d5b-6975-45f4-a6ed-f1b67f990240','FX Currency Update',true,'http','https://api.exchangeratesapi.io/v1/latest','0 9,19 * * 1-5','jobFxRateUpdate({url});');
 
 INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('1bcfd0c7-a082-479e-b815-c9d16f3cba1b','Australian dollar','$','AUD',false, 1.7927);
 INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c34355dd-7a42-4dd2-bb40-14b2b88fc20b','Brunei dollar','B$','BND',false, 1.49);

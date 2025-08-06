@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1754474863
+  version: 1.0.0.1754497112
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -14720,133 +14720,6 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
   /correlate/{correlationId}:
-    patch:
-      summary: Update aspects of single correlation
-      security:
-        - openId:
-            - write:mni_fetch
-      operationId: updateCorrelation
-      parameters:
-        - $ref: "#/components/parameters/correlationId"
-      tags:
-        - Fetch Jobs
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                source:
-                  type: object
-                  properties:
-                    object:
-                      type: string
-                    reference:
-                      type: string
-                    value:
-                      type: string
-                destination:
-                  type: object
-                  properties:
-                    object:
-                      type: string
-                    reference:
-                      type: string
-                    value:
-                      type: string
-                type:
-                  $ref: "#/components/schemas/correlationType"
-                fetchJobId:
-                  $ref: "#/components/schemas/fetchId"
-            examples:
-              sample:
-                value:
-                  source:
-                    value: "14"
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          $ref: "#/components/responses/NotFound"
-    put:
-      summary: Replace single correlation
-      security:
-        - openId:
-            - write:mni_write
-      operationId: replaceCorrelation
-      parameters:
-        - $ref: "#/components/parameters/correlationId"
-      tags:
-        - Fetch Jobs
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - source
-                - destination
-                - type
-                - fetchJobId
-              properties:
-                source:
-                  type: object
-                  required:
-                    - object
-                    - reference
-                    - value
-                  properties:
-                    object:
-                      type: string
-                    reference:
-                      type: string
-                    value:
-                      type: string
-                destination:
-                  type: object
-                  required:
-                    - object
-                    - reference
-                    - value
-                  properties:
-                    object:
-                      type: string
-                    reference:
-                      type: string
-                    value:
-                      type: string
-                type:
-                  $ref: "#/components/schemas/correlationType"
-                fetchJobId:
-                  $ref: "#/components/schemas/fetchId"
-            examples:
-              sample:
-                value:
-                  source:
-                    object: ROUTE_TB
-                    reference: id
-                    value: "14"
-                  destination:
-                    object: trench
-                    reference: trenchId
-                    value: 8fc1b88c-ab92-42e8-b95a-8453c401fb0f
-                  type: trench
-                  fetchJobId: 4810b82c-961f-4949-92f7-550ceaff594b
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          $ref: "#/components/responses/NotFound"
     delete:
       summary: delete specified correlation
       security:
@@ -14988,6 +14861,29 @@ paths:
                 sample:
                   value:
                     fetchId: 2e50d7ff-7e3a-479b-b45e-3e20146967af
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /fetch/jobs:
+    get:
+      summary: All enabled fetch job details
+      security:
+        - openId:
+            - read:mni_fetch
+            - read:mni_ui
+      operationId: getAllFetchJobDetails
+      tags:
+        - Fetch Jobs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":

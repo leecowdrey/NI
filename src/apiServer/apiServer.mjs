@@ -9938,6 +9938,108 @@ var run = async () => {
     }
   }
 
+  async function getAllFetchJobDetails(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id,description,protocol,cronTime,enabled,neId,emailId,emailAddress,emailSubject,fileUrl,httpUrl,kafkaId,kafkaTopic,mysqlHost,mysqlDatabase,mysqlSchema,mysqlPort,oracleHost,oracleProtocol,oracleSid,oraclePort,oracleSchema,snmpReadOid,snmpMibDocumentId,workflowEngineId,workflowRunnerId,workflowName,retries,currentRetry,retryDelay,maxLifeRetries,currentLifeRetries,function FROM fetchJob"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            let resObj = {
+              fetchId: ddRows[idx][0],
+              description: ddRows[idx][1],
+              protocol: ddRows[idx][2],
+              cronTime: ddRows[idx][3],
+              enabled: ddRows[idx][4],
+              retry: {
+                retries: toInteger(ddRows[idx][27]),
+                currentRetry: toInteger(ddRows[idx][28]),
+                retryDelay: toInteger(ddRows[idx][29]),
+                maxLifeRetries: toInteger(ddRows[idx][30]),
+                currentLifeRetries: toInteger(ddRows[idx][31]),
+              },
+              function: ddRows[idx][32],
+            };
+            if (ddRows[idx][5] != null) {
+              resObj.ne = {
+                neId: ddRows[idx][5],
+              };
+            }
+            if (ddRows[idx][6] != null) {
+              resObj.email = {
+                emailId: ddRows[idx][6],
+                address: ddRows[idx][7],
+                subject: ddRows[idx][8],
+              };
+            }
+            if (ddRows[idx][9] != null) {
+              resObj.file = {
+                url: ddRows[idx][9],
+              };
+            }
+            if (ddRows[idx][10] != null) {
+              resObj.http = {
+                url: ddRows[idx][10],
+              };
+            }
+            if (ddRows[idx][11] != null) {
+              resObj.kafka = {
+                kafkaId: ddRows[idx][11],
+                topic: ddRows[idx][12],
+              };
+            }
+            if (ddRows[idx][13] != null) {
+              resObj.mysql = {
+                host: ddRows[idx][13],
+                database: ddRows[idx][14],
+                schema: ddRows[idx][15],
+                port: toInteger(ddRows[idx][16]),
+              };
+            }
+            if (ddRows[idx][17] != null) {
+              resObj.oracle = {
+                host: ddRows[idx][17],
+                protocol: ddRows[idx][18],
+                sid: ddRows[idx][19],
+                port: toInteger(ddRows[idx][20]),
+                schema: ddRows[idx][21],
+              };
+            }
+            if (ddRows[idx][22] != null) {
+              resObj.snmp = {
+                oid: ddRows[idx][22],
+                mibDocumentId: ddRows[idx][23],
+              };
+            }
+            if (ddRows[idx][24] != null) {
+              resObj.workflow = {
+                engineId: ddRows[idx][24],
+                runnerId: ddRows[idx][25],
+                workflowName: ddRows[idx][26],
+              };
+            }
+            resJson.push(resObj);
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function deleteFetchJob(req, res, next) {
     try {
       let result = validationResult(req);
@@ -9961,49 +10063,6 @@ var run = async () => {
               errors: "fetchJobId " + req.params.fetchJobId + " does not exist",
             });
         }
-      } else {
-        res
-          .contentType(OAS.mimeJSON)
-          .status(400)
-          .json({ errors: result.array() });
-      }
-    } catch (e) {
-      return next(e);
-    }
-  }
-
-  async function addMultipleFetchJobs(req, res, next) {
-    try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        let resJson = [];
-        for (let i = 0; i < req.body.length; i++) {
-          let ddd = await DDC.runAndReadAll(
-            "SELECT id FROM fetchJob WHERE id = '" +
-              req.body[i].fetchJobId +
-              "'"
-          );
-          let dddRows = ddd.getRows();
-          if (dddRows.length > 0) {
-            await DDC.run(
-              "DELETE FROM fetchJob WHERE id = '" + req.body[i].fetchJobId + "'"
-            );
-          }
-        }
-        for (let i = 0; i < req.body.length; i++) {
-          let ddp = await DDC.prepare(
-            "INSERT INTO fetchJob (id,delete,fetchJobId) VALUES ($1,$2,$3)"
-          );
-          ddp.bindVarchar(1, req.body[i].fetchJobId);
-          ddp.bindBoolean(2, toBoolean(req.body[i].delete));
-          ddp.bindInteger(3, req.body[i].fetchJobId);
-          await ddp.run();
-          resJson.push(req.body[i].fetchJobId);
-        }
-        resJson = Array.from(new Set(resJson.map(JSON.stringify)))
-          .map(JSON.parse)
-          .sort();
-        res.contentType(OAS.mimeJSON).status(200).json(resJson);
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -20599,14 +20658,12 @@ var run = async () => {
                 value: ddRows[0][2],
               },
               destination: {
-                source: {
-                  object: ddRows[0][3],
-                  reference: ddRows[0][4],
-                  value: ddRows[0][5],
-                },
-                type: ddRows[0][6],
-                fetchJobId: ddRows[0][7],
+                object: ddRows[0][3],
+                reference: ddRows[0][4],
+                value: ddRows[0][5],
               },
+              type: ddRows[0][6],
+              fetchJobId: ddRows[0][7],
             };
             res.contentType(OAS.mimeJSON).status(200).json(resJson);
           } else {
@@ -20664,113 +20721,6 @@ var run = async () => {
           .contentType(OAS.mimeJSON)
           .status(200)
           .json({ correlationId: correlationId });
-      } else {
-        res
-          .contentType(OAS.mimeJSON)
-          .status(400)
-          .json({ errors: result.array() });
-      }
-    } catch (e) {
-      return next(e);
-    }
-  }
-
-  async function updateCorrelation(req, res, next) {
-    try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        let resJson = {};
-        let ddp = await DDC.prepare(
-          "SELECT id,sourceObject,sourceReference,sourceValue,destinationObject,destinationReference,destinationValue,type,fetchJobId FROM correlate WHERE id = $1 LIMIT 1"
-        );
-        ddp.bindVarchar(1, req.params.correlationId);
-        let ddRead = await ddp.runAndReadAll();
-        let ddRows = ddRead.getRows();
-        if (ddRows.length > 0) {
-          resJson = {
-            id: req.params.correlationId,
-            source: {
-              object: ddRows[0][0],
-              reference: ddRows[0][1],
-              value: ddRows[0][2],
-            },
-            destination: {
-              source: {
-                object: ddRows[0][3],
-                reference: ddRows[0][4],
-                value: ddRows[0][5],
-              },
-              type: ddRows[0][6],
-              fetchJobId: ddRows[0][7],
-            },
-          };
-          // pass to replace to regenerate the record
-          req.body = jsonDeepMerge(resJson, req.body);
-          return next();
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(404)
-            .json({
-              errors:
-                "correlationId " + req.params.correlationId + " does not exist",
-            });
-        }
-      } else {
-        res
-          .contentType(OAS.mimeJSON)
-          .status(400)
-          .json({ errors: result.array() });
-      }
-    } catch (e) {
-      return next(e);
-    }
-  }
-
-  async function replaceCorrelation(req, res, next) {
-    try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        if (req.body.fetchJobId != null) {
-          if (!(await dbIdExists(req.body.fetchJobId, "fetchJob"))) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "fetchJobId " + req.body.fetchJobId + " does not exist",
-              });
-          }
-        }
-        let ddp = await DDC.prepare(
-          "SELECT id FROM correlate WHERE id = $1 LIMIT 1"
-        );
-        ddp.bindVarchar(1, req.params.correlationId);
-        let ddRead = await ddp.runAndReadAll();
-        let ddRows = ddRead.getRows();
-        if (ddRows.length > 0) {
-          let ddp = await DDC.prepare(
-            "UPDATE correlate SET sourceObject = $1, sourceReference = $2, sourceValue = $3, destinationObject = $4, destinationReference = $5, destinationValue = $6, type = $7, fetchJobId = $8 WHERE id = $9"
-          );
-          ddp.bindVarchar(1, req.body.source.object);
-          ddp.bindVarchar(2, req.body.source.reference);
-          ddp.bindVarchar(3, req.body.source.value);
-          ddp.bindVarchar(4, req.body.destination.object);
-          ddp.bindVarchar(5, req.body.destination.reference);
-          ddp.bindVarchar(6, req.body.destination.value);
-          ddp.bindVarchar(7, req.body.type);
-          ddp.bindVarchar(8, req.body.fetchJobId);
-          ddp.bindVarchar(9, req.params.correlationId);
-          await ddp.run();
-          res.sendStatus(204);
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(404)
-            .json({
-              errors:
-                "correlationId " + req.params.correlationId + " does not exist",
-            });
-        }
       } else {
         res
           .contentType(OAS.mimeJSON)
@@ -22467,11 +22417,11 @@ var run = async () => {
   /*
        Tag:           Fetch
        operationId:   getAllFetchJobs
-       exposed Route: /mni/v1/fetchJob
+       exposed Route: /mni/v1/fetch
        HTTP method:   GET
     */
   app.get(
-    serveUrlPrefix + serveUrlVersion + "/fetchJobs",
+    serveUrlPrefix + serveUrlVersion + "/fetch",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
@@ -22481,12 +22431,12 @@ var run = async () => {
   /*
        Tag:           Fetch
        operationId:   getFetchJob
-       exposed Route: /mni/v1/fetchJob/{fetchJobId}
+       exposed Route: /mni/v1/fetch/{fetchJobId}
        HTTP method:   GET
     */
   /*
   app.get(
-    serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchJobId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("fetchJobId").isUUID(4),
     getFetchJob
@@ -22496,11 +22446,11 @@ var run = async () => {
   /*
        Tag:           Fetch
        operationId:   deleteFetchJob
-       exposed Route: /mni/v1/fetchJob/{fetchJobId}
+       exposed Route: /mni/v1/fetch/{fetch}
        HTTP method:   GET
     */
   app.delete(
-    serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchJobId",
     param("fetchJobId").isUUID(4),
     deleteFetchJob
   );
@@ -22508,33 +22458,15 @@ var run = async () => {
   /*
        Tag:           Fetch
        operationId:   addFetchJob
-       exposed Route: /mni/v1/fetchJob
+       exposed Route: /mni/v1/fetch
        HTTP method:   POST
     */
   /*
   app.post(
-    serveUrlPrefix + serveUrlVersion + "/fetchJob",
+    serveUrlPrefix + serveUrlVersion + "/fetch",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     addFetchJob
-  );
-  */
-
-  /*
-       Tag:           Fetch
-       operationId:   addMultipleFetchJobs
-       exposed Route: /mni/v1/fetchJob
-       HTTP method:   POST
-    */
-  /*
-  app.post(
-    serveUrlPrefix + serveUrlVersion + "/fetchJob",
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    body().isArray({ min: 1 }),
-    body("*.delete").default(false).isBoolean({ strict: true }),
-    body("*.fetchJobId").isUUID(4),
-    addMultipleFetchJobs
   );
   */
 
@@ -26593,51 +26525,6 @@ var run = async () => {
 
   /*
        Tag:           Fetch Jobs
-       operationId:   updateCorrelation
-       exposed Route: /mni/v1/correlate/:correlationId
-       HTTP method:   PATCH
-    */
-  app.patch(
-    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
-    param("correlationId").isUUID(4),
-    body("source").optional().isObject(),
-    body("source.object").optional().isString().trim(),
-    body("source.reference").optional().isString().trim(),
-    body("source.value").optional().isString().trim(),
-    body("destination").optional().isObject(),
-    body("destination.object").optional().isString().trim(),
-    body("destination.reference").optional().isString().trim(),
-    body("destination.value").optional().isString().trim(),
-    body("type").optional().isIn(OAS.correlationType),
-    updateCorrelation,
-    replaceCorrelation
-  );
-
-  /*
-       Tag:           Fetch Jobs
-       operationId:   replaceCorrelation
-       exposed Route: /mni/v1/correlate/:correlationId
-       HTTP method:   PUT
-    */
-  app.put(
-    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
-    param("correlationId").isUUID(4),
-    body("source").isObject(),
-    body("source.object").isString().trim(),
-    body("source.reference").isString().trim(),
-    body("source.value").isString().trim(),
-    body("destination").isObject(),
-    body("destination.object").isString().trim(),
-    body("destination.reference").isString().trim(),
-    body("destination.value").isString().trim(),
-    body("type").default("unknown").isIn(OAS.correlationType),
-    replaceCorrelation
-  );
-
-  /*
-       Tag:           Fetch Jobs
        operationId:   getAllFetchJobs
        exposed Route: /mni/v1/fetch
        HTTP method:   GET
@@ -26652,6 +26539,18 @@ var run = async () => {
 
   /*
        Tag:           Fetch Jobs
+       operationId:   getAllFetchJobDetails
+       exposed Route: /mni/v1/fetch/jobs
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetch/jobs",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getAllFetchJobDetails
+  );
+
+  /*
+       Tag:           Fetch Jobs
        operationId:   addFetchJob
        exposed Route: /mni/v1/fetch
        HTTP method:   POST
@@ -26661,6 +26560,18 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     addFetchJob
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   getAllFetchJobDetails
+       exposed Route: /mni/v1/fetch/jobs
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetch/jobs",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getAllFetchJobDetails
   );
 
   /*
@@ -26828,6 +26739,7 @@ var run = async () => {
         scheduled: true,
         recoverMissedExecutions: false,
         name: "backup",
+        noOverlap: true,
       }
     );
   }

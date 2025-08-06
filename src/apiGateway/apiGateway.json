@@ -10497,6 +10497,52 @@
       }
     },
     {
+      "endpoint": "/mni/v1/fetch/jobs",
+      "@comment": "getAllFetchJobDetails",
+      "output_encoding": "no-op",
+      "input_headers": ["Accept"],
+      "input_query_strings": [],
+      "backend": [
+        {
+          "url_pattern": "/mni/v1/fetch/jobs",
+          "encoding": "no-op",
+          "sd": "dns",
+          "sd_scheme": "https",
+          "host": ["_https._tcp.apiserver.mni.merkator.local"],
+          "disable_host_sanitize": true,
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "Basic #"
+              }
+            },
+            "qos/http-cache": {
+              "@comment": "Allow up to 100 cache entries or ~32MB (bytes not set exactly)",
+              "shared": true,
+              "max_items": 100,
+              "max_size": 32000000
+            }
+          },
+          "method": "GET"
+        }
+      ],
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "scopes": ["read:mni_ui", "read:mni_fetch"],
+          "scopes_matcher": "any",
+          "cache": true,
+          "disable_jwk_security": false,
+          "cookie_key": "TOKEN",
+          "scopes_key": ".mni",
+          "jwk_url": "https://url/to/jwks.json",
+          "alg": "RS256"
+        }
+      }
+    },
+    {
       "endpoint": "/mni/v1/fetch/{fetchId}",
       "@comment": "deleteFetchJob",
       "output_encoding": "no-op",
