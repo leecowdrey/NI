@@ -2,7 +2,7 @@ erDiagram
     adminEmailSend {varchar id varchar adminEmailId varchar host integer port enum protocol enum authentication boolean encryptionEnabled boolean encryptionStartTls}
     costCable {enum technology enum unit decimal costPerUnit}
     secret {varchar scope varchar realm enum type timestamp expiration varchar identityProviderBase varchar identityProviderAuthorization varchar identityProviderToken varchar identityProviderWellKnown varchar plainUsername varchar plainPassword varchar sshUsername varchar sshKeyPassphrase varchar sshKeyPublic varchar sshKeyPrivate varchar sshHostCA varchar sslPrivate varchar sslCA enum snmpVersion varchar snmpCommunityRead varchar snmpCommunityWrite varchar snmpCommunityTrap varchar snmpUsername enum snmpAuthorizationProtocol varchar snmpAuthorizationPassword enum snmpEncryptionProtocol varchar snmpEncryptionPassword varchar tokenIdentity varchar tokenKey}
-    _site {integer tsId timestamp point varchar siteId enum source decimal probability varchar reference timestamp commissioned timestamp decommissioned enum area enum type boolean onNet boolean hasDocument enum country varchar region varchar town varchar district varchar street varchar premisesNameNumber varchar postalCode decimal X decimal Y decimal Z varchar M varchar documentId point_3d geoPoint}
+    _site {integer tsId timestamp point varchar siteId enum source decimal probability varchar reference timestamp commissioned timestamp decommissioned enum area enum type boolean onNet boolean hasDocument enum country varchar region varchar town varchar district varchar street varchar premisesNameNumber varchar postalCode decimal X decimal Y decimal Z varchar M varchar documentId varchar wkt point_3d geoPoint}
     _pole {integer tsId timestamp point varchar poleId enum source decimal probability varchar reference enum purpose decimal height enum classifier enum unit integer premisesPassed enum area boolean hasDocument varchar jobId varchar permitId timestamp plannedStart timestamp plannedCompletion integer plannedDuration enum plannedUnit timestamp actualStart timestamp actualCompletion integer actualDuration enum actualUnit enum state varchar connectsToSiteId varchar connectsToTrenchId varchar connectsToPoleId decimal X decimal Y decimal Z varchar M varchar documentId point_3d geoPoint}
     alertContent {varchar id timestamp point varchar alertId varchar content}
     _cableCoax {integer tsId timestamp point enum source varchar cableId decimal frequencyLow decimal frequencyHigh integer channels decimal width enum unit}
@@ -14,6 +14,7 @@ erDiagram
     trench {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     _document {integer tsId enum source timestamp point decimal probability varchar documentId enum mimeType varchar path varchar name integer sizeBytes varchar md5Hash}
     alertWorkflow {varchar id varchar alertId varchar requestorId varchar workflowEngineId varchar workflowRunnerId varchar flowName}
+    correlate {varchar id varchar sourceObject varchar sourceReference varchar sourceValue varchar destinationObject varchar destinationReference varchar destinationValue enum type varchar fetchJobId}
     costPole {enum purpose enum classifier decimal costPerUnit}
     costService {enum type integer rate enum unit integer lagMembers decimal costPerUnit}
     _cableEthernet {integer tsId timestamp point enum source varchar cableId enum category integer rate enum unit}
@@ -29,7 +30,7 @@ erDiagram
     currency {varchar id varchar name enum symbol enum isoCode boolean systemDefault decimal rateFromDefault}
     site {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     _ne {integer tsId timestamp point varchar neId enum source decimal probability varchar host varchar mgmtIP enum protocol integer port enum typeSecret varchar vendor varchar model varchar image varchar version timestamp commissioned timestamp decommissioned boolean hasDocument varchar siteId varchar rackId varchar slotPosition varchar config varchar documentId}
-    _trench {integer tsId timestamp point varchar trenchId enum source decimal probability varchar reference enum purpose decimal depth enum classifier enum unit enum type integer premisesPassed enum area boolean hasDocument varchar jobId varchar permitId timestamp plannedStart timestamp plannedCompletion integer plannedDuration enum plannedUnit timestamp actualStart timestamp actualCompletion integer actualDuration enum actualUnit enum state varchar connectsToSiteId varchar connectsToTrenchId varchar connectsToPoleId varchar documentId}
+    _trench {integer tsId timestamp point varchar trenchId enum source decimal probability varchar reference enum purpose decimal depth enum classifier enum unit enum type integer premisesPassed enum area boolean hasDocument varchar jobId varchar permitId timestamp plannedStart timestamp plannedCompletion integer plannedDuration enum plannedUnit timestamp actualStart timestamp actualCompletion integer actualDuration enum actualUnit enum state varchar connectsToSiteId varchar connectsToTrenchId varchar connectsToPoleId varchar documentId varchar wkt}
     adminKafka {varchar id varchar name varchar clientId varchar host integer port integer retryDelay integer retries enum acks integer linger integer batchSize integer bufferMemory integer maxInFlightRequestsPerConnection enum compressionMethod enum authentication}
     cve {varchar id timestamp published timestamp updated varchar vendor varchar uri}
     _cableSingleFiber {integer tsId timestamp point enum source varchar cableId integer strands enum mode integer channels integer width enum unit}
@@ -51,7 +52,7 @@ erDiagram
     _serviceIngress {integer tsId timestamp point enum source varchar serviceId integer serviceTsId varchar neId varchar nePort integer cVlanId integer sVlanId integer lagMember}
     adminWorkflow {varchar id varchar name varchar engineUrl enum engineType}
     costSite {enum area enum type decimal costPerUnit}
-    fetchJob {varchar id boolean delete varchar description enum protocol varchar cronTime varchar neId varchar emailId varchar emailAddress varchar emailSubject varchar fileUrl varchar httpUrl varchar kafkaId varchar kafkaTopic varchar snmpReadOid blob snmpMib varchar workflowEngineId varchar workflowRunnerId varchar workflowName integer retries integer currentRetry integer retryDelay integer maxLifeRetries integer currentLifeRetries varchar function}
+    fetchJob {varchar id timestamp point varchar description enum protocol varchar cronTime boolean enabled varchar neId varchar emailId varchar emailAddress varchar emailSubject varchar fileUrl varchar httpUrl varchar kafkaId varchar kafkaTopic varchar mysqlHost varchar mysqlDatabase varchar mysqlSchema integer mysqlPort varchar oracleHost varchar oracleProtocol varchar oracleSid integer oraclePort varchar oracleSchema varchar snmpReadOid blob snmpMib varchar workflowEngineId varchar workflowRunnerId varchar workflowName integer retries integer currentRetry integer retryDelay integer maxLifeRetries integer currentLifeRetries varchar function}
     document {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     _cable {integer tsId timestamp point enum source decimal probability varchar cableId varchar reference varchar ductId varchar poleId enum technology boolean hasDocument enum state integer coaxTsId integer copperTsId integer ethernetTsId integer singleFiberTsId integer multiFiberTsId varchar documentId}
     _nePortLoopback {integer tsId integer neTsId integer rate enum unit}
@@ -59,7 +60,7 @@ erDiagram
     adminData {varchar id integer historicalDuration enum historicalUnit integer predictedDuration enum predictedUnit}
     fetchQueue {integer qId timestamp point boolean delete varchar fetchJobId}
     pole {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
-    _nePort {integer tsId timestamp point enum source varchar neId integer neTsId varchar name enum technology enum state integer errorCount}
+    _nePort {integer tsId timestamp point enum source varchar neId integer neTsId varchar name enum technology enum state integer errorCount varchar macAddress}
     _service {integer tsId timestamp point varchar serviceId enum source decimal probability varchar reference varchar customerName varchar customerReference timestamp commissioned timestamp decommissioned enum type boolean hasDocument integer rate enum unit varchar lagGroup integer lagMembers varchar documentId}
     costTrench {enum purpose enum type enum unit decimal costPerUnit}
     ne {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
@@ -71,11 +72,11 @@ erDiagram
     duct }o--o{ _duct : "ductId"
     pole }o--o{ _pole : "poleId"
     document }o--o{ _cable : "documentId"
-    document }o--o{ _site : "documentId"
     adminKafka }o--o{ alertPublish : "kafkaId"
+    document }o--o{ _site : "documentId"
     alert }o--o{ alertWorkflow : "alertId"
-    ne }o--o{ _nePort : "neId"
     _ne }o--o{ _nePortCoax : "neTsId"
+    ne }o--o{ _nePort : "neId"
     document }o--o{ _trench : "documentId"
     cve }o--o{ cvePlatforms : "cveId"
     _ne }o--o{ _nePortVirtual : "neTsId"
@@ -124,11 +125,12 @@ erDiagram
     alert }o--o{ alertQueue : "alertId"
     site }o--o{ _rack : "siteId"
     adminEmail }o--o{ alertNotify : "emailProviderId"
-    _ne }o--o{ _nePort : "neTsId"
     ne }o--o{ _serviceIngress : "neId"
+    _ne }o--o{ _nePort : "neTsId"
     _service }o--o{ _serviceEgress : "serviceTsId"
     service }o--o{ _serviceEgress : "serviceId"
     adminEmail }o--o{ adminEmailSend : "adminEmailId"
     document }o--o{ _ne : "documentId"
+    fetchJob }o--o{ correlate : "fetchJobId"
     trench }o--o{ _duct : "trenchId"
     trench }o--o{ _trench : "trenchId"

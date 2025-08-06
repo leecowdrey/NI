@@ -53,12 +53,10 @@ SSL_KEY=$(grep -E "^APISERV_SSL_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_SIZE=$(grep -E "^APISERV_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 USERNAME=$(grep -E "^APISERV_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 WORKING_DIRECTORY=$(grep -E "^APISERV_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-DOCUMENT_DIRECTORY==$(grep -E "^APISERV_DOCUMENT_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+DOCUMENT_DIRECTORY=$(grep -E "^APISERV_DOCUMENT_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 UPLOAD_DIRECTORY=$(grep -E "^APISERV_UPLOAD_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-CVE_SCAN=$(grep -E "^APISERV_CVE_SCAN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-CVE_DIRECTORY=$(grep -E "^APISERV_CVE_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 

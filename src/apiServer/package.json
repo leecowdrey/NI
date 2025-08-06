@@ -21,8 +21,8 @@
   },
   "type": "module",
   "scripts": {
-    "start": "node -r dotenv/config /usr/local/mni/api/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini",
-    "dev": "DEBUG=* node -r dotenv/config /usr/local/mni/api/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini"
+    "start": "node --max-old-space-size=8192 -r dotenv/config /usr/local/mni/api/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini",
+    "dev": "DEBUG=* node --max-old-space-size=8192 -r dotenv/config /usr/local/mni/api/apiServer.mjs dotenv_config_path=/etc/mni/mni.ini"
   },
   "description": "MarlinDT Network Intelligence (MNI) provides analytical and prediction insights for telecommunications infrastructure and services.",
   "homepage": "https://www.merkator.com/",

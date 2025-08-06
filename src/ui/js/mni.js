@@ -1,5 +1,5 @@
 //=====================================================================
-// MarlinDT Network Intelligence (MNI) - Common JavaScript for UI
+// MarlinDT Network Intelligence (MNI) - JavaScript: UI Common
 //
 // Corporate Headquarters:
 // Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
@@ -9,6 +9,11 @@
 //=====================================================================
 //
 var mmdReady = null;
+var mmlReady = null;
+var mniLicenseHost = null;
+var mniLicenseDomain = null;
+var mniLicenseStart = null;
+var mniLicenseExpiry = null;
 var mniAppShortName = "MNI";
 var mniAppIcon = "/favicon.ico";
 var mniAppNotificationIcon = "/favicon.ico";
@@ -77,22 +82,50 @@ function mniMetadata() {
     mmdReady = setTimeout(mniMetadata, mniRetryMs);
   }
 }
+function mniLicense() {
+  try {
+    if (mmlReady != null) {
+      clearTimeout(mmlReady);
+    }
+    fetch(localStorage.getItem("mni.gatewayUrl") + "/license", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          mmlReady = setTimeout(mniLicense, mniRetryMs);
+        }
+      })
+      .then((data) => {
+        localStorage.setItem("mni.license.host", data.host);
+        localStorage.setItem("mni.license.domain", data.domain);
+        localStorage.setItem("mni.license.start", data.start);
+        localStorage.setItem("mni.license.expiry", data.expiry);
+        localStorage.setItem("mni.license.", true);
+      })
+      .catch((e) => {
+        mmlReady = setTimeout(mniLicense, mniRetryMs);
+      });
+    mniLicenseHost = localStorage.getItem("mni.license.host");
+    mniLicenseDomain = localStorage.getItem("mni.license.domain");
+    mniLicenseStart = localStorage.getItem("mni.license.start");
+    mniLicenseExpiry = localStorage.getItem("mni.license.expiry");
+  } catch (e) {
+    mmlReady = setTimeout(mniLicense, mniRetryMs);
+  }
+}
 function clearSessionStorage() {
-  localStorage.removeItem("mni.gatewayUrlDns");
-  localStorage.removeItem("mni.appIcon");
-  localStorage.removeItem("mni.appBuild");
-  localStorage.removeItem("mni.appNotificationIcon");
-  localStorage.removeItem("mni.retryMs");
-  localStorage.removeItem("mni.readinessAttempts");
-  localStorage.removeItem("mni.rootUrl");
-  localStorage.removeItem("mni.gatewayUrl");
-  localStorage.removeItem("mni.gatewayUrlIp");
-  localStorage.removeItem("mni.gatewayUrlDns");
-  localStorage.removeItem("mni.appName");
-  localStorage.removeItem("mni.appShortName");
-  localStorage.removeItem("mni.appVersion");
-  localStorage.removeItem("mni.refreshMs");
-  localStorage.removeItem("mni.");
+  let storageLength = localStorage.length;
+  for (var i = 0; i < storageLength; i++) {
+    let keyName = localStorage.key(i);
+    if (keyName.startsWith("mni.")) {
+      localStorage.removeItem(keyName);
+    }
+  }
 }
 function dumpSessionStorage() {
   let storageLength = localStorage.length;
@@ -127,7 +160,7 @@ function jump(jumpTo) {
   return false;
 }
 function menuJump(jumpTo) {
-  window.location = localStorage.getItem("mni.rootUrl")+"/"+jumpTo;
+  window.location = localStorage.getItem("mni.rootUrl") + "/" + jumpTo;
   return false;
 }
 function logout() {
@@ -200,4 +233,11 @@ try {
   }
 } catch (e) {
   mmdReady = setTimeout(mniMetadata, mniRetryMs);
+}
+try {
+  if (!localStorage.getItem("mni.license.")) {
+    mniLicense();
+  }
+} catch (e) {
+  mmlReady = setTimeout(mniLicense, mniRetryMs);
 }

@@ -31,6 +31,9 @@ SERVICE_KEY=$(grep -E "^APISERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"
 APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
+# country specific for sample datasets
+COUNTRY="gbp" # gbp, bel, esp,
+
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
 doing "Checking for API Readiness"
@@ -122,7 +125,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/site.json &>/dev/null
+     -d @sample/site-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -132,7 +135,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/rack.json &>/dev/null
+     -d @sample/rack-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -142,7 +145,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/trench.json &>/dev/null
+     -d @sample/trench-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -152,7 +155,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/pole.json &>/dev/null
+     -d @sample/pole-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -162,7 +165,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/duct.json &>/dev/null
+     -d @sample/duct-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -172,7 +175,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/cable.json &>/dev/null
+     -d @sample/cable-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -182,7 +185,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/ne.json &>/dev/null
+     -d @sample/ne-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -192,7 +195,7 @@ curl --silent --insecure --connect-timeout 5 \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-     -d @sample/service.json &>/dev/null
+     -d @sample/service-${COUNTRY}.json &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

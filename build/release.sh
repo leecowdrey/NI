@@ -307,6 +307,17 @@ cp -R -f ../src/uiServer/* uiServer/
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+
+doing "Updating license public key"
+if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+  MNI_LICENSE_PUBLIC_KEY=$(base64 -w 0 ../src/licenseGen/mniMasterKey.pub)
+  sed -i -e "s/MNI_LICENSE_PUBLIC_KEY=.*/MNI_LICENSE_PUBLIC_KEY=\"${MNI_LICENSE_PUBLIC_KEY}\"/" mni.ini
+elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+  MNI_LICENSE_PUBLIC_KEY=$(base64 -i ../src/licenseGen/mniMasterKey.pub)
+  sed -i '' "s/MNI_LICENSE_PUBLIC_KEY=.*/MNI_LICENSE_PUBLIC_KEY=\"${MNI_LICENSE_PUBLIC_KEY}\"/" mni.ini
+fi
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
 ## run the Obfuscation
 doing "Obfuscating JavaScript"
 js_obfuscate "alertService" "*.mjs" "node" "low" && \

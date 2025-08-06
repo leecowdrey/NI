@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1753892117
+  version: 1.0.0.1754474863
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -7499,6 +7499,8 @@ paths:
                         properties:
                           name:
                             $ref: "#/components/schemas/portName"
+                          macAddress:
+                            $ref: "#/components/schemas/portMacAddress"
                           technology:
                             $ref: "#/components/schemas/portTechnology"
                           configuration:
@@ -7738,6 +7740,8 @@ paths:
                       properties:
                         name:
                           $ref: "#/components/schemas/portName"
+                        macAddress:
+                          $ref: "#/components/schemas/portMacAddress"
                         technology:
                           $ref: "#/components/schemas/portTechnology"
                         configuration:
@@ -8111,6 +8115,8 @@ paths:
                     properties:
                       name:
                         $ref: "#/components/schemas/portName"
+                      macAddress:
+                        $ref: "#/components/schemas/portMacAddress"
                       technology:
                         $ref: "#/components/schemas/portTechnology"
                       configuration:
@@ -8147,6 +8153,7 @@ paths:
                   version: 12.3R6.6
                   ports:
                     - name: ge-0/0/0
+                      macAddress: 54:1e:56:e3:55:00
                       technology: ethernet
                       state: used
                       configuration:
@@ -8155,6 +8162,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/1
+                      macAddress: 54:1e:56:e3:55:01
                       technology: ethernet
                       state: used
                       configuration:
@@ -8163,6 +8171,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/2
+                      macAddress: 54:1e:56:e3:55:02
                       technology: ethernet
                       state: used
                       configuration:
@@ -8171,6 +8180,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/3
+                      macAddress: 54:1e:56:e3:55:03
                       technology: ethernet
                       state: used
                       configuration:
@@ -8179,6 +8189,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/4
+                      macAddress: 54:1e:56:e3:55:04
                       technology: ethernet
                       state: used
                       configuration:
@@ -8187,6 +8198,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/5
+                      macAddress: 54:1e:56:e3:55:05
                       technology: ethernet
                       state: used
                       configuration:
@@ -8194,6 +8206,7 @@ paths:
                         rate: 10
                         unit: Gbps
                     - name: ge-0/0/6
+                      macAddress: 54:1e:56:e3:55:06
                       technology: ethernet
                       state: used
                       configuration:
@@ -8202,6 +8215,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-0/0/7
+                      macAddress: 54:1e:56:e3:55:07
                       technology: ethernet
                       state: used
                       configuration:
@@ -8210,6 +8224,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-1/1/0
+                      macAddress: 54:1e:56:e3:57:00
                       technology: ethernet
                       state: free
                       configuration:
@@ -8218,6 +8233,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-1/1/1
+                      macAddress: 54:1e:56:e3:57:01
                       technology: ethernet
                       state: free
                       configuration:
@@ -8226,6 +8242,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-1/1/2
+                      macAddress: 54:1e:56:e3:57:02
                       technology: ethernet
                       state: free
                       configuration:
@@ -8234,6 +8251,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-1/1/3
+                      macAddress: 54:1e:56:e3:57:03
                       technology: ethernet
                       state: used
                       configuration:
@@ -8242,6 +8260,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-2/1/0
+                      macAddress: 54:1e:56:e3:59:00
                       technology: ethernet
                       state: reserved
                       configuration:
@@ -8250,6 +8269,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-2/1/1
+                      macAddress: 54:1e:56:e3:59:01
                       technology: ethernet
                       state: reserved
                       configuration:
@@ -8258,6 +8278,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-2/1/2
+                      macAddress: 54:1e:56:e3:59:02
                       technology: ethernet
                       state: reserved
                       configuration:
@@ -8266,6 +8287,7 @@ paths:
                         unit: Gbps
                       errorCount: 0
                     - name: ge-2/1/3
+                      macAddress: 54:1e:56:e3:59:03
                       technology: ethernet
                       state: reserved
                       configuration:
@@ -8389,6 +8411,8 @@ paths:
                       properties:
                         name:
                           $ref: "#/components/schemas/portName"
+                        macAddress:
+                          $ref: "#/components/schemas/portMacAddress"
                         technology:
                           $ref: "#/components/schemas/portTechnology"
                         configuration:
@@ -8633,6 +8657,8 @@ paths:
                     properties:
                       name:
                         $ref: "#/components/schemas/portName"
+                      macAddress:
+                        $ref: "#/components/schemas/portMacAddress"
                       technology:
                         $ref: "#/components/schemas/portTechnology"
                       configuration:
@@ -8867,6 +8893,8 @@ paths:
                     properties:
                       name:
                         $ref: "#/components/schemas/portName"
+                      macAddress:
+                        $ref: "#/components/schemas/portMacAddress"
                       technology:
                         $ref: "#/components/schemas/portTechnology"
                       configuration:
@@ -14574,6 +14602,492 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /correlate:
+    get:
+      summary: List of all known correlations
+      security:
+        - openId:
+            - read:mni_fetch
+            - read:mni_ui
+      operationId: getAllCorrelations
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+      tags:
+        - Fetch Jobs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/correlationId"
+              examples:
+                sample:
+                  value:
+                    - 747ded39-4273-423b-8550-d2009f2d6575
+                    - 4810b82c-961f-4949-92f7-550ceaff594b
+                    - 2bbe3d5b-6975-45f4-a6ed-f1b67f990240
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Add single correlation
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: addCorrelation
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - source
+                - destination
+                - type
+                - fetchJobId
+              properties:
+                source:
+                  type: object
+                  required:
+                    - object
+                    - reference
+                    - value
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                destination:
+                  type: object
+                  required:
+                    - object
+                    - reference
+                    - value
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                type:
+                  $ref: "#/components/schemas/correlationType"
+                fetchJobId:
+                  $ref: "#/components/schemas/fetchId"
+            examples:
+              sample:
+                value:
+                  source:
+                    object: ROUTE_TB
+                    reference: id
+                    value: "12"
+                  destination:
+                    object: trench
+                    reference: trenchId
+                    value: 8fc1b88c-ab92-42e8-b95a-8453c401fb0f
+                  type: trench
+                  fetchJobId: 4810b82c-961f-4949-92f7-550ceaff594b
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  correlationId:
+                    $ref: "#/components/schemas/correlationId"
+              examples:
+                sample:
+                  value:
+                    correlationId: 2e50d7ff-7e3a-479b-b45e-3e20146967af
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /correlate/{correlationId}:
+    patch:
+      summary: Update aspects of single correlation
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: updateCorrelation
+      parameters:
+        - $ref: "#/components/parameters/correlationId"
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: object
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                destination:
+                  type: object
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                type:
+                  $ref: "#/components/schemas/correlationType"
+                fetchJobId:
+                  $ref: "#/components/schemas/fetchId"
+            examples:
+              sample:
+                value:
+                  source:
+                    value: "14"
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      summary: Replace single correlation
+      security:
+        - openId:
+            - write:mni_write
+      operationId: replaceCorrelation
+      parameters:
+        - $ref: "#/components/parameters/correlationId"
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - source
+                - destination
+                - type
+                - fetchJobId
+              properties:
+                source:
+                  type: object
+                  required:
+                    - object
+                    - reference
+                    - value
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                destination:
+                  type: object
+                  required:
+                    - object
+                    - reference
+                    - value
+                  properties:
+                    object:
+                      type: string
+                    reference:
+                      type: string
+                    value:
+                      type: string
+                type:
+                  $ref: "#/components/schemas/correlationType"
+                fetchJobId:
+                  $ref: "#/components/schemas/fetchId"
+            examples:
+              sample:
+                value:
+                  source:
+                    object: ROUTE_TB
+                    reference: id
+                    value: "14"
+                  destination:
+                    object: trench
+                    reference: trenchId
+                    value: 8fc1b88c-ab92-42e8-b95a-8453c401fb0f
+                  type: trench
+                  fetchJobId: 4810b82c-961f-4949-92f7-550ceaff594b
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: delete specified correlation
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: deleteCorrelation
+      tags:
+        - Fetch Jobs
+      parameters:
+        - $ref: "#/components/parameters/correlationId"
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    get:
+      summary: Get specified correlation
+      security:
+        - openId:
+            - read:mni_fetch
+            - read:mni_ui
+      operationId: getCorrelation
+      tags:
+        - Fetch Jobs
+      parameters:
+        - $ref: "#/components/parameters/correlationId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source:
+                    type: object
+                    properties:
+                      object:
+                        type: string
+                      reference:
+                        type: string
+                      value:
+                        type: string
+                  destination:
+                    type: object
+                    properties:
+                      object:
+                        type: string
+                      reference:
+                        type: string
+                      value:
+                        type: string
+                  type:
+                    $ref: "#/components/schemas/correlationType"
+                  fetchJobId:
+                    $ref: "#/components/schemas/fetchId"
+              examples:
+                sample:
+                  value:
+                    source:
+                      object: ROUTE_TB
+                      reference: id
+                      value: "14"
+                    destination:
+                      object: trench
+                      reference: trenchId
+                      value: 8fc1b88c-ab92-42e8-b95a-8453c401fb0f
+                    type: trench
+                    fetchJobId: 4810b82c-961f-4949-92f7-550ceaff594b
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /fetch:
+    get:
+      summary: List of all known fetch jobs
+      security:
+        - openId:
+            - read:mni_fetch
+            - read:mni_ui
+      operationId: getAllFetchJobs
+      parameters:
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+      tags:
+        - Fetch Jobs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/fetchId"
+              examples:
+                sample:
+                  value:
+                    - 747ded39-4273-423b-8550-d2009f2d6575
+                    - 4810b82c-961f-4949-92f7-550ceaff594b
+                    - 2bbe3d5b-6975-45f4-a6ed-f1b67f990240
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Add single fetch job
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: addFetchJob
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rackId:
+                    $ref: "#/components/schemas/fetchId"
+              examples:
+                sample:
+                  value:
+                    fetchId: 2e50d7ff-7e3a-479b-b45e-3e20146967af
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /fetch/{fetchId}:
+    patch:
+      summary: Update aspects of single fetch job
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: updateFetchJob
+      parameters:
+        - $ref: "#/components/parameters/fetchId"
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      summary: Replace single fetch job
+      security:
+        - openId:
+            - write:mni_write
+      operationId: replaceFetchJob
+      parameters:
+        - $ref: "#/components/parameters/fetchId"
+      tags:
+        - Fetch Jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: delete specified fetch job
+      security:
+        - openId:
+            - write:mni_fetch
+      operationId: deleteFetchJob
+      tags:
+        - Fetch Jobs
+      parameters:
+        - $ref: "#/components/parameters/fetchId"
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    get:
+      summary: Get specified fetch job
+      security:
+        - openId:
+            - read:mni_fetch
+            - read:mni_ui
+      operationId: getFetchJob
+      tags:
+        - Fetch Jobs
+      parameters:
+        - $ref: "#/components/parameters/fetchId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
   schemas:
     ianaMimeType:
@@ -17135,6 +17649,12 @@ components:
       type: string
       minLength: 3
       maxLength: 64
+    portMacAddress:
+      description: the Media Access Control (MAC) address of the equipment interface port, i.e. 54:1e:56:e3:55:00, 54-1f-56-e3-55-00, 54:1E:56:E3:55:00 or 54-1E-56-E3-55-00
+      type: string
+      minLength: 17
+      maxLength: 17
+      pattern: "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
     portConnection:
       description: |
         cable connection of the interface port, *note*: technology specific
@@ -17461,7 +17981,7 @@ components:
         - `EGY` Egypt
         - `ERI` Eritrea
         - `ESH` Western Sahara
-        - `ESP` ESP
+        - `ESP` Spain
         - `EST` Estonia
         - `ETH` Ethiopia
         - `FIN` Finland
@@ -18272,6 +18792,7 @@ components:
         - `psz` - Public Safety Zone
         - `urban` 
         - `unclassified` - not recorded or known
+        - `utility` - public service building, i.e. hospital, school
       type: string
       default: unclassified
       enum:
@@ -18283,6 +18804,7 @@ components:
         - psz
         - urban
         - unclassified
+        - utility
     delete:
       description: |
         MNI internal metadata field to indicate record is marked for deletion
@@ -18338,20 +18860,28 @@ components:
         - "*"
     siteType:
       description: |
-        - `street` - various street furniture options
-        - `exchange` - district/town exchange building etc.
-        - `pop` - point of presence
-        - `dc` - data center
+        - `adu`` - accessory dwelling units 
         - `colo` - colocation
+        - `commercial` - place of work, retail unit etc.
+        - `dc` - data center
+        - `exchange` - district/town exchange building etc.
+        - `mdu` - multi-dwelling unit
+        - `pop` - point of presence
+        - `sdu` - single dwelling unit
+        - `street` - various street furniture options
         - `unclassified` - not recorded or known
       type: string
       default: unclassified
       enum:
-        - street
-        - exchange
-        - pop
-        - dc
+        - adu
         - colo
+        - commercial
+        - dc
+        - exchange
+        - mdu
+        - pop
+        - sdu
+        - street
         - unclassified
     cableConfiguration:
       description: |
@@ -18931,6 +19461,20 @@ components:
         - sogea
         - unclassified
         - voice
+    correlationType:
+      description: intended related resource of correlation
+      type: string
+      enum:
+        - cable
+        - duct
+        - ne
+        - other
+        - pole
+        - rack
+        - service
+        - site
+        - trench
+        - unknown
     trenchPurpose:
       description: |
         intended purpose of the contents of the trench
@@ -19127,6 +19671,14 @@ components:
         - ERSI
     requestorId:
       description: unique identifier of the requesting originator
+      type: string
+      format: uuid
+    fetchId:
+      description: internal fetch job identifier
+      type: string
+      format: uuid
+    correlationId:
+      description: internal fetch correlation identifier
       type: string
       format: uuid
     serviceId:
@@ -19599,6 +20151,22 @@ components:
     siteId:
       name: siteId
       description: internal site identifier
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    fetchId:
+      name: fetchId
+      description: internal fetch job identifier
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    correlationId:
+      name: correlationId
+      description: internal fetch correlation identifier
       in: path
       required: true
       schema:

@@ -1,3 +1,13 @@
+//=====================================================================
+// MarlinDT Network Intelligence (MNI) - JavaScript: Service
+//
+// Corporate Headquarters:
+// Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
+// https://www.merkator.com/
+//
+// © 2024-2025 Merkator nv/sa. All rights reserved.
+//=====================================================================
+//
 function adjustLine(from, to, line) {
   var fT = from.offsetTop + from.offsetHeight / 2;
   var tT = to.offsetTop + to.offsetHeight / 2;

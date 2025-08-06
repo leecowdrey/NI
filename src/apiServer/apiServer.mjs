@@ -44,6 +44,10 @@ const { default: crypto } = await import("crypto");
 
 const allPrintableRegEx = /[ -~]/gi;
 const versionRegex = /^(\d+\.)?(\d+\.)?(\*|\d+)$/gi;
+const nullMacAddressRegex = /^(0{2}[:-]){5}(0{2})$/gi;
+const wktPointRegex = /^POINT\s*(ZM|Z|M|EMPTY)?\s*(\(-?[\d|.|\s]+\))?$/gi;
+const wktLineStringRegex =
+  /^LINESTRING\s*(EMPTY)?\s*\(?((-?[\d|.]+)\s+(-?[\d|.])+(,\s*)?)+\)?$/gi;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -259,14 +263,14 @@ const ftsTables = [
     leader: false,
     key: "neId",
     field: [
+      "config",
       "host",
+      "image",
       "mgmtIP",
+      "model",
       "protocol",
       "vendor",
-      "model",
-      "image",
       "version",
-      "config",
     ],
     next: "_nePort",
   },
@@ -274,7 +278,7 @@ const ftsTables = [
     table: "_nePort",
     leader: false,
     key: "neId",
-    field: ["name", "state", "technology"],
+    field: ["macAddress", "name", "state", "technology"],
     next: null,
   },
   {
@@ -420,6 +424,10 @@ global.LOGGER = new Console({
 });
 
 //
+var mniLicenseHost = null;
+var mniLicenseDomain = null;
+var mniLicenseStart = null;
+var mniLicenseExpiry = null;
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
@@ -434,7 +442,7 @@ var hwClockCheck = new Date();
 var licenseTimer = null;
 var licenseIntervalMs = 86399000; // 23 hours, 59 minutes and 59 seconds
 var updateGeometryTimer = null;
-var updateGeometryIntervalMs = 300000; // 5 minutes
+var updateGeometryIntervalMs = 60000; // 1 minute
 var updatePremisesPassedTimer = null;
 var updatePremisesPassedIntervalMs = 300000; // 5 minutes
 var pruneTimer = null;
@@ -696,6 +704,115 @@ async function jobBackup(target) {
   }
 }
 
+async function coordinatesFromWktLineString(
+  wkt,
+  crsSrc = OAS.wktEpsg3857,
+  crsDst = OAS.wktEpsg4326
+) {
+  let coordinates = [];
+  // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
+  // to array of coordinates: x=2.198299999902494, y=41.39499999988968
+  if (wktLineStringRegex.test(wkt)) {
+    let lines = wkt
+      .replace(/\s\s+/g, " ")
+      .replace("LINESTRING (", "")
+      .replace(")", "")
+      .replace(", ", ",")
+      .split(",");
+    for (let l = 0; l < lines.length; l++) {
+      let geosql =
+        "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('POINT (" +
+        lines[l] +
+        ")'),'" +
+        crsSrc +
+        "','" +
+        crsDst +
+        "') as point)";
+      let ddRead = await DDC.runAndReadAll(geosql);
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        if (ddRows[0][0] != null && ddRows[0][1] != null) {
+          coordinates.push({
+            coordinate: {
+              x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+              y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+            },
+          });
+        }
+      }
+    }
+  }
+  return coordinates;
+}
+
+async function coordinatesStartEndFromWktLineString(
+  wkt,
+  crsSrc = OAS.wktEpsg3857,
+  crsDst = OAS.wktEpsg4326
+) {
+  let coordinates = [];
+  // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
+  // to array of coordinates: x=2.198299999902494, y=41.39499999988968
+  if (wktLineStringRegex.test(wkt)) {
+    let geosql =
+      "SELECT ST_X(spoint), ST_Y(spoint), ST_X(epoint), ST_Y(epoint) FROM ( SELECT ST_StartPoint(linestring) as spoint,ST_EndPoint(linestring) as epoint FROM ( SELECT ST_Transform(ST_GeomFromText('" +
+      wkt +
+      "'),'" +
+      crsSrc +
+      "','" +
+      crsDst +
+      "', true) as linestring ) ) ";
+    let ddRead = await DDC.runAndReadAll(geosql);
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      coordinates.push({
+        coordinate: {
+          x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+          y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+        },
+      });
+      coordinates.push({
+        coordinate: {
+          x: toDecimal(ddRows[0][2], OAS.X_scale, OAS.XY_precision),
+          y: toDecimal(ddRows[0][3], OAS.Y_scale, OAS.XY_precision),
+        },
+      });
+    }
+  }
+  return coordinates;
+}
+
+async function coordinateFromWktPoint(
+  wkt,
+  crsSrc = OAS.wktEpsg3857,
+  crsDst = OAS.wktEpsg4326
+) {
+  // converts GIS Well-Known Text (WKT) geometric point object such as POINT (244713.636599999 5070779.8199)
+  // to x=41.39499999988968, y=2.198299999902494
+  let coordinate = {};
+  if (wktPointRegex.test(wkt)) {
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('" +
+        wkt +
+        "'),'" +
+        crsSrc +
+        "','" +
+        crsDst +
+        "',true) as point)"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      if (ddRows[0][0] != null) {
+        coordinate.x = toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision);
+      }
+      if (ddRows[0][1] != null) {
+        coordinate.y = toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision);
+      }
+    }
+  }
+  return coordinate;
+}
+
 async function jobUpdateGeometry() {
   // child table (i.e. _pole) holds the spatial points as 3D points
   // parent table (i.e. pole) holds the spatial geometry object see https://duckdb.org/docs/stable/extensions/spatial/overview
@@ -723,6 +840,89 @@ async function jobUpdateGeometry() {
         points[i].dst +
         " IS NULL";
       await DDC.run(ddSql);
+    }
+    // transform well known text (WKT) for sites
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT tsId,siteId,wkt FROM _site WHERE wkt IS NOT NULL"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updateGeometry",
+            table: "site",
+            id: ddRows[idx][1],
+          });
+        }
+        let coordinate = await coordinateFromWktPoint(
+          ddRows[idx][2],
+          OAS.wktEpsg3857,
+          OAS.wktEpsg4326
+        );
+        if (coordinate != null) {
+          if (coordinate?.x != null && coordinate?.y != null) {
+            await DDC.run(
+              "UPDATE _site SET X = " +
+                coordinate.x +
+                ", Y = " +
+                coordinate.y +
+                ", wkt = null WHERE tsId = " +
+                ddRows[idx][0]
+            );
+          }
+        }
+      }
+    }
+    // transform well known text (WKT) for trenches
+    ddRead = await DDC.runAndReadAll(
+      "SELECT tsId,trenchId,source,strftime(point,'" +
+        pointFormat +
+        "'),wkt FROM _trench WHERE wkt IS NOT NULL"
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updateGeometry",
+            table: "trench",
+            id: ddRows[idx][1],
+          });
+        }
+        let coordinates = await coordinatesFromWktLineString(
+          ddRows[idx][4],
+          OAS.wktEpsg3857,
+          OAS.wktEpsg4326
+        );
+
+        if (coordinates != null) {
+          if (coordinates.length > 0) {
+            for (let i = 0; i < coordinates.length; i++) {
+              let ddtc = await DDC.prepare(
+                "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y) VALUES (strptime($1,$2),$3,$4,$5,$6,$7)"
+              );
+              ddtc.bindVarchar(1, ddRows[idx][3]);
+              ddtc.bindVarchar(2, pointFormat);
+              ddtc.bindInteger(3, ddRows[idx][0]);
+              ddtc.bindVarchar(4, ddRows[idx][1]);
+              ddtc.bindVarchar(5, ddRows[idx][2]);
+              ddtc.bindFloat(
+                6,
+                toDecimal(coordinates[i].x, OAS.X_scale, OAS.XY_precision)
+              );
+              ddtc.bindFloat(
+                7,
+                toDecimal(coordinates[i].y, OAS.Y_scale, OAS.XY_precision)
+              );
+              await ddtc.run();
+              await DDC.run(
+                "UPDATE _trench SET wkt = null WHERE tsId = " + ddRows[idx][0]
+              );
+            }
+          }
+        }
+      }
     }
     //
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
@@ -1858,27 +2058,34 @@ function validateLicense() {
     containerEnv = true;
   }
   //
-  let mniLicenseKey = process.env.MNI_KEY;
-  if (mniLicenseKey != null) {
+  let mniLicensePublicKey = process.env.MNI_LICENSE_PUBLIC_KEY;
+  let mniLicensePrivateKey = process.env.MNI_LICENSE_PRIVATE_KEY;
+  if (mniLicensePublicKey != null && mniLicensePrivateKey != null) {
     try {
-      if (Base64.isValid(mniLicenseKey)) {
-        let key = Base64.decode(mniLicenseKey);
+      if (Base64.isValid(mniLicensePrivateKey)) {
+        let key = Base64.decode(mniLicensePrivateKey);
         if (key != null) {
-          let validator = new SoftwareLicenseKey(OAS.mniMasterPublicKey);
+          let validator = new SoftwareLicenseKey(
+            Base64.decode(mniLicensePublicKey)
+          );
           try {
             let keyData = JSON.parse(
               JSON.stringify(validator.validateLicense(key))
             );
+            mniLicenseHost = keyData.host;
+            mniLicenseDomain = keyData.domain;
+            mniLicenseStart = keyData.start;
+            mniLicenseExpiry = keyData.expiry;
             if (DEBUG) {
               LOGGER.debug(
                 dayjs().format(OAS.dayjsFormat),
                 "debug",
                 "license",
                 {
-                  host: keyData.host,
-                  domain: keyData.domain,
-                  start: keyData.start,
-                  expiry: keyData.expiry,
+                  host: mniLicenseHost,
+                  domain: mniLicenseDomain,
+                  start: mniLicenseStart,
+                  expiry: mniLicenseExpiry,
                 }
               );
             }
@@ -2335,7 +2542,7 @@ var run = async () => {
     if (regexPattern) {
       comparator = "SIMILAR TO";
     }
-    query = query.replace(/\'/g, "\\'");
+    query = query.replace(/'/g, "''");
     for (let t = 0; t < ftsTables.length; t++) {
       if (resource == ftsTables[t].table) {
         next = ftsTables[t].next;
@@ -3509,7 +3716,7 @@ var run = async () => {
           ddp.bindVarchar(1, req.body[i].emailProviderId);
           ddp.bindVarchar(2, req.body[i].vendor);
           ddp.bindVarchar(3, req.body[i].address);
-          ddp.bindVarchar(4, req.body[i].name);
+          ddp.bindVarchar(4, req.body[i].name.replace(/'/g, "''"));
           await ddp.run();
 
           let emailSendSecret = {
@@ -3598,7 +3805,7 @@ var run = async () => {
             emailProviderId: ddEmailRows[idx][0],
             vendor: ddEmailRows[idx][1],
             address: ddEmailRows[idx][2],
-            name: ddEmailRows[idx][3],
+            name: ddEmailRows[idx][3].replace(/''/g, "'"),
           };
           let ddReceive = await DDC.runAndReadAll(
             "SELECT host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator " +
@@ -3707,7 +3914,7 @@ var run = async () => {
         ddp.bindVarchar(1, emailProviderId);
         ddp.bindVarchar(2, req.body.vendor);
         ddp.bindVarchar(3, req.body.address);
-        ddp.bindVarchar(4, req.body.name);
+        ddp.bindVarchar(4, req.body.name.replace(/'/g, "''"));
         await ddp.run();
 
         let emailSendSecret = {
@@ -3847,7 +4054,7 @@ var run = async () => {
             emailProviderId: req.params.emailProviderId,
             vendor: ddEmailRows[0][0],
             address: ddEmailRows[0][1],
-            name: ddEmailRows[0][2],
+            name: ddEmailRows[0][2].replace(/''/g, "'"),
           };
           let emailReceiveSecret = await getSecret(
             "adminEmailReceive",
@@ -3939,7 +4146,7 @@ var run = async () => {
           let resJson = {
             vendor: ddEmailRows[0][0],
             address: ddEmailRows[0][1],
-            name: ddEmailRows[0][2],
+            name: ddEmailRows[0][2].replace(/''/g, "'"),
           };
           let emailReceiveSecret = await getSecret(
             "adminEmailReceive",
@@ -4056,7 +4263,7 @@ var run = async () => {
         );
         ddp.bindVarchar(1, req.body.vendor);
         ddp.bindVarchar(2, req.body.address);
-        ddp.bindVarchar(3, req.body.name);
+        ddp.bindVarchar(3, req.body.name.replace(/'/g, "''"));
         ddp.bindVarchar(4, req.params.emailProviderId);
         await ddp.run();
 
@@ -4215,7 +4422,7 @@ var run = async () => {
             "INSERT INTO adminKafka (id,name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
           );
           ddp.bindVarchar(1, req.body[i].kafkaProducerId);
-          ddp.bindVarchar(2, req.body[i].name);
+          ddp.bindVarchar(2, req.body[i].name.replace(/'/g, "''"));
           ddp.bindVarchar(3, req.body[i].clientId);
           ddp.bindVarchar(4, req.body[i].producer.host);
           ddp.bindInteger(5, req.body[i].producer.port);
@@ -4300,7 +4507,7 @@ var run = async () => {
           "INSERT INTO adminKafka (id,name,clientId,host,port,retryDelay,retries,acks,linger,batchSize,bufferMemory,maxInFlightRequestsPerConnection,compressionMethod,authentication) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
         );
         ddp.bindVarchar(1, kafkaProducerId);
-        ddp.bindVarchar(2, req.body.name);
+        ddp.bindVarchar(2, req.body.name.replace(/'/g, "''"));
         ddp.bindVarchar(3, req.body.clientId);
         ddp.bindVarchar(4, req.body.producer.host);
         ddp.bindInteger(5, req.body.producer.port);
@@ -4519,7 +4726,7 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "UPDATE adminKafka SET name = $1, clientId = $2, host = $3, port = $4, retryDelay = $5, retries = $6, acks = $7, linger = $8, batchSize = $9, bufferMemory = $10, maxInFlightRequestsPerConnection = $11, compressionMethod = $12, authentication = $13 WHERE id = $14"
           );
-          ddp.bindVarchar(1, req.body.name);
+          ddp.bindVarchar(1, req.body.name.replace(/'/g, "''"));
           ddp.bindVarchar(2, req.body.clientId);
           ddp.bindVarchar(3, req.body.producer.host);
           ddp.bindInteger(4, req.body.producer.port);
@@ -5138,7 +5345,7 @@ var run = async () => {
             "INSERT INTO adminWorkflow (id, name, engineUrl, engineType) VALUES ($1,$2,$3,$4)"
           );
           ddp.bindVarchar(1, req.body[i].workflowEngineId);
-          ddp.bindVarchar(2, req.body[i].name);
+          ddp.bindVarchar(2, req.body[i].name.replace(/'/g, "''"));
           ddp.bindVarchar(3, req.body[i].engine.url);
           ddp.bindVarchar(4, req.body[i].engine.type);
           await ddp.run();
@@ -5210,7 +5417,7 @@ var run = async () => {
           "INSERT INTO adminWorkflow (id, name, engineUrl, engineType) VALUES ($1,$2,$3,$4)"
         );
         ddp.bindVarchar(1, workflowEngineId);
-        ddp.bindVarchar(2, req.body.name);
+        ddp.bindVarchar(2, req.body.name.replace(/'/g, "''"));
         ddp.bindVarchar(3, req.body.engine.url);
         ddp.bindVarchar(4, req.body.engine.type);
         await ddp.run();
@@ -5400,7 +5607,7 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "UPDATE adminWorkflow SET name = $1, engineUrl = $2, engineType = $3 WHERE ID = $4"
           );
-          ddp.bindVarchar(1, req.body.name);
+          ddp.bindVarchar(1, req.body.name.replace(/'/g, "''"));
           ddp.bindVarchar(2, req.body.engine.url);
           ddp.bindVarchar(3, req.body.engine.type);
           ddp.bindVarchar(4, req.body.workflowEngineId);
@@ -8705,7 +8912,7 @@ var run = async () => {
         ddp.bindVarchar(6, req.body.technology);
         ddp.bindVarchar(7, req.body.state);
         ddp.bindInteger(8, configTsId);
-        ddp.bindVarchar(9, req.body.reference);
+        ddp.bindVarchar(9, req.body.reference.replace(/'/g, "''"));
         ddp.bindFloat(
           10,
           validateProbability(req.body.probability, req.body.source)
@@ -9731,7 +9938,7 @@ var run = async () => {
     }
   }
 
-  async function deleteSingleFetchJob(req, res, next) {
+  async function deleteFetchJob(req, res, next) {
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
@@ -9878,7 +10085,7 @@ var run = async () => {
           resJson = {
             cableId: ddCableRows[0][0],
             technology: ddCableRows[0][1],
-            reference: ddCableRows[0][13],
+            reference: ddCableRows[0][13].replace(/''/g, "'"),
             state: ddCableRows[0][2],
             probability: validateProbability(
               ddCableRows[0][14],
@@ -10049,7 +10256,7 @@ var run = async () => {
             point: ddCableRows[0][13],
             delete: toBoolean(ddCableRows[0][3]),
             source: ddCableRows[0][14],
-            reference: ddCableRows[0][15],
+            reference: ddCableRows[0][15].replace(/''/g, "'"),
             probability: validateProbability(
               ddCableRows[0][15],
               ddCableRows[0][13]
@@ -10275,7 +10482,7 @@ var run = async () => {
           ddp.bindVarchar(6, req.body.technology);
           ddp.bindVarchar(7, req.body.state);
           ddp.bindInteger(8, configTsId);
-          ddp.bindVarchar(9, req.body.reference);
+          ddp.bindVarchar(9, req.body.reference.replace(/'/g, "''"));
           ddp.bindFloat(
             10,
             validateProbability(req.body.probability, req.body.source)
@@ -10429,9 +10636,8 @@ var run = async () => {
           let resObj = {
             cableId: ddCableRows[idx][0],
             technology: ddCableRows[idx][1],
-            reference: ddCableRows[idx][11],
+            reference: ddCableRows[idx][11].replace(/''/g, "'"),
             state: ddCableRows[idx][2],
-            reference: ddCableRows[idx][13],
             probability: validateProbability(
               ddCableRows[idx][14],
               ddCableRows[idx][13]
@@ -10697,7 +10903,7 @@ var run = async () => {
           ddp.bindVarchar(6, req.body[i].technology);
           ddp.bindVarchar(7, req.body[i].state);
           ddp.bindInteger(8, configTsId);
-          ddp.bindVarchar(9, req.body[i].reference);
+          ddp.bindVarchar(9, req.body[i].reference.replace(/'/g, "''"));
           ddp.bindFloat(
             10,
             validateProbability(req.body[i].probability, req.body[i].source)
@@ -11717,12 +11923,20 @@ var run = async () => {
       ddp.bindVarchar(4, body.source);
       ddp.bindVarchar(5, neId);
       ddp.bindInteger(6, tsId);
-      ddp.bindVarchar(7, body.ports[p].name);
+      ddp.bindVarchar(7, body.ports[p].name.replace(/'/g, "''"));
       ddp.bindVarchar(8, body.ports[p].technology);
       ddp.bindVarchar(9, body.ports[p].state);
       ddp.bindInteger(10, body.ports[p].errorCount);
       await ddp.run();
 
+      if (body.ports[p].macAddress != null) {
+        await DDC.run(
+          "UPDATE _nePort SET macAddress = '" +
+            body.ports[p].macAddress +
+            "' WHERE tsId = " +
+            portTsId
+        );
+      }
       switch (body.ports[p].technology) {
         case "coax":
           ddp = await DDC.prepare(
@@ -12166,7 +12380,7 @@ var run = async () => {
         resJson.config = ddRows[0][20];
       }
       let ddn = await DDC.prepare(
-        "SELECT tsId,name,technology,state,errorCount FROM _nePort WHERE neTsId = $1"
+        "SELECT tsId,name,technology,state,errorCount,macAddress FROM _nePort WHERE neTsId = $1"
       );
       ddn.bindInteger(1, ddRows[0][19]);
       let ddPort = await ddn.runAndReadAll();
@@ -12196,6 +12410,11 @@ var run = async () => {
                   unit: ddCoaxRows[0][4],
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
           case "ethernet":
@@ -12216,6 +12435,11 @@ var run = async () => {
                   unit: ddEthernetRows[0][2],
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
           case "loopback":
@@ -12235,6 +12459,11 @@ var run = async () => {
                   unit: ddLoopbackRows[0][1],
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
           case "fiber":
@@ -12257,6 +12486,11 @@ var run = async () => {
                   channels: toInteger(ddFiberRows[0][4]),
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
           case "xdsl":
@@ -12277,6 +12511,11 @@ var run = async () => {
                   unit: ddXdslRows[0][2],
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
           case "virtual":
@@ -12296,6 +12535,11 @@ var run = async () => {
                   unit: ddVirtualRows[0][1],
                 },
               };
+              if (ddPortRows[idx][5] != null) {
+                if (!nullMacAddressRegex.test(ddPortRows[idx][5])) {
+                  resPort.macAddress = ddPortRows[idx][5];
+                }
+              }
             }
             break;
         }
@@ -12729,7 +12973,7 @@ var run = async () => {
         ddp.bindInteger(17, toInteger(req.body.build.actual.duration));
         ddp.bindVarchar(18, req.body.build.planned.unit);
         ddp.bindVarchar(19, req.body.build.actual.unit);
-        ddp.bindVarchar(20, req.body.reference);
+        ddp.bindVarchar(20, req.body.reference.replace(/'/g, "''"));
         ddp.bindFloat(
           21,
           validateProbability(req.body.probability, req.body.source)
@@ -12993,7 +13237,7 @@ var run = async () => {
             poleId: req.params.poleId,
             point: ddRows[0][30],
             probability: validateProbability(ddRows[0][32], ddRows[0][5]),
-            reference: ddRows[0][31],
+            reference: ddRows[0][31].replace(/''/g, "'"),
             purpose: ddRows[0][6],
             construction: {
               height: toDecimal(ddRows[0][7]),
@@ -13181,7 +13425,7 @@ var run = async () => {
           resJson = {
             poleId: req.params.poleId,
             purpose: ddRows[0][6],
-            reference: ddRows[0][31],
+            reference: ddRows[0][31].replace(/''/g, "'"),
             probability: validateProbability(ddRows[0][32], ddRows[0][5]),
             point: ddRows[0][30],
             construction: {
@@ -13372,7 +13616,7 @@ var run = async () => {
           ddp.bindInteger(17, toInteger(req.body.build.actual.duration));
           ddp.bindVarchar(18, req.body.build.planned.unit);
           ddp.bindVarchar(19, req.body.build.actual.unit);
-          ddp.bindVarchar(20, req.body.reference);
+          ddp.bindVarchar(20, req.body.reference.replace(/'/g, "''"));
           ddp.bindFloat(
             21,
             validateProbability(req.body.probability, req.body.source)
@@ -13512,7 +13756,7 @@ var run = async () => {
           let resObj = {
             poleId: ddRows[idx][0],
             purpose: ddRows[idx][6],
-            reference: ddRows[idx][31],
+            reference: ddRows[idx][31].replace(/''/g, "'"),
             probability: validateProbability(ddRows[idx][32], ddRows[idx][5]),
             construction: {
               height: toDecimal(ddRows[idx][7]),
@@ -13672,7 +13916,7 @@ var run = async () => {
           ddp.bindInteger(17, req.body[i].build.actual.duration);
           ddp.bindVarchar(18, req.body[i].build.planned.unit);
           ddp.bindVarchar(19, req.body[i].build.actual.unit);
-          ddp.bindVarchar(20, req.body[i].reference);
+          ddp.bindVarchar(20, req.body[i].reference.replace(/'/g, "''"));
           ddp.bindFloat(
             21,
             validateProbability(req.body[i].probability, req.body[i].source)
@@ -13900,7 +14144,7 @@ var run = async () => {
         rackId: rackId,
         point: ddRows[0][5],
         probability: validateProbability(ddRows[0][25], ddRows[0][5]),
-        reference: ddRows[0][8],
+        reference: ddRows[0][8].replace(/''/g, "'"),
         commissioned: ddRows[0][9],
         siteId: ddRows[0][11],
         coordinate: {
@@ -14018,7 +14262,7 @@ var run = async () => {
     ddp.bindVarchar(3, pointFormat);
     ddp.bindVarchar(4, rackId);
     ddp.bindVarchar(5, body.source);
-    ddp.bindVarchar(6, body.reference);
+    ddp.bindVarchar(6, body.reference.replace(/'/g, "''"));
     ddp.bindVarchar(7, body.commissioned);
     ddp.bindVarchar(8, dateFormat);
     ddp.bindVarchar(9, body.siteId);
@@ -14768,7 +15012,7 @@ var run = async () => {
         ddp.bindVarchar(7, dateFormat);
         ddp.bindInteger(8, req.body.rate);
         ddp.bindVarchar(9, req.body.unit);
-        ddp.bindVarchar(10, req.body.reference);
+        ddp.bindVarchar(10, req.body.reference.replace(/'/g, "''"));
         ddp.bindFloat(
           11,
           validateProbability(req.body.probability, req.body.source)
@@ -15178,7 +15422,7 @@ var run = async () => {
           resJson = {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
-            reference: ddRows[0][16],
+            reference: ddRows[0][16].replace(/''/g, "'"),
             probability: validateProbability(ddRows[0][17], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
@@ -15358,7 +15602,7 @@ var run = async () => {
           resJson = {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
-            reference: ddRows[0][17],
+            reference: ddRows[0][17].replace(/''/g, "'"),
             probability: validateProbability(ddRows[0][18], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
@@ -15579,7 +15823,7 @@ var run = async () => {
           ddp.bindVarchar(7, dateFormat);
           ddp.bindInteger(8, req.body.rate);
           ddp.bindVarchar(9, req.body.unit);
-          ddp.bindVarchar(10, req.body.reference);
+          ddp.bindVarchar(10, req.body.reference.replace(/'/g, "''"));
           ddp.bindFloat(
             11,
             validateProbability(req.body.probability, req.body.source)
@@ -15808,7 +16052,7 @@ var run = async () => {
           let resObj = {
             serviceId: ddRows[idx][0],
             point: ddRows[idx][13],
-            reference: ddRows[idx][17],
+            reference: ddRows[idx][17].replace(/''/g, "'"),
             probability: validateProbability(ddRows[idx][18], ddRows[idx][5]),
             customer: {},
             commissioned: ddRows[idx][9],
@@ -16075,7 +16319,7 @@ var run = async () => {
           ddp.bindVarchar(7, dateFormat);
           ddp.bindInteger(8, req.body[i].rate);
           ddp.bindVarchar(9, req.body[i].unit);
-          ddp.bindVarchar(10, req.body[i].reference);
+          ddp.bindVarchar(10, req.body[i].reference.replace(/'/g, "''"));
           ddp.bindFloat(
             11,
             validateProbability(req.body[i].probability, req.body[i].source)
@@ -16344,7 +16588,7 @@ var run = async () => {
           for (let idx in ddRows) {
             resJson.push({
               siteId: ddRows[idx][0],
-              reference: ddRows[idx][1],
+              reference: ddRows[idx][1].replace(/''/g, "'"),
               area: ddRows[idx][2],
               type: ddRows[idx][3],
               postalCode: ddRows[idx][4],
@@ -16384,7 +16628,7 @@ var run = async () => {
           for (let idx in ddRows) {
             resJson.push({
               siteId: ddRows[idx][0],
-              reference: ddRows[idx][1],
+              reference: ddRows[idx][1].replace(/''/g, "'"),
               area: ddRows[idx][2],
               type: ddRows[idx][3],
               postalCode: ddRows[idx][4],
@@ -16479,16 +16723,19 @@ var run = async () => {
         ddp.bindVarchar(3, pointFormat);
         ddp.bindVarchar(4, siteId);
         ddp.bindVarchar(5, req.body.source);
-        ddp.bindVarchar(6, req.body.reference);
+        ddp.bindVarchar(6, req.body.reference.replace(/'/g, "''"));
         ddp.bindVarchar(7, req.body.commissioned);
         ddp.bindVarchar(8, dateFormat);
         ddp.bindVarchar(9, req.body.area);
         ddp.bindVarchar(10, req.body.type);
         ddp.bindVarchar(11, req.body.location.country);
-        ddp.bindVarchar(12, req.body.location.region);
-        ddp.bindVarchar(13, req.body.location.town);
-        ddp.bindVarchar(14, req.body.location.street);
-        ddp.bindVarchar(15, req.body.location.premisesNameNumber);
+        ddp.bindVarchar(12, req.body.location.region.replace(/'/g, "''"));
+        ddp.bindVarchar(13, req.body.location.town.replace(/'/g, "''"));
+        ddp.bindVarchar(14, req.body.location.street.replace(/'/g, "''"));
+        ddp.bindVarchar(
+          15,
+          req.body.location.premisesNameNumber.replace(/'/g, "''")
+        );
         ddp.bindVarchar(16, req.body.location.postalCode);
         ddp.bindFloat(
           17,
@@ -16524,7 +16771,7 @@ var run = async () => {
         if (req.body.location.district != null) {
           await DDC.run(
             "UPDATE _site SET district = '" +
-              req.body.location.district +
+              req.body.location.district.replace(/'/g, "''") +
               "' " +
               "WHERE tsId = " +
               tsId
@@ -16634,7 +16881,7 @@ var run = async () => {
                   break;
               }
               let ddClone = await DDC.prepare(
-                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability FROM _site WHERE tsId = $4"
+                "INSERT INTO _site (tsId,point,siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability,documentId,wkt) SELECT $1,strptime($2,$3),siteId,source,reference,commissioned,decommissioned,onNet,area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,probability,documentId,wkt FROM _site WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -16706,7 +16953,7 @@ var run = async () => {
             dateFormat +
             "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,strftime(point,'" +
             pointFormat +
-            "'),onNet,probability FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
+            "'),onNet,probability,documentId,wkt FROM site, _site WHERE site.id = $1 AND _site.siteId = site.id AND site.delete = false " +
             datePoint +
             " ORDER BY _site.point DESC LIMIT 1"
         );
@@ -16717,7 +16964,7 @@ var run = async () => {
           resJson = {
             siteId: req.params.siteId,
             point: ddRows[0][23],
-            reference: ddRows[0][7],
+            reference: ddRows[0][7].replace(/''/g, "'"),
             probability: validateProbability(ddRows[0][25], ddRows[0][6]),
             commissioned: ddRows[0][8],
             onNet: ddRows[0][24],
@@ -16725,10 +16972,10 @@ var run = async () => {
             type: ddRows[0][11],
             location: {
               country: ddRows[0][12],
-              region: ddRows[0][13],
-              town: ddRows[0][14],
-              street: ddRows[0][16],
-              premisesNameNumber: ddRows[0][17],
+              region: ddRows[0][13].replace(/''/g, "'"),
+              town: ddRows[0][14].replace(/''/g, "'"),
+              street: ddRows[0][16].replace(/''/g, "'"),
+              premisesNameNumber: ddRows[0][17].replace(/''/g, "'"),
               postalCode: ddRows[0][18],
               coordinate: {
                 x: toDecimal(ddRows[0][19], OAS.X_scale, OAS.XY_precision),
@@ -16747,6 +16994,12 @@ var run = async () => {
           }
           if (ddRows[0][22] != null) {
             resJson.location.coordinate.m = ddRows[0][22];
+          }
+          if (ddRows[0][26] != null) {
+            resJson.documentId = ddRows[0][26];
+          }
+          if (ddRows[0][27] != null) {
+            resJson.location.wkt = ddRows[0][27];
           }
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
         } else {
@@ -16824,7 +17077,7 @@ var run = async () => {
             dateFormat +
             "'),strftime(decommissioned,'" +
             dateFormat +
-            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
+            "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability,documentId,wkt FROM site, _site WHERE id = $1 AND tsId = historicalTsId AND site.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.siteId);
         let ddSite = await ddp.runAndReadAll();
@@ -16834,17 +17087,17 @@ var run = async () => {
             siteId: req.params.siteId,
             point: ddRows[0][5],
             probability: validateProbability(ddRows[0][24], ddRows[0][6]),
-            reference: ddRows[0][7],
+            reference: ddRows[0][7].replace(/''/g, "'"),
             commissioned: ddRows[0][8],
             onNet: toBoolean(ddRows[0][23]),
             area: ddRows[0][10],
             type: ddRows[0][11],
             location: {
               country: ddRows[0][12],
-              region: ddRows[0][13],
-              town: ddRows[0][14],
-              street: ddRows[0][16],
-              premisesNameNumber: ddRows[0][17],
+              region: ddRows[0][13].replace(/''/g, "'"),
+              town: ddRows[0][14].replace(/''/g, "'"),
+              street: ddRows[0][16].replace(/''/g, "'"),
+              premisesNameNumber: ddRows[0][17].replace(/''/g, "'"),
               postalCode: ddRows[0][18],
               coordinate: {
                 x: toDecimal(ddRows[0][19], OAS.X_scale, OAS.XY_precision),
@@ -16863,6 +17116,12 @@ var run = async () => {
           }
           if (ddRows[0][22] != null) {
             resJson.location.coordinate.m = ddRows[0][22];
+          }
+          if (ddRows[0][25] != null) {
+            resJson.documentId = ddRows[0][25];
+          }
+          if (ddRows[0][26] != null) {
+            resJson.wkt = ddRows[0][26];
           }
           // pass to replace to regenerate the record
           req.body = jsonDeepMerge(resJson, req.body);
@@ -16930,16 +17189,19 @@ var run = async () => {
           ddp.bindVarchar(3, pointFormat);
           ddp.bindVarchar(4, req.params.siteId);
           ddp.bindVarchar(5, req.body.source);
-          ddp.bindVarchar(6, req.body.reference);
+          ddp.bindVarchar(6, req.body.reference.replace(/'/g, "''"));
           ddp.bindVarchar(7, req.body.commissioned);
           ddp.bindVarchar(8, dateFormat);
           ddp.bindVarchar(9, req.body.area);
           ddp.bindVarchar(10, req.body.type);
           ddp.bindVarchar(11, req.body.location.country);
-          ddp.bindVarchar(12, req.body.location.region);
-          ddp.bindVarchar(13, req.body.location.town);
-          ddp.bindVarchar(14, req.body.location.street);
-          ddp.bindVarchar(15, req.body.location.premisesNameNumber);
+          ddp.bindVarchar(12, req.body.location.region.replace(/'/g, "''"));
+          ddp.bindVarchar(13, req.body.location.town.replace(/'/g, "''"));
+          ddp.bindVarchar(14, req.body.location.street.replace(/'/g, "''"));
+          ddp.bindVarchar(
+            15,
+            req.body.location.premisesNameNumber.replace(/'/g, "''")
+          );
           ddp.bindVarchar(16, req.body.location.postalCode);
           ddp.bindFloat(
             17,
@@ -16975,7 +17237,7 @@ var run = async () => {
           if (req.body.location.district != null) {
             await DDC.run(
               "UPDATE _site SET district = '" +
-                req.body.location.district +
+                req.body.location.district.replace(/'/g, "''") +
                 "' " +
                 "WHERE tsId = " +
                 tsId
@@ -16988,6 +17250,24 @@ var run = async () => {
                 "','" +
                 dateFormat +
                 "') " +
+                "WHERE tsId = " +
+                tsId
+            );
+          }
+          if (req.body.documentId != null) {
+            await DDC.run(
+              "UPDATE _site SET documentId = '" +
+                req.body.documentId +
+                "' " +
+                "WHERE tsId = " +
+                tsId
+            );
+          }
+          if (req.body.location?.wkt != null) {
+            await DDC.run(
+              "UPDATE _site SET wkt = '" +
+                req.body.location.wkt +
+                "' " +
                 "WHERE tsId = " +
                 tsId
             );
@@ -17034,7 +17314,7 @@ var run = async () => {
           dateFormat +
           "'),strftime(decommissioned,'" +
           dateFormat +
-          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
+          "'),area,type,country,region,town,district,street,premisesNameNumber,postalCode,x,y,z,m,onNet,probability,documentId,wkt FROM site, _site WHERE _site.siteId = site.id ORDER BY _site.point"
       );
       let ddRows = ddSite.getRows();
       if (ddRows.length > 0) {
@@ -17043,17 +17323,17 @@ var run = async () => {
             siteId: ddRows[idx][0],
             point: ddRows[idx][5],
             probability: validateProbability(ddRows[idx][24], ddRows[idx][6]),
-            reference: ddRows[idx][7],
+            reference: ddRows[idx][7].replace(/''/g, "'"),
             commissioned: ddRows[idx][8],
             onNet: ddRows[idx][23],
             area: ddRows[idx][10],
             type: ddRows[idx][11],
             location: {
               country: ddRows[idx][12],
-              region: ddRows[idx][13],
-              town: ddRows[idx][14],
-              street: ddRows[idx][16],
-              premisesNameNumber: ddRows[idx][17],
+              region: ddRows[idx][13].replace(/''/g, "'"),
+              town: ddRows[idx][14].replace(/''/g, "'"),
+              street: ddRows[idx][16].replace(/''/g, "'"),
+              premisesNameNumber: ddRows[idx][17].replace(/''/g, "'"),
               postalCode: ddRows[idx][18],
               coordinate: {
                 x: toDecimal(ddRows[idx][19], OAS.X_scale, OAS.XY_precision),
@@ -17072,6 +17352,12 @@ var run = async () => {
           }
           if (ddRows[idx][22] != null) {
             resObj.location.coordinate.m = ddRows[idx][22];
+          }
+          if (ddRows[idx][25] != null) {
+            resObj.documentId = ddRows[idx][25];
+          }
+          if (ddRows[idx][26] != null) {
+            resObj.location.wkt = ddRows[idx][26];
           }
           resJson.push(resObj);
         }
@@ -17156,16 +17442,19 @@ var run = async () => {
           ddp.bindVarchar(3, pointFormat);
           ddp.bindVarchar(4, req.body[i].siteId);
           ddp.bindVarchar(5, req.body[i].source);
-          ddp.bindVarchar(6, req.body[i].reference);
+          ddp.bindVarchar(6, req.body[i].reference.replace(/'/g, "''"));
           ddp.bindVarchar(7, req.body[i].commissioned);
           ddp.bindVarchar(8, dateFormat);
           ddp.bindVarchar(9, req.body[i].area);
           ddp.bindVarchar(10, req.body[i].type);
           ddp.bindVarchar(11, req.body[i].location.country);
-          ddp.bindVarchar(12, req.body[i].location.region);
-          ddp.bindVarchar(13, req.body[i].location.town);
-          ddp.bindVarchar(14, req.body[i].location.street);
-          ddp.bindVarchar(15, req.body[i].location.premisesNameNumber);
+          ddp.bindVarchar(12, req.body[i].location.region.replace(/'/g, "''"));
+          ddp.bindVarchar(13, req.body[i].location.town.replace(/'/g, "''"));
+          ddp.bindVarchar(14, req.body[i].location.street.replace(/'/g, "''"));
+          ddp.bindVarchar(
+            15,
+            req.body[i].location.premisesNameNumber.replace(/'/g, "''")
+          );
           ddp.bindVarchar(16, req.body[i].location.postalCode);
           ddp.bindFloat(
             17,
@@ -17201,7 +17490,7 @@ var run = async () => {
           if (req.body[i].location.district != null) {
             await DDC.run(
               "UPDATE _site SET district = '" +
-                req.body[i].location.district +
+                req.body[i].location.district.replace(/'/g, "''") +
                 "' " +
                 "WHERE tsId = " +
                 tsId
@@ -17222,6 +17511,15 @@ var run = async () => {
             await DDC.run(
               "UPDATE _site SET M = '" +
                 req.body[i].location.coordinate.m +
+                "' " +
+                "WHERE tsId = " +
+                tsId
+            );
+          }
+          if (req.body[i].location?.wkt != null) {
+            await DDC.run(
+              "UPDATE _site SET wkt = '" +
+                req.body[i].location.wkt +
                 "' " +
                 "WHERE tsId = " +
                 tsId
@@ -17475,7 +17773,7 @@ var run = async () => {
         ddp.bindInteger(13, toInteger(req.body.build.planned.duration));
         ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
         ddp.bindVarchar(15, req.body.state);
-        ddp.bindVarchar(16, req.body.reference);
+        ddp.bindVarchar(16, req.body.reference.replace(/'/g, "''"));
         ddp.bindFloat(
           17,
           validateProbability(req.body.probability, req.body.source)
@@ -17575,6 +17873,15 @@ var run = async () => {
             "UPDATE _trench SET connectsToPoleId = '" +
               req.body.connectsTo.poleId +
               "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (req.body?.wkt != null) {
+          await DDC.run(
+            "UPDATE _trench SET wkt = '" +
+              req.body.wkt +
+              "' " +
+              "WHERE tsId = " +
               tsId
           );
         }
@@ -17708,7 +18015,7 @@ var run = async () => {
               }
               let tsId = await getSeqNextValue("seq_trench");
               let ddClone = await DDC.prepare(
-                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability FROM _trench WHERE tsId = $4"
+                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt FROM _trench WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -17791,7 +18098,7 @@ var run = async () => {
             dateFormat +
             "'), actualDuration, actualUnit, state, connectsToSiteId, connectsToTrenchId, connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference,probability FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
+            "'),reference,probability,documentId,wkt FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
             datePoint +
             " ORDER BY _trench.point DESC LIMIT 1"
         );
@@ -17805,7 +18112,7 @@ var run = async () => {
             probability: validateProbability(ddRows[0][30], ddRows[0][6]),
             source: ddRows[0][6],
             purpose: ddRows[0][7],
-            reference: ddRows[0][29],
+            reference: ddRows[0][29].replace(/''/g, "'"),
             construction: {
               depth: toDecimal(ddRows[0][8]),
               classifier: ddRows[0][9],
@@ -17865,6 +18172,12 @@ var run = async () => {
           }
           if (ddRows[0][27] != null) {
             resJson.connectsTo.poleId = ddRows[0][27];
+          }
+          if (ddRows[0][31] != null) {
+            resJson.documentId = ddRows[0][31];
+          }
+          if (ddRows[0][32] != null) {
+            resJson.wkt = ddRows[0][32];
           }
           let trenchTsId = 0;
           if (req.query?.point != null) {
@@ -18476,7 +18789,7 @@ var run = async () => {
             dateFormat +
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference,probability FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+            "'),reference,probability,documentId,wkt FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddRead = await ddp.runAndReadAll();
@@ -18486,7 +18799,7 @@ var run = async () => {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
             probability: validateProbability(ddRows[0][30], ddRows[0][6]),
-            reference: ddRows[0][29],
+            reference: ddRows[0][29].replace(/''/g, "'"),
             purpose: ddRows[0][7],
             construction: {
               depth: toDecimal(ddRows[0][8]),
@@ -18549,6 +18862,12 @@ var run = async () => {
           }
           if (ddRows[0][27] != null) {
             resJson.connectsTo.poleId = ddRows[0][27];
+          }
+          if (ddRows[0][31] != null) {
+            resJson.documentId = ddRows[0][31];
+          }
+          if (ddRows[0][32] != null) {
+            resJson.wkt = ddRows[0][32];
           }
           let ddc = await DDC.prepare(
             "SELECT x,y,z FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
@@ -18690,7 +19009,7 @@ var run = async () => {
           ddp.bindInteger(13, toInteger(req.body.build.planned.duration));
           ddp.bindInteger(14, toInteger(req.body.build.actual.duration));
           ddp.bindVarchar(15, req.body.state);
-          ddp.bindVarchar(16, req.body.reference);
+          ddp.bindVarchar(16, req.body.reference.replace(/'/g, "''"));
           ddp.bindFloat(
             17,
             validateProbability(req.body.probability, req.body.source)
@@ -18793,6 +19112,22 @@ var run = async () => {
                 tsId
             );
           }
+          if (req.body.documentId != null) {
+            await DDC.run(
+              "UPDATE _trench SET documentId = '" +
+                req.body.documentId +
+                "' WHERE tsId = " +
+                tsId
+            );
+          }
+          if (req.body.wkt != null) {
+            await DDC.run(
+              "UPDATE _trench SET wkt = '" +
+                req.body.wkt +
+                "' WHERE tsId = " +
+                tsId
+            );
+          }
 
           for (let i = 0; i < req.body.coordinates.length; i++) {
             let ddtc = await DDC.prepare(
@@ -18874,7 +19209,7 @@ var run = async () => {
           dateFormat +
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,tsId,strftime(point,'" +
           pointFormat +
-          "'),reference,probability FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
+          "'),reference,probability,documentId,wkt FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -18883,7 +19218,7 @@ var run = async () => {
             trenchId: ddRows[idx][0],
             purpose: ddRows[idx][7],
             probability: validateProbability(ddRows[idx][31], ddRows[idx][6]),
-            reference: ddRows[idx][30],
+            reference: ddRows[idx][30].replace(/''/g, "'"),
             construction: {
               depth: toDecimal(ddRows[idx][8]),
               classifier: ddRows[idx][9],
@@ -18946,6 +19281,12 @@ var run = async () => {
           }
           if (ddRows[idx][27] != null) {
             resObj.connectsTo.poleId = ddRows[idx][27];
+          }
+          if (ddRows[idx][32] != null) {
+            resObj.documentId = ddRows[idx][32];
+          }
+          if (ddRows[idx][33] != null) {
+            resObj.wkt = ddRows[idx][33];
           }
           let ddc = await DDC.prepare(
             "SELECT x,y,z FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
@@ -19136,7 +19477,7 @@ var run = async () => {
           ddp.bindInteger(13, toInteger(req.body[i].build.planned.duration));
           ddp.bindInteger(14, toInteger(req.body[i].build.actual.duration));
           ddp.bindVarchar(15, req.body[i].state);
-          ddp.bindVarchar(16, req.body[i].reference);
+          ddp.bindVarchar(16, req.body[i].reference.replace(/'/g, "''"));
           ddp.bindFloat(
             17,
             validateProbability(req.body[i].probability, req.body[i].source)
@@ -19239,6 +19580,15 @@ var run = async () => {
                 tsId
             );
           }
+          if (req.body[i]?.wkt != null) {
+            await DDC.run(
+              "UPDATE _trench SET wkt = '" +
+                req.body[i].wkt +
+                "' " +
+                "WHERE tsId = " +
+                tsId
+            );
+          }
 
           for (let c = 0; c < req.body[i].coordinates.length; c++) {
             let ddtc = await DDC.prepare(
@@ -19313,6 +19663,19 @@ var run = async () => {
         .status(200)
         .contentType(OAS.mimeJSON)
         .json({ point: dayjs().format(OAS.dayjsFormat) });
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getLicense(req, res, next) {
+    try {
+      res.status(200).contentType(OAS.mimeJSON).json({
+        host: mniLicenseHost,
+        domain: mniLicenseDomain,
+        start: mniLicenseStart,
+        expiry: mniLicenseExpiry,
+      });
     } catch (e) {
       return next(e);
     }
@@ -20178,6 +20541,403 @@ var run = async () => {
     }
   }
 
+  async function getAllCorrelations(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll("SELECT id FROM correlate");
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push(ddRows[idx][0]);
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getCorrelation(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddp = await DDC.prepare(
+          "SELECT id FROM correlate WHERE id = $1 LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.correlationId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddp = await DDC.prepare(
+            "SELECT sourceObject,sourceReference,sourceValue,destinationObject,destinationReference,destinationValue,type,fetchJobId FROM correlate WHERE id = $1 LIMIT 1"
+          );
+          ddp.bindVarchar(1, req.params.correlationId);
+          let ddRead = await ddp.runAndReadAll();
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            resJson = {
+              id: req.params.correlationId,
+              source: {
+                object: ddRows[0][0],
+                reference: ddRows[0][1],
+                value: ddRows[0][2],
+              },
+              destination: {
+                source: {
+                  object: ddRows[0][3],
+                  reference: ddRows[0][4],
+                  value: ddRows[0][5],
+                },
+                type: ddRows[0][6],
+                fetchJobId: ddRows[0][7],
+              },
+            };
+            res.contentType(OAS.mimeJSON).status(200).json(resJson);
+          } else {
+            res.sendStatus(204);
+          }
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "correlationId " + req.params.correlationId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addCorrelation(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (req.body.fetchJobId != null) {
+          if (!(await dbIdExists(req.body.fetchJobId, "fetchJob"))) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "fetchJobId " + req.body.fetchJobId + " does not exist",
+              });
+          }
+        }
+        let correlationId = uuidv4();
+        let ddp = await DDC.prepare(
+          "INSERT INTO correlate (id,sourceObject,sourceReference,sourceValue,destinationObject,destinationReference,destinationValue,type,fetchJobId) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+        );
+        ddp.bindVarchar(1, correlationId);
+        ddp.bindVarchar(2, req.body.source.object);
+        ddp.bindVarchar(3, req.body.source.reference);
+        ddp.bindVarchar(4, req.body.source.value);
+        ddp.bindVarchar(5, req.body.destination.object);
+        ddp.bindVarchar(6, req.body.destination.reference);
+        ddp.bindVarchar(7, req.body.destination.value);
+        ddp.bindVarchar(8, req.body.type);
+        ddp.bindVarchar(9, req.body.fetchJobId);
+        await ddp.run();
+        res
+          .contentType(OAS.mimeJSON)
+          .status(200)
+          .json({ correlationId: correlationId });
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function updateCorrelation(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let ddp = await DDC.prepare(
+          "SELECT id,sourceObject,sourceReference,sourceValue,destinationObject,destinationReference,destinationValue,type,fetchJobId FROM correlate WHERE id = $1 LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.correlationId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          resJson = {
+            id: req.params.correlationId,
+            source: {
+              object: ddRows[0][0],
+              reference: ddRows[0][1],
+              value: ddRows[0][2],
+            },
+            destination: {
+              source: {
+                object: ddRows[0][3],
+                reference: ddRows[0][4],
+                value: ddRows[0][5],
+              },
+              type: ddRows[0][6],
+              fetchJobId: ddRows[0][7],
+            },
+          };
+          // pass to replace to regenerate the record
+          req.body = jsonDeepMerge(resJson, req.body);
+          return next();
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "correlationId " + req.params.correlationId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceCorrelation(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (req.body.fetchJobId != null) {
+          if (!(await dbIdExists(req.body.fetchJobId, "fetchJob"))) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "fetchJobId " + req.body.fetchJobId + " does not exist",
+              });
+          }
+        }
+        let ddp = await DDC.prepare(
+          "SELECT id FROM correlate WHERE id = $1 LIMIT 1"
+        );
+        ddp.bindVarchar(1, req.params.correlationId);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddp = await DDC.prepare(
+            "UPDATE correlate SET sourceObject = $1, sourceReference = $2, sourceValue = $3, destinationObject = $4, destinationReference = $5, destinationValue = $6, type = $7, fetchJobId = $8 WHERE id = $9"
+          );
+          ddp.bindVarchar(1, req.body.source.object);
+          ddp.bindVarchar(2, req.body.source.reference);
+          ddp.bindVarchar(3, req.body.source.value);
+          ddp.bindVarchar(4, req.body.destination.object);
+          ddp.bindVarchar(5, req.body.destination.reference);
+          ddp.bindVarchar(6, req.body.destination.value);
+          ddp.bindVarchar(7, req.body.type);
+          ddp.bindVarchar(8, req.body.fetchJobId);
+          ddp.bindVarchar(9, req.params.correlationId);
+          await ddp.run();
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "correlationId " + req.params.correlationId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteCorrelation(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await dbIdExists(req.params.correlationId, "correlate")) {
+          await DDC.run(
+            "DELETE FROM correlate WHERE id = '" +
+              req.params.correlationId +
+              "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors:
+                "correlationId " + req.params.correlationId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getAllFetchJobs(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
+        let resJson = [];
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM fetchJob WHERE delete = false"
+        );
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            resJson.push(ddRows[idx][0]);
+          }
+          resJson.sort();
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res.sendStatus(204);
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function addFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function getFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function updateFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function replaceFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        res.sendStatus(410);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  async function deleteFetchJob(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await dbIdExists(req.params.fetchId, "fetchJob")) {
+          await DDC.run(
+            "DELETE FROM fetchJob WHERE id = '" + req.params.fetchId + "'"
+          );
+          res.sendStatus(204);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "fetchId " + req.params.fetchId + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   // Express API routes
 
   /*
@@ -20235,7 +20995,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/document/:documentId",
     param("documentId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getDocument
   );
 
@@ -21720,7 +22480,7 @@ var run = async () => {
 
   /*
        Tag:           Fetch
-       operationId:   getSingleFetchJob
+       operationId:   getFetchJob
        exposed Route: /mni/v1/fetchJob/{fetchJobId}
        HTTP method:   GET
     */
@@ -21729,25 +22489,25 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("fetchJobId").isUUID(4),
-    getSingleFetchJob
+    getFetchJob
   );
   */
 
   /*
        Tag:           Fetch
-       operationId:   deleteSingleFetchJob
+       operationId:   deleteFetchJob
        exposed Route: /mni/v1/fetchJob/{fetchJobId}
        HTTP method:   GET
     */
   app.delete(
     serveUrlPrefix + serveUrlVersion + "/fetchJob/:fetchJobId",
     param("fetchJobId").isUUID(4),
-    deleteSingleFetchJob
+    deleteFetchJob
   );
 
   /*
        Tag:           Fetch
-       operationId:   addSingleFetchJob
+       operationId:   addFetchJob
        exposed Route: /mni/v1/fetchJob
        HTTP method:   POST
     */
@@ -21756,7 +22516,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/fetchJob",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    addSingleFetchJob
+    addFetchJob
   );
   */
 
@@ -21825,7 +22585,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/cables/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getCablesSimpleStatistics
   );
 
@@ -22362,7 +23122,7 @@ var run = async () => {
     body("*.state").isIn(OAS.cableState),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.probability")
       .default(OAS.probabilityHistorical)
@@ -22394,7 +23154,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/ducts/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getDuctsSimpleStatistics
   );
 
@@ -22473,7 +23233,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("ductId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleDuct
   );
 
@@ -22588,7 +23348,7 @@ var run = async () => {
     body("*.placement.unit").default("mm").isIn(OAS.sizeUnit),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.probability")
       .default(OAS.probabilityHistorical)
@@ -22620,7 +23380,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/nes/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getNesSimpleStatistics
   );
 
@@ -22795,7 +23555,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("neId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleNe
   );
 
@@ -23253,7 +24013,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/poles/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getPolesSimpleStatistics
   );
 
@@ -23389,7 +24149,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("poleId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSinglePole
   );
 
@@ -23678,7 +24438,7 @@ var run = async () => {
     body("*.coordinate.m").optional().isString().trim(),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("probability")
       .default(OAS.probabilityHistorical)
@@ -23723,7 +24483,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/racks/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getRacksSimpleStatistics
   );
 
@@ -23752,7 +24512,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleRack
   );
 
@@ -23929,7 +24689,7 @@ var run = async () => {
     body("*.slotUsage.*.usage").optional().isIn(OAS.rackSlotUsage),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("probability")
       .default(OAS.probabilityHistorical)
@@ -23948,7 +24708,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/rack/slots/:rackId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleRackSlots
   );
 
@@ -23963,7 +24723,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("rackId").isUUID(4),
     param("slot").isInt(OAS.rackSlots),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleRackSlotUsage
   );
 
@@ -23990,7 +24750,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/services/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getServicesSimpleStatistics
   );
 
@@ -24061,7 +24821,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("serviceId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleService
   );
 
@@ -24265,7 +25025,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/sites/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSitesSimpleStatistics
   );
 
@@ -24293,11 +25053,19 @@ var run = async () => {
     body("location.street").isString().trim(),
     body("location.premisesNameNumber").isString().trim(),
     body("location.postalCode").isString().trim(),
-    body("location.coordinate").isObject(),
-    body("location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
-    body("location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
-    body("location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
-    body("location.coordinate.m").optional().isString().trim(),
+    oneOf(
+      [
+        body("location.coordinate").isObject(),
+        body("location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
+        body("location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
+        body("location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
+        body("location.coordinate.m").optional().isString().trim(),
+      ],
+      [body("location.wkt").isString().trim()],
+      {
+        message: "either coordinates or single WKT must be supplied",
+      }
+    ),
     body("point")
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
@@ -24334,7 +25102,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/site/:siteId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("siteId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleSite
   );
 
@@ -24465,14 +25233,22 @@ var run = async () => {
     body("*.location.street").isString().trim(),
     body("*.location.premisesNameNumber").isString().trim(),
     body("*.location.postalCode").isString().trim(),
-    body("*.location.coordinate").isObject(),
-    body("*.location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
-    body("*.location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
-    body("*.location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
-    body("*.location.coordinate.m").optional().isString().trim(),
+    oneOf(
+      [
+        body("*.location.coordinate").isObject(),
+        body("*.location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
+        body("*.location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
+        body("*.location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
+        body("*.location.coordinate.m").optional().isString().trim(),
+      ],
+      [body("*.location.wkt").isString().trim()],
+      {
+        message: "either coordinates or single WKT must be supplied",
+      }
+    ),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.probability")
       .default(OAS.probabilityHistorical)
@@ -24519,7 +25295,7 @@ var run = async () => {
   app.get(
     serveUrlPrefix + serveUrlVersion + "/trenches/state",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getTrenchesSimpleStatistics
   );
 
@@ -24594,11 +25370,19 @@ var run = async () => {
         message: "either site, trench or pole identifier must be supplied",
       }
     ),
-    body("coordinates").isArray({ min: 1 }),
-    body("coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
-    body("coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
-    body("coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
-    body("coordinates.*.m").optional().isString().trim(),
+    oneOf(
+      [
+        body("coordinates").isArray({ min: 1 }),
+        body("coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
+        body("coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
+        body("coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
+        body("coordinates.*.m").optional().isString().trim(),
+      ],
+      [body("wkt").isString().trim()],
+      {
+        message: "either coordinates or single WKT must be supplied",
+      }
+    ),
     body("point")
       .default(dayjs().format(OAS.dayjsFormat))
       .matches(OAS.dateTime),
@@ -24652,7 +25436,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getSingleTrench
   );
 
@@ -24666,7 +25450,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/trench/premisesPassed/:trenchId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getTrenchPremisesPassed
   );
 
@@ -24680,7 +25464,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/trench/geometry/:trenchId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getTrenchGeometry
   );
 
@@ -24707,7 +25491,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/trench/distance/:trenchId",
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     param("trenchId").isUUID(4),
-    query("point").optional().matches(OAS.datePeriodYearMonthDay),
+    query("point").optional().matches(OAS.dateTime),
     getTrenchDistance
   );
 
@@ -24990,14 +25774,22 @@ var run = async () => {
         message: "either site, trench or pole identifier must be supplied",
       }
     ),
-    body("*.coordinates").isArray({ min: 1 }),
-    body("*.coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
-    body("*.coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
-    body("*.coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
-    body("*.coordinates.*.m").optional().isString().trim(),
+    oneOf(
+      [
+        body("*.coordinates").isArray({ min: 1 }),
+        body("*.coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
+        body("*.coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
+        body("*.coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
+        body("*.coordinates.*.m").optional().isString().trim(),
+      ],
+      [body("*.wkt").isString().trim()],
+      {
+        message: "either coordinates or single WKT must be supplied",
+      }
+    ),
     body("*.point")
       .default(dayjs().format(OAS.dayjsFormat))
-      .matches(OAS.datePeriodYearMonthDay),
+      .matches(OAS.dateTime),
     body("*.source").default("historical").isIn(OAS.source),
     body("*.probability")
       .default(OAS.probabilityHistorical)
@@ -25499,6 +26291,18 @@ var run = async () => {
   );
 
   /*
+       Tag:           License
+       operationId:   getLicense
+       exposed Route: /mni/v1/license
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/license",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getLicense
+  );
+
+  /*
        Tag:           UI
        operationId:   getMapRender
        exposed Route: /mni/v1/ui/mapRender
@@ -25726,6 +26530,191 @@ var run = async () => {
     addSingleSecret
   );
 
+  /*
+       Tag:           Fetch Jobs
+       operationId:   getAllCorrelations
+       exposed Route: /mni/v1/correlate
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/correlate",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllCorrelations
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   addCorrelation
+       exposed Route: /mni/v1/correlate
+       HTTP method:   POST
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/correlate",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("source").isObject(),
+    body("source.object").isString().trim(),
+    body("source.reference").isString().trim(),
+    body("source.value").isString().trim(),
+    body("destination").isObject(),
+    body("destination.object").isString().trim(),
+    body("destination.reference").isString().trim(),
+    body("destination.value").isString().trim(),
+    body("type").default("unknown").isIn(OAS.correlationType),
+    addCorrelation
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   deleteCorrelation
+       exposed Route: /mni/v1/correlate/:correlationId
+       HTTP method:   DELETE
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
+    param("correlationId").isUUID(4),
+    deleteCorrelation
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   getCorrelation
+       exposed Route: /mni/v1/correlate/:correlationId
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("correlationId").isUUID(4),
+    getCorrelation
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   updateCorrelation
+       exposed Route: /mni/v1/correlate/:correlationId
+       HTTP method:   PATCH
+    */
+  app.patch(
+    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    param("correlationId").isUUID(4),
+    body("source").optional().isObject(),
+    body("source.object").optional().isString().trim(),
+    body("source.reference").optional().isString().trim(),
+    body("source.value").optional().isString().trim(),
+    body("destination").optional().isObject(),
+    body("destination.object").optional().isString().trim(),
+    body("destination.reference").optional().isString().trim(),
+    body("destination.value").optional().isString().trim(),
+    body("type").optional().isIn(OAS.correlationType),
+    updateCorrelation,
+    replaceCorrelation
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   replaceCorrelation
+       exposed Route: /mni/v1/correlate/:correlationId
+       HTTP method:   PUT
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/correlate/:correlationId",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    param("correlationId").isUUID(4),
+    body("source").isObject(),
+    body("source.object").isString().trim(),
+    body("source.reference").isString().trim(),
+    body("source.value").isString().trim(),
+    body("destination").isObject(),
+    body("destination.object").isString().trim(),
+    body("destination.reference").isString().trim(),
+    body("destination.value").isString().trim(),
+    body("type").default("unknown").isIn(OAS.correlationType),
+    replaceCorrelation
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   getAllFetchJobs
+       exposed Route: /mni/v1/fetch
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetch",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("pageSize").optional().isInt(OAS.pageSize),
+    query("pageNumber").optional().isInt(OAS.pageNumber),
+    getAllFetchJobs
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   addFetchJob
+       exposed Route: /mni/v1/fetch
+       HTTP method:   POST
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/fetch",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    addFetchJob
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   deleteFetchJob
+       exposed Route: /mni/v1/fetch/:fetchId
+       HTTP method:   DELETE
+    */
+  app.delete(
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
+    param("fetchId").isUUID(4),
+    deleteFetchJob
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   getFetchJob
+       exposed Route: /mni/v1/fetch/:fetchId
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    param("fetchId").isUUID(4),
+    getFetchJob
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   updateFetchJob
+       exposed Route: /mni/v1/fetch/:fetchId
+       HTTP method:   PATCH
+    */
+  app.patch(
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    param("fetchId").isUUID(4),
+    updateFetchJob,
+    replaceFetchJob
+  );
+
+  /*
+       Tag:           Fetch Jobs
+       operationId:   replaceFetchJob
+       exposed Route: /mni/v1/fetch/:fetchId
+       HTTP method:   PUT
+    */
+  app.put(
+    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    param("fetchId").isUUID(4),
+    replaceFetchJob
+  );
+
   // Express 404 handling ¯\_(ツ)_/¯
   app.use((req, res, next) => {
     res
@@ -25791,6 +26780,12 @@ var run = async () => {
     },
     geometry: {
       premisesPassedBoundaryDistance: premisesPassedBoundaryDistance,
+    },
+    license: {
+      host: mniLicenseHost,
+      domain: mniLicenseDomain,
+      start: mniLicenseStart,
+      expiry: mniLicenseExpiry,
     },
     ssl: {
       key: sslKey,

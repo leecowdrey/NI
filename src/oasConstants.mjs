@@ -42,6 +42,18 @@ export const Y_scale = 2;
 export const Z_scale = 8;
 export const XY_precision = 6;
 export const Z_precision = 2;
+export const correlationType = [
+  "cable",
+  "duct",
+  "ne",
+  "other",
+  "pole",
+  "rack",
+  "service",
+  "site",
+  "trench",
+  "unknown",
+];
 export const fetchProtocol = [
   "email",
   "ftp",
@@ -2269,6 +2281,7 @@ export const areaType = [
   "psz",
   "urban",
   "unclassified",
+  "utility",
 ];
 export const cableCoaxConfigurationFrequency = ["MHz", "GHz"];
 export const cableConfiguration_coax_channels = { min: 1, max: 512 };
@@ -2958,6 +2971,7 @@ export const portFiberConfigurationMode = ["SMOF", "MMOF"];
 export const portFiberConfigurationRate = ["Gbps", "Tbps"];
 export const portErrorCount = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const portName = { min: 3, max: 64 };
+export const portMacAddress = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 export const portState = ["free", "used", "reserved", "faulty"];
 export const portTechnology = [
   "coax",
@@ -3010,12 +3024,17 @@ export const serviceType = [
   "voice",
 ];
 export const siteType = [
-  "street",
-  "exchange",
-  "pop",
-  "dc",
+  "adu",
   "colo",
+  "commercial",
+  "dc",
+  "exchange",
+  "mdu",
+  "pop",
+  "sdu",
+  "street",
   "unclassified",
+  "utility",
 ];
 export const sizeUnit = ["cm", "mm", "m", "km", "Mm", "inch", "feet"];
 export const source = ["historical", "predicted"];
@@ -3032,6 +3051,9 @@ export const url_protocols = ["http", "https"];
 export const vlanId = { min: 0, max: 4095 };
 export const vxlanId = { min: 4096, max: 16777215 };
 export const workflowEngineType = ["bpmn", "elsa"];
+export const wktEpsg3857 = "EPSG:3857";
+export const wktEpsg4326 = "EPSG:4326";
+export const wktCrs = [wktEpsg3857, wktEpsg4326];
 export const bannerGraffti = [
   32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95,
   32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32,
@@ -3053,19 +3075,3 @@ export const bannerGraffti = [
   95, 124, 32, 124, 95, 124, 92, 95, 47, 95, 47, 32, 124, 95, 95, 95, 47, 92,
   95, 95, 44, 95, 124, 10, 10,
 ];
-//
-export const mniMasterPublicKey =
-  "-----BEGIN PUBLIC KEY-----\n" +
-  "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEApsd8yoJ7ai0qVyO+X3pc\n" +
-  "a5r1TXAIA90UcURDD+lvc89MUjGdqGv9OKefWplKhs5ZwzZ6l+OokYe/bc8jX9JK\n" +
-  "efdt3bEGYa4rv+TJredeKUjL9+GmIAO5xZiyGvY9dGSmj4Z7bZ5whl9S/8fHDOGc\n" +
-  "4VHNj3WAeOsD9U+2lh2z34tUOl58mgp62BE/GF+fbdXtzOemst7+I8e4dPX/xagm\n" +
-  "MxCGEXD+e+yBky9Irf3yUScdMttRUSamPHxkylQbvuBK/lwSlcImxa/Z5La70DvA\n" +
-  "FiHbAMmSaR0Az20hxpZgs+pYNM0+OyT4Mu9mFkD/dxH3FYYKJcq3gM2N3ozg7bMw\n" +
-  "LHG6lXnJmyUaKwTOJCg9f3kA9YtIxrt/UdjabCNcxn0MQ1S7A+MpqBsDEFW9MnCJ\n" +
-  "MXu8yW4yCvRK7LHcVmyX9yJOCNXkM6Jyj8CdvKegbHR5cb6T565JUvI6/h4Uf8g+\n" +
-  "e4gIn3ESFwaw7S4gTvCNszhgOmCLl7gJX7trexu1V+sojaXHW5XnhIw6O1Zh3rBa\n" +
-  "SV0yQhkzMj8IAu35bYXtwS2T44PxDKQkFc6ldXh+Flqgsb2q+CInrI75JiYHCwiB\n" +
-  "N57VOqQRtrKUKau90zMkbdLsX5kB3JqLpeumi8hHNbQdq14PD0UVlkiLnSWZk9gO\n" +
-  "/c0Dkgp0+FhFyvUrxT9dJasCAwEAAQ==\n" +
-  "-----END PUBLIC KEY-----";
