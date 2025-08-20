@@ -1,0 +1,19 @@
+[
+	{
+		"ductId": "b248ec91-27a5-4fb4-906b-2a1d077fb588",
+		"point": "20250509T113205",
+		"trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+		"probability": 1,
+		"purpose": "cable",
+		"category": "duct",
+		"configuration": 1,
+		"state": "free",
+		"placement": {
+			"horizontal": 1579,
+			"vertical": 350,
+			"unit": "mm"
+		},
+		"source": "historical",
+		"delete": false
+	}
+]
