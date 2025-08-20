@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1754497112"
+    "version": "1.0.0.1755723758"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -26645,7 +26645,7 @@
         ]
       },
       "siteType": {
-        "description": "- `adu`` - accessory dwelling units \n- `colo` - colocation\n- `commercial` - place of work, retail unit etc.\n- `dc` - data center\n- `exchange` - district/town exchange building etc.\n- `mdu` - multi-dwelling unit\n- `pop` - point of presence\n- `sdu` - single dwelling unit\n- `street` - various street furniture options\n- `unclassified` - not recorded or known\n",
+        "description": "- `adu` - accessory dwelling units \n- `colo` - colocation\n- `commercial` - place of work, retail unit etc.\n- `dc` - data center\n- `exchange` - district/town exchange building etc.\n- `mdu` - multi-dwelling unit\n- `pop` - point of presence\n- `sdu` - single dwelling unit\n- `street` - various street furniture options\n- `unclassified` - not recorded or known\n",
         "type": "string",
         "default": "unclassified",
         "enum": [

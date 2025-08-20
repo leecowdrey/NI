@@ -720,24 +720,26 @@ async function coordinatesFromWktLineString(
       .replace(", ", ",")
       .split(",");
     for (let l = 0; l < lines.length; l++) {
-      let geosql =
-        "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('POINT (" +
-        lines[l] +
-        ")'),'" +
-        crsSrc +
-        "','" +
-        crsDst +
-        "') as point)";
-      let ddRead = await DDC.runAndReadAll(geosql);
-      let ddRows = ddRead.getRows();
-      if (ddRows.length > 0) {
-        if (ddRows[0][0] != null && ddRows[0][1] != null) {
-          coordinates.push({
-            coordinate: {
-              x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
-              y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
-            },
-          });
+      if (lines[l].toLowerCase() != "empty") {
+        let geosql =
+          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('POINT (" +
+          lines[l] +
+          ")'),'" +
+          crsSrc +
+          "','" +
+          crsDst +
+          "') as point)";
+        let ddRead = await DDC.runAndReadAll(geosql);
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          if (ddRows[0][0] != null && ddRows[0][1] != null) {
+            coordinates.push({
+              coordinate: {
+                x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+                y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+              },
+            });
+          }
         }
       }
     }
@@ -827,20 +829,6 @@ async function jobUpdateGeometry() {
       event: "updateGeometry",
       state: "start",
     });
-    // update spatial points
-    for (let i = 0; i < points.length; i++) {
-      let ddSql =
-        "UPDATE " +
-        points[i].table +
-        " SET " +
-        points[i].dst +
-        " = " +
-        points[i].src +
-        " WHERE " +
-        points[i].dst +
-        " IS NULL";
-      await DDC.run(ddSql);
-    }
     // transform well known text (WKT) for sites
     let ddRead = await DDC.runAndReadAll(
       "SELECT tsId,siteId,wkt FROM _site WHERE wkt IS NOT NULL"
@@ -923,6 +911,20 @@ async function jobUpdateGeometry() {
           }
         }
       }
+    }
+    // update spatial points
+    for (let i = 0; i < points.length; i++) {
+      let ddSql =
+        "UPDATE " +
+        points[i].table +
+        " SET " +
+        points[i].dst +
+        " = " +
+        points[i].src +
+        " WHERE " +
+        points[i].dst +
+        " IS NULL";
+      await DDC.run(ddSql);
     }
     //
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {

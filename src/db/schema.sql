@@ -1095,8 +1095,8 @@ INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES 
 INSERT INTO fetchJob (id,description,enabled,protocol,mysqlHost,mysqlDatabase,mysqlPort,mysqlSchema,cronTime,function) VALUES ('747ded39-4273-423b-8550-d2009f2d6575','Merkator NetworkMining LNI',false,'mysql','192.168.20.10','NM',3306,'gnd','0 0 * * *','noop();');
 INSERT INTO fetchJob (id,description,enabled,protocol,oracleHost,oracleSid,oraclePort,oracleSchema,cronTime,function) VALUES ('4810b82c-961f-4949-92f7-550ceaff594b','Merkator Marlin PNI',false,'oracle','192.168.20.20','MARLIN',1521,'MARLIN','0 0 * * *','noop();');
 
-INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('86c954a9-efb6-4a8b-85bb-13de5504c97a','CVE Pull',true,'none','00 20 * * *','jobCveRepoPull(cveDirectory);');
-INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('24c449a6-f838-4e12-9427-bc484191f92e','CVE Build',true,'none','30 20 * * *','jobCveListBuild(cveDirectory);');
+INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('86c954a9-efb6-4a8b-85bb-13de5504c97a','CVE Pull',true,'none','00 * * * *','jobCveRepoPull({cveDirectory});');
+INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('24c449a6-f838-4e12-9427-bc484191f92e','CVE Build',true,'none','30 */6 * * *','jobCveListBuild({cveDirectory});');
 
 INSERT INTO fetchJob (id,description,enabled,protocol,httpUrl,crontime,function) VALUES ('2bbe3d5b-6975-45f4-a6ed-f1b67f990240','FX Currency Update',true,'http','https://api.exchangeratesapi.io/v1/latest','0 9,19 * * 1-5','jobFxRateUpdate({url});');
 

@@ -134,43 +134,33 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 if [[ "${CVE_SCAN,,}" == "true" ]] ; then
- if [[ -d "${CVE_DIRECTORY}" ]] ; then
-  doing "Pulling CVE List V5 repository"
-  pushd ${CVE_DIRECTORY} &>/dev/null && \
-  git clean -xdf &>/dev/null && \
-  git reset --hard &>/dev/null && \
-  git pull &>/dev/null && \
-  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
-  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
-  popd &>/dev/null
-  RETVAL=$?
- else
   doing "Cloning CVE List V5 repository"
-  mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY} && \
-  pushd ${CVE_DIRECTORY} &>/dev/null && \
-  git init &>/dev/null && \
-  git remote add -f origin https://github.com/CVEProject/cvelistV5.git &>/dev/null && \
-  git config core.sparseCheckout true &>/dev/null && \
-  echo "README.md" >> .git/info/sparse-checkout && \
-  echo ".gitignore" >> .git/info/sparse-checkout && \
-  echo ".gitattributes" >> .git/info/sparse-checkout && \
-  echo "cves/2025/" >> .git/info/sparse-checkout && \
-  echo "cves/2026/" >> .git/info/sparse-checkout && \
-  echo "cves/2027/" >> .git/info/sparse-checkout && \
-  echo "cves/2028/" >> .git/info/sparse-checkout && \
-  echo "cves/2029/" >> .git/info/sparse-checkout && \
-  echo "cves/delta.json" >> .git/info/sparse-checkout && \
-  echo "cves/deltaLog.json" >> .git/info/sparse-checkout && \
-  git pull origin main &>/dev/null && \
-  # git clone https://github.com/CVEProject/cvelistV5.git ${CVE_DIRECTORY} &>/dev/null && \
-  git config --global --add safe.directory ${CVE_DIRECTORY} && \
-  chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} &>/dev/null && \
-  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/* &>/dev/null && \
-  chown -hR ${USERNAME}:${GROUP} ${CVE_DIRECTORY}/.git* &>/dev/null
+  mkdir -p ${CVE_DIRECTORY} && chown ${USERNAME}:${GROUP} ${CVE_DIRECTORY} && chmod 770 ${CVE_DIRECTORY}
+  CVE_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
+  cat > ${CVE_TMP} <<EOF
+#!/bin/bash
+pushd ${CVE_DIRECTORY} &>/dev/null && \
+git init &>/dev/null && \
+git remote add -f origin https://github.com/CVEProject/cvelistV5.git &>/dev/null && \
+git config core.sparseCheckout true &>/dev/null && \
+echo "README.md" >> .git/info/sparse-checkout && \
+echo ".gitignore" >> .git/info/sparse-checkout && \
+echo ".gitattributes" >> .git/info/sparse-checkout && \
+echo "cves/2025/" >> .git/info/sparse-checkout && \
+echo "cves/2026/" >> .git/info/sparse-checkout && \
+echo "cves/2027/" >> .git/info/sparse-checkout && \
+echo "cves/2028/" >> .git/info/sparse-checkout && \
+echo "cves/2029/" >> .git/info/sparse-checkout && \
+echo "cves/delta.json" >> .git/info/sparse-checkout && \
+echo "cves/deltaLog.json" >> .git/info/sparse-checkout && \
+git pull origin main &>/dev/null
+exit \$?
+EOF
+  chown ${USERNAME}:${GROUP} ${CVE_TMP} &>/dev/null
+  chmod +x ${CVE_TMP} &>/dev/null
+  su --shell=/bin/bash --login -c ${CVE_TMP} - ${USERNAME}
   RETVAL=$?
- fi
-else
- RETVAL=0
+  [[ -f "${CVE_TMP}" ]] && rm -f ${CVE_TMP} &>/dev/null
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

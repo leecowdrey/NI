@@ -18,9 +18,11 @@ import dayjs from "dayjs";
 import os from "os";
 import path from "path";
 import fs from "fs";
-import simpleGit from "simple-git";
+import { exec as execCb } from "node:child_process";
+import { promisify } from "node:util";
 import { glob } from "glob";
 import { URL } from "node:url";
+
 //import { oracledb } from "oracledb";
 //import mysql from "mysql2/promise";
 
@@ -776,11 +778,23 @@ async function jobCveRepoPull(target = cveDirectory) {
       if (fs.existsSync(target)) {
         if (fs.lstatSync(target).isDirectory()) {
           try {
-            let git = simpleGit(target);
-            await git.addConfig("safe.directory", target, false, "global");
-            await git.clean("xdf");
-            //await git.reset("hard");
-            await git.pull("origin", "main");
+            const exec = promisify(execCb);
+            //               "git fetch origin main && git reset --hard && git pull --rebase origin main",
+            const { error, stdout, stderr } = await exec(
+              "git pull --rebase origin main",
+              { cwd: target }
+            );
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(OAS.dayjsFormat),
+                "debug",
+                "cveRepoPull",
+                {
+                  stdout: stdout,
+                  stderr: stderr,
+                }
+              );
+            }
           } catch (e) {
             LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
               event: "cveRepoPull",
@@ -1353,6 +1367,10 @@ var run = async () => {
         break;
       case OAS.fetchProtocolNone:
         try {
+          cronFunction = cronFunction.replace(
+            /{cveDirectory}/g,
+            "'" + cveDirectory + "'"
+          );
           jobsCronIds.push(
             eval(
               "cron.schedule('" +

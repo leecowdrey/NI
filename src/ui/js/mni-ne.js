@@ -14,6 +14,7 @@ let frReady = null;
 let fvnReady = null;
 let retryMs = 5000;
 let neId = null;
+let neRawPoints = [];
 let point = null;
 var cveKnown = 0;
 var cveImpacting = 0;
@@ -49,6 +50,11 @@ function fetchCveNe(neId = null) {
     .catch((e) => {
       console.error(e);
     });
+}
+function updateNePointFromSlider() {
+  document.getElementById("nePoint").value =
+            neRawPoints[(neRawPoints.length - document.getElementById("nePointRange").value)];
+  fetchNe();
 }
 function fetchListNe() {
   if (flrReady != null) {
@@ -129,7 +135,6 @@ function fetchNe(neId, point = null) {
         if (data.source != null) {
           source = data.source;
         }
-        console.log("source", source);
         if (nePorts > neGridMaxColumns) {
           neGridColumns = Math.max(
             Math.ceil(nePorts / neGridMaxColumns),
@@ -312,6 +317,7 @@ function fetchNePoints() {
         }
       })
       .then((data) => {
+        neRawPoints = [];
         let nePoints =
           "<option disabled value='-1' selected='selected'> -- select a date/time -- </option>";
         for (var i = 0; i < data.length; i++) {
@@ -321,8 +327,28 @@ function fetchNePoints() {
             "' >" +
             data[i].point +
             "</option>";
+          neRawPoints.push(data[i].point);
         }
         document.getElementById("nePoint").innerHTML = nePoints;
+        // slider
+        if (neRawPoints.length > 0) {
+          document.getElementById("nePointRange").disabled = false;
+          document.getElementById("nePointRange").setAttribute("min", 1);
+          document
+            .getElementById("nePointRange")
+            .setAttribute("max", neRawPoints.length);
+          document
+            .getElementById("nePointRange")
+            .setAttribute("value", neRawPoints.length);
+          document.getElementById("nePoint").value =
+            neRawPoints[(neRawPoints.length - document.getElementById("nePointRange").value)];
+          fetchNe();
+        } else {
+          document.getElementById("nePointRange").setAttribute("min", 0);
+          document.getElementById("nePointRange").setAttribute("max", 0);
+          document.getElementById("nePointRange").setAttribute("value", 0);
+          document.getElementById("nePointRange").disabled = true;
+        }
       })
       .catch((e) => {
         console.error(e);
@@ -336,18 +362,3 @@ try {
   console.error(e);
   flrReady = setTimeout(fetchListNe, retryMs);
 }
-/*
-        try {
-            if ("<%=payload.neId%>" != null) {
-                if ("<%=payload.point%>" != null) {
-                    fetchCveNe("<%=payload.neId%>");
-                    fetchNe("<%=payload.neId%>");
-                } else {
-                    fetchCveNe("<%=payload.neId%>");
-                    fetchNe("<%=payload.neId%>", "<%=payload.point%>");
-                }
-            }
-        } catch (e) {
-            console.error(e);
-        }
-        */

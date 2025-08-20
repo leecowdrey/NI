@@ -233,9 +233,9 @@
         <div class="ne-select" id="neList">
             <label for="neId">NE</label>
             <select id="neId" onchange="if(this.selectedIndex !== undefined) fetchCveNe(); fetchNePoints();"></select>
-            <a accesskey="@" nohref onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i
-                    style="color:white;" class="fa fa-refresh"></i></a>
+            <a accesskey="@" nohref onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
             <label for="nePoint">Point</label>
+            <input type="range" min="0" max="0" value="0" id="nePointRange" onchange="updateNePointFromSlider();">
             <select id="nePoint" onchange="if(this.selectedIndex !== undefined) fetchNe();"></select>
         </div>
     </div>
