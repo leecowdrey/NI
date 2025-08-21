@@ -779,9 +779,8 @@ async function jobCveRepoPull(target = cveDirectory) {
         if (fs.lstatSync(target).isDirectory()) {
           try {
             const exec = promisify(execCb);
-            //               "git fetch origin main && git reset --hard && git pull --rebase origin main",
             const { error, stdout, stderr } = await exec(
-              "git pull --rebase origin main",
+              "git pull --rebase origin main && git sparse-checkout reapply",
               { cwd: target }
             );
             if (DEBUG) {

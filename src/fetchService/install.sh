@@ -140,25 +140,19 @@ if [[ "${CVE_SCAN,,}" == "true" ]] ; then
   cat > ${CVE_TMP} <<EOF
 #!/bin/bash
 pushd ${CVE_DIRECTORY} &>/dev/null && \
-git init &>/dev/null && \
-git remote add -f origin https://github.com/CVEProject/cvelistV5.git &>/dev/null && \
-git config core.sparseCheckout true &>/dev/null && \
-echo "README.md" >> .git/info/sparse-checkout && \
-echo ".gitignore" >> .git/info/sparse-checkout && \
-echo ".gitattributes" >> .git/info/sparse-checkout && \
-echo "cves/2025/" >> .git/info/sparse-checkout && \
-echo "cves/2026/" >> .git/info/sparse-checkout && \
-echo "cves/2027/" >> .git/info/sparse-checkout && \
-echo "cves/2028/" >> .git/info/sparse-checkout && \
-echo "cves/2029/" >> .git/info/sparse-checkout && \
-echo "cves/delta.json" >> .git/info/sparse-checkout && \
-echo "cves/deltaLog.json" >> .git/info/sparse-checkout && \
-git pull origin main &>/dev/null
-exit \$?
+cd .. && \
+git clone --filter=blob:none --no-checkout https://github.com/CVEProject/cvelistV5.git && \
+cd ${CVE_DIRECTORY} && \
+git sparse-checkout init --cone && \
+git checkout main && \
+git sparse-checkout set --no-cone '/*' '!cves/1999' '!cves/2000' '!cves/2001' '!cves/2002' '!cves/2003' '!cves/2004' '!cves/2005' '!cves/2006' '!cves/2007' '!cves/2008' '!cves/2009' '!cves/2010' '!cves/2011' '!cves/2012' '!cves/2013' '!cves/2014' '!cves/2015' '!cves/2016' '!cves/2017' '!cves/2018' '!cves/2019' '!cves/2020' '!cves/2021' '!cves/2022' '!cves/2023' '!cves/2024'
+RETVAL=\$?
+popd &>/dev/null
+exit \${RETVAL}
 EOF
   chown ${USERNAME}:${GROUP} ${CVE_TMP} &>/dev/null
   chmod +x ${CVE_TMP} &>/dev/null
-  su --shell=/bin/bash --login -c ${CVE_TMP} - ${USERNAME}
+  su --shell=/bin/bash --login -c ${CVE_TMP} - ${USERNAME} > cvelistv5.log 2>&1
   RETVAL=$?
   [[ -f "${CVE_TMP}" ]] && rm -f ${CVE_TMP} &>/dev/null
 fi
