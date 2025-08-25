@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1755772601"
+    "version": "1.0.0.1756149520"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -4756,6 +4756,9 @@
                           "cableId": {
                             "$ref": "#/components/schemas/cableId"
                           },
+                          "country": {
+                            "$ref": "#/components/schemas/countryCode"
+                          },
                           "poleId": {
                             "$ref": "#/components/schemas/poleId"
                           },
@@ -4867,6 +4870,9 @@
                         "cableId": {
                           "description": "optionally specify the internal cable identifier",
                           "$ref": "#/components/schemas/cableId"
+                        },
+                        "country": {
+                          "$ref": "#/components/schemas/countryCode"
                         },
                         "poleId": {
                           "$ref": "#/components/schemas/poleId"
@@ -5065,6 +5071,9 @@
                       "state"
                     ],
                     "properties": {
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "poleId": {
                         "$ref": "#/components/schemas/poleId"
                       },
@@ -5103,6 +5112,9 @@
                       "ductId": {
                         "$ref": "#/components/schemas/ductId"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
@@ -5132,6 +5144,7 @@
                 "ethernet": {
                   "value": {
                     "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "ethernet",
                     "configuration": {
                       "category": "Cat6A",
@@ -5147,6 +5160,7 @@
                 "single": {
                   "value": {
                     "poleId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "singleFiber",
                     "configuration": {
                       "strands": 1,
@@ -5417,6 +5431,9 @@
                       "ductId": {
                         "$ref": "#/components/schemas/ductId"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
@@ -5452,6 +5469,9 @@
                       "poleId": {
                         "$ref": "#/components/schemas/poleId"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
@@ -5481,6 +5501,7 @@
                 "multi": {
                   "value": {
                     "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "multiFiber",
                     "configuration": {
                       "ribbons": 24,
@@ -5496,6 +5517,7 @@
                 "single": {
                   "value": {
                     "poleId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "singleFiber",
                     "configuration": {
                       "strands": 18,
@@ -5556,6 +5578,9 @@
                       "cableId": {
                         "$ref": "#/components/schemas/cableId"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "ductId": {
                         "$ref": "#/components/schemas/ductId"
                       },
@@ -5591,6 +5616,9 @@
                       "poleId": {
                         "$ref": "#/components/schemas/poleId"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
@@ -5621,6 +5649,7 @@
                   "value": {
                     "cableId": "5520aca1-4727-431a-aa9c-23f2e54b8a41",
                     "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "multiFiber",
                     "configuration": {
                       "ribbons": 24,
@@ -5637,6 +5666,7 @@
                   "value": {
                     "cableId": "5520aca1-4727-431a-aa9c-23f2e54b8a41",
                     "poleId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "country": "BEL",
                     "technology": "singleFiber",
                     "configuration": {
                       "strands": 18,
@@ -6379,6 +6409,9 @@
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "trenchId": {
                         "$ref": "#/components/schemas/trenchId"
                       },
@@ -6465,6 +6498,9 @@
                     },
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
+                    },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
                     },
                     "trenchId": {
                       "$ref": "#/components/schemas/trenchId"
@@ -6638,6 +6674,9 @@
                   "purpose": {
                     "$ref": "#/components/schemas/ductPurpose"
                   },
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "category": {
                     "$ref": "#/components/schemas/ductSizeCategory"
                   },
@@ -6672,6 +6711,7 @@
                 "sample": {
                   "value": {
                     "trenchId": "38b6c897-9982-4426-b9e3-c603e7e2cb5d",
+                    "country": "BEL",
                     "purpose": "cable",
                     "category": "microduct",
                     "configuration": 24,
@@ -7001,6 +7041,9 @@
                   "trenchId": {
                     "$ref": "#/components/schemas/trenchId"
                   },
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/ductPurpose"
                   },
@@ -7038,6 +7081,7 @@
                 "sample": {
                   "value": {
                     "trenchId": "38b6c897-9982-4426-b9e3-c603e7e2cb5d",
+                    "country": "BEL",
                     "purpose": "cable",
                     "category": "microduct",
                     "configuration": 12,
@@ -7098,6 +7142,9 @@
                 "properties": {
                   "trenchId": {
                     "$ref": "#/components/schemas/trenchId"
+                  },
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
                   },
                   "purpose": {
                     "$ref": "#/components/schemas/ductPurpose"
@@ -7231,6 +7278,7 @@
                     "value": {
                       "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
                       "trenchId": "38b6c897-9982-4426-b9e3-c603e7e2cb5d",
+                      "country": "BEL",
                       "purpose": "cable",
                       "category": "microduct",
                       "configuration": 24,
@@ -7294,6 +7342,9 @@
                     "properties": {
                       "serviceId": {
                         "$ref": "#/components/schemas/serviceId"
+                      },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -7457,6 +7508,9 @@
                     },
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
+                    },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
                     },
                     "reference": {
                       "type": "string"
@@ -7949,6 +8003,9 @@
                   "link"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -8099,6 +8156,7 @@
                 "sample": {
                   "value": {
                     "reference": "ZX2034-10-10",
+                    "country": "BEL",
                     "customer": {
                       "name": "Bluevia",
                       "reference": "sample"
@@ -8206,6 +8264,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -8401,6 +8462,9 @@
                   "link"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -8550,6 +8614,7 @@
                 "sample": {
                   "value": {
                     "reference": "ZX2034-10-10",
+                    "country": "BEL",
                     "customer": {
                       "name": "Bluevia",
                       "reference": "sample"
@@ -8690,6 +8755,9 @@
                     "reference": {
                       "type": "string"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "customer": {
                       "type": "object",
                       "required": [
@@ -8824,6 +8892,7 @@
                     "value": {
                       "serviceId": "07bc9f28-cc27-4f3a-958b-dd8fd1034c2c",
                       "reference": "ZX2034-10-10",
+                      "country": "BEL",
                       "customer": {
                         "name": "Bluevia",
                         "reference": "sample"
@@ -10252,6 +10321,9 @@
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "reference": {
                         "type": "string"
                       },
@@ -10352,6 +10424,9 @@
                     },
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
+                    },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
                     },
                     "reference": {
                       "type": "string"
@@ -10595,6 +10670,9 @@
                   "slots"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -10668,6 +10746,7 @@
               "examples": {
                 "single": {
                   "value": {
+                    "country": "BEL",
                     "reference": "esp-zar-f0-01",
                     "commissioned": "20241010",
                     "siteId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
@@ -10767,6 +10846,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -10897,6 +10979,9 @@
                   "siteId"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -10971,6 +11056,7 @@
                 "single": {
                   "value": {
                     "reference": "esp-zar-f0-01",
+                    "country": "ESP",
                     "commissioned": "20241010",
                     "siteId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
                     "floor": 0,
@@ -11102,6 +11188,9 @@
                     "reference": {
                       "type": "string"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "commissioned": {
                       "$ref": "#/components/schemas/date"
                     },
@@ -11174,6 +11263,7 @@
                     "value": {
                       "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
                       "reference": "esp-zar-f0-01",
+                      "country": "ESP",
                       "commissioned": "20241010",
                       "siteId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
                       "floor": 0,
@@ -11638,6 +11728,9 @@
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "host": {
                         "type": "string",
                         "format": "hostname"
@@ -11727,6 +11820,7 @@
                       {
                         "neId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
                         "point": "20240831T000000",
+                        "country": "ESP",
                         "host": "esp-zar-daro-01",
                         "commissioned": "20241010",
                         "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
@@ -11966,6 +12060,9 @@
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "host": {
                       "type": "string",
                       "format": "hostname"
@@ -12061,6 +12158,7 @@
                     {
                       "neId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
                       "point": "20240831T000000",
+                      "country": "ESP",
                       "host": "esp-zar-daro-01",
                       "commissioned": "20241010",
                       "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
@@ -12519,6 +12617,9 @@
                   "ports"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "host": {
                     "type": "string",
                     "format": "hostname"
@@ -12620,6 +12721,7 @@
                 "sample": {
                   "value": {
                     "host": "esp-zar-daro-01",
+                    "country": "ESP",
                     "commissioned": "20241010",
                     "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                     "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
@@ -12939,6 +13041,9 @@
                     "neId": {
                       "$ref": "#/components/schemas/neId"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "host": {
                       "type": "string",
                       "format": "hostname"
@@ -13042,6 +13147,7 @@
                     "value": {
                       "neId": "86e420f1-137b-4e34-9ff7-18bd12743a10",
                       "host": "esp-zar-daro-01",
+                      "country": "ESP",
                       "commissioned": "20241010",
                       "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                       "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
@@ -13290,6 +13396,9 @@
                     "type": "string",
                     "format": "hostname"
                   },
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "commissioned": {
                     "$ref": "#/components/schemas/date"
                   },
@@ -13381,6 +13490,7 @@
                 "sample": {
                   "value": {
                     "host": "esp-zar-daro-01",
+                    "country": "ESP",
                     "commissioned": "20241010",
                     "siteId": "a91550d8-8d19-4f79-b00f-73f6a29c1182",
                     "rackId": "a84eed87-277f-46ac-9ee3-094c0d104f1f",
@@ -13620,6 +13730,9 @@
                     "type": "string",
                     "format": "hostname"
                   },
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "commissioned": {
                     "$ref": "#/components/schemas/date"
                   },
@@ -13855,6 +13968,9 @@
                       "purpose": {
                         "$ref": "#/components/schemas/polePurpose"
                       },
+                      "country": {
+                        "$ref": "#/components/schemas/countryCode"
+                      },
                       "construction": {
                         "type": "object",
                         "properties": {
@@ -14024,6 +14140,9 @@
                     },
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
+                    },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
                     },
                     "purpose": {
                       "$ref": "#/components/schemas/polePurpose"
@@ -14456,6 +14575,9 @@
                   "coordinate"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/polePurpose"
                   },
@@ -14608,6 +14730,7 @@
               "examples": {
                 "backhaul": {
                   "value": {
+                    "country": "GBR",
                     "purpose": "backhaul",
                     "construction": {
                       "height": 15,
@@ -14823,6 +14946,9 @@
                   "coordinate"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/polePurpose"
                   },
@@ -14975,6 +15101,7 @@
               "examples": {
                 "backhaul": {
                   "value": {
+                    "country": "GBR",
                     "purpose": "backhaul",
                     "construction": {
                       "height": 15,
@@ -15061,6 +15188,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/polePurpose"
                   },
@@ -15241,6 +15371,9 @@
                     "poleId": {
                       "$ref": "#/components/schemas/neId"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "purpose": {
                       "$ref": "#/components/schemas/polePurpose"
                     },
@@ -15364,6 +15497,7 @@
                   "backhaul": {
                     "value": {
                       "poleId": "a9e616ed-1b61-453f-b8f3-95f0449043a8",
+                      "country": "GBR",
                       "purpose": "backhaul",
                       "construction": {
                         "height": 15,
@@ -15714,6 +15848,9 @@
                     "point": {
                       "$ref": "#/components/schemas/dateTime"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "purpose": {
                       "$ref": "#/components/schemas/trenchPurpose"
                     },
@@ -16002,6 +16139,9 @@
                   "coordinates"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
                   },
@@ -16164,6 +16304,7 @@
               "examples": {
                 "service/drop": {
                   "value": {
+                    "country": "GBR",
                     "purpose": "service/drop",
                     "reference": "gbr-worc-cg-south",
                     "construction": {
@@ -16399,6 +16540,9 @@
                   "coordinates"
                 ],
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
                   },
@@ -16561,6 +16705,7 @@
               "examples": {
                 "service/drop": {
                   "value": {
+                    "country": "GBR",
                     "purpose": "service/drop",
                     "reference": "gbr-worc-cg-south",
                     "construction": {
@@ -16666,6 +16811,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "country": {
+                    "$ref": "#/components/schemas/countryCode"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/trenchPurpose"
                   },
@@ -16875,6 +17023,9 @@
                     "reference": {
                       "type": "string"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
                     "purpose": {
                       "$ref": "#/components/schemas/trenchPurpose"
                     },
@@ -17005,6 +17156,7 @@
                     "value": {
                       "trenchId": "5ef82c6f-b06b-4d93-a4c2-3b78b62dd7cf",
                       "reference": "gbr-worc-cg-south",
+                      "country": "GBR",
                       "purpose": "service/drop",
                       "construction": {
                         "depth": 0.5,

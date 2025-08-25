@@ -32,7 +32,7 @@ APISERV_URL_PREFIX=$(grep -E "^APISERV_URL_PREFIX=.*" ${ENV}|cut -d '=' -f2-|cut
 APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 # country specific for sample datasets
-COUNTRY="gbp" # gbp, bel, esp,
+COUNTRY="GBR" # GBR, BEL, ESP etc. see schema.sql countryCode for list
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 

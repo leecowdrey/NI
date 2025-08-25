@@ -4,6 +4,7 @@
     "purpose": "service/drop",
     "reference": "bel-zel-vliegezenlaan",
     "probability": 1,
+    "country": "BEL",
     "construction": {
       "depth": 914.4,
       "classifier": "low",
@@ -118,6 +119,7 @@
     "purpose": "service/drop",
     "reference": "bel-zel-m1-t1",
     "probability": 1,
+    "country": "BEL",
     "construction": {
       "depth": 914.4,
       "classifier": "low",

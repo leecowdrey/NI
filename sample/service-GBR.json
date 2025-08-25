@@ -1,0 +1,102 @@
+[
+  {
+    "serviceId": "784d5d3d-44cf-41a2-8ef0-24a376b0b296",
+    "point": "20250512T122152",
+		"country": "GBR",
+    "customer": {
+      "name": "ABC",
+      "reference": "sample"
+    },
+    "commissioned": "20250512",
+    "reference": "gbr-worc-cg1-sample-0001",
+    "probability": 1,
+    "rate": 1,
+    "unit": "Gbps",
+    "lag": {
+      "group": "LAG1",
+      "members": 2
+    },
+    "link": {
+      "ingress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/0",
+          "cVlanId": 101,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/1",
+          "cVlanId": 101,
+          "member": 2
+        }
+      ],
+      "egress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/0",
+          "sVlanId": 202,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/1",
+          "sVlanId": 202,
+          "member": 1
+        }
+      ]
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "serviceId": "81eefb1f-57d4-40be-bfa9-c765e6d7577a",
+    "point": "20250514T122152",
+    "country": "GBR",
+    "customer": {
+      "name": "EFG",
+      "reference": "sample"
+    },
+    "commissioned": "20250514",
+    "reference": "gbr-worc-cg1sample-0002",
+    "probability": 1,
+    "rate": 1,
+    "unit": "Gbps",
+    "lag": {
+      "group": "LAG1",
+      "members": 2
+    },
+    "link": {
+      "ingress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/2",
+          "cVlanId": 101,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "VDSL 0/0/3",
+          "cVlanId": 101,
+          "member": 2
+        }
+      ],
+      "egress": [
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/0",
+          "sVlanId": 202,
+          "member": 1
+        },
+        {
+          "neId": "ecd9b5ff-b9b8-47d2-a7bf-18dd25e710fc",
+          "port": "GigabitEthernet0/0/1",
+          "sVlanId": 202,
+          "member": 1
+        }
+      ]
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

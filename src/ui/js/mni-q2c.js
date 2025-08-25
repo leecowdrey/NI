@@ -275,8 +275,10 @@ function fetchListTrench() {
   if (fltReady != null) {
     clearTimeout(fltReady);
   }
-
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/trench", {
+let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  fetch(localStorage.getItem("mni.gatewayUrl") + "/trench?country=" +
+      selectedCountry, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -603,6 +605,7 @@ try {
   flcReady = setTimeout(fetchListCurrency, retryMs);
 }
 try {
+  countryListPopulate();
   fetchMapRender();
 } catch (e) {
   fmrReady = setTimeout(fetchMapRender, retryMs);

@@ -20,6 +20,7 @@ var mniAppNotificationIcon = "/favicon.ico";
 var mniAppName = null;
 var mniAppVersion = null;
 var mniAppBuild = null;
+var mniCountryCode = null;
 var mniRootUrl = "/";
 var mniGatewayUrl = null;
 var mniGatewayUrlIp = null;
@@ -27,6 +28,257 @@ var mniGatewayUrlDns = null;
 var mniRetryMs = 1000;
 var mniRefreshMs = 60000;
 var mniReadinessAttempts = 10;
+const countryCode = [
+  "ABW",
+  "AFG",
+  "AGO",
+  "AIA",
+  "ALA",
+  "ALB",
+  "AND",
+  "ARE",
+  "ARG",
+  "ARM",
+  "ASM",
+  "ATA",
+  "ATF",
+  "ATG",
+  "AUS",
+  "AUT",
+  "AZE",
+  "BDI",
+  "BEL",
+  "BEN",
+  "BES",
+  "BFA",
+  "BGD",
+  "BGR",
+  "BHR",
+  "BHS",
+  "BIH",
+  "BLM",
+  "BLR",
+  "BLZ",
+  "BMU",
+  "BOL",
+  "BRA",
+  "BRB",
+  "BRN",
+  "BTN",
+  "BVT",
+  "BWA",
+  "CAF",
+  "CAN",
+  "CCK",
+  "CHE",
+  "CHL",
+  "CHN",
+  "CIV",
+  "CMR",
+  "COD",
+  "COG",
+  "COK",
+  "COL",
+  "COM",
+  "CPV",
+  "CRI",
+  "CUB",
+  "CUW",
+  "CXR",
+  "CYM",
+  "CYP",
+  "CZE",
+  "DEU",
+  "DJI",
+  "DMA",
+  "DNK",
+  "DOM",
+  "DZA",
+  "ECU",
+  "EGY",
+  "ERI",
+  "ESH",
+  "ESP",
+  "EST",
+  "ETH",
+  "FIN",
+  "FJI",
+  "FLK",
+  "FRA",
+  "FRO",
+  "FSM",
+  "GAB",
+  "GBR",
+  "GEO",
+  "GGY",
+  "GHA",
+  "GIB",
+  "GIN",
+  "GLP",
+  "GMB",
+  "GNB",
+  "GNQ",
+  "GRC",
+  "GRD",
+  "GRL",
+  "GTM",
+  "GUF",
+  "GUM",
+  "GUY",
+  "HKG",
+  "HMD",
+  "HND",
+  "HRV",
+  "HTI",
+  "HUN",
+  "IDN",
+  "IMN",
+  "IND",
+  "IOT",
+  "IRL",
+  "IRN",
+  "IRQ",
+  "ISL",
+  "ISR",
+  "ITA",
+  "JAM",
+  "JEY",
+  "JOR",
+  "JPN",
+  "KAZ",
+  "KEN",
+  "KGZ",
+  "KHM",
+  "KIR",
+  "KNA",
+  "KOR",
+  "KWT",
+  "LAO",
+  "LBN",
+  "LBR",
+  "LBY",
+  "LCA",
+  "LIE",
+  "LKA",
+  "LSO",
+  "LTU",
+  "LUX",
+  "LVA",
+  "MAC",
+  "MAF",
+  "MAR",
+  "MCO",
+  "MDA",
+  "MDG",
+  "MDV",
+  "MEX",
+  "MHL",
+  "MKD",
+  "MLI",
+  "MLT",
+  "MMR",
+  "MNE",
+  "MNG",
+  "MNP",
+  "MOZ",
+  "MRT",
+  "MSR",
+  "MTQ",
+  "MUS",
+  "MWI",
+  "MYS",
+  "MYT",
+  "NAM",
+  "NCL",
+  "NER",
+  "NFK",
+  "NGA",
+  "NIC",
+  "NIU",
+  "NLD",
+  "NOR",
+  "NPL",
+  "NRU",
+  "NZL",
+  "OMN",
+  "PAK",
+  "PAN",
+  "PCN",
+  "PER",
+  "PHL",
+  "PLW",
+  "PNG",
+  "POL",
+  "PRI",
+  "PRK",
+  "PRT",
+  "PRY",
+  "PSE",
+  "PYF",
+  "QAT",
+  "REU",
+  "ROU",
+  "RUS",
+  "RWA",
+  "SAU",
+  "SDN",
+  "SEN",
+  "SGP",
+  "SGS",
+  "SHN",
+  "SJM",
+  "SLB",
+  "SLE",
+  "SLV",
+  "SMR",
+  "SOM",
+  "SPM",
+  "SRB",
+  "SSD",
+  "STP",
+  "SUR",
+  "SVK",
+  "SVN",
+  "SWE",
+  "SWZ",
+  "SXM",
+  "SYC",
+  "SYR",
+  "TCA",
+  "TCD",
+  "TGO",
+  "THA",
+  "TJK",
+  "TKL",
+  "TKM",
+  "TLS",
+  "TON",
+  "TTO",
+  "TUN",
+  "TUR",
+  "TUV",
+  "TWN",
+  "TZA",
+  "UGA",
+  "UKR",
+  "UMI",
+  "URY",
+  "USA",
+  "UZB",
+  "VAT",
+  "VCT",
+  "VEN",
+  "VGB",
+  "VIR",
+  "VNM",
+  "VUT",
+  "WLF",
+  "WSM",
+  "YEM",
+  "ZAF",
+  "ZMB",
+  "ZWE",
+];
 
 function mniMetadata() {
   try {
@@ -53,6 +305,7 @@ function mniMetadata() {
         localStorage.setItem("mni.appNotificationIcon", data.notificatonIcon);
         localStorage.setItem("mni.appVersion", data.version);
         localStorage.setItem("mni.appBuild", data.build);
+        localStorage.setItem("mni.country", data.country);
         localStorage.setItem("mni.rootUrl", data.rootUrl);
         localStorage.setItem("mni.gatewayUrl", data.gatewayUrl);
         localStorage.setItem("mni.gatewayUrlIp", data.gatewayUrlIp);
@@ -71,6 +324,7 @@ function mniMetadata() {
     mniAppNotificationIcon = localStorage.getItem("mni.appNotificationIcon");
     mniAppVersion = localStorage.getItem("mni.appVersion");
     mniAppBuild = localStorage.getItem("mni.appBuild");
+    mniCountryCode = localStorage.getItem("mni.country");
     mniRootUrl = localStorage.getItem("mni.rootUrl");
     mniGatewayUrl = localStorage.getItem("mni.gatewayUrl");
     mniGatewayUrlIp = localStorage.getItem("mni.gatewayUrlIp");
@@ -226,6 +480,32 @@ function toInteger(s) {
     return 0;
   }
   return Number.parseInt(s, 10);
+}
+function countryListPopulate() {
+  let mniCountryCode = localStorage.getItem("mni.country");
+  let countries = "";
+  if (countryCode.length > 0) {
+    for (let c = 0; c < countryCode.length; c++) {
+      let selected = "'>";
+      if (countryCode[c] == mniCountryCode) {
+        selected = "' selected='selected'>";
+      }
+      countries +=
+        "<option value='" +
+        countryCode[c] +
+        selected +
+        countryCode[c] +
+        "</option>";
+    }
+    document.getElementById("country").innerHTML = countries;
+  } else {
+    document.getElementById("country").innerHTML =
+      "<option value='" +
+      mniCountryCode +
+      "' selected='selected'>" +
+      mniCountryCode +
+      "</option>";
+  }
 }
 try {
   if (!localStorage.getItem("mni.")) {

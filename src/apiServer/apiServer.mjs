@@ -48,6 +48,7 @@ const nullMacAddressRegex = /^(0{2}[:-]){5}(0{2})$/gi;
 const wktPointRegex = /^POINT\s*(ZM|Z|M|EMPTY)?\s*(\(-?[\d|.|\s]+\))?$/gi;
 const wktLineStringRegex =
   /^LINESTRING\s*(EMPTY)?\s*\(?((-?[\d|.]+)\s+(-?[\d|.])+(,\s*)?)+\)?$/gi;
+const wktPointValueRegex = /^\s*(-?[\d|.]+)\s+(-?[\d|.])+$/gi;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -428,6 +429,7 @@ var mniLicenseHost = null;
 var mniLicenseDomain = null;
 var mniLicenseStart = null;
 var mniLicenseExpiry = null;
+var mniCountryCode = null;
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
@@ -710,21 +712,25 @@ async function coordinatesFromWktLineString(
   crsDst = OAS.wktEpsg4326
 ) {
   let coordinates = [];
+  let points = 0;
   // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
   // to array of coordinates: x=2.198299999902494, y=41.39499999988968
   if (wktLineStringRegex.test(wkt)) {
-    let lines = wkt
-      .replace(/\s\s+/g, " ")
-      .replace("LINESTRING (", "")
-      .replace(")", "")
-      .replace(", ", ",")
-      .split(",");
-    for (let l = 0; l < lines.length; l++) {
-      if (lines[l].toLowerCase() != "empty") {
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT ST_NumPoints(ST_GeomFromText('" + wkt + "'))"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      points = toInteger(ddRows[0][0]);
+    }
+    if (points > 0) {
+      for (let p = 1; p <= points; p++) {
         let geosql =
-          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('POINT (" +
-          lines[l] +
-          ")'),'" +
+          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_PointN(ST_GeomFromText('" +
+          wkt +
+          "')," +
+          p +
+          "),'" +
           crsSrc +
           "','" +
           crsDst +
@@ -732,14 +738,11 @@ async function coordinatesFromWktLineString(
         let ddRead = await DDC.runAndReadAll(geosql);
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
-          if (ddRows[0][0] != null && ddRows[0][1] != null) {
-            coordinates.push({
-              coordinate: {
-                x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
-                y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
-              },
-            });
-          }
+          coordinates.push({
+            x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+            y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+            z: 0,
+          });
         }
       }
     }
@@ -768,16 +771,14 @@ async function coordinatesStartEndFromWktLineString(
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
       coordinates.push({
-        coordinate: {
-          x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
-          y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
-        },
+        x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+        y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+        z: 0,
       });
       coordinates.push({
-        coordinate: {
-          x: toDecimal(ddRows[0][2], OAS.X_scale, OAS.XY_precision),
-          y: toDecimal(ddRows[0][3], OAS.Y_scale, OAS.XY_precision),
-        },
+        x: toDecimal(ddRows[0][2], OAS.X_scale, OAS.XY_precision),
+        y: toDecimal(ddRows[0][3], OAS.Y_scale, OAS.XY_precision),
+        z: 0,
       });
     }
   }
@@ -883,30 +884,54 @@ async function jobUpdateGeometry() {
           OAS.wktEpsg3857,
           OAS.wktEpsg4326
         );
-
         if (coordinates != null) {
           if (coordinates.length > 0) {
             for (let i = 0; i < coordinates.length; i++) {
-              let ddtc = await DDC.prepare(
-                "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y) VALUES (strptime($1,$2),$3,$4,$5,$6,$7)"
-              );
-              ddtc.bindVarchar(1, ddRows[idx][3]);
-              ddtc.bindVarchar(2, pointFormat);
-              ddtc.bindInteger(3, ddRows[idx][0]);
-              ddtc.bindVarchar(4, ddRows[idx][1]);
-              ddtc.bindVarchar(5, ddRows[idx][2]);
-              ddtc.bindFloat(
-                6,
-                toDecimal(coordinates[i].x, OAS.X_scale, OAS.XY_precision)
-              );
-              ddtc.bindFloat(
-                7,
-                toDecimal(coordinates[i].y, OAS.Y_scale, OAS.XY_precision)
-              );
-              await ddtc.run();
-              await DDC.run(
-                "UPDATE _trench SET wkt = null WHERE tsId = " + ddRows[idx][0]
-              );
+              if (
+                coordinates[i].x >= -180 &&
+                coordinates[i].x <= 180 &&
+                coordinates[i].y >= -90 &&
+                coordinates[i].y <= 90
+              ) {
+                let ddtc = await DDC.prepare(
+                  "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z) VALUES (strptime($1,$2),$3,$4,$5,$6,$7,$8)"
+                );
+                ddtc.bindVarchar(1, ddRows[idx][3]);
+                ddtc.bindVarchar(2, pointFormat);
+                ddtc.bindInteger(3, ddRows[idx][0]);
+                ddtc.bindVarchar(4, ddRows[idx][1]);
+                ddtc.bindVarchar(5, ddRows[idx][2]);
+                ddtc.bindFloat(
+                  6,
+                  toDecimal(coordinates[i].x, OAS.X_scale, OAS.XY_precision)
+                );
+                ddtc.bindFloat(
+                  7,
+                  toDecimal(coordinates[i].y, OAS.Y_scale, OAS.XY_precision)
+                );
+                ddtc.bindFloat(
+                  8,
+                  toDecimal(coordinates[i].z, OAS.Z_scale, OAS.Z_precision)
+                );
+                await ddtc.run();
+                await DDC.run(
+                  "UPDATE _trench SET wkt = null WHERE tsId = " + ddRows[idx][0]
+                );
+              } else {
+                await DDC.run(
+                  "DELETE FROM _trenchCoordinate WHERE trenchId = '" +
+                    ddRows[idx][0] +
+                    "'"
+                );
+                await DDC.run(
+                  "DELETE FROM _trench WHERE trenchId = '" +
+                    ddRows[idx][0] +
+                    "'"
+                );
+                await DDC.run(
+                  "DELETE FROM trench WHERE id = '" + ddRows[idx][0] + "'"
+                );
+              }
             }
           }
         }
@@ -2003,6 +2028,7 @@ function loadEnv() {
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
+  mniCountryCode = process.env.MNI_DEFAULT_COUNTRY_CODE || "BEL";
   tickIntervalMs = toInteger(process.env.APISERV_TICK_INTERVAL_MS) || 60000;
   duckDbFile = path.resolve(process.env.APISERV_DUCKDB_FILE || "mni.duckdb");
   duckDbMaxMemory = process.env.APISERV_DUCKDB_MAX_MEMORY || "512MB";
@@ -8767,9 +8793,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT cableId FROM _cable WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM cable WHERE delete = false"
+          "SELECT id FROM cable WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -8904,7 +8937,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
             configTsCol +
-            ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
+            ",reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -8919,6 +8952,7 @@ var run = async () => {
           10,
           validateProbability(req.body.probability, req.body.source)
         );
+        ddp.bindVarchar(10, req.body.country);
         await ddp.run();
 
         if (req.body?.ductId != null) {
@@ -9076,7 +9110,7 @@ var run = async () => {
           }
         } else {
           let ddp = await DDC.prepare(
-            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId,reference,probability FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
+            "SELECT id,technology,coaxTsId,copperTsId,ethernetTsId,singleFiberTsId,multiFiberTsId,historicalTsId,predictedTsId,source,state,ductId,poleId,reference,probability,country FROM cable,_cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false"
           );
           ddp.bindVarchar(1, req.params.cableId);
           let ddRead = await ddp.runAndReadAll();
@@ -9102,6 +9136,7 @@ var run = async () => {
             let point = dayjs().format(OAS.dayjsFormat);
             let reference = ddRows[0][13];
             let prob = toDecimal(ddRows[0][14]);
+            let country = ddRows[0][15];
 
             if (req.query?.predicted != null) {
               switch (technology) {
@@ -9242,7 +9277,7 @@ var run = async () => {
               ddp = await DDC.prepare(
                 "INSERT INTO _cable (tsId,point,source,cableId,ductId,poleId,technology,state," +
                   configTsCol +
-                  "),reference,probability SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4,reference,probability FROM _cable WHERE tsId = $5"
+                  "),reference,probability,country SELECT $1,strptime($2,$3),source,cableId,ductId,poleId,technology,state,$4,reference,probability,country FROM _cable WHERE tsId = $5"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -10135,7 +10170,7 @@ var run = async () => {
         }
         let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false " +
+          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability,country FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND cable.delete = false " +
             datePoint +
             " ORDER BY _cable.point DESC LIMIT 1"
         );
@@ -10147,6 +10182,7 @@ var run = async () => {
             cableId: ddCableRows[0][0],
             technology: ddCableRows[0][1],
             reference: ddCableRows[0][13].replace(/''/g, "'"),
+            country: ddCableRows[0][16],
             state: ddCableRows[0][2],
             probability: validateProbability(
               ddCableRows[0][14],
@@ -10286,7 +10322,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,strftime(_cable.point,'" +
             pointFormat +
-            "'),source,reference,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
+            "'),source,reference,probability,country FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddCable = await ddp.runAndReadAll();
@@ -10318,6 +10354,7 @@ var run = async () => {
             delete: toBoolean(ddCableRows[0][3]),
             source: ddCableRows[0][14],
             reference: ddCableRows[0][15].replace(/''/g, "'"),
+            country: ddCableRows[0][16],
             probability: validateProbability(
               ddCableRows[0][15],
               ddCableRows[0][13]
@@ -10455,7 +10492,7 @@ var run = async () => {
       let result = validationResult(req);
       if (result.isEmpty()) {
         let ddp = await DDC.prepare(
-          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,source,reference,probability FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
+          "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,source,reference,probability,country FROM cable, _cable WHERE cable.id = $1 AND _cable.cableId = cable.id AND _cable.tsId = cable.historicalTsId LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.cableId);
         let ddCable = await ddp.runAndReadAll();
@@ -10533,7 +10570,7 @@ var run = async () => {
           ddp = await DDC.prepare(
             "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
               configTsCol +
-              ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
+              ",reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -10548,6 +10585,7 @@ var run = async () => {
             10,
             validateProbability(req.body.probability, req.body.source)
           );
+          ddp.bindVarchar(11, req.body.country);
           await ddp.run();
 
           if (req.body?.ductId != null) {
@@ -10689,7 +10727,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddCable = await DDC.runAndReadAll(
-        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
+        "SELECT cable.id,_cable.technology,_cable.state,cable.delete,_cable.ductId,_cable.poleId,_cable.tsId,_cable.coaxTsId,_cable.copperTsId,_cable.ethernetTsId,_cable.singleFiberTsId,_cable.multiFiberTsId,reference,source,probability,country FROM cable, _cable WHERE _cable.cableId = cable.id ORDER BY _cable.technology DESC, _cable.point"
       );
       let ddCableRows = ddCable.getRows();
       if (ddCableRows.length > 0) {
@@ -10698,6 +10736,7 @@ var run = async () => {
             cableId: ddCableRows[idx][0],
             technology: ddCableRows[idx][1],
             reference: ddCableRows[idx][11].replace(/''/g, "'"),
+            country: ddCableRows[idx][15],
             state: ddCableRows[idx][2],
             probability: validateProbability(
               ddCableRows[idx][14],
@@ -10954,7 +10993,7 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "INSERT INTO _cable (tsId,point,source,cableId,technology,state," +
               configTsCol +
-              ",reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10)"
+              ",reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -10969,6 +11008,7 @@ var run = async () => {
             10,
             validateProbability(req.body[i].probability, req.body[i].source)
           );
+          ddp.bindVarchar(11, req.body[i].country);
           await ddp.run();
 
           if (req.body[i].ductId != null) {
@@ -11100,9 +11140,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
         let resJson = [];
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT ductId FROM _duct WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM duct WHERE delete = false"
+          "SELECT id FROM duct WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -11190,7 +11237,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
+          "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -11209,6 +11256,7 @@ var run = async () => {
           14,
           validateProbability(req.body.probability, req.body.source)
         );
+        ddp.bindVarchar(15, req.body.country);
         await ddp.run();
 
         if (req.body.within != null) {
@@ -11308,7 +11356,7 @@ var run = async () => {
                   break;
               }
               let ddClone = await DDC.prepare(
-                "INSERT INTO _duct (tsId,point,ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) SELECT $1,strptime($2,$3),ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability FROM _duct WHERE tsId = $4"
+                "INSERT INTO _duct (tsId,point,ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability,country) SELECT $1,strptime($2,$3),ductId,trenchId,source,within,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability,country FROM _duct WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -11368,7 +11416,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
             pointFormat +
-            "'),probability FROM duct, _duct WHERE id = $1 AND _duct.ductId = duct.id AND duct.delete = false " +
+            "'),probability,country FROM duct, _duct WHERE id = $1 AND _duct.ductId = duct.id AND duct.delete = false " +
             datePoint +
             " ORDER BY _duct.point DESC LIMIT 1"
         );
@@ -11379,6 +11427,7 @@ var run = async () => {
           resJson = {
             ductId: req.params.ductId,
             point: ddRows[0][15],
+            country: ddRows[0][17],
             probability: validateProbability(ddRows[0][16], ddRows[0][5]),
             trenchId: ddRows[0][6],
             purpose: ddRows[0][7],
@@ -11468,7 +11517,7 @@ var run = async () => {
         let ddp = await DDC.prepare(
           "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,ductId,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
             pointFormat +
-            "'),probability FROM duct,_duct WHERE duct.id = $1 AND _duct.tsId = duct.historicalTsId AND duct.delete = false LIMIT 1"
+            "'),probability,country FROM duct,_duct WHERE duct.id = $1 AND _duct.tsId = duct.historicalTsId AND duct.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.ductId);
         let ddDuct = await ddp.runAndReadAll();
@@ -11497,6 +11546,7 @@ var run = async () => {
           resJson = {
             ductId: ddDuctRows[0][6],
             point: ddDuctRows[0][16],
+            country: ddDuctRows[0][19],
             probability: validateProbability(ddRows[0][18], ddRows[0][5]),
             trenchId: ddDuctRows[0][7],
             purpose: ddDuctRows[0][8],
@@ -11573,7 +11623,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
+            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -11592,6 +11642,7 @@ var run = async () => {
             14,
             validateProbability(req.body.probability, req.body.source)
           );
+          ddp.bindVarchar(15, req.body.country);
           await ddp.run();
 
           if (req.body.within != null) {
@@ -11631,7 +11682,7 @@ var run = async () => {
       let ddDuct = await DDC.runAndReadAll(
         "SELECT id,delete,source,trenchId,purpose,category,configuration,state,within,placementVertical,placementHorizontal,placementUnit,strftime(point,'" +
           pointFormat +
-          "'),probability FROM duct,_duct WHERE _duct.ductId = duct.id ORDER BY _duct.point"
+          "'),probability,country FROM duct,_duct WHERE _duct.ductId = duct.id ORDER BY _duct.point"
       );
       let ddDuctRows = ddDuct.getRows();
       if (ddDuctRows.length > 0) {
@@ -11639,6 +11690,7 @@ var run = async () => {
           let resObj = {
             ductId: ddDuctRows[idx][0],
             point: ddDuctRows[idx][12],
+            country: ddDuctRows[idx][14],
             probability: validateProbability(
               ddDuctRows[idx][13],
               ddDuctRows[idx][2]
@@ -11748,7 +11800,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)"
+            "INSERT INTO _duct (tsId,point,ductid,trenchId,source,purpose,category,configuration,state,placementVertical,placementHorizontal,placementUnit,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -11767,6 +11819,7 @@ var run = async () => {
             14,
             validateProbability(req.body[i].probability, req.body[i].source)
           );
+          ddp.bindVarchar(15, req.body[i].country);
           await ddp.run();
 
           if (req.body[i].within != null) {
@@ -11841,9 +11894,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT neId FROM _ne WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM ne WHERE delete = false"
+          "SELECT id FROM ne WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -11931,7 +11991,7 @@ var run = async () => {
       await ddp.run();
     }
     let ddp = await DDC.prepare(
-      "INSERT INTO _ne (tsId,point,neId,source,host,mgmtIP,vendor,model,image,version,commissioned,siteId,rackid,slotPosition,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,strptime($12,$13),$14,$15,$16,$17)"
+      "INSERT INTO _ne (tsId,point,neId,source,host,mgmtIP,vendor,model,image,version,commissioned,siteId,rackid,slotPosition,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,strptime($12,$13),$14,$15,$16,$17,$18)"
     );
     ddp.bindInteger(1, tsId);
     ddp.bindVarchar(2, body.point || point);
@@ -11950,6 +12010,7 @@ var run = async () => {
     ddp.bindVarchar(15, body.rackId);
     ddp.bindVarchar(16, body.slotPosition);
     ddp.bindFloat(17, validateProbability(body.probability, body.source));
+    ddp.bindVarchar(18, body.country);
     await ddp.run();
     if (body.config != null) {
       await DDC.run(
@@ -12408,7 +12469,7 @@ var run = async () => {
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,rackId,slotPosition,tsId,config,probability FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id " +
+        "'),siteId,rackId,slotPosition,tsId,config,probability,country FROM ne, _ne WHERE ne.id = $1 AND _ne.neId = ne.id " +
         datePoint +
         " ORDER BY _ne.tsId DESC LIMIT 1"
     );
@@ -12419,6 +12480,7 @@ var run = async () => {
       resJson = {
         neId: neId,
         point: ddRows[0][6],
+        country: ddRows[0][22],
         probability: validateProbability(ddRows[0][21], ddRows[0][5]),
         host: ddRows[0][8],
         commissioned: ddRows[0][14],
@@ -12892,9 +12954,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT poleId FROM _pole WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM pole WHERE delete = false"
+          "SELECT id FROM pole WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -13004,7 +13073,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+          "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -13039,6 +13108,7 @@ var run = async () => {
           21,
           validateProbability(req.body.probability, req.body.source)
         );
+        ddp.bindVarchar(22, req.body.country);
         await ddp.run();
         if (req.body.build?.jobId != null) {
           await DDC.run(
@@ -13217,7 +13287,7 @@ var run = async () => {
                   break;
               }
               let ddp = await DDC.prepare(
-                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability FROM _pole WHERE tsId = $4"
+                "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability,country) SELECT $1,strptime($2,$3),source,poleId,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,X,Y,Z,M,geoPoint,reference,probability,country FROM _pole WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -13286,7 +13356,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "'),reference,probability FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
+            "'),reference,probability,country FROM pole,_pole WHERE pole.id = $1 AND _pole.poleId = pole.id AND pole.delete = false " +
             datePoint +
             " ORDER BY _pole.point DESC LIMIT 1"
         );
@@ -13297,6 +13367,7 @@ var run = async () => {
           resJson = {
             poleId: req.params.poleId,
             point: ddRows[0][30],
+            country: ddRows[0][33],
             probability: validateProbability(ddRows[0][32], ddRows[0][5]),
             reference: ddRows[0][31].replace(/''/g, "'"),
             purpose: ddRows[0][6],
@@ -13477,7 +13548,7 @@ var run = async () => {
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
             "X,Y,Z,M,strftime(point,'" +
             pointFormat +
-            "'),reference,probability FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
+            "'),reference,probability,country FROM pole,_pole WHERE pole.id = $1 AND _pole.tsId = pole.historicalTsId AND pole.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.poleId);
         let ddPole = await ddp.runAndReadAll();
@@ -13487,6 +13558,7 @@ var run = async () => {
             poleId: req.params.poleId,
             purpose: ddRows[0][6],
             reference: ddRows[0][31].replace(/''/g, "'"),
+            country: ddRows[0][33],
             probability: validateProbability(ddRows[0][32], ddRows[0][5]),
             point: ddRows[0][30],
             construction: {
@@ -13646,7 +13718,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -13682,6 +13754,7 @@ var run = async () => {
             21,
             validateProbability(req.body.probability, req.body.source)
           );
+          ddp.bindVarchar(22, req.body.country);
           await ddp.run();
           if (req.body.build?.jobId != null) {
             await DDC.run(
@@ -13809,7 +13882,7 @@ var run = async () => {
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId," +
           "X,Y,Z,M,strftime(point,'" +
           pointFormat +
-          "'),reference,probability FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
+          "'),reference,probability,country FROM pole,_pole WHERE _pole.poleId = pole.id ORDER BY _pole.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -13818,6 +13891,7 @@ var run = async () => {
             poleId: ddRows[idx][0],
             purpose: ddRows[idx][6],
             reference: ddRows[idx][31].replace(/''/g, "'"),
+            country: ddRows[idx][33],
             probability: validateProbability(ddRows[idx][32], ddRows[idx][5]),
             construction: {
               height: toDecimal(ddRows[idx][7]),
@@ -13956,7 +14030,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)"
+            "INSERT INTO _pole (tsId,point,source,poleId,purpose,height,classifier,unit,premisesPassed,area,state,x,y,z,plannedDuration,actualDuration,plannedUnit,actualUnit,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -13982,6 +14056,7 @@ var run = async () => {
             21,
             validateProbability(req.body[i].probability, req.body[i].source)
           );
+          ddp.bindVarchar(22, req.body[i].country);
           await ddp.run();
           if (req.body[i].build?.jobId != null) {
             await DDC.run(
@@ -14089,9 +14164,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT rackId FROM _rack WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM rack WHERE delete = false"
+          "SELECT id FROM rack WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -14193,7 +14275,7 @@ var run = async () => {
         dateFormat +
         "'),strftime(decommissioned,'" +
         dateFormat +
-        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots,probability FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
+        "'),siteId,floor,floorArea,floorRow,floorColumn,X,Y,Z,M,depth,height,width,unit,slots,probability,country FROM rack, _rack WHERE rack.id = $1 AND _rack.rackId = rack.id AND rack.delete = false " +
         datePoint +
         " ORDER BY _rack.tsId DESC LIMIT 1"
     );
@@ -14204,6 +14286,7 @@ var run = async () => {
       resJson = {
         rackId: rackId,
         point: ddRows[0][5],
+        country: ddRows[0][26],
         probability: validateProbability(ddRows[0][25], ddRows[0][5]),
         reference: ddRows[0][8].replace(/''/g, "'"),
         commissioned: ddRows[0][9],
@@ -14316,7 +14399,7 @@ var run = async () => {
     }
 
     let ddp = await DDC.prepare(
-      "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
+      "INSERT INTO _rack (tsId,point,rackId,source,reference,commissioned,siteId,X,Y,Z,depth,height,width,unit,slots,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,strptime($7,$8),$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)"
     );
     ddp.bindInteger(1, tsId);
     ddp.bindVarchar(2, body.point);
@@ -14345,6 +14428,7 @@ var run = async () => {
     ddp.bindVarchar(16, body.dimensions.unit);
     ddp.bindInteger(17, toInteger(body.slots));
     ddp.bindFloat(18, validateProbability(body.probability, body.source));
+    ddp.bindVarchar(19, body.country);
     await ddp.run();
     if (body.decommissioned != null) {
       await DDC.run(
@@ -14923,9 +15007,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT serviceId FROM _service WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM service WHERE delete = false"
+          "SELECT id FROM service WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -15062,7 +15153,7 @@ var run = async () => {
         await ddp.run();
 
         ddp = await DDC.prepare(
-          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
+          "INSERT INTO _service (tsId,point,source,serviceId,commissioned,unit,rate,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11,$12)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -15078,6 +15169,7 @@ var run = async () => {
           11,
           validateProbability(req.body.probability, req.body.source)
         );
+        ddp.bindVarchar(12, req.body.country);
         await ddp.run();
 
         if (req.body.reference != null) {
@@ -15364,7 +15456,7 @@ var run = async () => {
               }
 
               let ddp = await DDC.prepare(
-                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probability) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probabiltiy FROM _service WHERE tsId = $4"
+                "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probability,country) SELECT $1,strptime($2,$3),source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probabiltiy,country FROM _service WHERE tsId = $4"
               );
               ddp.bindInteger(1, tsId);
               ddp.bindVarchar(2, point);
@@ -15472,7 +15564,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),rate,unit,reference,probability FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
+            "'),rate,unit,reference,probability,country FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id " +
             datePoint +
             " AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
@@ -15484,6 +15576,7 @@ var run = async () => {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
             reference: ddRows[0][16].replace(/''/g, "'"),
+            country: ddRows[0][18],
             probability: validateProbability(ddRows[0][17], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
@@ -15654,7 +15747,7 @@ var run = async () => {
             dateFormat +
             "'),lagGroup,lagMembers,strftime(point,'" +
             pointFormat +
-            "'),tsId,rate,unit,reference,probability FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
+            "'),tsId,rate,unit,reference,probability,country FROM service,_service WHERE service.id = $1 AND _service.serviceId = service.id AND _service.tsId = service.historicalTsId AND service.delete = false ORDER BY _service.point DESC LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.serviceId);
         let ddRead = await ddp.runAndReadAll();
@@ -15664,6 +15757,7 @@ var run = async () => {
             serviceId: req.params.serviceId,
             point: ddRows[0][13],
             reference: ddRows[0][17].replace(/''/g, "'"),
+            country: ddRows[0][19],
             probability: validateProbability(ddRows[0][18], ddRows[0][5]),
             customer: {},
             commissioned: ddRows[0][9],
@@ -15873,7 +15967,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11,$12)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -15889,6 +15983,7 @@ var run = async () => {
             11,
             validateProbability(req.body.probability, req.body.source)
           );
+          ddp.bindVarchar(12, req.body.country);
           await ddp.run();
 
           if (req.body.reference != null) {
@@ -16105,7 +16200,7 @@ var run = async () => {
           dateFormat +
           "'),lagGroup,lagMembers,strftime(point,'" +
           pointFormat +
-          "'),tsId,rate,unit,reference,probability FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
+          "'),tsId,rate,unit,reference,probability,country FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -16114,6 +16209,7 @@ var run = async () => {
             serviceId: ddRows[idx][0],
             point: ddRows[idx][13],
             reference: ddRows[idx][17].replace(/''/g, "'"),
+            country: ddRows[idx][19],
             probability: validateProbability(ddRows[idx][18], ddRows[idx][5]),
             customer: {},
             commissioned: ddRows[idx][9],
@@ -16369,7 +16465,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11)"
+            "INSERT INTO _service (tsId,point,source,serviceId,commissioned,rate,unit,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,strptime($6,$7),$8,$9,$10,$11,$12)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -16385,6 +16481,7 @@ var run = async () => {
             11,
             validateProbability(req.body[i].probability, req.body[i].source)
           );
+          ddp.bindVarchar(12, req.body[i].country);
           await ddp.run();
 
           if (req.body[i].reference != null) {
@@ -16607,9 +16704,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT siteId FROM _site WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM site WHERE delete = false"
+          "SELECT id FROM site WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -16640,9 +16744,14 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter = " AND _site.country = '" + req.query.country + "'";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = true AND delete = false AND _site.tsId = site.historicalTsId"
+          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = true AND delete = false AND _site.tsId = site.historicalTsId" +
+            countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -16680,9 +16789,14 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter = " AND _site.country = '" + req.query.country + "'";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = false AND delete = false AND _site.tsId = site.historicalTsId"
+          "SELECT id,reference,area,type,postalcode,country FROM site,_site WHERE _site.siteId = site.id AND onnet = false AND delete = false AND _site.tsId = site.historicalTsId" +
+            countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -17691,9 +17805,16 @@ var run = async () => {
           req.query.pageSize,
           req.query.pageNumber
         );
+        let countryFilter = "";
+        if (req.query.country != null) {
+          countryFilter =
+            " AND id IN (SELECT DISTINCT trenchId FROM _trench WHERE country = '" +
+            req.query.country +
+            "')";
+        }
         let resJson = [];
         let ddRead = await DDC.runAndReadAll(
-          "SELECT id FROM trench WHERE delete = false"
+          "SELECT id FROM trench WHERE delete = false" + countryFilter
         );
         let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
@@ -17817,7 +17938,7 @@ var run = async () => {
         }
 
         let ddp = await DDC.prepare(
-          "INSERT INTO _trench (tsId, point, trenchId, source, purpose, depth, classifier, unit, type, premisesPassed, area, plannedDuration, actualDuration, state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
+          "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
         );
         ddp.bindInteger(1, tsId);
         ddp.bindVarchar(2, req.body.point);
@@ -17839,6 +17960,7 @@ var run = async () => {
           17,
           validateProbability(req.body.probability, req.body.source)
         );
+        ddp.bindVarchar(18, req.body.country);
         await ddp.run();
 
         if (req.body.build?.jobId != null) {
@@ -18076,7 +18198,7 @@ var run = async () => {
               }
               let tsId = await getSeqNextValue("seq_trench");
               let ddClone = await DDC.prepare(
-                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt FROM _trench WHERE tsId = $4"
+                "INSERT INTO _trench (tsId,point,trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt,country) SELECT $1,strptime($2,$3),trenchId,source,reference,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,plannedStart,plannedCompletion,plannedDuration,plannedUnit,actualStart,actualCompletion,actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,probability,documentId,wkt,country FROM _trench WHERE tsId = $4"
               );
               ddClone.bindInteger(1, tsId);
               ddClone.bindVarchar(2, point);
@@ -18159,7 +18281,7 @@ var run = async () => {
             dateFormat +
             "'), actualDuration, actualUnit, state, connectsToSiteId, connectsToTrenchId, connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference,probability,documentId,wkt FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
+            "'),reference,probability,documentId,wkt,country FROM trench, _trench WHERE trench.id = $1 AND _trench.trenchId = trench.id AND trench.delete = false " +
             datePoint +
             " ORDER BY _trench.point DESC LIMIT 1"
         );
@@ -18170,6 +18292,7 @@ var run = async () => {
           resJson = {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
+            country: ddRows[0][33],
             probability: validateProbability(ddRows[0][30], ddRows[0][6]),
             source: ddRows[0][6],
             purpose: ddRows[0][7],
@@ -18850,7 +18973,7 @@ var run = async () => {
             dateFormat +
             "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,strftime(point,'" +
             pointFormat +
-            "'),reference,probability,documentId,wkt FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
+            "'),reference,probability,documentId,wkt,country FROM trench, _trench WHERE id = $1 AND tsId = historicalTsId AND trench.delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddRead = await ddp.runAndReadAll();
@@ -18859,6 +18982,7 @@ var run = async () => {
           resJson = {
             trenchId: req.params.trenchId,
             point: ddRows[0][28],
+            cpuntry: ddRows[0][33],
             probability: validateProbability(ddRows[0][30], ddRows[0][6]),
             reference: ddRows[0][29].replace(/''/g, "'"),
             purpose: ddRows[0][7],
@@ -19053,7 +19177,7 @@ var run = async () => {
           await ddp.run();
 
           ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body.point);
@@ -19075,6 +19199,7 @@ var run = async () => {
             17,
             validateProbability(req.body.probability, req.body.source)
           );
+          ddp.bindVarchar(18, req.body.country);
           await ddp.run();
 
           if (req.body.build?.jobId != null) {
@@ -19270,7 +19395,7 @@ var run = async () => {
           dateFormat +
           "'),actualDuration,actualUnit,state,connectsToSiteId,connectsToTrenchId,connectsToPoleId,tsId,strftime(point,'" +
           pointFormat +
-          "'),reference,probability,documentId,wkt FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
+          "'),reference,probability,documentId,wkt,country FROM trench, _trench WHERE _trench.trenchId = trench.id ORDER BY _trench.point"
       );
       let ddRows = ddp.getRows();
       if (ddRows.length > 0) {
@@ -19278,6 +19403,7 @@ var run = async () => {
           let resObj = {
             trenchId: ddRows[idx][0],
             purpose: ddRows[idx][7],
+            country: ddRows[idx][34],
             probability: validateProbability(ddRows[idx][31], ddRows[idx][6]),
             reference: ddRows[idx][30].replace(/''/g, "'"),
             construction: {
@@ -19518,7 +19644,7 @@ var run = async () => {
           }
 
           let ddp = await DDC.prepare(
-            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)"
+            "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
           );
           ddp.bindInteger(1, tsId);
           ddp.bindVarchar(2, req.body[i].point);
@@ -19543,6 +19669,7 @@ var run = async () => {
             17,
             validateProbability(req.body[i].probability, req.body[i].source)
           );
+          ddp.bindVarchar(18, req.body[i].country);
           await ddp.run();
 
           if (req.body[i].build?.jobId != null) {
@@ -22507,6 +22634,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllCables
   );
 
@@ -22538,6 +22666,7 @@ var run = async () => {
     }),
     body("technology").isIn(OAS.cableTechnology),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("configuration").isObject(),
     oneOf(
       [
@@ -22706,6 +22835,7 @@ var run = async () => {
     ),
     body("technology").optional().isIn(OAS.cableTechnology),
     body("reference").optional().isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("configuration").optional().isObject(),
     oneOf(
       [
@@ -22810,6 +22940,7 @@ var run = async () => {
     }),
     body("technology").isIn(OAS.cableTechnology),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("configuration").isObject(),
     oneOf(
       [
@@ -22976,6 +23107,7 @@ var run = async () => {
     }),
     body("*.technology").isIn(OAS.cableTechnology),
     body("*.reference").isString().trim(),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.configuration").isObject(),
     oneOf(
       [
@@ -23076,6 +23208,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllDuct
   );
 
@@ -23104,6 +23237,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("state").default("free").isIn(OAS.ductState),
@@ -23196,6 +23330,7 @@ var run = async () => {
     param("ductId").isUUID(4),
     body("trenchId").optional().isUUID(4),
     body("purpose").optional().isIn(OAS.ductPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("category").optional().isIn(OAS.ductSizeCategory),
     body("configuration").optional().isInt(OAS.ductConfiguration),
     body("state").optional().isIn(OAS.ductState),
@@ -23223,6 +23358,7 @@ var run = async () => {
     param("ductId").isUUID(4),
     body("trenchId").isUUID(4),
     body("purpose").isIn(OAS.ductPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("category").isIn(OAS.ductSizeCategory),
     body("configuration").isInt(OAS.ductConfiguration),
     body("state").default("free").isIn(OAS.ductState),
@@ -23270,6 +23406,7 @@ var run = async () => {
     body("*.ductId").isUUID(4),
     body("*.trenchId").isUUID(4),
     body("*.purpose").isIn(OAS.ductPurpose),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.category").isIn(OAS.ductSizeCategory),
     body("*.configuration").isInt(OAS.ductConfiguration),
     body("*.state").default("free").isIn(OAS.ductState),
@@ -23302,6 +23439,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllNe
   );
 
@@ -23340,6 +23478,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/ne",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23516,6 +23655,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").optional().isUUID(4),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("host")
       .optional()
       .isFQDN({ require_tld: false, allow_numeric_tld: true }),
@@ -23653,6 +23793,7 @@ var run = async () => {
     serveUrlPrefix + serveUrlVersion + "/ne/:neId",
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("neId").isUUID(4),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23798,6 +23939,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body().isArray({ min: 1 }),
     body("*.neId").isUUID(4),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.host").isFQDN({ require_tld: false, allow_numeric_tld: true }),
     body("*.commissioned").matches(OAS.datePeriodYearMonthDay),
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
@@ -23935,6 +24077,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllPole
   );
 
@@ -23962,6 +24105,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.height").default(20).isFloat(OAS.height),
@@ -24111,6 +24255,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").optional().isIn(OAS.polePurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").optional().isString().trim(),
     body("construction").optional().isObject(),
     body("construction.height").optional().isFloat(OAS.height),
@@ -24179,6 +24324,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("poleId").isUUID(4),
     body("purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").isString().trim(),
     body("construction").optional().isObject(),
     body("construction.height").optional().default(20).isFloat(OAS.height),
@@ -24291,6 +24437,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.poleId").isUUID(4),
     body("*.purpose").default("unclassified").isIn(OAS.polePurpose),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.reference").isString().trim(),
     body("*.construction").isObject(),
     body("*.construction.height").default(0).isFloat(OAS.height),
@@ -24392,6 +24539,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllRacks
   );
 
@@ -24461,6 +24609,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").optional().isUUID(4),
     body("reference").optional().isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").optional().isUUID(4),
@@ -24500,6 +24649,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("rackId").isUUID(4),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
@@ -24543,6 +24693,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("siteId").isUUID(4),
@@ -24600,6 +24751,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.rackId").isUUID(4),
     body("*.reference").isString().trim(),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.commissioned").matches(OAS.datePeriodYearMonthDay),
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("*.siteId").isUUID(4),
@@ -24672,6 +24824,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllServices
   );
 
@@ -24699,6 +24852,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
@@ -24783,6 +24937,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").optional().isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("rate").optional().isInt(OAS.cableConfiguration_ethernet_rate),
@@ -24821,6 +24976,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("serviceId").isUUID(4),
     body("reference").isString().trim(),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("commissioned").matches(OAS.datePeriodYearMonthDay),
     body("decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
@@ -24877,6 +25033,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.serviceId").isUUID(4),
     body("*.reference").isString().trim(),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.commissioned").matches(OAS.datePeriodYearMonthDay),
     body("*.decommissioned").optional().matches(OAS.datePeriodYearMonthDay),
     body("*.rate").default(0).isInt(OAS.cableConfiguration_ethernet_rate),
@@ -24919,6 +25076,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllSites
   );
 
@@ -24933,6 +25091,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllSitesOnNet
   );
 
@@ -24947,6 +25106,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllSitesOffNet
   );
 
@@ -25217,6 +25377,7 @@ var run = async () => {
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     query("pageSize").optional().isInt(OAS.pageSize),
     query("pageNumber").optional().isInt(OAS.pageNumber),
+    query("country").optional().isIn(OAS.countryCode),
     getAllTrench
   );
 
@@ -25244,6 +25405,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
     body("purpose").isIn(OAS.trenchPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.depth")
@@ -25453,6 +25615,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").optional().isIn(OAS.trenchPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").optional().isString().trim(),
     body("construction").optional().isObject(),
     body("construction.depth")
@@ -25524,6 +25687,7 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("trenchId").isUUID(4),
     body("purpose").isIn(OAS.trenchPurpose),
+    body("country").default(mniCountryCode).isIn(OAS.countryCode),
     body("reference").isString().trim(),
     body("construction").isObject(),
     body("construction.depth")
@@ -25635,6 +25799,7 @@ var run = async () => {
     body().isArray({ min: 1 }),
     body("*.trenchId").isUUID(4),
     body("*.purpose").isIn(OAS.trenchPurpose),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
     body("*.reference").isString().trim(),
     body("*.construction").isObject(),
     body("*.construction.depth")
@@ -26686,6 +26851,7 @@ var run = async () => {
       apiDirectory: apiDirectory,
       backupDirectory: backupDirectory,
       configDirectory: configDirectory,
+      countryCode: mniCountryCode,
       docoumentDirectory: documentDirectory,
       uploadDirectory: uploadDirectory,
       tickInterval: tickIntervalMs,

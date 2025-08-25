@@ -778,9 +778,30 @@ async function jobCveRepoPull(target = cveDirectory) {
       if (fs.existsSync(target)) {
         if (fs.lstatSync(target).isDirectory()) {
           try {
+            if (fs.existsSync(path.join(target, ".git", "index.lock"))) {
+              fs.unlink(
+                path.join(target, ".git", "index.lock", (err) => {
+                  LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+                    event: "cveRepoPull",
+                    state: "failed",
+                    action: "failed to remove git lock file",
+                    file: path.join(target, ".git", "index.lock"),
+                    error: err,
+                  });
+                })
+              );
+            }
+          } catch (err) {
+            LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+              event: "cveRepoPull",
+              state: "failed",
+              error: err,
+            });
+          }
+          try {
             const exec = promisify(execCb);
             const { error, stdout, stderr } = await exec(
-              "git pull --rebase origin main && git sparse-checkout reapply",
+              "git reset --hard ; git pull origin main ; git sparse-checkout reapply",
               { cwd: target }
             );
             if (DEBUG) {
@@ -789,8 +810,7 @@ async function jobCveRepoPull(target = cveDirectory) {
                 "debug",
                 "cveRepoPull",
                 {
-                  stdout: stdout,
-                  stderr: stderr,
+                  result: stdout,
                 }
               );
             }

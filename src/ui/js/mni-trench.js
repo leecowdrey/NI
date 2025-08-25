@@ -108,14 +108,20 @@ function fetchListTrench() {
   if (fltReady != null) {
     clearTimeout(fltReady);
   }
-
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/trench", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  fetch(
+    localStorage.getItem("mni.gatewayUrl") +
+      "/trench?country=" +
+      selectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -354,6 +360,7 @@ function fetchTrenchGeometry() {
   });
 }
 try {
+  countryListPopulate();
   fetchMapRender();
 } catch (e) {
   fmrReady = setTimeout(fetchMapRender, retryMs);

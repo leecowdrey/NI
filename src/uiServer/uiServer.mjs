@@ -45,6 +45,7 @@ global.LOGGER = new Console({
 });
 
 //
+var mniCountryCode = null;
 var tickTimer = null;
 var tickIntervalMs = null;
 var serveName = null;
@@ -162,6 +163,7 @@ function loadEnv() {
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
+  mniCountryCode = process.env.MNI_DEFAULT_COUNTRY_CODE || "BEL";
   tickIntervalMs = toInteger(process.env.UISERV_TICK_INTERVAL_MS) || 60000;
   serveHost = process.env.DNSSERV_HOST || "mni";
   serveDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
@@ -340,10 +342,11 @@ var run = async () => {
       urlPrefix: serveUrlPrefix,
     },
     environment: {
-      timestamp: OAS.dayjsFormat,
-      tickInterval: tickIntervalMs,
-      distDirectory: distDirectory,
       configDirectory: configDirectory,
+      country: mniCountryCode,
+      distDirectory: distDirectory,
+      tickInterval: tickIntervalMs,
+      timestamp: OAS.dayjsFormat,
     },
     apiGateway: {
       dns: apiGatewayDns,
@@ -487,6 +490,7 @@ var run = async () => {
       notificatonIcon: "/favicon.ico",
       name: appName,
       version: appVersion,
+      country: mniCountryCode,
       build: appBuild,
       rootUrl: serveUrlPrefix,
       gatewayUrl: apiGatewayDns,

@@ -30,12 +30,15 @@ function fetchListSites() {
   if (flsReady != null) {
     clearTimeout(flsReady);
   }
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
   if (document.getElementById("onNet").checked) {
-    urlOnOffNetSuffix = "onnet";
+    urlOnOffNetSuffix = "onnet?country=" +
+      selectedCountry;
   } else {
-    urlOnOffNetSuffix = "offnet";
+    urlOnOffNetSuffix = "offnet?country=" +
+      selectedCountry;
   }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/site/" + urlOnOffNetSuffix, {
     method: "GET",
     headers: {
@@ -186,6 +189,7 @@ function fetchSite() {
   }
 }
 try {
+  countryListPopulate();
   fetchMapRender();
 } catch (e) {
   fmrReady = setTimeout(fetchMapRender, retryMs);

@@ -4,6 +4,7 @@
     "point": "20250510T174124",
     "host": "gbr-worc-cg1-01",
     "commissioned": "20250510",
+		"country": "BEL",
     "probability": 1,
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "rackId": "c2f7ceba-ed76-441d-8e48-46b3ed3e7e35",

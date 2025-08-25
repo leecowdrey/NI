@@ -232,6 +232,7 @@ function fetchPole() {
   }
 }
 try {
+  countryListPopulate();
   fetchMapRender();
 } catch (e) {
   fmrReady = setTimeout(fetchMapRender, retryMs);

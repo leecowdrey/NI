@@ -4,6 +4,7 @@
     "purpose": "backhaul",
     "reference": "bel-zel-m1-p1",
     "probability": 1,
+    "country": "BEL",
     "construction": {
       "height": 30,
       "unit": "m",

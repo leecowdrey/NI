@@ -143,6 +143,7 @@ pushd ${CVE_DIRECTORY} &>/dev/null && \
 cd .. && \
 git clone --filter=blob:none --no-checkout https://github.com/CVEProject/cvelistV5.git && \
 cd ${CVE_DIRECTORY} && \
+git config pull.rebase true && \
 git sparse-checkout init --cone && \
 git checkout main && \
 git sparse-checkout set --no-cone '/*' '!cves/1999' '!cves/2000' '!cves/2001' '!cves/2002' '!cves/2003' '!cves/2004' '!cves/2005' '!cves/2006' '!cves/2007' '!cves/2008' '!cves/2009' '!cves/2010' '!cves/2011' '!cves/2012' '!cves/2013' '!cves/2014' '!cves/2015' '!cves/2016' '!cves/2017' '!cves/2018' '!cves/2019' '!cves/2020' '!cves/2021' '!cves/2022' '!cves/2023' '!cves/2024'

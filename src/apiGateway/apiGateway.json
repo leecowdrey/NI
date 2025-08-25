@@ -3689,7 +3689,7 @@
       "@comment": "getAllCables",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/cable",
@@ -4279,7 +4279,7 @@
       "@comment": "getAllDuct",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/duct",
@@ -4734,7 +4734,7 @@
       "@comment": "getAllNe",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/ne",
@@ -5189,7 +5189,7 @@
       "@comment": "getAllPole",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/pole",
@@ -6191,7 +6191,7 @@
       "@comment": "getAllServices",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["point"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/service",
@@ -6600,7 +6600,7 @@
       "@comment": "getAllSites",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/site",
@@ -7146,7 +7146,7 @@
       "@comment": "getAllTrench",
       "output_encoding": "no-op",
       "input_headers": ["Accept"],
-      "input_query_strings": ["pageSize", "pageNumber"],
+      "input_query_strings": ["pageSize", "pageNumber","country"],
       "backend": [
         {
           "url_pattern": "/mni/v1/trench",

@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1755772601
+  version: 1.0.0.1756149520
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -3056,6 +3056,8 @@ paths:
                       properties:
                         cableId:
                           $ref: "#/components/schemas/cableId"
+                        country:
+                          $ref: "#/components/schemas/countryCode"
                         poleId:
                           $ref: "#/components/schemas/poleId"
                         point:
@@ -3129,6 +3131,8 @@ paths:
                       cableId:
                         description: optionally specify the internal cable identifier
                         $ref: "#/components/schemas/cableId"
+                      country:
+                        $ref: "#/components/schemas/countryCode"
                       poleId:
                         $ref: "#/components/schemas/poleId"
                       point:
@@ -3253,6 +3257,8 @@ paths:
                     - configuration
                     - state
                   properties:
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     poleId:
                       $ref: "#/components/schemas/poleId"
                     technology:
@@ -3278,6 +3284,8 @@ paths:
                   properties:
                     ductId:
                       $ref: "#/components/schemas/ductId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
@@ -3296,6 +3304,7 @@ paths:
               ethernet:
                 value:
                   ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: ethernet
                   configuration:
                     category: Cat6A
@@ -3308,6 +3317,7 @@ paths:
               single:
                 value:
                   poleId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: singleFiber
                   configuration:
                     strands: 1
@@ -3470,6 +3480,8 @@ paths:
                   properties:
                     ductId:
                       $ref: "#/components/schemas/ductId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
@@ -3493,6 +3505,8 @@ paths:
                   properties:
                     poleId:
                       $ref: "#/components/schemas/poleId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
@@ -3511,6 +3525,7 @@ paths:
               multi:
                 value:
                   ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: multiFiber
                   configuration:
                     ribbons: 24
@@ -3523,6 +3538,7 @@ paths:
               single:
                 value:
                   poleId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: singleFiber
                   configuration:
                     strands: 18
@@ -3560,6 +3576,8 @@ paths:
                   properties:
                     cableId:
                       $ref: "#/components/schemas/cableId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     ductId:
                       $ref: "#/components/schemas/ductId"
                     technology:
@@ -3582,6 +3600,8 @@ paths:
                       $ref: "#/components/schemas/cableId"
                     poleId:
                       $ref: "#/components/schemas/poleId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
@@ -3601,6 +3621,7 @@ paths:
                 value:
                   cableId: 5520aca1-4727-431a-aa9c-23f2e54b8a41
                   ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: multiFiber
                   configuration:
                     ribbons: 24
@@ -3614,6 +3635,7 @@ paths:
                 value:
                   cableId: 5520aca1-4727-431a-aa9c-23f2e54b8a41
                   poleId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  country: BEL
                   technology: singleFiber
                   configuration:
                     strands: 18
@@ -4068,6 +4090,8 @@ paths:
                       $ref: "#/components/schemas/ductId"
                     point:
                       $ref: "#/components/schemas/dateTime"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     trenchId:
                       $ref: "#/components/schemas/trenchId"
                     purpose:
@@ -4129,6 +4153,8 @@ paths:
                     $ref: "#/components/schemas/ductId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   trenchId:
                     $ref: "#/components/schemas/trenchId"
                   purpose:
@@ -4239,6 +4265,8 @@ paths:
                   $ref: "#/components/schemas/trenchId"
                 purpose:
                   $ref: "#/components/schemas/ductPurpose"
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 category:
                   $ref: "#/components/schemas/ductSizeCategory"
                 configuration:
@@ -4263,6 +4291,7 @@ paths:
               sample:
                 value:
                   trenchId: 38b6c897-9982-4426-b9e3-c603e7e2cb5d
+                  country: BEL
                   purpose: cable
                   category: microduct
                   configuration: 24
@@ -4459,6 +4488,8 @@ paths:
               properties:
                 trenchId:
                   $ref: "#/components/schemas/trenchId"
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/ductPurpose"
                 category:
@@ -4485,6 +4516,7 @@ paths:
               sample:
                 value:
                   trenchId: 38b6c897-9982-4426-b9e3-c603e7e2cb5d
+                  country: BEL
                   purpose: cable
                   category: microduct
                   configuration: 12
@@ -4524,6 +4556,8 @@ paths:
               properties:
                 trenchId:
                   $ref: "#/components/schemas/trenchId"
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/ductPurpose"
                 category:
@@ -4610,6 +4644,7 @@ paths:
                   value:
                     ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
                     trenchId: 38b6c897-9982-4426-b9e3-c603e7e2cb5d
+                    country: BEL
                     purpose: cable
                     category: microduct
                     configuration: 24
@@ -4651,6 +4686,8 @@ paths:
                   properties:
                     serviceId:
                       $ref: "#/components/schemas/serviceId"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     reference:
@@ -4764,6 +4801,8 @@ paths:
                     $ref: "#/components/schemas/serviceId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   reference:
                     type: string
                   customer:
@@ -5075,6 +5114,8 @@ paths:
                 - commissioned
                 - link
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 customer:
@@ -5183,6 +5224,7 @@ paths:
               sample:
                 value:
                   reference: ZX2034-10-10
+                  country: BEL
                   customer:
                     name: Bluevia
                     reference: sample
@@ -5250,6 +5292,8 @@ paths:
             schema:
               type: object
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 customer:
@@ -5379,6 +5423,8 @@ paths:
                 - commissioned
                 - link
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 customer:
@@ -5487,6 +5533,7 @@ paths:
               sample:
                 value:
                   reference: ZX2034-10-10
+                  country: BEL
                   customer:
                     name: Bluevia
                     reference: sample
@@ -5572,6 +5619,8 @@ paths:
                     $ref: "#/components/schemas/serviceId"
                   reference:
                     type: string
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   customer:
                     type: object
                     required:
@@ -5668,6 +5717,7 @@ paths:
                   value:
                     serviceId: 07bc9f28-cc27-4f3a-958b-dd8fd1034c2c
                     reference: ZX2034-10-10
+                    country: BEL
                     customer:
                       name: Bluevia
                       reference: sample
@@ -6592,6 +6642,8 @@ paths:
                       $ref: "#/components/schemas/rackId"
                     point:
                       $ref: "#/components/schemas/dateTime"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     reference:
                       type: string
                     commissioned:
@@ -6662,6 +6714,8 @@ paths:
                     $ref: "#/components/schemas/rackId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   reference:
                     type: string
                   commissioned:
@@ -6816,6 +6870,8 @@ paths:
                 - siteId
                 - slots
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 commissioned:
@@ -6866,6 +6922,7 @@ paths:
             examples:
               single:
                 value:
+                  country: BEL
                   reference: esp-zar-f0-01
                   commissioned: "20241010"
                   siteId: 86e420f1-137b-4e34-9ff7-18bd12743a10
@@ -6929,6 +6986,8 @@ paths:
             schema:
               type: object
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 commissioned:
@@ -7012,6 +7071,8 @@ paths:
                 - commissioned
                 - siteId
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 reference:
                   type: string
                 commissioned:
@@ -7063,6 +7124,7 @@ paths:
               single:
                 value:
                   reference: esp-zar-f0-01
+                  country: ESP
                   commissioned: "20241010"
                   siteId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                   floor: 0
@@ -7143,6 +7205,8 @@ paths:
                     $ref: "#/components/schemas/rackId"
                   reference:
                     type: string
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   commissioned:
                     $ref: "#/components/schemas/date"
                   decommissioned:
@@ -7193,6 +7257,7 @@ paths:
                   value:
                     rackId: a84eed87-277f-46ac-9ee3-094c0d104f1f
                     reference: esp-zar-f0-01
+                    country: ESP
                     commissioned: "20241010"
                     siteId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                     floor: 0
@@ -7456,6 +7521,8 @@ paths:
                       $ref: "#/components/schemas/neId"
                     point:
                       $ref: "#/components/schemas/dateTime"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     host:
                       type: string
                       format: hostname
@@ -7520,6 +7587,7 @@ paths:
                   value:
                     - neId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                       point: 20240831T000000
+                      country: ESP
                       host: esp-zar-daro-01
                       commissioned: "20241010"
                       siteId: a91550d8-8d19-4f79-b00f-73f6a29c1182
@@ -7692,6 +7760,8 @@ paths:
                     $ref: "#/components/schemas/neId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   host:
                     type: string
                     format: hostname
@@ -7761,6 +7831,7 @@ paths:
                 value:
                   - neId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                     point: 20240831T000000
+                    country: ESP
                     host: esp-zar-daro-01
                     commissioned: "20241010"
                     siteId: a91550d8-8d19-4f79-b00f-73f6a29c1182
@@ -8067,6 +8138,8 @@ paths:
                 - version
                 - ports
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 host:
                   type: string
                   format: hostname
@@ -8142,6 +8215,7 @@ paths:
               sample:
                 value:
                   host: esp-zar-daro-01
+                  country: ESP
                   commissioned: "20241010"
                   siteId: a91550d8-8d19-4f79-b00f-73f6a29c1182
                   rackId: a84eed87-277f-46ac-9ee3-094c0d104f1f
@@ -8362,6 +8436,8 @@ paths:
                 properties:
                   neId:
                     $ref: "#/components/schemas/neId"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   host:
                     type: string
                     format: hostname
@@ -8439,6 +8515,7 @@ paths:
                   value:
                     neId: 86e420f1-137b-4e34-9ff7-18bd12743a10
                     host: esp-zar-daro-01
+                    country: ESP
                     commissioned: "20241010"
                     siteId: a91550d8-8d19-4f79-b00f-73f6a29c1182
                     rackId: a84eed87-277f-46ac-9ee3-094c0d104f1f
@@ -8617,6 +8694,8 @@ paths:
                 host:
                   type: string
                   format: hostname
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 commissioned:
                   $ref: "#/components/schemas/date"
                 decommissioned:
@@ -8684,6 +8763,7 @@ paths:
               sample:
                 value:
                   host: esp-zar-daro-01
+                  country: ESP
                   commissioned: "20241010"
                   siteId: a91550d8-8d19-4f79-b00f-73f6a29c1182
                   rackId: a84eed87-277f-46ac-9ee3-094c0d104f1f
@@ -8853,6 +8933,8 @@ paths:
                 host:
                   type: string
                   format: hostname
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 commissioned:
                   $ref: "#/components/schemas/date"
                 decommissioned:
@@ -9007,6 +9089,8 @@ paths:
                       $ref: "#/components/schemas/dateTime"
                     purpose:
                       $ref: "#/components/schemas/polePurpose"
+                    country:
+                      $ref: "#/components/schemas/countryCode"
                     construction:
                       type: object
                       properties:
@@ -9122,6 +9206,8 @@ paths:
                     $ref: "#/components/schemas/poleId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   purpose:
                     $ref: "#/components/schemas/polePurpose"
                   construction:
@@ -9393,6 +9479,8 @@ paths:
                 - build
                 - coordinate
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/polePurpose"
                 construction:
@@ -9498,6 +9586,7 @@ paths:
             examples:
               backhaul:
                 value:
+                  country: GBR
                   purpose: backhaul
                   construction:
                     height: 15
@@ -9634,6 +9723,8 @@ paths:
                 - build
                 - coordinate
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/polePurpose"
                 construction:
@@ -9739,6 +9830,7 @@ paths:
             examples:
               backhaul:
                 value:
+                  country: GBR
                   purpose: backhaul
                   construction:
                     height: 15
@@ -9797,6 +9889,8 @@ paths:
             schema:
               type: object
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/polePurpose"
                 construction:
@@ -9912,6 +10006,8 @@ paths:
                 properties:
                   poleId:
                     $ref: "#/components/schemas/neId"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   purpose:
                     $ref: "#/components/schemas/polePurpose"
                   construction:
@@ -9994,6 +10090,7 @@ paths:
                 backhaul:
                   value:
                     poleId: a9e616ed-1b61-453f-b8f3-95f0449043a8
+                    country: GBR
                     purpose: backhaul
                     construction:
                       height: 15
@@ -10224,6 +10321,8 @@ paths:
                     $ref: "#/components/schemas/trenchId"
                   point:
                     $ref: "#/components/schemas/dateTime"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   purpose:
                     $ref: "#/components/schemas/trenchPurpose"
                   reference:
@@ -10414,6 +10513,8 @@ paths:
                 - build
                 - coordinates
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/trenchPurpose"
                 reference:
@@ -10526,6 +10627,7 @@ paths:
             examples:
               service/drop:
                 value:
+                  country: GBR
                   purpose: service/drop
                   reference: gbr-worc-cg-south
                   construction:
@@ -10674,6 +10776,8 @@ paths:
                 - build
                 - coordinates
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/trenchPurpose"
                 reference:
@@ -10786,6 +10890,7 @@ paths:
             examples:
               service/drop:
                 value:
+                  country: GBR
                   purpose: service/drop
                   reference: gbr-worc-cg-south
                   construction:
@@ -10855,6 +10960,8 @@ paths:
             schema:
               type: object
               properties:
+                country:
+                  $ref: "#/components/schemas/countryCode"
                 purpose:
                   $ref: "#/components/schemas/trenchPurpose"
                 reference:
@@ -10987,6 +11094,8 @@ paths:
                     $ref: "#/components/schemas/trenchId"
                   reference:
                     type: string
+                  country:
+                    $ref: "#/components/schemas/countryCode"
                   purpose:
                     $ref: "#/components/schemas/trenchPurpose"
                   construction:
@@ -11074,6 +11183,7 @@ paths:
                   value:
                     trenchId: 5ef82c6f-b06b-4d93-a4c2-3b78b62dd7cf
                     reference: gbr-worc-cg-south
+                    country: GBR
                     purpose: service/drop
                     construction:
                       depth: 0.5
