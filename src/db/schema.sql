@@ -36,7 +36,9 @@ CREATE TYPE cableFiberConfigurationRate AS ENUM ('Gbps','Tbps');
 CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','singleFiber','multiFiber');
 CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large', 'unclassified');
-CREATE TYPE countryCode AS ENUM ( 'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATA', 'ATF', 'ATG', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD', 'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN', 'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD', 'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYP', 'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP', 'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY', 'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF', 'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT', 'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAZ', 'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA', 'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG', 'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT', 'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC', 'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL', 'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU', 'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV', 'SMR', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ', 'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON', 'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB', 'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'YEM', 'ZAF', 'ZMB', 'ZWE' );
+CREATE TYPE countryCode AS ENUM (
+  'ABW','AFG','AGO','AIA','ALB','AND','ARE','ARG','ARM','ASM','ATA','ATF','ATG','AUS','AUT','AZE','BDI','BEL','BEN','BES','BFA','BGD','BGR','BHR','BHS','BIH','BLM','BLR','BLZ','BMU','BOL','BRA','BRB','BRN','BTN','BWA','CAF','CAN','CHE','CHL','CHN','CIV','CMR','COD','COG','COK','COL','COM','CPV','CRI','CUB','CUW','CYM','CYP','CZE','DEU','DJI','DMA','DNK','DOM','DZA','ECU','EGY','ERI','ESP','EST','ETH','FIN','FJI','FLK','FRA','FRO','FSM','GAB','GBR','GEO','GGY','GHA','GIB','GIN','GLP','GMB','GNB','GNQ','GRC','GRD','GRL','GTM','GUF','GUM','GUY','HND','HRV','HTI','HUN','IDN','IMN','IND','IRL','IRN','IRQ','ISL','ISR','ITA','JAM','JOR','JPN','KAZ','KEN','KGZ','KHM','KIR','KNA','KOR','KWT','LAO','LBN','LBR','LBY','LCA','LIE','LKA','LSO','LTU','LUX','LVA','MAR','MCO','MDA','MDG','MDV','MEX','MHL','MKD','MLI','MLT','MMR','MNE','MNG','MNP','MOZ','MRT','MSR','MTQ','MUS','MWI','MYS','MYT','NAM','NCL','NER','NGA','NIC','NIU','NLD','NOR','NPL','NRU','NZL','OMN','PAK','PAN','PCN','PER','PHL','PLW','PNG','POL','PRK','PRT','PRY','PSE','PYF','QAT','REU','ROU','RUS','RWA','SAU','SDN','SEN','SGP','SHN','SLB','SLE','SLV','SMR','SOM','SRB','SSD','STP','SUR','SVK','SVN','SWE','SWZ','SYC','SYR','TCA','TCD','TGO','THA','TJK','TKL','TKM','TLS','TON','TTO','TUN','TUR','TUV','TWN','TZA','UGA','UKR','URY','USA','UZB','VAT','VCT','VEN','VGB','VIR','VNM','VUT','WLF','WSM','YEM','ZAF','ZMB','ZWE'
+);
 CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
 CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','HKD','IDR','ILS','INR','ISK','JOD','JPY','MAD','MXN','MYR','NGN','NOK','NZD','PLN','QAR','RUB','SEK','SGD','SHP','THB','TRY','UAH','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
 CREATE TYPE depthClassifier AS ENUM ('low','medium','deep');
@@ -85,6 +87,7 @@ CREATE TYPE source AS ENUM ('historical','planned','predicted');
 CREATE TYPE trenchPurpose AS ENUM ('service/drop','ring','backhaul','pole','tower','unclassified');
 CREATE TYPE trenchState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE workflowEngineType AS ENUM ('bpmn','elsa');
+CREATE TYPE worldGeometryType AS ENUM ('Polygon','MultiPolygon');
 
 ---
 --- sequences
@@ -120,6 +123,8 @@ CREATE SEQUENCE IF NOT EXISTS seq_serviceIngress;
 CREATE SEQUENCE IF NOT EXISTS seq_site;
 CREATE SEQUENCE IF NOT EXISTS seq_trench;
 CREATE SEQUENCE IF NOT EXISTS seq_trenchCoordinate;
+CREATE SEQUENCE IF NOT EXISTS seq_worldGeoCoordinate;
+CREATE SEQUENCE IF NOT EXISTS seq_worldGeoPolygon;
 
 ---
 --- parent referential tables
@@ -461,8 +466,7 @@ CREATE TABLE IF NOT EXISTS rack (
     tsPoint TIMESTAMP,
     historicalTsId INTEGER,
     plannedTsId INTEGER,
-    predictedTsId INTEGER,
-    geometry GEOMETRY
+    predictedTsId INTEGER
 );
 CREATE TABLE IF NOT EXISTS ne (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
@@ -538,6 +542,32 @@ CREATE TABLE IF NOT EXISTS fetchQueue (
     delete BOOLEAN NOT NULL DEFAULT false,
     fetchJobId VARCHAR NOT NULL,
     FOREIGN KEY (fetchJobId) REFERENCES fetchJob (id)
+);
+
+CREATE TABLE IF NOT EXISTS worldGeo (
+    id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
+    country countryCode NOT NULL,
+    crs VARCHAR NOT NULL,
+    geometryType worldGeometryType NOT NULL,
+    geoCollection GEOMETRY
+);
+
+CREATE TABLE IF NOT EXISTS _worldGeoPolygon (
+    tsId INTEGER NOT NULL DEFAULT nextval('seq_worldGeoPolygon') PRIMARY KEY,
+    worldGeoId VARCHAR NOT NULL,
+    geometrySet INTEGER NOT NULL CHECK (geometrySet > 0),
+    geoPolygon GEOMETRY,
+    FOREIGN KEY (worldGeoId) REFERENCES worldGeo (id)
+);
+
+CREATE TABLE IF NOT EXISTS _worldGeoCoordinate (
+    tsId INTEGER NOT NULL DEFAULT nextval('seq_worldGeoCoordinate') PRIMARY KEY,
+    worldGeoId VARCHAR NOT NULL,
+    geometrySet INTEGER NOT NULL CHECK (geometrySet > 0),
+    X DECIMAL(9,6) NOT NULL DEFAULT 0 CHECK (X >= -180 AND X <= 180),
+    Y DECIMAL(9,6) NOT NULL DEFAULT 0 CHECK (Y >= -90 AND Y <= 90),
+    geoPoint GEOMETRY,
+    FOREIGN KEY (worldGeoId) REFERENCES worldGeo (id)
 );
 
 ---
@@ -1044,7 +1074,6 @@ CREATE TABLE IF NOT EXISTS _serviceEgress (
     FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
-
 ---
 --- initial data population
 ---
@@ -1318,10 +1347,6 @@ INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','l
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','micro','m',5.00);
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','narrow','m',10.00);
 INSERT INTO costTrench (purpose,type,unit,costPerUnit) VALUES ('unclassified','portable','m',25.00);
-
---
--- Experimental data population
---
 
 --
 -- EOF

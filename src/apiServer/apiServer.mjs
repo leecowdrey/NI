@@ -816,14 +816,33 @@ async function coordinateFromWktPoint(
   return coordinate;
 }
 
+async function countryFromCoordinate(x, y) {
+  let country = null;
+  if (x >= -180 && x <= 180 && y >= -190 && y <= 90) {
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT id,country FROM worldGeo WHERE ST_INTERSECTS(geoCollection,ST_POINT2D(" +
+        x +
+        "," +
+        y +
+        "))"
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      country = ddRows[0][1];
+    }
+  }
+  return country;
+}
+
 async function jobUpdateGeometry() {
   // child table (i.e. _pole) holds the spatial points as 3D points
   // parent table (i.e. pole) holds the spatial geometry object see https://duckdb.org/docs/stable/extensions/spatial/overview
   let points = [
-    { table: "_pole", dst: "geoPoint", src: "ST_Point3D(X,Y,Z)" },
-    { table: "_rack", dst: "geoPoint", src: "ST_Point3D(X,Y,Z)" },
-    { table: "_site", dst: "geoPoint", src: "ST_Point3D(X,Y,Z)" },
-    { table: "_trenchCoordinate", dst: "geoPoint", src: "ST_Point3D(X,Y,Z)" },
+    { table: "_pole", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
+    { table: "_rack", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
+    { table: "_site", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
+    { table: "_trenchCoordinate", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
+    { table: "_worldGeoCoordinate", dst: "geoPoint", src: "ST_Point2D(x,y)" },
   ];
   try {
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
@@ -950,6 +969,58 @@ async function jobUpdateGeometry() {
         points[i].dst +
         " IS NULL";
       await DDC.run(ddSql);
+    }
+    // update geometry collections for world geoemetries
+    ddRead = await DDC.runAndReadAll(
+      "SELECT id,country FROM worldGeo WHERE geoCollection IS NULL"
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        let ddReadSet = await DDC.runAndReadAll(
+          "SELECT MIN(geometrySet),MAX(geometrySet) FROM _worldGeoCoordinate WHERE worldGeoId = '" +
+            ddRows[idx][0] +
+            "'"
+        );
+        let ddRowsSet = ddReadSet.getRows();
+        if (ddRowsSet.length > 0) {
+          let minSet = toInteger(ddRowsSet[0][0]);
+          let maxSet = toInteger(ddRowsSet[0][1]);
+          if (DEBUG) {
+            LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+              event: "updateGeometry",
+              state: "worldGeo",
+              id: ddRows[idx][0],
+              country: ddRows[idx][1],
+              sets: maxSet,
+            });
+          }
+          await DDC.run(
+            "DELETE FROM _worldGeoPolygon WHERE worldGeoId = '" +
+              ddRows[idx][0] +
+              "'"
+          );
+          for (let s = minSet; s < maxSet; s++) {
+            await DDC.run(
+              "INSERT INTO _worldGeoPolygon (worldGeoId,geometrySet,geoPolygon) SELECT '" +
+                ddRows[idx][0] +
+                "'," +
+                s +
+                ",ST_MakePolygon(ST_MakeLine(list(geoPoint))) FROM _worldGeoCoordinate WHERE worldGeoId = '" +
+                ddRows[idx][0] +
+                "' AND geometrySet = " +
+                s
+            );
+          }
+          await DDC.run(
+            "UPDATE worldGeo SET geoCollection = (SELECT ST_Collect(list(geoPolygon)) FROM _worldGeoPolygon WHERE worldGeoId = '" +
+              ddRows[idx][0] +
+              "') WHERE id = '" +
+              ddRows[idx][0] +
+              "'"
+          );
+        }
+      }
     }
     //
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
@@ -2396,10 +2467,14 @@ var run = async () => {
   // database
   if (fs.existsSync(duckDbFile)) {
     try {
+      /*
       DDI = await DuckDBInstance.create(duckDbFile, {
         max_memory: duckDbMaxMemory,
         threads: duckDbThreads,
       });
+      */
+     // use by default 80% available RAM, and total cores for threads
+      DDI = await DuckDBInstance.create(duckDbFile);
       DDC = await DDI.connect();
     } catch (e) {
       LOGGER.error(
@@ -21017,6 +21092,32 @@ var run = async () => {
     }
   }
 
+  async function getWorldCountryFromCoordinate(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let country = await countryFromCoordinate(req.body.x, req.body.y);
+        if (country != null) {
+        res.contentType(OAS.mimeJSON).status(200).json({ country: country });
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "x:"+req.body.x+", y:"+req.body.y+ " not found within loaded world geometries",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   // Express API routes
 
   /*
@@ -26791,6 +26892,21 @@ var run = async () => {
     header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
     param("fetchId").isUUID(4),
     replaceFetchJob
+  );
+
+  /*
+       Tag:           World
+       operationId:   getWorldCountryFromCoordinate
+       exposed Route: /mni/v1/world/fromCoordinate
+       HTTP method:   POST
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/world/fromCoordinate",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body("x").default(0).isFloat(OAS.coordinate_x),
+    body("y").default(0).isFloat(OAS.coordinate_y),
+    getWorldCountryFromCoordinate
   );
 
   // Express 404 handling ¯\_(ツ)_/¯

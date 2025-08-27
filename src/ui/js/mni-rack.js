@@ -18,7 +18,10 @@ function fetchListRack() {
   if (flrReady != null) {
     clearTimeout(flrReady);
   }
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/rack", {
+let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  fetch(localStorage.getItem("mni.gatewayUrl") + "/rack?country=" +
+      selectedCountry, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -296,6 +299,7 @@ function fetchRackPoints() {
   }
 }
 try {
+  countryListPopulate();
   fetchListRack();
 } catch (e) {
   console.error(e);

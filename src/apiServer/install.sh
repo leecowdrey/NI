@@ -228,11 +228,21 @@ if [[ ! -f "${DB_FILE}" ]] ; then
   [[ -f "schema.log" ]] && rm -f schema.log &>/dev/null
   duckdb ${DB_FILE} < schema.sql > schema.log 2>&1
   RETVAL=$?
-  #if [[ -f "devData.sql" ]] ; then
-  #  duckdb ${DB_FILE} < devData.sql >> schema.log 2>&1
-  #fi
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
+doing "Adding World geometries to database"
+[[ $(dirname ${DB_FILE}) == "." ]] && DB_FILE="${WORKING_DIRECTORY}/${DB_FILE}"
+if [[ -f "${DB_FILE}" ]] ; then
+  for GEO_COUNTRY in ./world/*.sql ; do
+    GEO_ISO_CODE=$(basename ${GEO_COUNTRY})
+    GEO_ISO_CODE="${GEO_ISO_CODE%.sql*}"
+    info "Loading geometry for ${GEO_ISO_CODE}"
+    duckdb ${DB_FILE} < ${GEO_COUNTRY} > world/${GEO_ISO_CODE}.log 2>&1
+    RETVAL=$?
+    [[ ${RETVAL} -eq 0 ]] && success "- ok" || warn "- fail"
+  done
+fi
 
 doing "Setting DuckDB database ownership/permissions"
 if [[ -f "${DB_FILE}" ]] ; then

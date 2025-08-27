@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1756149520"
+    "version": "1.0.0.1756330939"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -4998,6 +4998,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -6781,6 +6784,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -7930,7 +7936,13 @@
         "operationId": "getAllServices",
         "parameters": [
           {
-            "$ref": "#/components/parameters/dateTime"
+            "$ref": "#/components/parameters/pageSize"
+          },
+          {
+            "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -9363,6 +9375,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -9586,6 +9601,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -9669,6 +9687,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -10591,13 +10612,16 @@
             ]
           }
         ],
-        "operationId": "getAllracks",
+        "operationId": "getAllRacks",
         "parameters": [
           {
             "$ref": "#/components/parameters/pageSize"
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -12534,6 +12558,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -14828,6 +14855,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -16421,6 +16451,9 @@
           },
           {
             "$ref": "#/components/parameters/pageNumber"
+          },
+          {
+            "$ref": "#/components/parameters/countryCode"
           }
         ],
         "tags": [
@@ -23352,6 +23385,86 @@
           }
         }
       }
+    },
+    "/world/fromCoordinate": {
+      "post": {
+        "summary": "Find country by coordinate",
+        "description": "Find the matching ISO 3166-1 alpha-3 three-letter country code that contains the supplied coordinate \n",
+        "security": [
+          {
+            "openId": [
+              "read:mni_ui",
+              "read:mni_alert",
+              "read:mni_fetch",
+              "read:mni_predict",
+              "read:mni_admin",
+              "read:mni_cable",
+              "read:mni_duct",
+              "read:mni_ne",
+              "read:mni_pole",
+              "read:mni_rack",
+              "read:mni_service",
+              "read:mni_site",
+              "read:mni_trench"
+            ]
+          }
+        ],
+        "operationId": "getWorldCountryFromCoordinate",
+        "tags": [
+          "World"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/coordinate"
+              },
+              "examples": {
+                "sample": {
+                  "value": {
+                    "x": -4.43205199969999,
+                    "y": 57.4943539998374
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    }
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": {
+                      "country": "GBR"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -26291,13 +26404,12 @@
         ]
       },
       "countryCode": {
-        "description": "ISO 3166-1 alpha-3 three-letter country codes\n- `ABW` Aruba\n- `AFG` Afghanistan\n- `AGO` Angola\n- `AIA` Anguilla\n- `ALA` Åland Islands\n- `ALB` Albania\n- `AND` Andorra\n- `ARE` United Arab Emirates\n- `ARG` Argentina\n- `ARM` Armenia\n- `ASM` American Samoa\n- `ATA` Antarctica\n- `ATF` French Southern Territories\n- `ATG` Antigua and Barbuda\n- `AUS` Australia\n- `AUT` Austria\n- `AZE` Azerbaijan\n- `BDI` Burundi\n- `BEL` Belgium\n- `BEN` Benin\n- `BES` Bonaire, Sint Eustatius and Saba\n- `BFA` Burkina Faso\n- `BGD` Bangladesh\n- `BGR` Bulgaria\n- `BHR` Bahrain\n- `BHS` Bahamas\n- `BIH` Bosnia and Herzegovina\n- `BLM` Saint Barthélemy\n- `BLR` Belarus\n- `BLZ` Belize\n- `BMU` Bermuda\n- `BOL` Bolivia, Plurinational State of\n- `BRA` Brazil\n- `BRB` Barbados\n- `BRN` Brunei Darussalam\n- `BTN` Bhutan\n- `BVT` Bouvet Island\n- `BWA` Botswana\n- `CAF` Central African Republic\n- `CAN` Canada\n- `CCK` Cocos (Keeling) Islands\n- `CHE` Switzerland\n- `CHL` Chile\n- `CHN` China\n- `CIV` Côte d'Ivoire\n- `CMR` Cameroon\n- `COD` Congo, Democratic Republic of the\n- `COG` Congo\n- `COK` Cook Islands\n- `COL` Colombia\n- `COM` Comoros\n- `CPV` Cabo Verde\n- `CRI` Costa Rica\n- `CUB` Cuba\n- `CUW` Curaçao\n- `CXR` Christmas Island\n- `CYM` Cayman Islands\n- `CYP` Cyprus\n- `CZE` Czechia\n- `DEU` Germany\n- `DJI` Djibouti\n- `DMA` Dominica\n- `DNK` Denmark\n- `DOM` Dominican Republic\n- `DZA` Algeria\n- `ECU` Ecuador\n- `EGY` Egypt\n- `ERI` Eritrea\n- `ESH` Western Sahara\n- `ESP` Spain\n- `EST` Estonia\n- `ETH` Ethiopia\n- `FIN` Finland\n- `FJI` Fiji\n- `FLK` Falkland Islands (Malvinas)\n- `FRA` France\n- `FRO` Faroe Islands\n- `FSM` Micronesia, Federated States of\n- `GAB` Gabon\n- `GBR` United Kingdom of Great Britain and Northern Ireland\n- `GEO` Georgia\n- `GGY` Guernsey\n- `GHA` Ghana\n- `GIB` Gibraltar\n- `GIN` Guinea\n- `GLP` Guadeloupe\n- `GMB` Gambia\n- `GNB` Guinea-Bissau\n- `GNQ` Equatorial Guinea\n- `GRC` Greece\n- `GRD` Grenada\n- `GRL` Greenland\n- `GTM` Guatemala\n- `GUF` French Guiana\n- `GUM` Guam\n- `GUY` Guyana\n- `HKG` Hong Kong\n- `HMD` Heard Island and McDonald Islands\n- `HND` Honduras\n- `HRV` Croatia\n- `HTI` Haiti\n- `HUN` Hungary\n- `IDN` Indonesia\n- `IMN` Isle of Man\n- `IND` India\n- `IOT` British Indian Ocean Territory\n- `IRL` Ireland\n- `IRN` Iran, Islamic Republic of\n- `IRQ` Iraq\n- `ISL` Iceland\n- `ISR` Israel\n- `ITA` Italy\n- `JAM` Jamaica\n- `JEY` Jersey\n- `JOR` Jordan\n- `JPN` Japan\n- `KAZ` Kazakhstan\n- `KEN` Kenya\n- `KGZ` Kyrgyzstan\n- `KHM` Cambodia\n- `KIR` Kiribati\n- `KNA` Saint Kitts and Nevis\n- `KOR` Korea, Republic of\n- `KWT` Kuwait\n- `LAO` Lao People's Democratic Republic\n- `LBN` Lebanon\n- `LBR` Liberia\n- `LBY` Libya\n- `LCA` Saint Lucia\n- `LIE` Liechtenstein\n- `LKA` Sri Lanka\n- `LSO` Lesotho\n- `LTU` Lithuania\n- `LUX` Luxembourg\n- `LVA` Latvia\n- `MAC` Macao\n- `MAF` Saint Martin (French part)\n- `MAR` Morocco\n- `MCO` Monaco\n- `MDA` Moldova, Republic of\n- `MDG` Madagascar\n- `MDV` Maldives\n- `MEX` Mexico\n- `MHL` Marshall Islands\n- `MKD` North Macedonia\n- `MLI` Mali\n- `MLT` Malta\n- `MMR` Myanmar\n- `MNE` Montenegro\n- `MNG` Mongolia\n- `MNP` Northern Mariana Islands\n- `MOZ` Mozambique\n- `MRT` Mauritania\n- `MSR` Montserrat\n- `MTQ` Martinique\n- `MUS` Mauritius\n- `MWI` Malawi\n- `MYS` Malaysia\n- `MYT` Mayotte\n- `NAM` Namibia\n- `NCL` New Caledonia\n- `NER` Niger\n- `NFK` Norfolk Island\n- `NGA` Nigeria\n- `NIC` Nicaragua\n- `NIU` Niue\n- `NLD` Netherlands, Kingdom of the\n- `NOR` Norway\n- `NPL` Nepal\n- `NRU` Nauru\n- `NZL` New Zealand\n- `OMN` Oman\n- `PAK` Pakistan\n- `PAN` Panama\n- `PCN` Pitcairn\n- `PER` Peru\n- `PHL` Philippines\n- `PLW` Palau\n- `PNG` Papua New Guinea\n- `POL` Poland\n- `PRI` Puerto Rico\n- `PRK` Korea, Democratic People's Republic of\n- `PRT` Portugal\n- `PRY` Paraguay\n- `PSE` Palestine, State of\n- `PYF` French Polynesia\n- `QAT` Qatar\n- `REU` Réunion\n- `ROU` Romania\n- `RUS` Russian Federation\n- `RWA` Rwanda\n- `SAU` Saudi Arabia\n- `SDN` Sudan\n- `SEN` Senegal\n- `SGP` Singapore\n- `SGS` South Georgia and the South Sandwich Islands\n- `SHN` Saint Helena, Ascension and Tristan da Cunha\n- `SJM` Svalbard and Jan Mayen\n- `SLB` Solomon Islands\n- `SLE` Sierra Leone\n- `SLV` El Salvador\n- `SMR` San Marino\n- `SOM` Somalia\n- `SPM` Saint Pierre and Miquelon\n- `SRB` Serbia\n- `SSD` South Sudan\n- `STP` Sao Tome and Principe\n- `SUR` Suriname\n- `SVK` Slovakia\n- `SVN` Slovenia\n- `SWE` Sweden\n- `SWZ` Eswatini\n- `SXM` Sint Maarten (Dutch part)\n- `SYC` Seychelles\n- `SYR` Syrian Arab Republic\n- `TCA` Turks and Caicos Islands\n- `TCD` Chad\n- `TGO` Togo\n- `THA` Thailand\n- `TJK` Tajikistan\n- `TKL` Tokelau\n- `TKM` Turkmenistan\n- `TLS` Timor-Leste\n- `TON` Tonga\n- `TTO` Trinidad and Tobago\n- `TUN` Tunisia\n- `TUR` Türkiye\n- `TUV` Tuvalu\n- `TWN` Taiwan, Province of China\n- `TZA` Tanzania, United Republic of\n- `UGA` Uganda\n- `UKR` Ukraine\n- `UMI` United States Minor Outlying Islands\n- `URY` Uruguay\n- `USA` United States of America\n- `UZB` Uzbekistan\n- `VAT` Holy See\n- `VCT` Saint Vincent and the Grenadines\n- `VEN` Venezuela, Bolivarian Republic of\n- `VGB` Virgin Islands (British)\n- `VIR` Virgin Islands (U.S.)\n- `VNM` Viet Nam\n- `VUT` Vanuatu\n- `WLF` Wallis and Futuna\n- `WSM` Samoa\n- `YEM` Yemen\n- `ZAF` South Africa\n- `ZMB` Zambia\n- `ZWE` Zimbabwe\n",
+        "description": "ISO 3166-1 alpha-3 three-letter country codes\n- `ABW` Aruba\n- `AFG` Afghanistan\n- `AGO` Angola\n- `AIA` Anguilla\n- `ALB` Albania\n- `AND` Andorra\n- `ARE` United Arab Emirates\n- `ARG` Argentina\n- `ARM` Armenia\n- `ASM` American Samoa\n- `ATA` Antarctica\n- `ATG` Antigua and Barbuda\n- `AUS` Australia\n- `AUT` Austria\n- `AZE` Azerbaijan\n- `BDI` Burundi\n- `BEL` Belgium\n- `BEN` Benin\n- `BES` Bonaire, Sint Eustatius and Saba\n- `BFA` Burkina Faso\n- `BGD` Bangladesh\n- `BGR` Bulgaria\n- `BHR` Bahrain\n- `BHS` Bahamas\n- `BIH` Bosnia and Herzegovina\n- `BLM` Saint Barthélemy\n- `BLR` Belarus\n- `BLZ` Belize\n- `BMU` Bermuda\n- `BOL` Bolivia, Plurinational State of\n- `BRA` Brazil\n- `BRB` Barbados\n- `BRN` Brunei Darussalam\n- `BTN` Bhutan\n- `BWA` Botswana\n- `CAF` Central African Republic\n- `CAN` Canada\n- `CCK` Cocos (Keeling) Islands\n- `CHE` Switzerland\n- `CHL` Chile\n- `CHN` China\n- `CIV` Côte d'Ivoire\n- `CMR` Cameroon\n- `COD` Congo, Democratic Republic of the\n- `COG` Congo\n- `COK` Cook Islands\n- `COL` Colombia\n- `COM` Comoros\n- `CPV` Cabo Verde\n- `CRI` Costa Rica\n- `CUB` Cuba\n- `CUW` Curaçao\n- `CXR` Christmas Island\n- `CYM` Cayman Islands\n- `CYP` Cyprus\n- `CZE` Czechia\n- `DEU` Germany\n- `DJI` Djibouti\n- `DMA` Dominica\n- `DNK` Denmark\n- `DOM` Dominican Republic\n- `DZA` Algeria\n- `ECU` Ecuador\n- `EGY` Egypt\n- `ERI` Eritrea\n- `ESH` Western Sahara\n- `ESP` Spain\n- `EST` Estonia\n- `ETH` Ethiopia\n- `FIN` Finland\n- `FJI` Fiji\n- `FLK` Falkland Islands (Malvinas)\n- `FRA` France\n- `FRO` Faroe Islands\n- `FSM` Micronesia, Federated States of\n- `GAB` Gabon\n- `GBR` United Kingdom of Great Britain and Northern Ireland\n- `GEO` Georgia\n- `GGY` Guernsey\n- `GHA` Ghana\n- `GIB` Gibraltar\n- `GIN` Guinea\n- `GLP` Guadeloupe\n- `GMB` Gambia\n- `GNB` Guinea-Bissau\n- `GNQ` Equatorial Guinea\n- `GRC` Greece\n- `GRD` Grenada\n- `GRL` Greenland\n- `GTM` Guatemala\n- `GUF` French Guiana\n- `GUM` Guam\n- `GUY` Guyana\n- `HND` Honduras\n- `HRV` Croatia\n- `HTI` Haiti\n- `HUN` Hungary\n- `IDN` Indonesia\n- `IMN` Isle of Man\n- `IND` India\n- `IRL` Ireland\n- `IRN` Iran, Islamic Republic of\n- `IRQ` Iraq\n- `ISL` Iceland\n- `ISR` Israel\n- `ITA` Italy\n- `JAM` Jamaica\n- `JOR` Jordan\n- `JPN` Japan\n- `KAZ` Kazakhstan\n- `KEN` Kenya\n- `KGZ` Kyrgyzstan\n- `KHM` Cambodia\n- `KIR` Kiribati\n- `KNA` Saint Kitts and Nevis\n- `KOR` Korea, Republic of\n- `KWT` Kuwait\n- `LAO` Lao People's Democratic Republic\n- `LBN` Lebanon\n- `LBR` Liberia\n- `LBY` Libya\n- `LCA` Saint Lucia\n- `LIE` Liechtenstein\n- `LKA` Sri Lanka\n- `LSO` Lesotho\n- `LTU` Lithuania\n- `LUX` Luxembourg\n- `LVA` Latvia\n- `MAR` Morocco\n- `MCO` Monaco\n- `MDA` Moldova, Republic of\n- `MDG` Madagascar\n- `MDV` Maldives\n- `MEX` Mexico\n- `MHL` Marshall Islands\n- `MKD` North Macedonia\n- `MLI` Mali\n- `MLT` Malta\n- `MMR` Myanmar\n- `MNE` Montenegro\n- `MNG` Mongolia\n- `MNP` Northern Mariana Islands\n- `MOZ` Mozambique\n- `MRT` Mauritania\n- `MSR` Montserrat\n- `MTQ` Martinique\n- `MUS` Mauritius\n- `MWI` Malawi\n- `MYS` Malaysia\n- `MYT` Mayotte\n- `NAM` Namibia\n- `NCL` New Caledonia\n- `NER` Niger\n- `NGA` Nigeria\n- `NIC` Nicaragua\n- `NIU` Niue\n- `NLD` Netherlands, Kingdom of the\n- `NOR` Norway\n- `NPL` Nepal\n- `NRU` Nauru\n- `NZL` New Zealand\n- `OMN` Oman\n- `PAK` Pakistan\n- `PAN` Panama\n- `PCN` Pitcairn\n- `PER` Peru\n- `PHL` Philippines\n- `PLW` Palau\n- `PNG` Papua New Guinea\n- `POL` Poland\n- `PRK` Korea, Democratic People's Republic of\n- `PRT` Portugal\n- `PRY` Paraguay\n- `PSE` Palestine, State of\n- `PYF` French Polynesia\n- `QAT` Qatar\n- `REU` Réunion\n- `ROU` Romania\n- `RUS` Russian Federation\n- `RWA` Rwanda\n- `SAU` Saudi Arabia\n- `SDN` Sudan\n- `SEN` Senegal\n- `SGP` Singapore\n- `SHN` Saint Helena, Ascension and Tristan da Cunha\n- `SLB` Solomon Islands\n- `SLE` Sierra Leone\n- `SLV` El Salvador\n- `SMR` San Marino\n- `SOM` Somalia\n- `SPM` Saint Pierre and Miquelon\n- `SRB` Serbia\n- `SSD` South Sudan\n- `STP` Sao Tome and Principe\n- `SUR` Suriname\n- `SVK` Slovakia\n- `SVN` Slovenia\n- `SWE` Sweden\n- `SWZ` Eswatini\n- `SYC` Seychelles\n- `SYR` Syrian Arab Republic\n- `TCA` Turks and Caicos Islands\n- `TCD` Chad\n- `TGO` Togo\n- `THA` Thailand\n- `TJK` Tajikistan\n- `TKL` Tokelau\n- `TKM` Turkmenistan\n- `TLS` Timor-Leste\n- `TON` Tonga\n- `TTO` Trinidad and Tobago\n- `TUN` Tunisia\n- `TUR` Türkiye\n- `TUV` Tuvalu\n- `TWN` Taiwan, Province of China\n- `TZA` Tanzania, United Republic of\n- `UGA` Uganda\n- `UKR` Ukraine\n- `URY` Uruguay\n- `USA` United States of America\n- `UZB` Uzbekistan\n- `VAT` Holy See\n- `VCT` Saint Vincent and the Grenadines\n- `VEN` Venezuela, Bolivarian Republic of\n- `VGB` Virgin Islands (British)\n- `VIR` Virgin Islands (U.S.)\n- `VNM` Viet Nam\n- `VUT` Vanuatu\n- `WLF` Wallis and Futuna\n- `WSM` Samoa\n- `YEM` Yemen\n- `ZAF` South Africa\n- `ZMB` Zambia\n- `ZWE` Zimbabwe\n",
         "enum": [
           "ABW",
           "AFG",
           "AGO",
           "AIA",
-          "ALA",
           "ALB",
           "AND",
           "ARE",
@@ -26305,7 +26417,6 @@
           "ARM",
           "ASM",
           "ATA",
-          "ATF",
           "ATG",
           "AUS",
           "AUT",
@@ -26329,11 +26440,9 @@
           "BRB",
           "BRN",
           "BTN",
-          "BVT",
           "BWA",
           "CAF",
           "CAN",
-          "CCK",
           "CHE",
           "CHL",
           "CHN",
@@ -26361,7 +26470,6 @@
           "ECU",
           "EGY",
           "ERI",
-          "ESH",
           "ESP",
           "EST",
           "ETH",
@@ -26389,8 +26497,6 @@
           "GUF",
           "GUM",
           "GUY",
-          "HKG",
-          "HMD",
           "HND",
           "HRV",
           "HTI",
@@ -26398,7 +26504,6 @@
           "IDN",
           "IMN",
           "IND",
-          "IOT",
           "IRL",
           "IRN",
           "IRQ",
@@ -26406,7 +26511,6 @@
           "ISR",
           "ITA",
           "JAM",
-          "JEY",
           "JOR",
           "JPN",
           "KAZ",
@@ -26429,7 +26533,6 @@
           "LUX",
           "LVA",
           "MAC",
-          "MAF",
           "MAR",
           "MCO",
           "MDA",
@@ -26455,7 +26558,6 @@
           "NAM",
           "NCL",
           "NER",
-          "NFK",
           "NGA",
           "NIC",
           "NIU",
@@ -26473,7 +26575,6 @@
           "PLW",
           "PNG",
           "POL",
-          "PRI",
           "PRK",
           "PRT",
           "PRY",
@@ -26488,15 +26589,12 @@
           "SDN",
           "SEN",
           "SGP",
-          "SGS",
           "SHN",
-          "SJM",
           "SLB",
           "SLE",
           "SLV",
           "SMR",
           "SOM",
-          "SPM",
           "SRB",
           "SSD",
           "STP",
@@ -26505,7 +26603,6 @@
           "SVN",
           "SWE",
           "SWZ",
-          "SXM",
           "SYC",
           "SYR",
           "TCA",
@@ -26525,7 +26622,6 @@
           "TZA",
           "UGA",
           "UKR",
-          "UMI",
           "URY",
           "USA",
           "UZB",
@@ -28089,6 +28185,247 @@
         "schema": {
           "type": "integer",
           "minimum": 1
+        }
+      },
+      "countryCode": {
+        "name": "country",
+        "description": "optional filter of resource within specified ISO 3166-1 alpha-3 three-letter country code\n- `ABW` Aruba\n- `AFG` Afghanistan\n- `AGO` Angola\n- `AIA` Anguilla\n- `ALB` Albania\n- `AND` Andorra\n- `ARE` United Arab Emirates\n- `ARG` Argentina\n- `ARM` Armenia\n- `ASM` American Samoa\n- `ATA` Antarctica\n- `ATG` Antigua and Barbuda\n- `AUS` Australia\n- `AUT` Austria\n- `AZE` Azerbaijan\n- `BDI` Burundi\n- `BEL` Belgium\n- `BEN` Benin\n- `BES` Bonaire, Sint Eustatius and Saba\n- `BFA` Burkina Faso\n- `BGD` Bangladesh\n- `BGR` Bulgaria\n- `BHR` Bahrain\n- `BHS` Bahamas\n- `BIH` Bosnia and Herzegovina\n- `BLM` Saint Barthélemy\n- `BLR` Belarus\n- `BLZ` Belize\n- `BMU` Bermuda\n- `BOL` Bolivia, Plurinational State of\n- `BRA` Brazil\n- `BRB` Barbados\n- `BRN` Brunei Darussalam\n- `BTN` Bhutan\n- `BWA` Botswana\n- `CAF` Central African Republic\n- `CAN` Canada\n- `CHE` Switzerland\n- `CHL` Chile\n- `CHN` China\n- `CIV` Côte d'Ivoire\n- `CMR` Cameroon\n- `COD` Congo, Democratic Republic of the\n- `COG` Congo\n- `COK` Cook Islands\n- `COL` Colombia\n- `COM` Comoros\n- `CPV` Cabo Verde\n- `CRI` Costa Rica\n- `CUB` Cuba\n- `CUW` Curaçao\n- `CYM` Cayman Islands\n- `CYP` Cyprus\n- `CZE` Czechia\n- `DEU` Germany\n- `DJI` Djibouti\n- `DMA` Dominica\n- `DNK` Denmark\n- `DOM` Dominican Republic\n- `DZA` Algeria\n- `ECU` Ecuador\n- `EGY` Egypt\n- `ERI` Eritrea\n- `ESP` Spain\n- `EST` Estonia\n- `ETH` Ethiopia\n- `FIN` Finland\n- `FJI` Fiji\n- `FLK` Falkland Islands (Malvinas)\n- `FRA` France\n- `FRO` Faroe Islands\n- `FSM` Micronesia, Federated States of\n- `GAB` Gabon\n- `GBR` United Kingdom of Great Britain and Northern Ireland\n- `GEO` Georgia\n- `GGY` Guernsey\n- `GHA` Ghana\n- `GIB` Gibraltar\n- `GIN` Guinea\n- `GLP` Guadeloupe\n- `GMB` Gambia\n- `GNB` Guinea-Bissau\n- `GNQ` Equatorial Guinea\n- `GRC` Greece\n- `GRD` Grenada\n- `GRL` Greenland\n- `GTM` Guatemala\n- `GUF` French Guiana\n- `GUM` Guam\n- `GUY` Guyana\n- `HND` Honduras\n- `HRV` Croatia\n- `HTI` Haiti\n- `HUN` Hungary\n- `IDN` Indonesia\n- `IMN` Isle of Man\n- `IND` India\n- `IRL` Ireland\n- `IRN` Iran, Islamic Republic of\n- `IRQ` Iraq\n- `ISL` Iceland\n- `ISR` Israel\n- `ITA` Italy\n- `JAM` Jamaica\n- `JOR` Jordan\n- `JPN` Japan\n- `KAZ` Kazakhstan\n- `KEN` Kenya\n- `KGZ` Kyrgyzstan\n- `KHM` Cambodia\n- `KIR` Kiribati\n- `KNA` Saint Kitts and Nevis\n- `KOR` Korea, Republic of\n- `KWT` Kuwait\n- `LAO` Lao People's Democratic Republic\n- `LBN` Lebanon\n- `LBR` Liberia\n- `LBY` Libya\n- `LCA` Saint Lucia\n- `LIE` Liechtenstein\n- `LKA` Sri Lanka\n- `LSO` Lesotho\n- `LTU` Lithuania\n- `LUX` Luxembourg\n- `LVA` Latvia\n- `MAF` Saint Martin (French part)\n- `MAR` Morocco\n- `MCO` Monaco\n- `MDA` Moldova, Republic of\n- `MDG` Madagascar\n- `MDV` Maldives\n- `MEX` Mexico\n- `MHL` Marshall Islands\n- `MKD` North Macedonia\n- `MLI` Mali\n- `MLT` Malta\n- `MMR` Myanmar\n- `MNE` Montenegro\n- `MNG` Mongolia\n- `MNP` Northern Mariana Islands\n- `MOZ` Mozambique\n- `MRT` Mauritania\n- `MSR` Montserrat\n- `MTQ` Martinique\n- `MUS` Mauritius\n- `MWI` Malawi\n- `MYS` Malaysia\n- `MYT` Mayotte\n- `NAM` Namibia\n- `NCL` New Caledonia\n- `NER` Niger\n- `NGA` Nigeria\n- `NIC` Nicaragua\n- `NIU` Niue\n- `NLD` Netherlands, Kingdom of the\n- `NOR` Norway\n- `NPL` Nepal\n- `NRU` Nauru\n- `NZL` New Zealand\n- `OMN` Oman\n- `PAK` Pakistan\n- `PAN` Panama\n- `PCN` Pitcairn\n- `PER` Peru\n- `PHL` Philippines\n- `PLW` Palau\n- `PNG` Papua New Guinea\n- `POL` Poland\n- `PRK` Korea, Democratic People's Republic of\n- `PRT` Portugal\n- `PRY` Paraguay\n- `PSE` Palestine, State of\n- `PYF` French Polynesia\n- `QAT` Qatar\n- `REU` Réunion\n- `ROU` Romania\n- `RUS` Russian Federation\n- `RWA` Rwanda\n- `SAU` Saudi Arabia\n- `SDN` Sudan\n- `SEN` Senegal\n- `SGP` Singapore\n- `SHN` Saint Helena, Ascension and Tristan da Cunha\n- `SLB` Solomon Islands\n- `SLE` Sierra Leone\n- `SLV` El Salvador\n- `SMR` San Marino\n- `SOM` Somalia\n- `SRB` Serbia\n- `SSD` South Sudan\n- `STP` Sao Tome and Principe\n- `SUR` Suriname\n- `SVK` Slovakia\n- `SVN` Slovenia\n- `SWE` Sweden\n- `SWZ` Eswatini\n- `SYC` Seychelles\n- `SYR` Syrian Arab Republic\n- `TCA` Turks and Caicos Islands\n- `TCD` Chad\n- `TGO` Togo\n- `THA` Thailand\n- `TJK` Tajikistan\n- `TKL` Tokelau\n- `TKM` Turkmenistan\n- `TLS` Timor-Leste\n- `TON` Tonga\n- `TTO` Trinidad and Tobago\n- `TUN` Tunisia\n- `TUR` Türkiye\n- `TUV` Tuvalu\n- `TWN` Taiwan, Province of China\n- `TZA` Tanzania, United Republic of\n- `UGA` Uganda\n- `UKR` Ukraine\n- `URY` Uruguay\n- `USA` United States of America\n- `UZB` Uzbekistan\n- `VAT` Holy See\n- `VCT` Saint Vincent and the Grenadines\n- `VEN` Venezuela, Bolivarian Republic of\n- `VGB` Virgin Islands (British)\n- `VIR` Virgin Islands (U.S.)\n- `VNM` Viet Nam\n- `VUT` Vanuatu\n- `WLF` Wallis and Futuna\n- `WSM` Samoa\n- `YEM` Yemen\n- `ZAF` South Africa\n- `ZMB` Zambia\n- `ZWE` Zimbabwe\n",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ABW",
+            "AFG",
+            "AGO",
+            "AIA",
+            "ALB",
+            "AND",
+            "ARE",
+            "ARG",
+            "ARM",
+            "ASM",
+            "ATA",
+            "ATG",
+            "AUS",
+            "AUT",
+            "AZE",
+            "BDI",
+            "BEL",
+            "BEN",
+            "BES",
+            "BFA",
+            "BGD",
+            "BGR",
+            "BHR",
+            "BHS",
+            "BIH",
+            "BLM",
+            "BLR",
+            "BLZ",
+            "BMU",
+            "BOL",
+            "BRA",
+            "BRB",
+            "BRN",
+            "BTN",
+            "BWA",
+            "CAF",
+            "CAN",
+            "CHE",
+            "CHL",
+            "CHN",
+            "CIV",
+            "CMR",
+            "COD",
+            "COG",
+            "COK",
+            "COL",
+            "COM",
+            "CPV",
+            "CRI",
+            "CUB",
+            "CUW",
+            "CYM",
+            "CYP",
+            "CZE",
+            "DEU",
+            "DJI",
+            "DMA",
+            "DNK",
+            "DOM",
+            "DZA",
+            "ECU",
+            "EGY",
+            "ERI",
+            "ESP",
+            "EST",
+            "ETH",
+            "FIN",
+            "FJI",
+            "FLK",
+            "FRA",
+            "FRO",
+            "FSM",
+            "GAB",
+            "GBR",
+            "GEO",
+            "GGY",
+            "GHA",
+            "GIB",
+            "GIN",
+            "GLP",
+            "GMB",
+            "GNB",
+            "GNQ",
+            "GRC",
+            "GRD",
+            "GRL",
+            "GTM",
+            "GUF",
+            "GUM",
+            "GUY",
+            "HND",
+            "HRV",
+            "HTI",
+            "HUN",
+            "IDN",
+            "IMN",
+            "IND",
+            "IRL",
+            "IRN",
+            "IRQ",
+            "ISL",
+            "ISR",
+            "ITA",
+            "JAM",
+            "JOR",
+            "JPN",
+            "KAZ",
+            "KEN",
+            "KGZ",
+            "KHM",
+            "KIR",
+            "KNA",
+            "KOR",
+            "KWT",
+            "LAO",
+            "LBN",
+            "LBR",
+            "LBY",
+            "LCA",
+            "LIE",
+            "LKA",
+            "LSO",
+            "LTU",
+            "LUX",
+            "LVA",
+            "MAR",
+            "MCO",
+            "MDA",
+            "MDG",
+            "MDV",
+            "MEX",
+            "MHL",
+            "MKD",
+            "MLI",
+            "MLT",
+            "MMR",
+            "MNE",
+            "MNG",
+            "MNP",
+            "MOZ",
+            "MRT",
+            "MSR",
+            "MTQ",
+            "MUS",
+            "MWI",
+            "MYS",
+            "MYT",
+            "NAM",
+            "NCL",
+            "NER",
+            "NGA",
+            "NIC",
+            "NIU",
+            "NLD",
+            "NOR",
+            "NPL",
+            "NRU",
+            "NZL",
+            "OMN",
+            "PAK",
+            "PAN",
+            "PCN",
+            "PER",
+            "PHL",
+            "PLW",
+            "PNG",
+            "POL",
+            "PRK",
+            "PRT",
+            "PRY",
+            "PSE",
+            "PYF",
+            "QAT",
+            "REU",
+            "ROU",
+            "RUS",
+            "RWA",
+            "SAU",
+            "SDN",
+            "SEN",
+            "SGP",
+            "SHN",
+            "SLB",
+            "SLE",
+            "SLV",
+            "SMR",
+            "SOM",
+            "SRB",
+            "SSD",
+            "STP",
+            "SUR",
+            "SVK",
+            "SVN",
+            "SWE",
+            "SWZ",
+            "SYC",
+            "SYR",
+            "TCA",
+            "TCD",
+            "TGO",
+            "THA",
+            "TJK",
+            "TKL",
+            "TKM",
+            "TLS",
+            "TON",
+            "TTO",
+            "TUN",
+            "TUR",
+            "TUV",
+            "TWN",
+            "TZA",
+            "UGA",
+            "UKR",
+            "URY",
+            "USA",
+            "UZB",
+            "VAT",
+            "VCT",
+            "VEN",
+            "VGB",
+            "VIR",
+            "VNM",
+            "VUT",
+            "WLF",
+            "WSM",
+            "YEM",
+            "ZAF",
+            "ZMB",
+            "ZWE"
+          ]
         }
       },
       "channel": {

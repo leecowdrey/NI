@@ -8,6 +8,10 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
+function fetchListService() {
+
+}
+
 function adjustLine(from, to, line) {
   var fT = from.offsetTop + from.offsetHeight / 2;
   var tT = to.offsetTop + to.offsetHeight / 2;
@@ -49,6 +53,8 @@ function adjustLine(from, to, line) {
   line.style.left = left + "px";
   line.style.height = H + "px";
 }
+countryListPopulate();
+
 adjustLine(
   document.getElementById("customer1"),
   document.getElementById("ingress1"),

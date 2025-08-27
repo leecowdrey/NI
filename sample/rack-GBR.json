@@ -4,7 +4,7 @@
     "point": "20250509T165841",
     "reference": "gbr-worc-cg1-1",
     "probability": 1,
-		"country": "GBR",
+    "country": "GBR",
     "commissioned": "20250509",
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "coordinate": {
@@ -19,9 +19,7 @@
       "unit": "mm"
     },
     "slots": 6,
-    "slotUsage": [
-      { "slot": 1, "usage": "reserved" }
-    ],
+    "slotUsage": [{ "slot": 1, "usage": "reserved" }],
     "source": "historical",
     "delete": false,
     "floor": 0,
@@ -34,6 +32,7 @@
     "point": "20250509T165842",
     "reference": "gbr-worc-cg1-2",
     "probability": 1,
+    "country": "GBR",
     "commissioned": "20250509",
     "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74",
     "coordinate": {

@@ -33,6 +33,10 @@ APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|c
 
 # country specific for sample datasets
 COUNTRY="GBR" # GBR, BEL, ESP etc. see schema.sql countryCode for list
+if [[ -n "${1}" ]] ; then
+  COUNTRY="${1^^}"
+fi
+info "Using country code ${COUNTRY}"
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 

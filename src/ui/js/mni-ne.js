@@ -53,20 +53,27 @@ function fetchCveNe(neId = null) {
 }
 function updateNePointFromSlider() {
   document.getElementById("nePoint").value =
-            neRawPoints[(neRawPoints.length - document.getElementById("nePointRange").value)];
+    neRawPoints[
+      neRawPoints.length - document.getElementById("nePointRange").value
+    ];
   fetchNe();
 }
 function fetchListNe() {
   if (flrReady != null) {
     clearTimeout(flrReady);
   }
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/ne", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  fetch(
+    localStorage.getItem("mni.gatewayUrl") + "/ne?country=" + selectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -341,7 +348,9 @@ function fetchNePoints() {
             .getElementById("nePointRange")
             .setAttribute("value", neRawPoints.length);
           document.getElementById("nePoint").value =
-            neRawPoints[(neRawPoints.length - document.getElementById("nePointRange").value)];
+            neRawPoints[
+              neRawPoints.length - document.getElementById("nePointRange").value
+            ];
           fetchNe();
         } else {
           document.getElementById("nePointRange").setAttribute("min", 0);
@@ -357,6 +366,7 @@ function fetchNePoints() {
   }
 }
 try {
+  countryListPopulate();
   fetchListNe();
 } catch (e) {
   console.error(e);

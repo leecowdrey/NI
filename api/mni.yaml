@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1756149520
+  version: 1.0.0.1756330939
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -3207,6 +3207,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Cables
       responses:
@@ -4333,6 +4334,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Ducts
       responses:
@@ -5063,7 +5065,9 @@ paths:
             - read:mni_ui
       operationId: getAllServices
       parameters:
-        - $ref: "#/components/parameters/dateTime"
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Services
       responses:
@@ -6020,6 +6024,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Sites
       responses:
@@ -6170,6 +6175,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Sites
       responses:
@@ -6220,6 +6226,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Sites
       responses:
@@ -6816,10 +6823,11 @@ paths:
         - openId:
             - read:mni_rack
             - read:mni_ui
-      operationId: getAllracks
+      operationId: getAllRacks
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Racks
       responses:
@@ -8077,6 +8085,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Network Equipment
       responses:
@@ -9649,6 +9658,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Poles
       responses:
@@ -10701,6 +10711,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
+        - $ref: "#/components/parameters/countryCode"
       tags:
         - Trenches
       responses:
@@ -15094,6 +15105,60 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /world/fromCoordinate:
+    post:
+      summary: Find country by coordinate
+      description: |
+        Find the matching ISO 3166-1 alpha-3 three-letter country code that contains the supplied coordinate 
+      security:
+        - openId:
+            - read:mni_ui
+            - read:mni_alert
+            - read:mni_fetch
+            - read:mni_predict
+            - read:mni_admin
+            - read:mni_cable
+            - read:mni_duct
+            - read:mni_ne
+            - read:mni_pole
+            - read:mni_rack
+            - read:mni_service
+            - read:mni_site
+            - read:mni_trench
+      operationId: getWorldCountryFromCoordinate
+      tags:
+        - World
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/coordinate"
+            examples: 
+              sample:
+                value:
+                  x: -4.432051999699990
+                  y: 57.4943539998374
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country:
+                    $ref: "#/components/schemas/countryCode"
+              examples:
+                sample:
+                  value:
+                    country: GBR
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
 components:
   schemas:
     ianaMimeType:
@@ -17922,7 +17987,6 @@ components:
         - `AFG` Afghanistan
         - `AGO` Angola
         - `AIA` Anguilla
-        - `ALA` Åland Islands
         - `ALB` Albania
         - `AND` Andorra
         - `ARE` United Arab Emirates
@@ -17930,7 +17994,6 @@ components:
         - `ARM` Armenia
         - `ASM` American Samoa
         - `ATA` Antarctica
-        - `ATF` French Southern Territories
         - `ATG` Antigua and Barbuda
         - `AUS` Australia
         - `AUT` Austria
@@ -17954,7 +18017,6 @@ components:
         - `BRB` Barbados
         - `BRN` Brunei Darussalam
         - `BTN` Bhutan
-        - `BVT` Bouvet Island
         - `BWA` Botswana
         - `CAF` Central African Republic
         - `CAN` Canada
@@ -18014,8 +18076,6 @@ components:
         - `GUF` French Guiana
         - `GUM` Guam
         - `GUY` Guyana
-        - `HKG` Hong Kong
-        - `HMD` Heard Island and McDonald Islands
         - `HND` Honduras
         - `HRV` Croatia
         - `HTI` Haiti
@@ -18023,7 +18083,6 @@ components:
         - `IDN` Indonesia
         - `IMN` Isle of Man
         - `IND` India
-        - `IOT` British Indian Ocean Territory
         - `IRL` Ireland
         - `IRN` Iran, Islamic Republic of
         - `IRQ` Iraq
@@ -18031,7 +18090,6 @@ components:
         - `ISR` Israel
         - `ITA` Italy
         - `JAM` Jamaica
-        - `JEY` Jersey
         - `JOR` Jordan
         - `JPN` Japan
         - `KAZ` Kazakhstan
@@ -18053,8 +18111,6 @@ components:
         - `LTU` Lithuania
         - `LUX` Luxembourg
         - `LVA` Latvia
-        - `MAC` Macao
-        - `MAF` Saint Martin (French part)
         - `MAR` Morocco
         - `MCO` Monaco
         - `MDA` Moldova, Republic of
@@ -18080,7 +18136,6 @@ components:
         - `NAM` Namibia
         - `NCL` New Caledonia
         - `NER` Niger
-        - `NFK` Norfolk Island
         - `NGA` Nigeria
         - `NIC` Nicaragua
         - `NIU` Niue
@@ -18098,7 +18153,6 @@ components:
         - `PLW` Palau
         - `PNG` Papua New Guinea
         - `POL` Poland
-        - `PRI` Puerto Rico
         - `PRK` Korea, Democratic People's Republic of
         - `PRT` Portugal
         - `PRY` Paraguay
@@ -18113,9 +18167,7 @@ components:
         - `SDN` Sudan
         - `SEN` Senegal
         - `SGP` Singapore
-        - `SGS` South Georgia and the South Sandwich Islands
         - `SHN` Saint Helena, Ascension and Tristan da Cunha
-        - `SJM` Svalbard and Jan Mayen
         - `SLB` Solomon Islands
         - `SLE` Sierra Leone
         - `SLV` El Salvador
@@ -18130,7 +18182,6 @@ components:
         - `SVN` Slovenia
         - `SWE` Sweden
         - `SWZ` Eswatini
-        - `SXM` Sint Maarten (Dutch part)
         - `SYC` Seychelles
         - `SYR` Syrian Arab Republic
         - `TCA` Turks and Caicos Islands
@@ -18150,7 +18201,6 @@ components:
         - `TZA` Tanzania, United Republic of
         - `UGA` Uganda
         - `UKR` Ukraine
-        - `UMI` United States Minor Outlying Islands
         - `URY` Uruguay
         - `USA` United States of America
         - `UZB` Uzbekistan
@@ -18172,7 +18222,6 @@ components:
         - AFG
         - AGO
         - AIA
-        - ALA
         - ALB
         - AND
         - ARE
@@ -18180,7 +18229,6 @@ components:
         - ARM
         - ASM
         - ATA
-        - ATF
         - ATG
         - AUS
         - AUT
@@ -18204,11 +18252,9 @@ components:
         - BRB
         - BRN
         - BTN
-        - BVT
         - BWA
         - CAF
         - CAN
-        - CCK
         - CHE
         - CHL
         - CHN
@@ -18236,7 +18282,6 @@ components:
         - ECU
         - EGY
         - ERI
-        - ESH
         - ESP
         - EST
         - ETH
@@ -18264,8 +18309,6 @@ components:
         - GUF
         - GUM
         - GUY
-        - HKG
-        - HMD
         - HND
         - HRV
         - HTI
@@ -18273,7 +18316,6 @@ components:
         - IDN
         - IMN
         - IND
-        - IOT
         - IRL
         - IRN
         - IRQ
@@ -18281,7 +18323,6 @@ components:
         - ISR
         - ITA
         - JAM
-        - JEY
         - JOR
         - JPN
         - KAZ
@@ -18304,7 +18345,6 @@ components:
         - LUX
         - LVA
         - MAC
-        - MAF
         - MAR
         - MCO
         - MDA
@@ -18330,7 +18370,6 @@ components:
         - NAM
         - NCL
         - NER
-        - NFK
         - NGA
         - NIC
         - NIU
@@ -18348,7 +18387,6 @@ components:
         - PLW
         - PNG
         - POL
-        - PRI
         - PRK
         - PRT
         - PRY
@@ -18363,15 +18401,12 @@ components:
         - SDN
         - SEN
         - SGP
-        - SGS
         - SHN
-        - SJM
         - SLB
         - SLE
         - SLV
         - SMR
         - SOM
-        - SPM
         - SRB
         - SSD
         - STP
@@ -18380,7 +18415,6 @@ components:
         - SVN
         - SWE
         - SWZ
-        - SXM
         - SYC
         - SYR
         - TCA
@@ -18400,7 +18434,6 @@ components:
         - TZA
         - UGA
         - UKR
-        - UMI
         - URY
         - USA
         - UZB
@@ -19907,6 +19940,476 @@ components:
       schema:
         type: integer
         minimum: 1
+    countryCode:
+      name: country
+      description: |
+        optional filter of resource within specified ISO 3166-1 alpha-3 three-letter country code
+        - `ABW` Aruba
+        - `AFG` Afghanistan
+        - `AGO` Angola
+        - `AIA` Anguilla
+        - `ALB` Albania
+        - `AND` Andorra
+        - `ARE` United Arab Emirates
+        - `ARG` Argentina
+        - `ARM` Armenia
+        - `ASM` American Samoa
+        - `ATA` Antarctica
+        - `ATG` Antigua and Barbuda
+        - `AUS` Australia
+        - `AUT` Austria
+        - `AZE` Azerbaijan
+        - `BDI` Burundi
+        - `BEL` Belgium
+        - `BEN` Benin
+        - `BES` Bonaire, Sint Eustatius and Saba
+        - `BFA` Burkina Faso
+        - `BGD` Bangladesh
+        - `BGR` Bulgaria
+        - `BHR` Bahrain
+        - `BHS` Bahamas
+        - `BIH` Bosnia and Herzegovina
+        - `BLM` Saint Barthélemy
+        - `BLR` Belarus
+        - `BLZ` Belize
+        - `BMU` Bermuda
+        - `BOL` Bolivia, Plurinational State of
+        - `BRA` Brazil
+        - `BRB` Barbados
+        - `BRN` Brunei Darussalam
+        - `BTN` Bhutan
+        - `BWA` Botswana
+        - `CAF` Central African Republic
+        - `CAN` Canada
+        - `CHE` Switzerland
+        - `CHL` Chile
+        - `CHN` China
+        - `CIV` Côte d'Ivoire
+        - `CMR` Cameroon
+        - `COD` Congo, Democratic Republic of the
+        - `COG` Congo
+        - `COK` Cook Islands
+        - `COL` Colombia
+        - `COM` Comoros
+        - `CPV` Cabo Verde
+        - `CRI` Costa Rica
+        - `CUB` Cuba
+        - `CUW` Curaçao
+        - `CYM` Cayman Islands
+        - `CYP` Cyprus
+        - `CZE` Czechia
+        - `DEU` Germany
+        - `DJI` Djibouti
+        - `DMA` Dominica
+        - `DNK` Denmark
+        - `DOM` Dominican Republic
+        - `DZA` Algeria
+        - `ECU` Ecuador
+        - `EGY` Egypt
+        - `ERI` Eritrea
+        - `ESP` Spain
+        - `EST` Estonia
+        - `ETH` Ethiopia
+        - `FIN` Finland
+        - `FJI` Fiji
+        - `FLK` Falkland Islands (Malvinas)
+        - `FRA` France
+        - `FRO` Faroe Islands
+        - `FSM` Micronesia, Federated States of
+        - `GAB` Gabon
+        - `GBR` United Kingdom of Great Britain and Northern Ireland
+        - `GEO` Georgia
+        - `GGY` Guernsey
+        - `GHA` Ghana
+        - `GIB` Gibraltar
+        - `GIN` Guinea
+        - `GLP` Guadeloupe
+        - `GMB` Gambia
+        - `GNB` Guinea-Bissau
+        - `GNQ` Equatorial Guinea
+        - `GRC` Greece
+        - `GRD` Grenada
+        - `GRL` Greenland
+        - `GTM` Guatemala
+        - `GUF` French Guiana
+        - `GUM` Guam
+        - `GUY` Guyana
+        - `HND` Honduras
+        - `HRV` Croatia
+        - `HTI` Haiti
+        - `HUN` Hungary
+        - `IDN` Indonesia
+        - `IMN` Isle of Man
+        - `IND` India
+        - `IRL` Ireland
+        - `IRN` Iran, Islamic Republic of
+        - `IRQ` Iraq
+        - `ISL` Iceland
+        - `ISR` Israel
+        - `ITA` Italy
+        - `JAM` Jamaica
+        - `JOR` Jordan
+        - `JPN` Japan
+        - `KAZ` Kazakhstan
+        - `KEN` Kenya
+        - `KGZ` Kyrgyzstan
+        - `KHM` Cambodia
+        - `KIR` Kiribati
+        - `KNA` Saint Kitts and Nevis
+        - `KOR` Korea, Republic of
+        - `KWT` Kuwait
+        - `LAO` Lao People's Democratic Republic
+        - `LBN` Lebanon
+        - `LBR` Liberia
+        - `LBY` Libya
+        - `LCA` Saint Lucia
+        - `LIE` Liechtenstein
+        - `LKA` Sri Lanka
+        - `LSO` Lesotho
+        - `LTU` Lithuania
+        - `LUX` Luxembourg
+        - `LVA` Latvia
+        - `MAF` Saint Martin (French part)
+        - `MAR` Morocco
+        - `MCO` Monaco
+        - `MDA` Moldova, Republic of
+        - `MDG` Madagascar
+        - `MDV` Maldives
+        - `MEX` Mexico
+        - `MHL` Marshall Islands
+        - `MKD` North Macedonia
+        - `MLI` Mali
+        - `MLT` Malta
+        - `MMR` Myanmar
+        - `MNE` Montenegro
+        - `MNG` Mongolia
+        - `MNP` Northern Mariana Islands
+        - `MOZ` Mozambique
+        - `MRT` Mauritania
+        - `MSR` Montserrat
+        - `MTQ` Martinique
+        - `MUS` Mauritius
+        - `MWI` Malawi
+        - `MYS` Malaysia
+        - `MYT` Mayotte
+        - `NAM` Namibia
+        - `NCL` New Caledonia
+        - `NER` Niger
+        - `NGA` Nigeria
+        - `NIC` Nicaragua
+        - `NIU` Niue
+        - `NLD` Netherlands, Kingdom of the
+        - `NOR` Norway
+        - `NPL` Nepal
+        - `NRU` Nauru
+        - `NZL` New Zealand
+        - `OMN` Oman
+        - `PAK` Pakistan
+        - `PAN` Panama
+        - `PCN` Pitcairn
+        - `PER` Peru
+        - `PHL` Philippines
+        - `PLW` Palau
+        - `PNG` Papua New Guinea
+        - `POL` Poland
+        - `PRK` Korea, Democratic People's Republic of
+        - `PRT` Portugal
+        - `PRY` Paraguay
+        - `PSE` Palestine, State of
+        - `PYF` French Polynesia
+        - `QAT` Qatar
+        - `REU` Réunion
+        - `ROU` Romania
+        - `RUS` Russian Federation
+        - `RWA` Rwanda
+        - `SAU` Saudi Arabia
+        - `SDN` Sudan
+        - `SEN` Senegal
+        - `SGP` Singapore
+        - `SHN` Saint Helena, Ascension and Tristan da Cunha
+        - `SLB` Solomon Islands
+        - `SLE` Sierra Leone
+        - `SLV` El Salvador
+        - `SMR` San Marino
+        - `SOM` Somalia
+        - `SRB` Serbia
+        - `SSD` South Sudan
+        - `STP` Sao Tome and Principe
+        - `SUR` Suriname
+        - `SVK` Slovakia
+        - `SVN` Slovenia
+        - `SWE` Sweden
+        - `SWZ` Eswatini
+        - `SYC` Seychelles
+        - `SYR` Syrian Arab Republic
+        - `TCA` Turks and Caicos Islands
+        - `TCD` Chad
+        - `TGO` Togo
+        - `THA` Thailand
+        - `TJK` Tajikistan
+        - `TKL` Tokelau
+        - `TKM` Turkmenistan
+        - `TLS` Timor-Leste
+        - `TON` Tonga
+        - `TTO` Trinidad and Tobago
+        - `TUN` Tunisia
+        - `TUR` Türkiye
+        - `TUV` Tuvalu
+        - `TWN` Taiwan, Province of China
+        - `TZA` Tanzania, United Republic of
+        - `UGA` Uganda
+        - `UKR` Ukraine
+        - `URY` Uruguay
+        - `USA` United States of America
+        - `UZB` Uzbekistan
+        - `VAT` Holy See
+        - `VCT` Saint Vincent and the Grenadines
+        - `VEN` Venezuela, Bolivarian Republic of
+        - `VGB` Virgin Islands (British)
+        - `VIR` Virgin Islands (U.S.)
+        - `VNM` Viet Nam
+        - `VUT` Vanuatu
+        - `WLF` Wallis and Futuna
+        - `WSM` Samoa
+        - `YEM` Yemen
+        - `ZAF` South Africa
+        - `ZMB` Zambia
+        - `ZWE` Zimbabwe
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - ABW
+          - AFG
+          - AGO
+          - AIA
+          - ALB
+          - AND
+          - ARE
+          - ARG
+          - ARM
+          - ASM
+          - ATA
+          - ATG
+          - AUS
+          - AUT
+          - AZE
+          - BDI
+          - BEL
+          - BEN
+          - BES
+          - BFA
+          - BGD
+          - BGR
+          - BHR
+          - BHS
+          - BIH
+          - BLM
+          - BLR
+          - BLZ
+          - BMU
+          - BOL
+          - BRA
+          - BRB
+          - BRN
+          - BTN
+          - BWA
+          - CAF
+          - CAN
+          - CHE
+          - CHL
+          - CHN
+          - CIV
+          - CMR
+          - COD
+          - COG
+          - COK
+          - COL
+          - COM
+          - CPV
+          - CRI
+          - CUB
+          - CUW
+          - CYM
+          - CYP
+          - CZE
+          - DEU
+          - DJI
+          - DMA
+          - DNK
+          - DOM
+          - DZA
+          - ECU
+          - EGY
+          - ERI
+          - ESP
+          - EST
+          - ETH
+          - FIN
+          - FJI
+          - FLK
+          - FRA
+          - FRO
+          - FSM
+          - GAB
+          - GBR
+          - GEO
+          - GGY
+          - GHA
+          - GIB
+          - GIN
+          - GLP
+          - GMB
+          - GNB
+          - GNQ
+          - GRC
+          - GRD
+          - GRL
+          - GTM
+          - GUF
+          - GUM
+          - GUY
+          - HND
+          - HRV
+          - HTI
+          - HUN
+          - IDN
+          - IMN
+          - IND
+          - IRL
+          - IRN
+          - IRQ
+          - ISL
+          - ISR
+          - ITA
+          - JAM
+          - JOR
+          - JPN
+          - KAZ
+          - KEN
+          - KGZ
+          - KHM
+          - KIR
+          - KNA
+          - KOR
+          - KWT
+          - LAO
+          - LBN
+          - LBR
+          - LBY
+          - LCA
+          - LIE
+          - LKA
+          - LSO
+          - LTU
+          - LUX
+          - LVA
+          - MAR
+          - MCO
+          - MDA
+          - MDG
+          - MDV
+          - MEX
+          - MHL
+          - MKD
+          - MLI
+          - MLT
+          - MMR
+          - MNE
+          - MNG
+          - MNP
+          - MOZ
+          - MRT
+          - MSR
+          - MTQ
+          - MUS
+          - MWI
+          - MYS
+          - MYT
+          - NAM
+          - NCL
+          - NER
+          - NGA
+          - NIC
+          - NIU
+          - NLD
+          - NOR
+          - NPL
+          - NRU
+          - NZL
+          - OMN
+          - PAK
+          - PAN
+          - PCN
+          - PER
+          - PHL
+          - PLW
+          - PNG
+          - POL
+          - PRK
+          - PRT
+          - PRY
+          - PSE
+          - PYF
+          - QAT
+          - REU
+          - ROU
+          - RUS
+          - RWA
+          - SAU
+          - SDN
+          - SEN
+          - SGP
+          - SHN
+          - SLB
+          - SLE
+          - SLV
+          - SMR
+          - SOM
+          - SRB
+          - SSD
+          - STP
+          - SUR
+          - SVK
+          - SVN
+          - SWE
+          - SWZ
+          - SYC
+          - SYR
+          - TCA
+          - TCD
+          - TGO
+          - THA
+          - TJK
+          - TKL
+          - TKM
+          - TLS
+          - TON
+          - TTO
+          - TUN
+          - TUR
+          - TUV
+          - TWN
+          - TZA
+          - UGA
+          - UKR
+          - URY
+          - USA
+          - UZB
+          - VAT
+          - VCT
+          - VEN
+          - VGB
+          - VIR
+          - VNM
+          - VUT
+          - WLF
+          - WSM
+          - YEM
+          - ZAF
+          - ZMB
+          - ZWE
     channel:
       name: channel
       description: channel number within the frequency range
