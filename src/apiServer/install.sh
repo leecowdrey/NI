@@ -240,7 +240,7 @@ if [[ -f "${DB_FILE}" ]] ; then
     info "Loading geometry for ${GEO_ISO_CODE}"
     duckdb ${DB_FILE} < ${GEO_COUNTRY} > world/${GEO_ISO_CODE}.log 2>&1
     RETVAL=$?
-    [[ ${RETVAL} -eq 0 ]] && success "- ok" || warn "- fail"
+    [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
   done
 fi
 

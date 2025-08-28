@@ -835,6 +835,10 @@ async function countryFromCoordinate(x, y) {
 }
 
 async function jobUpdateGeometry() {
+  if (updateGeometryTimer != null) {
+    clearTimeout(updateGeometryTimer);
+  }
+  // move to cron
   // child table (i.e. _pole) holds the spatial points as 3D points
   // parent table (i.e. pole) holds the spatial geometry object see https://duckdb.org/docs/stable/extensions/spatial/overview
   let points = [
@@ -995,30 +999,45 @@ async function jobUpdateGeometry() {
               sets: maxSet,
             });
           }
-          await DDC.run(
-            "DELETE FROM _worldGeoPolygon WHERE worldGeoId = '" +
-              ddRows[idx][0] +
-              "'"
-          );
-          for (let s = minSet; s < maxSet; s++) {
+          try {
             await DDC.run(
-              "INSERT INTO _worldGeoPolygon (worldGeoId,geometrySet,geoPolygon) SELECT '" +
+              "DELETE FROM _worldGeoPolygon WHERE worldGeoId = '" +
                 ddRows[idx][0] +
-                "'," +
-                s +
-                ",ST_MakePolygon(ST_MakeLine(list(geoPoint))) FROM _worldGeoCoordinate WHERE worldGeoId = '" +
+                "'"
+            );
+            for (let s = minSet; s < maxSet; s++) {
+              await DDC.run(
+                "INSERT INTO _worldGeoPolygon (worldGeoId,geometrySet,geoPolygon) SELECT '" +
+                  ddRows[idx][0] +
+                  "'," +
+                  s +
+                  ",ST_MakePolygon(ST_MakeLine(list(geoPoint))) FROM _worldGeoCoordinate WHERE worldGeoId = '" +
+                  ddRows[idx][0] +
+                  "' AND geometrySet = " +
+                  s
+              );
+            }
+            await DDC.run(
+              "UPDATE worldGeo SET geoCollection = (SELECT ST_Collect(list(geoPolygon)) FROM _worldGeoPolygon WHERE worldGeoId = '" +
                 ddRows[idx][0] +
-                "' AND geometrySet = " +
-                s
+                "') WHERE id = '" +
+                ddRows[idx][0] +
+                "'"
+            );
+          } catch (e) {
+            LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+              event: "updateGeometry",
+              state: "worldGeo",
+              id: ddRows[idx][0],
+              country: ddRows[idx][1],
+              action: "setting to empty collection",
+            });
+            await DDC.run(
+              "UPDATE worldGeo SET geoCollection = (SELECT ST_Collect([ST_GeomFromText('GEOMETRYCOLLECTION EMPTY')])) WHERE id = '" +
+                ddRows[idx][0] +
+                "'"
             );
           }
-          await DDC.run(
-            "UPDATE worldGeo SET geoCollection = (SELECT ST_Collect(list(geoPolygon)) FROM _worldGeoPolygon WHERE worldGeoId = '" +
-              ddRows[idx][0] +
-              "') WHERE id = '" +
-              ddRows[idx][0] +
-              "'"
-          );
         }
       }
     }
@@ -2473,7 +2492,7 @@ var run = async () => {
         threads: duckDbThreads,
       });
       */
-     // use by default 80% available RAM, and total cores for threads
+      // use by default 80% available RAM, and total cores for threads
       DDI = await DuckDBInstance.create(duckDbFile);
       DDC = await DDI.connect();
     } catch (e) {
@@ -21098,13 +21117,18 @@ var run = async () => {
       if (result.isEmpty()) {
         let country = await countryFromCoordinate(req.body.x, req.body.y);
         if (country != null) {
-        res.contentType(OAS.mimeJSON).status(200).json({ country: country });
+          res.contentType(OAS.mimeJSON).status(200).json({ country: country });
         } else {
           res
             .contentType(OAS.mimeJSON)
             .status(404)
             .json({
-              errors: "x:"+req.body.x+", y:"+req.body.y+ " not found within loaded world geometries",
+              errors:
+                "x:" +
+                req.body.x +
+                ", y:" +
+                req.body.y +
+                " not found within loaded world geometries",
             });
         }
       } else {

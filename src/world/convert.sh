@@ -45,8 +45,8 @@ if [ ${GEOMETRY_SETS} -gt 0 ] ; then
           for (( S2=0; S2<=$SUB_SET2; S2++ )) ; do
             SUB_SET3=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}]|length" ${TAG}.geojson)
             if [ ${SUB_SET3} -eq 2 ] ; then
-              X=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][0]" ${TAG}.geojson)
-              Y=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][1]" ${TAG}.geojson)
+              Y=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][0]" ${TAG}.geojson)
+              X=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][1]" ${TAG}.geojson)
               echo "INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('${ID}',${SETS},${X},${Y});"
             fi
           done

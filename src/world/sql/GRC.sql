@@ -1,7 +1,7 @@
---- ISO Code: GRE
+--- ISO Code: GRC
 --- Country: Greece
 
-INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('0fce7a2e-ae88-4724-9640-b5d7ccc59066','GRE','urn:ogc:def:crs:OGC:1.3:CRS84','MultiPolygon');
+INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('0fce7a2e-ae88-4724-9640-b5d7ccc59066','GRC','urn:ogc:def:crs:OGC:1.3:CRS84','MultiPolygon');
 INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('0fce7a2e-ae88-4724-9640-b5d7ccc59066',1,24.121872999999805,34.85918149911458);
 INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('0fce7a2e-ae88-4724-9640-b5d7ccc59066',1,24.12096699999981,34.860757499114584);
 INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('0fce7a2e-ae88-4724-9640-b5d7ccc59066',1,24.113025499999793,34.86233899911457);
