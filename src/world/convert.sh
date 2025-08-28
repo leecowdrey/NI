@@ -20,7 +20,7 @@ if [ ${GEOMETRY_SETS} -gt 0 ] ; then
         if [ ${SUB_SET2} -eq 2 ] ; then
               X=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][0]" ${TAG}.geojson)
               Y=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][1]" ${TAG}.geojson)
-              echo "INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('${ID}',${SETS},${X},${Y});"
+              echo "INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('${ID}',${SETS},${X},${Y});"
         fi
       done
    fi
@@ -47,7 +47,7 @@ if [ ${GEOMETRY_SETS} -gt 0 ] ; then
             if [ ${SUB_SET3} -eq 2 ] ; then
               Y=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][0]" ${TAG}.geojson)
               X=$(jq -r ".features[0].geometry.coordinates[${C}][${S1}][${S2}][1]" ${TAG}.geojson)
-              echo "INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,x,y) VALUES ('${ID}',${SETS},${X},${Y});"
+              echo "INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('${ID}',${SETS},${X},${Y});"
             fi
           done
         fi

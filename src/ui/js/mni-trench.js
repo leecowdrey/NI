@@ -261,12 +261,12 @@ function fetchTrenchGeometry() {
       if (data != null) {
         if (data.length > 0) {
           let mi = Number.parseFloat(data.length / 2).toFixed(0);
-          mapCenter = { lat: data[mi].x, lng: data[mi].y };
+          mapCenter = { lat: data[mi].y, lng: data[mi].x };
         } else {
           mapCenter = { lat: 0, lng: 0 };
         }
         for (var i = 0; i < data.length; i++) {
-          let c = { lat: data[i].x, lng: data[i].y };
+          let c = { lat: data[i].y, lng: data[i].x };
           trenchCoordinates.push(c);
         }
         if (

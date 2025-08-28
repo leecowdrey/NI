@@ -236,8 +236,8 @@ async function drawOnMap() {
       if (c == 0) {
         startMarker[tSet] = new google.maps.Marker({
           position: {
-            lat: trenchCoordinates[tSet][c].x,
-            lng: trenchCoordinates[tSet][c].y,
+            lat: trenchCoordinates[tSet][c].y,
+            lng: trenchCoordinates[tSet][c].x,
           },
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
@@ -255,8 +255,8 @@ async function drawOnMap() {
         if (c > 0) {
           endMarker[tSet] = new google.maps.Marker({
             position: {
-              lat: trenchCoordinates[tSet][c].x,
-              lng: trenchCoordinates[tSet][c].y,
+              lat: trenchCoordinates[tSet][c].y,
+              lng: trenchCoordinates[tSet][c].x,
             },
             icon: {
               path: google.maps.SymbolPath.CIRCLE,
@@ -272,8 +272,8 @@ async function drawOnMap() {
         }
       }
       tPath[tSet].push({
-        lat: trenchCoordinates[tSet][c].x,
-        lng: trenchCoordinates[tSet][c].y,
+        lat: trenchCoordinates[tSet][c].y,
+        lng: trenchCoordinates[tSet][c].x,
       });
     }
     tPoly[tSet] = new google.maps.Polyline({
@@ -327,8 +327,8 @@ async function fetchTrenchGeometryLifetime() {
           let tSet = trenchCoordinates.sets[0].point;
           if (trenchCoordinates[tSet].length > 0) {
             mapCenter = {
-              lat: trenchCoordinates[tSet][0].x,
-              lng: trenchCoordinates[tSet][0].y,
+              lat: trenchCoordinates[tSet][0].y,
+              lng: trenchCoordinates[tSet][0].x,
             };
           }
         }

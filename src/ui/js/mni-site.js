@@ -142,11 +142,11 @@ function fetchSite() {
             document.getElementById("mapRender") !== undefined &&
             document.getElementById("mapRender") != null
           ) {
-            map.setCenter({ lat: siteX, lng: siteY });
+            map.setCenter({ lat: siteY, lng: siteX });
             if (marker != null) {
               marker.setMap(null);
             }
-            marker.setPosition({ lat: siteX, lng: siteY });
+            marker.setPosition({ lat: siteY, lng: siteX });
             marker.setMap(map);
           }
           if (data.area != null) {
@@ -168,13 +168,13 @@ function fetchSite() {
       function displayMap() {
         map = new google.maps.Map(document.getElementById("map"), {
           zoom: 17,
-          center: { lat: siteX, lng: siteY },
+          center: { lat: siteY, lng: siteX },
           mapTypeId: "hybrid",
           disableDefaultUI: true,
         });
 
         marker = new google.maps.Marker({
-          position: { lat: siteX, lng: siteY },
+          position: { lat: siteY, lng: siteX },
           label: {
             text: "\ue7ee", // codepoint from https://fonts.google.com/icons
             fontFamily: "Material Symbols Outlined",

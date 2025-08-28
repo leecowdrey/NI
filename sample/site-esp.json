@@ -17,8 +17,8 @@
       "premisesNameNumber": "100",
       "postalCode": "08005",
       "coordinate": {
-        "x": 41.39499999988968,
-        "y": 2.198299999902494,
+        "y": 41.39499999988968,
+        "x": 2.198299999902494,
         "z": 12
       },
       "district": "Sant Martí"
@@ -44,8 +44,8 @@
       "premisesNameNumber": "17",
       "postalCode": "08002",
       "coordinate": {
-        "x": 41.38659912277294,
-        "y": 2.1714165864169126,
+        "y": 41.38659912277294,
+        "x": 2.1714165864169126,
         "z": 12
       },
       "district": "Ciutat Vella"
@@ -71,8 +71,8 @@
       "premisesNameNumber": "A-66",
       "postalCode": "33429",
       "coordinate": {
-        "x": 43.38789292634062,
-        "y": -5.805670018740791,
+        "y": 43.38789292634062,
+        "x": -5.805670018740791,
         "z": 12
       },
       "district": "Centro Comercial Parque Principado"
@@ -98,8 +98,8 @@
       "premisesNameNumber": "A-49",
       "postalCode": "41950",
       "coordinate": {
-        "x": 37.38362908200068,
-        "y": -6.047217650771667,
+        "y": 37.38362908200068,
+        "x": -6.047217650771667,
         "z": 7
       },
       "district": "Castilleja de la Cuesta"
@@ -125,8 +125,8 @@
       "premisesNameNumber": "115-133",
       "postalCode": "08908",
       "coordinate": {
-        "x": 41.354700000228085,
-        "y": 2.123900000037417,
+        "y": 41.354700000228085,
+        "x": 2.123900000037417,
         "z": 12
       },
       "district": "Districte Econòmic"
@@ -152,8 +152,8 @@
       "premisesNameNumber": "12",
       "postalCode": "08908",
       "coordinate": {
-        "x": 39.414688508800744,
-        "y": -0.3877640042403874,
+        "y": 39.414688508800744,
+        "x": -0.3877640042403874,
         "z": 15
       }
     },
@@ -178,8 +178,8 @@
       "premisesNameNumber": "47",
       "postalCode": "28001",
       "coordinate": {
-        "x": 40.42525610454415,
-        "y": -3.682364678602637,
+        "y": 40.42525610454415,
+        "x": -3.682364678602637,
         "z": 657
       },
       "district": "Salamanca"
@@ -205,8 +205,8 @@
       "premisesNameNumber": "389",
       "postalCode": "29004",
       "coordinate": {
-        "x": 36.65781576840068,
-        "y": -4.482190367961593,
+        "y": 36.65781576840068,
+        "x": -4.482190367961593,
         "z": 6
       },
       "district": "Parque Comercial Bahía Azul"
@@ -232,8 +232,8 @@
       "premisesNameNumber": "62",
       "postalCode": "08011",
       "coordinate": {
-        "x": 41.38870000017462,
-        "y": 2.1591999998128335,
+        "y": 41.38870000017462,
+        "x": 2.1591999998128335,
         "z": 12
       },
       "district": "L'Eixample"
@@ -259,8 +259,8 @@
       "premisesNameNumber": "30",
       "postalCode": "08908",
       "coordinate": {
-        "x": 41.38870000017462,
-        "y": 2.1591999998128335,
+        "y": 41.38870000017462,
+        "x": 2.1591999998128335,
         "z": 12
       },
       "district": "L'Hospitalet de Llobregat"
@@ -286,8 +286,8 @@
       "premisesNameNumber": "585",
       "postalCode": "08007",
       "coordinate": {
-        "x": 41.38669999992767,
-        "y": 2.1638000001932696,
+        "y": 41.38669999992767,
+        "x": 2.1638000001932696,
         "z": 12
       },
       "district": "L'Eixample"
@@ -313,8 +313,8 @@
       "premisesNameNumber": "56",
       "postalCode": "08908",
       "coordinate": {
-        "x": 41.34860000021006,
-        "y": 2.1296999996188024,
+        "y": 41.34860000021006,
+        "x": 2.1296999996188024,
         "z": 12
       },
       "district": "L'Hospitalet de Llobregat"
@@ -340,8 +340,8 @@
       "premisesNameNumber": "12",
       "postalCode": "08028",
       "coordinate": {
-        "x": 41.380814622574526,
-        "y": 2.1228633980984872,
+        "y": 41.380814622574526,
+        "x": 2.1228633980984872,
         "z": 12
       },
       "district": "Les Corts"
@@ -367,8 +367,8 @@
       "premisesNameNumber": "17",
       "postalCode": "08001",
       "coordinate": {
-        "x": 41.409800000016254,
-        "y": 2.1691999997415543,
+        "y": 41.409800000016254,
+        "x": 2.1691999997415543,
         "z": 12
       },
       "district": "Ciutat Vella"
@@ -394,8 +394,8 @@
       "premisesNameNumber": "1",
       "postalCode": "29016",
       "coordinate": {
-        "x": 36.71937022454368,
-        "y": -4.411936517137559,
+        "y": 36.71937022454368,
+        "x": -4.411936517137559,
         "z": 6
       },
       "district": "Málaga-Este"
@@ -421,8 +421,8 @@
       "premisesNameNumber": "4",
       "postalCode": "33002",
       "coordinate": {
-        "x": 43.36334592393353,
-        "y": -5.848246691219474,
+        "y": 43.36334592393353,
+        "x": -5.848246691219474,
         "z": 12
       }
     },
@@ -447,8 +447,8 @@
       "premisesNameNumber": "9",
       "postalCode": "28027",
       "coordinate": {
-        "x": 40.442788417280155,
-        "y": -3.647116411572133,
+        "y": 40.442788417280155,
+        "x": -3.647116411572133,
         "z": 12
       },
       "district": "Lineal"
@@ -474,8 +474,8 @@
       "premisesNameNumber": "1",
       "postalCode": "28001",
       "coordinate": {
-        "x": 40.424993646452236,
-        "y": -3.6913785157632857,
+        "y": 40.424993646452236,
+        "x": -3.6913785157632857,
         "z": 12
       },
       "district": "Centro"
@@ -501,8 +501,8 @@
       "premisesNameNumber": "1",
       "postalCode": "28015",
       "coordinate": {
-        "x": 40.43359047240811,
-        "y": -3.705012687903172,
+        "y": 40.43359047240811,
+        "x": -3.705012687903172,
         "z": 12
       },
       "district": "Chamberí"
@@ -528,8 +528,8 @@
       "premisesNameNumber": "44",
       "postalCode": "46988",
       "coordinate": {
-        "x": 39.51944133536713,
-        "y": -0.46706961673546665,
+        "y": 39.51944133536713,
+        "x": -0.46706961673546665,
         "z": 12
       },
       "district": "Paterna"
@@ -555,8 +555,8 @@
       "premisesNameNumber": "83",
       "postalCode": "29004",
       "coordinate": {
-        "x": 36.69760000007704,
-        "y": -4.482199999698069,
+        "y": 36.69760000007704,
+        "x": -4.482199999698069,
         "z": 6
       },
       "district": "Churriana"
@@ -582,8 +582,8 @@
       "premisesNameNumber": "196-198",
       "postalCode": "08005",
       "coordinate": {
-        "x": 41.41019999974389,
-        "y": 2.1695999997746545,
+        "y": 41.41019999974389,
+        "x": 2.1695999997746545,
         "z": 12
       },
       "district": "Sant Martí"
@@ -609,8 +609,8 @@
       "premisesNameNumber": "A-49",
       "postalCode": "41300",
       "coordinate": {
-        "x": 37.48466679568361,
-        "y": -5.930328077281215,
+        "y": 37.48466679568361,
+        "x": -5.930328077281215,
         "z": 7
       },
       "district": "San José de la Rinconada"
@@ -636,8 +636,8 @@
       "premisesNameNumber": "660",
       "postalCode": "08034",
       "coordinate": {
-        "x": 41.38980501823892,
-        "y": 2.129940590909763,
+        "y": 41.38980501823892,
+        "x": 2.129940590909763,
         "z": 12
       },
       "district": "Les Corts"
@@ -663,8 +663,8 @@
       "premisesNameNumber": "29",
       "postalCode": "33428",
       "coordinate": {
-        "x": 43.42204373605674,
-        "y": -5.819840438392902,
+        "y": 43.42204373605674,
+        "x": -5.819840438392902,
         "z": 12
       }
     },
@@ -689,8 +689,8 @@
       "premisesNameNumber": "69",
       "postalCode": "41005",
       "coordinate": {
-        "x": 37.38294224668018,
-        "y": -5.972129781477701,
+        "y": 37.38294224668018,
+        "x": -5.972129781477701,
         "z": 7
       },
       "district": "Galia Business Center"

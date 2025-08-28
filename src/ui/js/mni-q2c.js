@@ -112,8 +112,8 @@ function trenchExportKml() {
     "</div>]]></description>\n";
   kmlData += "    <LookAt>\n";
   if (coordinates.length > 0) {
-    kmlData += "      <longitude>" + coordinates[0].y + "</longitude>\n";
-    kmlData += "      <latitude>" + coordinates[0].x + "</latitude>\n";
+    kmlData += "      <longitude>" + coordinates[0].x + "</longitude>\n";
+    kmlData += "      <latitude>" + coordinates[0].y + "</latitude>\n";
   } else {
     kmlData += "      <longitude>0</longitude>\n";
     kmlData += "      <latitude>0</latitude>\n";

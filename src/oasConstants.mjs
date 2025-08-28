@@ -37,11 +37,6 @@ export const fts_resources = [
   "trench",
   "*",
 ];
-export const X_scale = 3;
-export const Y_scale = 2;
-export const Z_scale = 8;
-export const XY_precision = 6;
-export const Z_precision = 2;
 export const correlationType = [
   "cable",
   "duct",
@@ -2339,8 +2334,18 @@ export const costType = [
   "site",
   "trench",
 ];
-export const coordinate_x = { min: -180, max: 180 };
-export const coordinate_y = { min: -90, max: 90 };
+// latitude is typically represented by the Y-axis, and longitude by the X-axis
+export const X_min = -180;
+export const X_max = 180;
+export const Y_min = -90;
+export const Y_max = 90;
+export const X_scale = 3;
+export const Y_scale = 2;
+export const Z_scale = 8;
+export const XY_precision = 6;
+export const Z_precision = 2;
+export const coordinate_x = { min: X_min, max: X_max };
+export const coordinate_y = { min: Y_min, max: Y_max };
 export const coordinate_z = { min: Number.MIN_VALUE, max: Number.MAX_VALUE };
 export const channels = { min: 1, max: 512 };
 export const cveId = "CVE-[0-9]{4}-[0-9]{4,}";

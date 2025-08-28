@@ -3,8 +3,8 @@
     "poleId": "360236fb-15b1-48be-babf-6c433c387ed8",
     "purpose": "service/drop",
     "reference": "gbr-worc-cg-elmley",
+    "country": "GBR",
     "probability": 1,
-		"country": "GBR",
     "construction": {
       "height": 20,
       "unit": "m",
@@ -28,8 +28,8 @@
     },
     "state": "used",
     "coordinate": {
-      "x": 52.31504,
-      "y": -2.17728,
+      "y": 52.31504,
+      "x": -2.17728,
       "z": 61
     },
     "point": "20250508T174124",

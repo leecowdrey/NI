@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1756370940
+  version: 1.0.0.1756411589
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -17498,8 +17498,8 @@ components:
     coordinate3d:
       description: |
         A geometry is represented using geometric constructs defined as lists of one or more XYZ points forming a three-dimensional geometry. *note*:
-        - `X` range is -180 to +180 with scale 3 and precision 6
-        - `Y` range is -90 to +90 with scale 2 and precision 6
+        - `X` is the longitude with a range of -180 to +180 with scale 3 and precision 6
+        - `Y` is latitude with a range of -90 to +90 with scale 2 and precision 6
         - `Z` scale 8 and precision 2
       type: object
       required:
@@ -17535,8 +17535,8 @@ components:
     coordinate:
       description: |
         A geometry is represented using geometric constructs either defined as lists of one or more XY or XYZ points or defined parametrically, for example, as a circular arc. While geometry typically is two- or three-dimensional, it may also contain the measurement dimension (M) to provide the basis for dynamic segments. *note*:
-        - `X` range is -180 to +180 with scale 3 and precision 6
-        - `Y` range is -90 to +90 with scale 2 and precision 6
+        - `X` is the longitude with a range of -180 to +180 with scale 3 and precision 6
+        - `Y` is latitude with a range of -90 to +90 with scale 2 and precision 6
         - `Z` scale 8 and precision 2
       type: object
       required:

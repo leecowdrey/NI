@@ -30,7 +30,10 @@ function fetchListPoles() {
     clearTimeout(fltReady);
   }
 
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/pole", {
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  fetch(localStorage.getItem("mni.gatewayUrl") + "/pole?country=" +
+      selectedCountry, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -177,11 +180,11 @@ function fetchPole() {
             document.getElementById("mapRender") !== undefined &&
             document.getElementById("mapRender") != null
           ) {
-            map.setCenter({ lat: poleX, lng: poleY });
+            map.setCenter({ lat: poleY, lng: poleX });
             if (marker != null) {
               marker.setMap(null);
             }
-            marker.setPosition({ lat: poleX, lng: poleY });
+            marker.setPosition({ lat: poleY, lng: poleX });
             marker.setMap(map);
           }
           if (
@@ -209,12 +212,12 @@ function fetchPole() {
       function displayMap() {
         map = new google.maps.Map(document.getElementById("map"), {
           zoom: 30,
-          center: { lat: poleX, lng: poleY },
+          center: { lat: poleY, lng: poleX },
           mapTypeId: "hybrid",
           disableDefaultUI: true,
         });
         marker = new google.maps.Marker({
-          position: { lat: poleX, lng: poleY },
+          position: { lat: poleY, lng: poleX },
           icon: {
             path: "M 0,0 V15 M -4,4 H4",
             strokeOpacity: 1,

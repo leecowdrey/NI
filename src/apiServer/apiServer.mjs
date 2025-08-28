@@ -445,6 +445,8 @@ var licenseTimer = null;
 var licenseIntervalMs = 86399000; // 23 hours, 59 minutes and 59 seconds
 var updateGeometryTimer = null;
 var updateGeometryIntervalMs = 60000; // 1 minute
+var updateWorldGeometryTimer = null;
+var updateWorldGeometryIntervalMs = 86400000; // 24 hours
 var updatePremisesPassedTimer = null;
 var updatePremisesPassedIntervalMs = 300000; // 5 minutes
 var pruneTimer = null;
@@ -818,12 +820,12 @@ async function coordinateFromWktPoint(
 
 async function countryFromCoordinate(x, y) {
   let country = null;
-  if (x >= -180 && x <= 180 && y >= -190 && y <= 90) {
+  if (x >= OAS.X_min && x <= OAS.X_max && y >= OAS.Y_min && y <= OAS.Y_max) {
     let ddRead = await DDC.runAndReadAll(
       "SELECT id,country FROM worldGeo WHERE ST_INTERSECTS(geoCollection,ST_POINT2D(" +
-        x +
-        "," +
         y +
+        "," +
+        x +
         "))"
     );
     let ddRows = ddRead.getRows();
@@ -846,7 +848,6 @@ async function jobUpdateGeometry() {
     { table: "_rack", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
     { table: "_site", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
     { table: "_trenchCoordinate", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
-    { table: "_worldGeoCoordinate", dst: "geoPoint", src: "ST_Point2D(x,y)" },
   ];
   try {
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
@@ -911,10 +912,10 @@ async function jobUpdateGeometry() {
           if (coordinates.length > 0) {
             for (let i = 0; i < coordinates.length; i++) {
               if (
-                coordinates[i].x >= -180 &&
-                coordinates[i].x <= 180 &&
-                coordinates[i].y >= -90 &&
-                coordinates[i].y <= 90
+                coordinates[i].x >= OAS.X_min &&
+                coordinates[i].x <= OAS.X_max &&
+                coordinates[i].y >= OAS.Y_min &&
+                coordinates[i].y <= OAS.Y_max
               ) {
                 let ddtc = await DDC.prepare(
                   "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z) VALUES (strptime($1,$2),$3,$4,$5,$6,$7,$8)"
@@ -974,11 +975,39 @@ async function jobUpdateGeometry() {
         " IS NULL";
       await DDC.run(ddSql);
     }
+    //
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "updateGeometry",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "updateGeometry",
+      state: "failed",
+      error: e,
+    });
+  }
+  updateGeometryTimer = setTimeout(jobUpdateGeometry, updateGeometryIntervalMs);
+}
+
+async function jobUpdateWorldGeometry() {
+  if (updateWorldGeometryTimer != null) {
+    clearTimeout(updateWorldGeometryTimer);
+  }
+  try {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "updateWorldGeometry",
+      state: "start",
+    });
+    // update spatial points to linestrings
+    await DDC.run(
+      "UPDATE _worldGeoCoordinate SET geoPoint = ST_Point2D(x,y) WHERE geoPoint IS NULL"
+    );
     // update geometry collections for world geoemetries
-    ddRead = await DDC.runAndReadAll(
+    let ddRead = await DDC.runAndReadAll(
       "SELECT id,country FROM worldGeo WHERE geoCollection IS NULL"
     );
-    ddRows = ddRead.getRows();
+    let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
       for (let idx in ddRows) {
         let ddReadSet = await DDC.runAndReadAll(
@@ -992,7 +1021,7 @@ async function jobUpdateGeometry() {
           let maxSet = toInteger(ddRowsSet[0][1]);
           if (DEBUG) {
             LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
-              event: "updateGeometry",
+              event: "updateWorldGeometry",
               state: "worldGeo",
               id: ddRows[idx][0],
               country: ddRows[idx][1],
@@ -1026,11 +1055,10 @@ async function jobUpdateGeometry() {
             );
           } catch (e) {
             LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-              event: "updateGeometry",
-              state: "worldGeo",
+              event: "updateWorldGeometry",
+              state: "incomplete collection",
               id: ddRows[idx][0],
               country: ddRows[idx][1],
-              action: "setting to empty collection",
             });
             await DDC.run(
               "UPDATE worldGeo SET geoCollection = (SELECT ST_Collect([ST_GeomFromText('GEOMETRYCOLLECTION EMPTY')])) WHERE id = '" +
@@ -1043,17 +1071,20 @@ async function jobUpdateGeometry() {
     }
     //
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-      event: "updateGeometry",
+      event: "updateWorldGeometry",
       state: "stop",
     });
   } catch (e) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-      event: "updateGeometry",
+      event: "updateWorldGeometry",
       state: "failed",
       error: e,
     });
   }
-  updateGeometryTimer = setTimeout(jobUpdateGeometry, updateGeometryIntervalMs);
+  updateWorldGeometryTimer = setTimeout(
+    jobUpdateWorldGeometry,
+    updateWorldGeometryIntervalMs
+  );
 }
 
 async function jobUpdatePremisesPassed() {
@@ -2335,6 +2366,9 @@ function quit() {
   }
   if (updateGeometryTimer != null) {
     clearTimeout(updateGeometryTimer);
+  }
+  if (updateWorldGeometryTimer != null) {
+    clearTimeout(updateWorldGeometryTimer);
   }
   if (predictQueueTimer != null) {
     clearTimeout(predictQueueTimer);
@@ -27090,7 +27124,10 @@ var run = async () => {
     if (error) throw error;
   });
 
-  // timer jobs - stagger the starts
+  // timer jobs - run immediately and then defer to interval
+  updateWorldGeometryTimer = setTimeout(jobUpdateWorldGeometry, 10000);
+
+  // timer jobs - stagger the starts based on interval
   pruneQueuesTimer = setTimeout(
     jobPruneQueues,
     pruneQueuesIntervalMs * Math.floor(Math.random() * 3)
