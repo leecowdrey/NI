@@ -128,6 +128,11 @@ doing "Adding document directory"
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+doing "Adding World GeoJSON directory"
+[[ -d "${WORKING_DIRECTORY}/world" ]] || (mkdir -p ${WORKING_DIRECTORY}/world)
+RETVAL=$?
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+
 doing "Adding upload directory"
 [[ -d "${UPLOAD_DIRECTORY}" ]] || (mkdir -p ${UPLOAD_DIRECTORY})
 RETVAL=$?
@@ -166,6 +171,7 @@ chown ${USERNAME}:${GROUP} ${API_DIRECTORY} && chmod 770 ${API_DIRECTORY} && \
 chown ${USERNAME}:${GROUP} ${BACKUP_DIRECTORY} && chmod 770 ${BACKUP_DIRECTORY} && \
 chown ${USERNAME}:${GROUP} ${DOCUMENT_DIRECTORY} && chmod 770 ${DOCUMENT_DIRECTORY} && \
 chown ${USERNAME}:${GROUP} ${UPLOAD_DIRECTORY} && chmod 770 ${UPLOAD_DIRECTORY} && \
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/world && chmod 770 ${WORKING_DIRECTORY}/world && \
 chown root:${GROUP} ${MNI_LOG_DIRECTORY} && chmod 770 ${MNI_LOG_DIRECTORY} && \
 chown root:${GROUP} ${CONFIG_DIRECTORY} && chmod 770 ${CONFIG_DIRECTORY}
 RETVAL=$?
@@ -174,7 +180,8 @@ RETVAL=$?
 doing "Preparing environment"
 cp -f ${CLI_PATH}/*.mjs ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/*.mjs && chmod 660 ${WORKING_DIRECTORY}/*.mjs && \
 cp -f ${CLI_PATH}/package.json ${WORKING_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/package.json && chmod 660 ${WORKING_DIRECTORY}/package.json && \
-cp -f ${CLI_PATH}/mni.yaml ${API_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml
+cp -f ${CLI_PATH}/mni.yaml ${API_DIRECTORY}/ && chown ${USERNAME}:${GROUP} ${API_DIRECTORY}/mni.yaml && chmod 660 ${API_DIRECTORY}/mni.yaml && \
+cp -f ${CLI_PATH}/world/*.geojson ${WORKING_DIRECTORY}/world/ && chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/world/*.geojson && chmod 660 ${WORKING_DIRECTORY}/world/*.geojson
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -230,19 +237,6 @@ if [[ ! -f "${DB_FILE}" ]] ; then
   RETVAL=$?
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
-
-doing "Adding World geometries to database"
-[[ $(dirname ${DB_FILE}) == "." ]] && DB_FILE="${WORKING_DIRECTORY}/${DB_FILE}"
-if [[ -f "${DB_FILE}" ]] ; then
-  for GEO_COUNTRY in ./world/*.sql ; do
-    GEO_ISO_CODE=$(basename ${GEO_COUNTRY})
-    GEO_ISO_CODE="${GEO_ISO_CODE%.sql*}"
-    info "Loading geometry for ${GEO_ISO_CODE}"
-    duckdb ${DB_FILE} < ${GEO_COUNTRY} > world/${GEO_ISO_CODE}.log 2>&1
-    RETVAL=$?
-    [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
-  done
-fi
 
 doing "Setting DuckDB database ownership/permissions"
 if [[ -f "${DB_FILE}" ]] ; then

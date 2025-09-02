@@ -1,24 +1,27 @@
+
 --- ISO Code: NRU
 --- Country: Nauru
 
-INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27','NRU','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',1,166.9099076,-0.5377351);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',2,166.9149852,-0.5466402);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',3,166.9260638,-0.5541294);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',4,166.935912,-0.55332);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',5,166.945794,-0.5481742);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',6,166.9502243,-0.5446475);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',7,166.9504098,-0.535518);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',8,166.9522609,-0.5293565);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',9,166.9588728,-0.5200444);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',10,166.9567428,-0.5113282);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',11,166.9524067,-0.5067007);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',12,166.9472402,-0.5037341);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',13,166.9345137,-0.5026813);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',14,166.9126593,-0.522935);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',15,166.9091794,-0.5285396);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',16,166.9102652,-0.5286385);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',17,166.9101336,-0.5372122);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',18,166.9084598,-0.5378865);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('122d6ed9-bee0-4749-9b82-9ea55bce6a27',19,166.9099076,-0.5377351);
+BEGIN TRANSACTION;
+INSERT INTO worldGeo (country,crs,geometryType) VALUES ('NRU','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,1,166.909907,-.537735);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,2,166.914985,-.546640);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,3,166.926063,-.554129);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,4,166.935912,-.553320);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,5,166.945794,-.548174);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,6,166.950224,-.544647);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,7,166.950409,-.535518);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,8,166.952260,-.529356);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,9,166.958872,-.520044);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,10,166.956742,-.511328);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,11,166.952406,-.506700);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,12,166.947240,-.503734);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,13,166.934513,-.502681);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,14,166.912659,-.522935);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,15,166.909179,-.528539);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,16,166.910265,-.528638);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,17,166.910133,-.537212);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,18,166.908459,-.537886);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('NRU',1,19,166.909907,-.537735);
+COMMIT;
 

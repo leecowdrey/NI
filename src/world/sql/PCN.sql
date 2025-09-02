@@ -1,29 +1,32 @@
+
 --- ISO Code: PCN
 --- Country: Pitcairn Island
 
-INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b','PCN','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',1,-128.30111521759318,-24.331074024546524);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',2,-128.3221759450638,-24.339440624385247);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',3,-128.33052601086666,-24.3396526962149);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',4,-128.33965656949505,-24.337416369170057);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',5,-128.34278981469816,-24.3383978352918);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',6,-128.34561655476017,-24.34259861983037);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',7,-128.34719840738057,-24.349556485643234);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',8,-128.35254042619965,-24.354976925344772);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',9,-128.356716264444,-24.368220036925095);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',10,-128.35332744990188,-24.381393919593677);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',11,-128.34418229617597,-24.393357609765815);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',12,-128.3366047075412,-24.40717821470281);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',13,-128.32891604993574,-24.4110886540181);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',14,-128.31302989111657,-24.413409821306175);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',15,-128.30586905641178,-24.419159795088433);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',16,-128.2980059797921,-24.42286249460841);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',17,-128.29357411265516,-24.421030016222232);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',18,-128.29167567619146,-24.417952398584305);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',19,-128.29441382673667,-24.403751978471007);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',20,-128.29345737705626,-24.388722349256966);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',21,-128.29781438642476,-24.37991865732016);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',22,-128.30689511721584,-24.348427264506597);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',23,-128.30666480893376,-24.344019686259458);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('5a6f6290-1130-4236-97d2-33946400c55b',24,-128.30111521759318,-24.331074024546524);
+BEGIN TRANSACTION;
+INSERT INTO worldGeo (country,crs,geometryType) VALUES ('PCN','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,1,-128.301115,-24.331074);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,2,-128.322175,-24.339440);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,3,-128.330526,-24.339652);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,4,-128.339656,-24.337416);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,5,-128.342789,-24.338397);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,6,-128.345616,-24.342598);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,7,-128.347198,-24.349556);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,8,-128.352540,-24.354976);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,9,-128.356716,-24.368220);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,10,-128.353327,-24.381393);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,11,-128.344182,-24.393357);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,12,-128.336604,-24.407178);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,13,-128.328916,-24.411088);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,14,-128.313029,-24.413409);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,15,-128.305869,-24.419159);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,16,-128.298005,-24.422862);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,17,-128.293574,-24.421030);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,18,-128.291675,-24.417952);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,19,-128.294413,-24.403751);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,20,-128.293457,-24.388722);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,21,-128.297814,-24.379918);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,22,-128.306895,-24.348427);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,23,-128.306664,-24.344019);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('PCN',1,24,-128.301115,-24.331074);
+COMMIT;
 

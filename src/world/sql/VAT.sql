@@ -1,12 +1,15 @@
+
 --- ISO Code: VAT
 --- Country: Vatican City
 
-INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('09029b95-b214-42e6-a947-e8795ea29488','VAT','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',1,12.455497093889619,41.907462156013764);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',2,12.450408930279877,41.906450917279415);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',3,12.445739255067508,41.901859969253735);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',4,12.451602093888994,41.900365213551765);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',5,12.45799536147615,41.90121589831142);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',6,12.457705012665201,41.90582895497124);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('09029b95-b214-42e6-a947-e8795ea29488',7,12.455497093889619,41.907462156013764);
+BEGIN TRANSACTION;
+INSERT INTO worldGeo (country,crs,geometryType) VALUES ('VAT','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,1,12.455497,41.907462);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,2,12.450408,41.906450);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,3,12.445739,41.901859);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,4,12.451602,41.900365);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,5,12.457995,41.901215);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,6,12.457705,41.905828);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('VAT',1,7,12.455497,41.907462);
+COMMIT;
 

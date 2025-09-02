@@ -1,32 +1,35 @@
+
 --- ISO Code: MCO
 --- Country: Monaco
 
-INSERT INTO worldGeo (id,country,crs,geometryType) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31','MCO','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',1,7.4090279,43.7295783);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',2,7.4185234,43.7247599);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',3,7.42398,43.7279639);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',4,7.4175252,43.7303049);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',5,7.4216618,43.7301663);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',6,7.422822220957944,43.72846524271808);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',7,7.4276666,43.7312389);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',8,7.4320852,43.7364127);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',9,7.4237558,43.7328021);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',10,7.42204,43.736388);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',11,7.4267368,43.7371766);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',12,7.4273804,43.7357761);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',13,7.4271109,43.7371228);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',14,7.4291039,43.7375307);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',15,7.4300739,43.7364333);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',16,7.4330175,43.7457385);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',17,7.4365507,43.7476581);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',18,7.4398163,43.7465797);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',19,7.4385688,43.7513432);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',20,7.4369097,43.7519311);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',21,7.4359783,43.7499924);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',22,7.4306408,43.7490241);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',23,7.4258777,43.7418756);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',24,7.4222221,43.7414143);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',25,7.4126598,43.7346724);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',26,7.4129057,43.7316907);
-INSERT INTO _worldGeoCoordinate (worldGeoId,geometrySet,y,x) VALUES ('365acb79-aea1-4f06-bbf0-ced89b9bbf31',27,7.4090279,43.7295783);
+BEGIN TRANSACTION;
+INSERT INTO worldGeo (country,crs,geometryType) VALUES ('MCO','urn:ogc:def:crs:OGC:1.3:CRS84','Polygon');
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,1,7.409027,43.729578);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,2,7.418523,43.724759);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,3,7.423980,43.727963);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,4,7.417525,43.730304);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,5,7.421661,43.730166);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,6,7.422822,43.728465);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,7,7.427666,43.731238);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,8,7.432085,43.736412);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,9,7.423755,43.732802);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,10,7.422040,43.736388);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,11,7.426736,43.737176);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,12,7.427380,43.735776);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,13,7.427110,43.737122);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,14,7.429103,43.737530);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,15,7.430073,43.736433);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,16,7.433017,43.745738);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,17,7.436550,43.747658);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,18,7.439816,43.746579);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,19,7.438568,43.751343);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,20,7.436909,43.751931);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,21,7.435978,43.749992);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,22,7.430640,43.749024);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,23,7.425877,43.741875);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,24,7.422222,43.741414);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,25,7.412659,43.734672);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,26,7.412905,43.731690);
+INSERT INTO _worldCoordinate (country,exterior,vertice,x,y) VALUES ('MCO',1,27,7.409027,43.729578);
+COMMIT;
 

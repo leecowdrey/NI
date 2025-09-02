@@ -3,7 +3,7 @@ erDiagram
     _document {integer tsId enum source timestamp point decimal probability varchar documentId enum mimeType varchar path varchar name integer sizeBytes varchar md5Hash}
     _nePort {integer tsId timestamp point enum source varchar neId integer neTsId varchar name enum technology enum state integer errorCount varchar macAddress}
     _nePortXdsl {integer tsId integer neTsId enum category integer rate enum unit}
-    _worldGeoCoordinate {integer tsId varchar worldGeoId integer geometrySet decimal X decimal Y point_3d geoPoint}
+    _worldGeoCoordinate {integer tsId enum country integer geometrySet decimal X decimal Y geometry geoPoint}
     adminEmail {varchar id varchar vendor varchar address varchar name}
     costPole {enum purpose enum classifier decimal costPerUnit}
     cvePlatforms {integer id varchar cveId varchar platform}
@@ -27,14 +27,14 @@ erDiagram
     _rack {integer tsId timestamp point varchar rackId enum source decimal probability varchar reference enum country timestamp commissioned timestamp decommissioned varchar siteId integer floor varchar floorArea integer floorRow integer floorColumn boolean hasDocument decimal X decimal Y decimal Z varchar M point_3d geoPoint decimal depth decimal height decimal width enum unit integer slots varchar documentId}
     alertWorkflow {varchar id varchar alertId varchar requestorId varchar workflowEngineId varchar workflowRunnerId varchar flowName}
     costCable {enum technology enum unit decimal costPerUnit}
-    rack {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId geometry geometry}
+    rack {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     trench {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     _duct {integer tsId timestamp point varchar ductId varchar trenchId enum source decimal probability enum country enum purpose enum category boolean hasDocument integer configuration enum state varchar within decimal placementVertical decimal placementHorizontal enum placementUnit varchar documentId}
     adminKafka {varchar id varchar name varchar clientId varchar host integer port integer retryDelay integer retries enum acks integer linger integer batchSize integer bufferMemory integer maxInFlightRequestsPerConnection enum compressionMethod enum authentication}
     alertNotifyRecipient {varchar id varchar alertNotifyId varchar notificationId varchar recipient}
     predictQueue {integer qId timestamp point boolean delete enum resource varchar id enum state}
     service {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
-    worldGeo {varchar id enum country varchar name varchar crs enum geometryType geometry geometry}
+    worldGeo {enum country varchar crs enum geometryType geometry geoCollection}
     adminEmailReceive {varchar id varchar adminEmailId varchar host integer port enum protocol boolean encryptionEnabled boolean encryptionStartTls varchar rootFolder enum folderSeparator}
     adminMap {varchar id enum vendor boolean systemDefault varchar renderUrl enum typeSecret}
     alert {varchar id boolean delete varchar description varchar function}
@@ -49,6 +49,7 @@ erDiagram
     pole {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
     _service {integer tsId timestamp point varchar serviceId enum source decimal probability varchar reference enum country varchar customerName varchar customerReference timestamp commissioned timestamp decommissioned enum type boolean hasDocument integer rate enum unit varchar lagGroup integer lagMembers varchar documentId}
     _site {integer tsId timestamp point varchar siteId enum source decimal probability varchar reference timestamp commissioned timestamp decommissioned enum area enum type boolean onNet boolean hasDocument enum country varchar region varchar town varchar district varchar street varchar premisesNameNumber varchar postalCode decimal X decimal Y decimal Z varchar M varchar documentId varchar wkt point_3d geoPoint}
+    _worldGeoPolygon {integer tsId enum country integer geometrySet geometry geoPolygon}
     adminWorkflow {varchar id varchar name varchar engineUrl enum engineType}
     costSite {enum area enum type decimal costPerUnit}
     site {varchar id boolean delete timestamp tsPoint integer historicalTsId integer plannedTsId integer predictedTsId}
@@ -84,7 +85,6 @@ erDiagram
     _ne }o--o{ _nePort : "neTsId"
     document }o--o{ _ne : "documentId"
     cve }o--o{ cvePlatforms : "cveId"
-    worldGeo }o--o{ _worldGeoCoordinate : "worldGeoId"
     cable }o--o{ _cableMultiFiber : "cableId"
     ne }o--o{ _ne : "neId"
     ne }o--o{ fetchJob : "neId"
@@ -116,6 +116,7 @@ erDiagram
     service }o--o{ _service : "serviceId"
     alertWorkflow }o--o{ alertQueue : "workflowAlertId"
     document }o--o{ _site : "documentId"
+    worldGeo }o--o{ _worldGeoPolygon : "country"
     alert }o--o{ alertWorkflow : "alertId"
     _rack }o--o{ _rackSlot : "rackTsId"
     service }o--o{ _serviceEgress : "serviceId"
@@ -132,6 +133,7 @@ erDiagram
     alert }o--o{ alertContent : "alertId"
     cable }o--o{ _cableEthernet : "cableId"
     alertCallback }o--o{ alertQueue : "callbackAlertId"
+    worldGeo }o--o{ _worldGeoCoordinate : "country"
     cable }o--o{ _cableSingleFiber : "cableId"
     adminWorkflow }o--o{ alertWorkflow : "workflowEngineId"
     rack }o--o{ _ne : "rackId"

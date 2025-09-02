@@ -4,7 +4,7 @@ function dln() {
     [[ -f "${1}.geojson" ]] && rm -f ${1}.geojson &>/dev/null
     curl --fail --location --output ${1}.json "https://www.geoboundaries.org/api/current/gbOpen/${1}/ADM0/"
     if [[ -f "${1}.json" ]] ; then
-      LNK=$(jq -r '.simplifiedGeometryGeoJSON' ${1}.json)
+      LNK=$(jq --exit-status -r '.simplifiedGeometryGeoJSON' ${1}.json)
       curl --fail --location --output ${1}.geojson "${LNK}"
     fi
 }
