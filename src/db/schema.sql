@@ -571,6 +571,7 @@ CREATE TABLE IF NOT EXISTS _trench (
     source source NOT NULL DEFAULT 'historical',
     probability DECIMAL(3,2) NOT NULL DEFAULT 1 CHECK (probability >= 0 AND probability <= 1),
     country countryCode NOT NULL,
+    countryChecked BOOLEAN NOT NULL DEFAULT false,
     reference VARCHAR NOT NULL,
     purpose trenchPurpose NOT NULL,
     depth DECIMAL(6,2) NOT NULL DEFAULT 914.4 CHECK (depth >= 0),
@@ -596,6 +597,8 @@ CREATE TABLE IF NOT EXISTS _trench (
     connectsToPoleId VARCHAR,
     documentId VARCHAR,
     wkt VARCHAR USING COMPRESSION zstd,
+    distanceTotal DECIMAL DEFAULT 0.0 CHECK (distanceTotal >= 0),
+    distanceUnit sizeUnit DEFAULT 'm',
     FOREIGN KEY (trenchId) REFERENCES trench (id),
     FOREIGN KEY (documentId) REFERENCES document (id),
 );
@@ -604,7 +607,6 @@ CREATE TABLE IF NOT EXISTS _trench (
 ---    FOREIGN KEY (connectsToSiteId) REFERENCES site (id),
 ---    FOREIGN KEY (connectsToTrenchId) REFERENCES trench (id),
 ---    FOREIGN KEY (connectsToPoleId) REFERENCES pole (id)
---- this is due to FOREIGN KEYS can not be NULL
 
 ---
 
@@ -618,9 +620,8 @@ CREATE TABLE IF NOT EXISTS _trenchCoordinate (
     Y DECIMAL(9,6) NOT NULL DEFAULT 0 CHECK (Y >= -90 AND Y <= 90),
     Z DECIMAL(18,2) NOT NULL DEFAULT 0,
     M VARCHAR,
-    geoPoint POINT_3D,
-    FOREIGN KEY (trenchId) REFERENCES trench (id),
-    FOREIGN KEY (trenchTsId) REFERENCES _trench (tsId)
+    geoPoint POINT_2D,
+    FOREIGN KEY (trenchId) REFERENCES trench (id)
 );
 
 ---
@@ -665,6 +666,7 @@ CREATE TABLE IF NOT EXISTS _site (
     onNet BOOLEAN NOT NULL DEFAULT false,
     hasDocument BOOLEAN DEFAULT false,
     country countryCode NOT NULL,
+    countryChecked BOOLEAN NOT NULL DEFAULT false,
     region VARCHAR NOT NULL,
     town VARCHAR NOT NULL,
     district VARCHAR,
@@ -677,7 +679,7 @@ CREATE TABLE IF NOT EXISTS _site (
     M VARCHAR,
     documentId VARCHAR,
     wkt VARCHAR USING COMPRESSION zstd,
-    geoPoint POINT_3D,
+    geoPoint POINT_2D,
     FOREIGN KEY (siteId) REFERENCES site (id),
     FOREIGN KEY (documentId) REFERENCES document (id)
 );
@@ -691,6 +693,7 @@ CREATE TABLE IF NOT EXISTS _pole (
     source source NOT NULL DEFAULT 'historical',
     probability DECIMAL(3,2) NOT NULL DEFAULT 1 CHECK (probability >= 0 AND probability <= 1),
     country countryCode NOT NULL,
+    countryChecked BOOLEAN NOT NULL DEFAULT false,
     reference VARCHAR NOT NULL,
     purpose polePurpose NOT NULL,
     height DECIMAL(6,2) NOT NULL DEFAULT 20 CHECK (height >= 0),
@@ -718,7 +721,7 @@ CREATE TABLE IF NOT EXISTS _pole (
     Z DECIMAL(18,2) NOT NULL DEFAULT 0,
     M VARCHAR,
     documentId VARCHAR,
-    geoPoint POINT_3D,
+    geoPoint POINT_2D,
     FOREIGN KEY (poleId) REFERENCES pole (id),
     FOREIGN KEY (documentId) REFERENCES document (id)
 );
@@ -841,7 +844,7 @@ CREATE TABLE IF NOT EXISTS _rack (
     Y DECIMAL(9,6) NOT NULL DEFAULT 0 CHECK (Y >= -90 AND Y <= 90),
     Z DECIMAL(18,2) NOT NULL DEFAULT 0,
     M VARCHAR,
-    geoPoint POINT_3D,
+    geoPoint POINT_2D,
     depth DECIMAL(6,2) NOT NULL DEFAULT 914.4 CHECK (depth >= 0),
     height DECIMAL(6,2) NOT NULL DEFAULT 2000 CHECK (height >= 0),
     width DECIMAL(6,2) NOT NULL DEFAULT 600 CHECK (width >= 0),
@@ -866,8 +869,7 @@ CREATE TABLE IF NOT EXISTS _rackSlot (
     usage slotState DEFAULT 'free',
     neId VARCHAR,
     host VARCHAR,
-    FOREIGN KEY (rackId) REFERENCES rack (id),
-    FOREIGN KEY (rackTsId) REFERENCES _rack (tsId)
+    FOREIGN KEY (rackId) REFERENCES rack (id)
 );
 
 ---
@@ -917,8 +919,7 @@ CREATE TABLE IF NOT EXISTS _nePort (
     state portState NOT NULL DEFAULT 'free',
     errorCount INTEGER NOT NULL DEFAULT 0 CHECK (errorCount >= 0),
     macAddress VARCHAR CHECK (regexp_full_match(macAddress,'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')),
-    FOREIGN KEY (neId) REFERENCES ne (id),
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId)
+    FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
 ---
@@ -930,8 +931,10 @@ CREATE TABLE IF NOT EXISTS _nePortCoax (
     frequencyHigh DECIMAL(6,2) NOT NULL DEFAULT 100000 CHECK (frequencyHigh >= 0.1 AND frequencyHigh <= 100000),
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
     width DECIMAL(6,2) DEFAULT 1 CHECK (width >= 0.1 AND width <= 100000),
-    unit portCoaxConfigurationRate DEFAULT 'GHz',
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    unit portCoaxConfigurationRate DEFAULT 'GHz'
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -941,8 +944,10 @@ CREATE TABLE IF NOT EXISTS _nePortEthernet (
     neTsId INTEGER NOT NULL,
     category portEthernetConfiguration NOT NULL DEFAULT 'Cat6A',
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
-    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps'
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -951,8 +956,10 @@ CREATE TABLE IF NOT EXISTS _nePortLoopback (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortLoopback') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
-    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps'
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -964,8 +971,10 @@ CREATE TABLE IF NOT EXISTS _nePortFiber (
     unit portFiberConfigurationRate NOT NULL DEFAULT 'Gbps',
     mode portFiberConfigurationMode NOT NULL DEFAULT 'SMOF',
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
-    width INTEGER DEFAULT 1 CHECK (width >= 1 AND width <= 1000),
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    width INTEGER DEFAULT 1 CHECK (width >= 1 AND width <= 1000)
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -975,8 +984,10 @@ CREATE TABLE IF NOT EXISTS _nePortXdsl (
     neTsId INTEGER NOT NULL,
     category portXdslConfiguration NOT NULL DEFAULT 'VDSL2',
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 100),
-    unit portXdslConfigurationRate DEFAULT 'Mbps',
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    unit portXdslConfigurationRate DEFAULT 'Mbps'
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -985,8 +996,10 @@ CREATE TABLE IF NOT EXISTS _nePortVirtual (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortVirtual') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
     rate INTEGER NOT NULL DEFAULT 10 CHECK (rate >= 1 AND rate <= 768),
-    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps',
-    FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    unit portEthernetConfigurationRate NOT NULL DEFAULT 'Gbps'
+    --,
+    --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
+    -- more DuckDB Foreign key issues when performing deletes
 );
 
 ---
@@ -1028,7 +1041,6 @@ CREATE TABLE IF NOT EXISTS _serviceIngress (
     sVlanId INTEGER NOT NULL DEFAULT 0 CHECK (sVlanId >= 0 AND sVlanId <= 4095),
     lagMember INTEGER DEFAULT 0 CHECK (lagMember >= 0 AND lagMember <= 256),
     FOREIGN KEY (serviceId) REFERENCES service (id),
-    FOREIGN KEY (serviceTsId) REFERENCES _service (tsId),
     FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
@@ -1046,7 +1058,6 @@ CREATE TABLE IF NOT EXISTS _serviceEgress (
     sVlanId INTEGER NOT NULL DEFAULT 0 CHECK (sVlanId >= 0 AND sVlanId <= 4095),
     lagMember INTEGER DEFAULT 0 CHECK (lagMember >= 0 AND lagMember <= 256),
     FOREIGN KEY (serviceId) REFERENCES service (id),
-    FOREIGN KEY (serviceTsId) REFERENCES _service (tsId),
     FOREIGN KEY (neId) REFERENCES ne (id)
 );
 
@@ -2025,3 +2036,4 @@ DROP TABLE world_ZWE;
 --
 -- EOF
 --
+CHECKPOINT;

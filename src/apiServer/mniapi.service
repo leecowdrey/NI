@@ -9,7 +9,7 @@ Environment=NODE_ENV=production
 ExecStart=/usr/bin/node --run start
 Group=mni
 LimitNOFILE=infinity
-Restart=never
+Restart=on-failure
 StandardError=append:/var/log/mni/api.log
 StandardOutput=append:/var/log/mni/api.log
 Type=simple

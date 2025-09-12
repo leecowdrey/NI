@@ -48,9 +48,9 @@ function fetchTrenchPremisesPassed(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
-      }
+      } //else {
+        //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -62,7 +62,8 @@ function fetchTrenchPremisesPassed(id, p) {
       }
     })
     .catch((e) => {
-      ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
+      notify(e);
+      //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
     });
 }
 function fetchTrenchDistance(id, p) {
@@ -87,9 +88,9 @@ function fetchTrenchDistance(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
-      }
+      } //else {
+        //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -101,7 +102,8 @@ function fetchTrenchDistance(id, p) {
       }
     })
     .catch((e) => {
-      ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
+      notify(e);
+      //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
     });
 }
 function fetchListTrench() {
@@ -125,9 +127,9 @@ function fetchListTrench() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fltReady = setTimeout(fetchListTrench, retryMs);
-      }
+      } //else {
+        //fltReady = setTimeout(fetchListTrench, retryMs);
+      //}
     })
     .then((data) => {
       let trenchIds =
@@ -140,7 +142,8 @@ function fetchListTrench() {
       document.getElementById("trenchDistance").setAttribute("value", "");
     })
     .catch((e) => {
-      fltReady = setTimeout(fetchListTrench, retryMs);
+      notify(e);
+      //fltReady = setTimeout(fetchListTrench, retryMs);
     });
 }
 function fetchTrenchPoints() {
@@ -164,9 +167,9 @@ function fetchTrenchPoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          ftpReady = setTimeout(fetchTrenchPoints, retryMs);
-        }
+        } //else {
+          //ftpReady = setTimeout(fetchTrenchPoints, retryMs);
+        //}
       })
       .then((data) => {
         let trenchPoints =
@@ -182,7 +185,8 @@ function fetchTrenchPoints() {
         document.getElementById("trenchPoint").innerHTML = trenchPoints;
       })
       .catch((e) => {
-        ftpReady = setTimeout(fetchTrenchPoints, retryMs);
+        notify(e);
+        //ftpReady = setTimeout(fetchTrenchPoints, retryMs);
       });
   }
 }
@@ -201,9 +205,9 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmrReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+        //fmrReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -222,7 +226,8 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      fmrReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //fmrReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 function fetchTrenchGeometry() {
@@ -253,9 +258,9 @@ function fetchTrenchGeometry() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftgReady = setTimeout(fetchTrenchGeometry, retryMs);
-      }
+      } //else {
+        //ftgReady = setTimeout(fetchTrenchGeometry, retryMs);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -301,7 +306,8 @@ function fetchTrenchGeometry() {
       fetchTrenchPremisesPassed(trenchId, point);
     })
     .catch((e) => {
-      ftgReady = setTimeout(fetchTrenchGeometry, retryMs);
+      notify(e);
+      //ftgReady = setTimeout(fetchTrenchGeometry, retryMs);
     });
   loadScript(mapRenderUrl, function () {
     function displayMap() {
@@ -363,10 +369,12 @@ try {
   countryListPopulate();
   fetchMapRender();
 } catch (e) {
-  fmrReady = setTimeout(fetchMapRender, retryMs);
+  notify(e);
+  //mrReady = setTimeout(fetchMapRender, retryMs);
 }
 try {
   fetchListTrench();
 } catch (e) {
-  fltReady = setTimeout(fetchListTrench, retryMs);
+  notify(e);
+  //fltReady = setTimeout(fetchListTrench, retryMs);
 }

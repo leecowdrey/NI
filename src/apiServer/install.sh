@@ -27,7 +27,7 @@ which curl &> /dev/null || apt install -y curl &>/dev/null
 which openssl &> /dev/null || apt install -y openssl &>/dev/null
 which unzip &> /dev/null || apt install -y unzip &>/dev/null
 which git &> /dev/null || apt install -y git &>/dev/null
-which node &> /dev/null || (curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh && bash nodesource_setup.sh && apt update && apt install -y nodejs)
+which node &> /dev/null || (curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && bash nodesource_setup.sh && apt update && apt install -y nodejs)
 which npm &> /dev/null || exit 1
 
 ADDRESS=$(grep -E "^APISERV_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)

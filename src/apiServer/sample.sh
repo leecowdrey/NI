@@ -34,18 +34,23 @@ APISERV_URL_VERSION=$(grep -E "^APISERV_URL_VERSION=.*" ${ENV}|cut -d '=' -f2-|c
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
 doing "Checking for API Readiness"
-READY=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure --connect-timeout 5 \
-     -X GET "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/api/readiness" \
-     -H "Accept: application/json" \
-     -u "${SERVICE_USERNAME}:${SERVICE_KEY}")
-RETVAL=$?
-if [[ ${RETVAL} -eq 0 ]] ; then
-  if [[ "${READY}" == "200" ]] ; then
-    RETVAL=0
-  else
-    RETVAL=1
-  fi
-fi
+READY_ATTEMPTS=3
+READY_ATTEMPT=0
+while [[ ${READY_ATTEMPT} -lt ${READY_ATTEMPTS} ]] ; do
+     READY=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure --connect-timeout 15 \
+          -X GET "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/api/readiness" \
+          -H "Accept: application/json" \
+          -u "${SERVICE_USERNAME}:${SERVICE_KEY}")
+     RETVAL=$?
+     if [[ ${RETVAL} -eq 0 ]] ; then
+          if [[ "${READY:0:1}" == "2" ]] ; then
+               RETVAL=0
+               break
+          else
+               RETVAL=1
+          fi
+     fi
+done
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 for SECRET in sample/secret-*.json ; do
@@ -59,7 +64,7 @@ for SECRET in sample/secret-*.json ; do
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/secret-${SECRET}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" || "${POST}" == "409" ]] ; then
+          if [[ "${POST:0:1}" == "2" || "${POST}" == "409" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -76,7 +81,7 @@ doing "Adding bulk email providers"
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/admin_email.json )
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -92,7 +97,7 @@ doing "Adding bulk kafka providers"
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/admin_kafka.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -108,7 +113,7 @@ doing "Adding bulk map providers"
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/admin_map.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -124,7 +129,7 @@ doing "Adding bulk workflow engines"
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/admin_workflow.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -144,7 +149,7 @@ for CVE in sample/CVE-*.json ; do
      -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
      -d @sample/CVE-${CVE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" || "${POST}" == "409" ]] ; then
+          if [[ "${POST:0:1}" == "2" || "${POST}" == "409" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -165,7 +170,7 @@ doing "Adding bulk sites"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/site-${GEO_SITE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -186,7 +191,7 @@ doing "Adding bulk racks"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/rack-${GEO_RACK}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -200,19 +205,56 @@ doing "Adding bulk trenches"
     GEO_TRENCH=${GEO_TRENCH#"sample/trench-"}
     GEO_TRENCH=${GEO_TRENCH%".json"}
     info "Loading trenches for ${GEO_TRENCH}"
-    POST=$(curl --silent --write-out "%{http_code}" --output ${GEO_ISO_CODE}.log --insecure \
-          -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/trenches" \
-          -H "Accept: application/json" \
-          -H "Content-Type: application/json" \
-          -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
-          -d @sample/trench-${GEO_TRENCH}.json)
-     if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
-          RETVAL=0
-          else
-          RETVAL=1
+    RETRY=1
+    until [ ${RETRY} = 0 ] ; do
+     POST=$(curl --silent --write-out "%{http_code}" --output ${GEO_ISO_CODE}.log --insecure \
+               -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/trenches" \
+               -H "Accept: application/json" \
+               -H "Content-Type: application/json" \
+               -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+               -d @sample/trench-${GEO_TRENCH}.json)
+          if [[ ${RETVAL} -eq 0 ]] ; then
+               if [[ "${POST:0:1}" == "2" ]] ; then
+                    RETVAL=0
+                    RETRY=0
+               elif [[ "${POST}" == "413" ]] ; then
+                    sleep 30s
+                    RETRY=1
+               else
+                    RETVAL=1
+                    RETRY=0
+               fi
           fi
-     fi
+     done
+     [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+  done
+
+doing "Adding extra bulk trenches"
+  for GEO_TRENCH in sample/trench-???-*.json ; do
+    GEO_TRENCH=${GEO_TRENCH#"sample/trench-"}
+    GEO_TRENCH=${GEO_TRENCH%".json"}
+    info "Loading bulk trenches for ${GEO_TRENCH}"
+    RETRY=1
+    until [ ${RETRY} = 0 ] ; do
+     POST=$(curl --silent --write-out "%{http_code}" --output ${GEO_ISO_CODE}.log --insecure \
+               -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/trenches/bulk" \
+               -H "Accept: application/json" \
+               -H "Content-Type: application/json" \
+               -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
+               -d @sample/trench-${GEO_TRENCH}.json)
+          if [[ ${RETVAL} -eq 0 ]] ; then
+               if [[ "${POST:0:1}" == "2" ]] ; then
+                    RETVAL=0
+                    RETRY=0
+               elif [[ "${POST}" == "413" ]] ; then
+                    sleep 30s
+                    RETRY=1
+               else
+                    RETVAL=1
+                    RETRY=0
+               fi
+          fi
+     done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
 
@@ -228,7 +270,7 @@ doing "Adding bulk poles"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/pole-${GEO_POLE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -249,7 +291,7 @@ doing "Adding bulk ducts"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/duct-${GEO_DUCT}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -270,7 +312,7 @@ doing "Adding bulk cables"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/cable-${GEO_CABLE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -291,7 +333,7 @@ doing "Adding bulk network equipment"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/ne-${GEO_NE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -312,7 +354,7 @@ doing "Adding bulk services"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -d @sample/service-${GEO_SERVICE}.json)
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1
@@ -329,7 +371,7 @@ doing "Adding document - favicon.ico"
           -u "${SERVICE_USERNAME}:${SERVICE_KEY}" \
           -F "document=@sample/favicon.ico")
      if [[ ${RETVAL} -eq 0 ]] ; then
-          if [[ "${POST}" == "200" ]] ; then
+          if [[ "${POST:0:1}" == "2" ]] ; then
           RETVAL=0
           else
           RETVAL=1

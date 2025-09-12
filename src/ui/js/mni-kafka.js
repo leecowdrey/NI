@@ -310,19 +310,20 @@ function fetchProvider() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          fpReady = setTimeout(fetchProvider, retryMs);
-        }
+        } //else {
+          //fpReady = setTimeout(fetchProvider, retryMs);
+        //}
       })
       .then((data) => {
         displayProvider(data);
       })
       .catch((e) => {
-        fpReady = setTimeout(fetchProvider, retryMs);
+        notify(e);
+        //fpReady = setTimeout(fetchProvider, retryMs);
       });
-  } else {
-    fpReady = setTimeout(fetchProvider, retryMs);
-  }
+  } //else {
+    //fpReady = setTimeout(fetchProvider, retryMs);
+  //}
 }
 function fetchProviderList() {
   if (fplReady != null) {
@@ -339,9 +340,9 @@ function fetchProviderList() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fplReady = setTimeout(fetchProviderList, retryMs);
-      }
+      } //else {
+        //fplReady = setTimeout(fetchProviderList, retryMs);
+      //}
     })
     .then((data) => {
       let Ids =
@@ -370,11 +371,13 @@ function fetchProviderList() {
       fetchProvider();
     })
     .catch((e) => {
-      fplReady = setTimeout(fetchProviderList, retryMs);
+      notify(e);
+      //fplReady = setTimeout(fetchProviderList, retryMs);
     });
 }
 try {
   fetchProviderList();
 } catch (e) {
-  fplReady = setTimeout(fetchProviderList, retryMs);
+  notify(e);
+  //fplReady = setTimeout(fetchProviderList, retryMs);
 }

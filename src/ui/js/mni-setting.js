@@ -71,13 +71,14 @@ function saveAdminData() {
     body: JSON.stringify(reqJson),
     keepalive: true,
   })
-    .then((response) => {
-      if (!response.ok) {
-        sadReady = setTimeout(saveAdminData, retryMs);
-      }
-    })
+    //.then((response) => {
+    //  if (!response.ok) {
+    //    sadReady = setTimeout(saveAdminData, retryMs);
+    //  }
+    //})
     .catch((e) => {
-      sadReady = setTimeout(saveAdminData, retryMs);
+      notify(e);
+      //sadReady = setTimeout(saveAdminData, retryMs);
     });
 }
 function fetchAdminData() {
@@ -94,9 +95,9 @@ function fetchAdminData() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fadReady = setTimeout(fetchAdminData, retryMs);
-      }
+      } //else {
+        //fadReady = setTimeout(fetchAdminData, retryMs);
+      //}
     })
     .then((data) => {
       let hD = 3;
@@ -121,15 +122,17 @@ function fetchAdminData() {
       document.getElementById("predictedUnit").value = pU;
     })
     .catch((e) => {
-      fadReady = setTimeout(fetchAdminData, retryMs);
+      notify(e);
+      //fadReady = setTimeout(fetchAdminData, retryMs);
     });
 }
 try {
   resetMinMax("historical");
   resetMinMax("predicted");
-} catch (e) {}
+} catch (e) {notify(e);}
 try {
   fetchAdminData();
 } catch (e) {
-  fadReady = setTimeout(fetchAdminData, retryMs);
+  notify(e);
+  //fadReady = setTimeout(fetchAdminData, retryMs);
 }

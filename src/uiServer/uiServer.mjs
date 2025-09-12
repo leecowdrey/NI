@@ -658,6 +658,10 @@ var run = async () => {
     res.render("trenchLifetime");
   });
 
+  app.get(serveUrlPrefix + "/trenchCountry", function (req, res, next) {
+    res.render("trenchCountry");
+  });
+
   app.get(serveUrlPrefix + "/q2c", function (req, res, next) {
     res.render("q2c");
   });

@@ -48,7 +48,7 @@ function fetchCveNe(neId = null) {
       }
     })
     .catch((e) => {
-      console.error(e);
+      notify(e);
     });
 }
 function updateNePointFromSlider() {
@@ -77,9 +77,9 @@ function fetchListNe() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flrReady = setTimeout(fetchListNe, retryMs);
-      }
+      } //else {
+        //flrReady = setTimeout(fetchListNe, retryMs);
+      //}
     })
     .then((data) => {
       let neIds =
@@ -90,8 +90,8 @@ function fetchListNe() {
       document.getElementById("neId").innerHTML = neIds;
     })
     .catch((e) => {
-      console.error(e);
-      flrReady = setTimeout(fetchListNe, retryMs);
+      notify(e);
+      //flrReady = setTimeout(fetchListNe, retryMs);
     });
 }
 function fetchNe(neId, point = null) {
@@ -123,9 +123,9 @@ function fetchNe(neId, point = null) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flrReady = setTimeout(fetchNe, retryMs);
-      }
+      } //else {
+        //flrReady = setTimeout(fetchNe, retryMs);
+      //}
     })
     .then((data) => {
       if (data.ports != null) {
@@ -298,8 +298,8 @@ function fetchNe(neId, point = null) {
       }
     })
     .catch((e) => {
-      console.error(e);
-      frReady = setTimeout(fetchNe, retryMs);
+      notify(e);
+      //frReady = setTimeout(fetchNe, retryMs);
     });
 }
 function fetchNePoints() {
@@ -319,9 +319,9 @@ function fetchNePoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          frpReady = setTimeout(fetchNePoints, retryMs);
-        }
+        } //else {
+          //frpReady = setTimeout(fetchNePoints, retryMs);
+        //}
       })
       .then((data) => {
         neRawPoints = [];
@@ -360,8 +360,8 @@ function fetchNePoints() {
         }
       })
       .catch((e) => {
-        console.error(e);
-        frpReady = setTimeout(fetchNePoints, retryMs);
+        notify(e);
+        //frpReady = setTimeout(fetchNePoints, retryMs);
       });
   }
 }
@@ -369,6 +369,6 @@ try {
   countryListPopulate();
   fetchListNe();
 } catch (e) {
-  console.error(e);
-  flrReady = setTimeout(fetchListNe, retryMs);
+  notify(e);
+  //flrReady = setTimeout(fetchListNe, retryMs);
 }

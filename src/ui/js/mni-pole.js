@@ -43,9 +43,9 @@ function fetchListPoles() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fltReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+        //fltReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       let poleIds =
@@ -58,7 +58,8 @@ function fetchListPoles() {
       document.getElementById("poleClassifier").setAttribute("value", "");
     })
     .catch((e) => {
-      fltReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //fltReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 function fetchPolePoints() {
@@ -79,9 +80,9 @@ function fetchPolePoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          fppReady = setTimeout(fetchMapRender, retryMs);
-        }
+        } //else {
+          //fppReady = setTimeout(fetchMapRender, retryMs);
+        //}
       })
       .then((data) => {
         let polePoints =
@@ -97,7 +98,8 @@ function fetchPolePoints() {
         document.getElementById("polePoint").innerHTML = polePoints;
       })
       .catch((e) => {
-        fppReady = setTimeout(fetchMapRender, retryMs);
+        notify(e);
+        //fppReady = setTimeout(fetchMapRender, retryMs);
       });
   }
 }
@@ -116,9 +118,9 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmrReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+        //fmrReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -137,7 +139,8 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      fmrReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //fmrReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 function fetchPole() {
@@ -168,9 +171,9 @@ function fetchPole() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          ftgReady = setTimeout(fetchPole, retryMs);
-        }
+        } //else {
+          //ftgReady = setTimeout(fetchPole, retryMs);
+        //}
       })
       .then((data) => {
         if (data != null) {
@@ -206,7 +209,8 @@ function fetchPole() {
         }
       })
       .catch((e) => {
-        ftgReady = setTimeout(fetchPole, retryMs);
+        notify(e);
+        //ftgReady = setTimeout(fetchPole, retryMs);
       });
     loadScript(mapRenderUrl, function () {
       function displayMap() {
@@ -238,10 +242,12 @@ try {
   countryListPopulate();
   fetchMapRender();
 } catch (e) {
-  fmrReady = setTimeout(fetchMapRender, retryMs);
+  notify(e);
+  //fmrReady = setTimeout(fetchMapRender, retryMs);
 }
 try {
   fetchListPoles();
 } catch (e) {
-  fltReady = setTimeout(fetchListPoles, retryMs);
+  notify(e);
+  //fltReady = setTimeout(fetchListPoles, retryMs);
 }

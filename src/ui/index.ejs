@@ -20,14 +20,7 @@
   <link rel="stylesheet" href="/mni/css/style.css">
   <meta name="theme-color" content="#fafafa">
   <script>
-    function toggleLoginPassword() {
-      var x = document.getElementById("password");
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
-      }
-    }
+    function toggleLoginPassword() { var x = document.getElementById("password"); if (x.type === "password") { x.type = "text"; } else { x.type = "password"; } }
   </script>
 </head>
 
@@ -41,9 +34,9 @@
       <div class="middle">
         <div class="inner" id="loginPanel">
           Login<br>
-          <label for="uname">Username</label><input type="text" placeholder="Enter Username" name="uname" id="username"
+          <label for="uname">Username</label><input type="text" placeholder="Enter Username" id="uname" name="username"
             required minlength="4"><br>
-          <label for="psw">Password</label><input type="password" placeholder="Enter Password" name="psw" id="password"
+          <label for="psw">Password</label><input type="password" placeholder="Enter Password" id="psw" name="password"
             required minlength="12"><br>
           <button type="submit">login</button><br>
           <label><input type="checkbox" checked="checked" onclick="toggleLoginPassword()" name="togglePwd">
@@ -56,6 +49,9 @@
   <div class="footer">
     <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
   </div>
+  <script>
+   localStorage.setItem("mni.uiUrl", window.location.href);
+  </script>
 </body>
 
 </html>

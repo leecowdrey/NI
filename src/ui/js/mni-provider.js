@@ -31,9 +31,9 @@ function fetchProviderStats() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ready = setTimeout(fetchProviderStats, retryMs);
-      }
+      } //else {
+        //ready = setTimeout(fetchProviderStats, retryMs);
+      //}
     })
     .then((data) => {
       if (data.providers != null) {
@@ -111,11 +111,13 @@ function fetchProviderStats() {
       ready = setTimeout(fetchProviderStats, refreshMs);
     })
     .catch((e) => {
-      ready = setTimeout(fetchProviderStats, retryMs);
+      notify(e);
+      //ready = setTimeout(fetchProviderStats, retryMs);
     });
 }
 try {
   fetchProviderStats();
 } catch (e) {
-  ready = setTimeout(fetchProviderStats, retryMs);
+  notify(e);
+  //ready = setTimeout(fetchProviderStats, retryMs);
 }

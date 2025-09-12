@@ -295,12 +295,13 @@ function fetchStats() {
       ready = setTimeout(fetchStats, refreshMs);
     })
     .catch((e) => {
-      console.error(e);
-      ready = setTimeout(fetchStats, refreshMs);
+      notify(e);
+      //ready = setTimeout(fetchStats, refreshMs);
     });
 }
 try {
   fetchStats();
 } catch (e) {
-  ready = setTimeout(fetchStats, refreshMs);
+  notify(e);
+  //ready = setTimeout(fetchStats, refreshMs);
 }

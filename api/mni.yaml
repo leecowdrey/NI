@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1756799768
+  version: 1.0.0.1757673362
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -10440,25 +10440,16 @@ paths:
                   delete:
                     $ref: "#/components/schemas/delete"
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                description: internal trench identifiers returned in the same order as supplied
-                type: array
-                items:
-                  $ref: "#/components/schemas/trenchId"
-              examples:
-                sample:
-                  value:
-                    - 38b6c897-9982-4426-b9e3-c603e7e2cb5d
+        "202":
+          $ref: "#/components/responses/Accepted"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+        "413":
+          $ref: "#/components/responses/TooLarge"
   /trenches/state:
     get:
       summary: Simple statistics for trenches
@@ -15109,7 +15100,7 @@ paths:
     post:
       summary: Find country by coordinate
       description: |
-        Find the matching ISO 3166-1 alpha-3 three-letter country code that contains the supplied coordinate 
+        Find the matching ISO 3166-1 alpha-3 three-letter country code that contains the supplied coordinate
       security:
         - openId:
             - read:mni_ui
@@ -15134,7 +15125,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/coordinate"
-            examples: 
+            examples:
               sample:
                 value:
                   x: -4.432051999699990
@@ -20882,6 +20873,8 @@ components:
         WWW_Authenticate:
           schema:
             type: string
+    Accepted:
+      description: bulk data accepted for server-side processing
     BadRequest:
       description: Bad request
       content:
@@ -20913,7 +20906,9 @@ components:
             description: specified media type was not found or not supported
             type: object
     TooLarge:
-      description: Request Entity Too Large
+      description: |
+        - existing bulk data is still being processed, try again in specified `Retry-After` header value (seconds), or
+        - supplied payload is too large
 security:
   - openId:
       # {scheme}:{scope}

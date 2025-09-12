@@ -412,19 +412,37 @@ const ftsTables = [
   },
 ];
 
-global.DEBUG = false;
-global.DDI = null;
-global.DDC = null;
+var DEBUG = false;
+var DDI = null;
+var DDC = null;
 
 //const output = fs.createWriteStream('./stdout.log');
 //const errorOutput = fs.createWriteStream('./stderr.log');
-global.LOGGER = new Console({
+var LOGGER = new Console({
   stdout: process.stdout,
   stderr: process.stderr,
   colorMode: false,
 });
 
-//
+// global arrays for bulk loads
+var CABLE = [];
+var DUCT = [];
+var NE = [];
+var POLE = [];
+var RACK = [];
+var SERVICE = [];
+var SITE = [];
+var TRENCH = [];
+const BULK_MAX_CABLE = 100;
+const BULK_MAX_DUCT = 100;
+const BULK_MAX_NE = 100;
+const BULK_MAX_POLE = 100;
+const BULK_MAX_RACK = 100;
+const BULK_MAX_SERVICE = 100;
+const BULK_MAX_SITE = 100;
+const BULK_MAX_TRENCH = 100;
+
+// various globals
 var mniLicenseHost = null;
 var mniLicenseDomain = null;
 var mniLicenseStart = null;
@@ -433,11 +451,16 @@ var mniCountryCode = null;
 var tickTimer = null;
 var tickIntervalMs = null;
 var duckDbFile = null;
+var duckDbInstallExtensions = ["spatial"]; // "inet",
 var duckDbExtensions = ["spatial"]; // "inet",
 var duckDbMaxMemory = null;
 var duckDbThreads = null;
 var duckDbVerison = null;
 var jobBackupEnabled = false;
+var updateCountryCodeTimer = null;
+var updateCountryCodeIntervalMs = 30000; // 30 seconds
+var bulkTrenchDrainTimer = null;
+var bulkTrenchDraineIntervalMs = 25000; // 25 seconds
 var backupCron = null;
 var backupCronTime = null;
 var hwClockCheck = new Date();
@@ -706,81 +729,87 @@ async function jobBackup(target) {
   }
 }
 
+function epsg4326toEpsg3857(coordinates) {
+  let x = pos[0];
+  let y = pos[1];
+  x = (coordinates[0] * 20037508.34) / 180;
+  y =
+    Math.log(Math.tan(((90 + coordinates[1]) * Math.PI) / 360)) /
+    (Math.PI / 180);
+  y = (y * 20037508.34) / 180;
+  return [x, y];
+}
+
+function epsg3857toEpsg4326(pos) {
+  let x = pos[0];
+  let y = pos[1];
+  x = (x * 180) / 20037508.34;
+  y = (y * 180) / 20037508.34;
+  y = (Math.atan(Math.pow(Math.E, y * (Math.PI / 180))) * 360) / Math.PI - 90;
+  return [x, y];
+}
+
 async function coordinatesFromWktLineString(
   wkt,
   crsSrc = OAS.wktEpsg3857,
   crsDst = OAS.wktEpsg4326
 ) {
   let coordinates = [];
-  let points = 0;
-  // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
-  // to array of coordinates: x=2.198299999902494, y=41.39499999988968
-  if (wktLineStringRegex.test(wkt)) {
-    let ddRead = await DDC.runAndReadAll(
-      "SELECT ST_NumPoints(ST_GeomFromText('" + wkt + "'))"
-    );
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      points = toInteger(ddRows[0][0]);
-    }
-    if (points > 0) {
-      for (let p = 1; p <= points; p++) {
-        let geosql =
-          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_PointN(ST_GeomFromText('" +
-          wkt +
-          "')," +
-          p +
-          "),'" +
-          crsSrc +
-          "','" +
-          crsDst +
-          "') as point)";
-        let ddRead = await DDC.runAndReadAll(geosql);
-        let ddRows = ddRead.getRows();
-        if (ddRows.length > 0) {
-          coordinates.push({
-            x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
-            y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
-            z: 0,
-          });
+  try {
+    let points = 0;
+    // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
+    // to array of coordinates: x=2.198299999902494, y=41.39499999988968
+    if (wktLineStringRegex.test(wkt)) {
+      let ddRead = await DDC.runAndReadAll(
+        "SELECT ST_NumPoints(ST_GeomFromText('" + wkt + "'))"
+      );
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        points = toInteger(ddRows[0][0]);
+      }
+      if (points > 0) {
+        for (let p = 1; p <= points; p++) {
+          let geosql = null;
+          if (crsSrc == OAS.wktEpsg3857) {
+            geosql =
+              "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_FlipCoordinates(ST_Transform(ST_PointN(ST_GeomFromText('" +
+              wkt +
+              "')," +
+              p +
+              "),'" +
+              crsSrc +
+              "','" +
+              crsDst +
+              "')) as point)";
+          } else {
+            geosql =
+              "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_PointN(ST_GeomFromText('" +
+              wkt +
+              "')," +
+              p +
+              "),'" +
+              crsSrc +
+              "','" +
+              crsDst +
+              "') as point)";
+          }
+          let ddRead = await DDC.runAndReadAll(geosql);
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            coordinates.push({
+              x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+              y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+              z: 0,
+            });
+          }
         }
       }
     }
-  }
-  return coordinates;
-}
-
-async function coordinatesStartEndFromWktLineString(
-  wkt,
-  crsSrc = OAS.wktEpsg3857,
-  crsDst = OAS.wktEpsg4326
-) {
-  let coordinates = [];
-  // converts GIS Well-Known Text (WKT) geometric point object such as LINESTRING (3475086.7833 3511016.3572, 3475144.8857 3510989.4322)
-  // to array of coordinates: x=2.198299999902494, y=41.39499999988968
-  if (wktLineStringRegex.test(wkt)) {
-    let geosql =
-      "SELECT ST_X(spoint), ST_Y(spoint), ST_X(epoint), ST_Y(epoint) FROM ( SELECT ST_StartPoint(linestring) as spoint,ST_EndPoint(linestring) as epoint FROM ( SELECT ST_Transform(ST_GeomFromText('" +
-      wkt +
-      "'),'" +
-      crsSrc +
-      "','" +
-      crsDst +
-      "', true) as linestring ) ) ";
-    let ddRead = await DDC.runAndReadAll(geosql);
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      coordinates.push({
-        x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
-        y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
-        z: 0,
-      });
-      coordinates.push({
-        x: toDecimal(ddRows[0][2], OAS.X_scale, OAS.XY_precision),
-        y: toDecimal(ddRows[0][3], OAS.Y_scale, OAS.XY_precision),
-        z: 0,
-      });
-    }
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "coordinatesFromWktLineString",
+      error: e,
+    });
   }
   return coordinates;
 }
@@ -790,46 +819,73 @@ async function coordinateFromWktPoint(
   crsSrc = OAS.wktEpsg3857,
   crsDst = OAS.wktEpsg4326
 ) {
-  // converts GIS Well-Known Text (WKT) geometric point object such as POINT (244713.636599999 5070779.8199)
-  // to x=41.39499999988968, y=2.198299999902494
   let coordinate = {};
-  if (wktPointRegex.test(wkt)) {
-    let ddRead = await DDC.runAndReadAll(
-      "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('" +
-        wkt +
-        "'),'" +
-        crsSrc +
-        "','" +
-        crsDst +
-        "',true) as point)"
-    );
-    let ddRows = ddRead.getRows();
-    if (ddRows.length > 0) {
-      if (ddRows[0][0] != null) {
-        coordinate.x = toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision);
+  try {
+    // converts GIS Well-Known Text (WKT) geometric point object such as POINT (244713.636599999 5070779.8199)
+    // to x=41.39499999988968, y=2.198299999902494
+    if (wktPointRegex.test(wkt)) {
+      let ddRead = null;
+      if (crsSrc == OAS.wktEpsg3857) {
+        let geosql = null;
+        geosql =
+          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_FlipCoordinates(ST_Transform(ST_GeomFromText('" +
+          wkt +
+          "'),'" +
+          crsSrc +
+          "','" +
+          crsDst +
+          "',true)) as point)";
+      } else {
+        geosql =
+          "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Transform(ST_GeomFromText('" +
+          wkt +
+          "'),'" +
+          crsSrc +
+          "','" +
+          crsDst +
+          "',true) as point)";
       }
-      if (ddRows[0][1] != null) {
-        coordinate.y = toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision);
+      ddRead = await DDC.runAndReadAll(geosql);
+      let ddRows = ddRead.getRows();
+      if (ddRows.length > 0) {
+        if (ddRows[0][0] != null) {
+          coordinate.x = toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision);
+        }
+        if (ddRows[0][1] != null) {
+          coordinate.y = toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision);
+        }
       }
     }
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "coordinateFromWktPoint",
+      error: e,
+    });
   }
   return coordinate;
 }
 
+// longitude (lng) = X, latitude (lat) = Y
 async function countryFromCoordinate(x, y) {
   let country = null;
-  if (x >= OAS.X_min && x <= OAS.X_max && y >= OAS.Y_min && y <= OAS.Y_max) {
+  try {
     let ddRead = await DDC.runAndReadAll(
       "SELECT country FROM worldGeo WHERE ST_INTERSECTS(geoCollection,ST_POINT2D(" +
         x +
         "," +
         y +
-        ")) LIMIT 1"
+        "))"
     );
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
       country = ddRows[0][0];
     }
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "countryFromCoordinate",
+      coordinate: { x: x, y: y },
+      error: e,
+    });
   }
   return country;
 }
@@ -838,14 +894,43 @@ async function jobUpdateGeometry() {
   if (updateGeometryTimer != null) {
     clearTimeout(updateGeometryTimer);
   }
-  // move to cron
+  try {
+    // flush DuckDB write-ahead-log (WAL)
+    await DDC.run("CHECKPOINT");
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "updateGeometry",
+      state: "failed",
+      error: e,
+    });
+  }
   // child table (i.e. _pole) holds the spatial points as 3D points
   // parent table (i.e. pole) holds the spatial geometry object see https://duckdb.org/docs/stable/extensions/spatial/overview
   let points = [
-    { table: "_pole", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
-    { table: "_rack", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
-    { table: "_site", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
-    { table: "_trenchCoordinate", dst: "geoPoint", src: "ST_Point3D(x,y,z)" },
+    {
+      table: "_pole",
+      dst: "geoPoint",
+      src: "ST_Point2D(x,y)",
+      bulk: BULK_MAX_POLE,
+    },
+    {
+      table: "_rack",
+      dst: "geoPoint",
+      src: "ST_Point2D(x,y)",
+      bulk: BULK_MAX_RACK,
+    },
+    {
+      table: "_site",
+      dst: "geoPoint",
+      src: "ST_Point2D(x,y)",
+      bulk: BULK_MAX_SITE,
+    },
+    {
+      table: "_trenchCoordinate",
+      dst: "geoPoint",
+      src: "ST_Point2D(x,y)",
+      bulk: BULK_MAX_TRENCH,
+    },
   ];
   try {
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
@@ -854,7 +939,9 @@ async function jobUpdateGeometry() {
     });
     // transform well known text (WKT) for sites
     let ddRead = await DDC.runAndReadAll(
-      "SELECT tsId,siteId,wkt FROM _site WHERE wkt IS NOT NULL"
+      "SELECT tsId,siteId,wkt FROM _site WHERE tsId IN (SELECT tsId FROM _site WHERE wkt IS NOT NULL AND X IS NULL AND Y IS NULL LIMIT " +
+        BULK_MAX_SITE +
+        ")"
     );
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
@@ -889,7 +976,9 @@ async function jobUpdateGeometry() {
     ddRead = await DDC.runAndReadAll(
       "SELECT tsId,trenchId,source,strftime(point,'" +
         pointFormat +
-        "'),wkt FROM _trench WHERE wkt IS NOT NULL"
+        "'),wkt FROM _trench WHERE tsId IN (SELECT tsId FROM _trench WHERE wkt IS NOT NULL LIMIT " +
+        BULK_MAX_TRENCH +
+        ")"
     );
     ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
@@ -909,14 +998,9 @@ async function jobUpdateGeometry() {
         if (coordinates != null) {
           if (coordinates.length > 0) {
             for (let i = 0; i < coordinates.length; i++) {
-              if (
-                coordinates[i].x >= OAS.X_min &&
-                coordinates[i].x <= OAS.X_max &&
-                coordinates[i].y >= OAS.Y_min &&
-                coordinates[i].y <= OAS.Y_max
-              ) {
+              if (coordinates[i].x != null && coordinates[i].y != null) {
                 let ddtc = await DDC.prepare(
-                  "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z) VALUES (strptime($1,$2),$3,$4,$5,$6,$7,$8)"
+                  "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y) VALUES (strptime($1,$2),$3,$4,$5,$6,$7)"
                 );
                 ddtc.bindVarchar(1, ddRows[idx][3]);
                 ddtc.bindVarchar(2, pointFormat);
@@ -931,27 +1015,9 @@ async function jobUpdateGeometry() {
                   7,
                   toDecimal(coordinates[i].y, OAS.Y_scale, OAS.XY_precision)
                 );
-                ddtc.bindFloat(
-                  8,
-                  toDecimal(coordinates[i].z, OAS.Z_scale, OAS.Z_precision)
-                );
                 await ddtc.run();
                 await DDC.run(
                   "UPDATE _trench SET wkt = null WHERE tsId = " + ddRows[idx][0]
-                );
-              } else {
-                await DDC.run(
-                  "DELETE FROM _trenchCoordinate WHERE trenchId = '" +
-                    ddRows[idx][0] +
-                    "'"
-                );
-                await DDC.run(
-                  "DELETE FROM _trench WHERE trenchId = '" +
-                    ddRows[idx][0] +
-                    "'"
-                );
-                await DDC.run(
-                  "DELETE FROM trench WHERE id = '" + ddRows[idx][0] + "'"
                 );
               }
             }
@@ -968,11 +1034,17 @@ async function jobUpdateGeometry() {
         points[i].dst +
         " = " +
         points[i].src +
+        " WHERE tsId IN (SELECT tsId FROM " +
+        points[i].table +
         " WHERE " +
         points[i].dst +
-        " IS NULL";
+        " IS NULL AND x IS NOT NULL AND y IS NOT NULL LIMIT " +
+        points[i].bulk +
+        ")";
       await DDC.run(ddSql);
     }
+    // update trench distance
+
     //
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       event: "updateGeometry",
@@ -988,10 +1060,545 @@ async function jobUpdateGeometry() {
   updateGeometryTimer = setTimeout(jobUpdateGeometry, updateGeometryIntervalMs);
 }
 
+async function jobUpdateCountryCode() {
+  if (updateCountryCodeTimer != null) {
+    clearTimeout(updateCountryCodeTimer);
+  }
+  try {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "updateCountryCode",
+      state: "start",
+    });
+    //
+    let ddRead = await DDC.runAndReadAll(
+      "SELECT siteId,tsId,country,x,y FROM _site WHERE x IS NOT NULL and y IS NOT NULL AND countryChecked = false LIMIT " +
+        BULK_MAX_SITE
+    );
+    let ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updateCountryCode",
+            site: ddRows[idx][0],
+            country: ddRows[idx][2],
+          });
+        }
+        let cc = await countryFromCoordinate(ddRows[idx][3], ddRows[idx][4]);
+        if (cc != null && ddRows[idx][2] != null) {
+          if (cc != ddRows[idx][2]) {
+            await DDC.run(
+              "UPDATE _site SET country = '" +
+                cc +
+                "', countryChecked = true WHERE tsId = " +
+                ddRows[idx][1]
+            );
+            LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+              event: "updateCountryCode",
+              change: "site",
+              siteId: ddRows[idx][0],
+              country: cc,
+            });
+          } else {
+            await DDC.run(
+              "UPDATE _site SET countryChecked = true WHERE tsId = " +
+                ddRows[idx][1]
+            );
+            LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+              event: "updateCountryCode",
+              change: "trench",
+              siteId: ddRows[idx][0],
+              country: ddRows[idx][2],
+            });
+          }
+        } else if (cc != null) {
+          await DDC.run(
+            "UPDATE _site SET country = '" +
+              cc +
+              "', countryChecked = true WHERE tsId = " +
+              ddRows[idx][1]
+          );
+          LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+            event: "updateCountryCode",
+            change: "site",
+            siteId: ddRows[idx][0],
+            country: cc,
+          });
+        }
+      }
+    }
+    //
+    ddRead = await DDC.runAndReadAll(
+      "SELECT poleId,tsId,country,x,y FROM _pole WHERE x IS NOT NULL and y IS NOT NULL AND countryChecked = false LIMIT " +
+        BULK_MAX_POLE
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updateCountryCode",
+            pole: ddRows[idx][0],
+            country: ddRows[idx][2],
+          });
+        }
+        let cc = await countryFromCoordinate(ddRows[idx][3], ddRows[idx][4]);
+        if (cc != null && ddRows[idx][2] != null) {
+          if (cc != ddRows[idx][2]) {
+            await DDC.run(
+              "UPDATE _pole SET country = '" +
+                cc +
+                "', countryChecked = true WHERE tsId = " +
+                ddRows[idx][1]
+            );
+            LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+              event: "updateCountryCode",
+              change: "pole",
+              poleId: ddRows[idx][0],
+              country: cc,
+            });
+          } else {
+            await DDC.run(
+              "UPDATE _pole SET countryChecked = true WHERE tsId = " +
+                ddRows[idx][1]
+            );
+            LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+              event: "updateCountryCode",
+              change: "trench",
+              poleId: ddRows[idx][0],
+              country: ddRows[idx][2],
+            });
+          }
+        } else if (cc != null) {
+          await DDC.run(
+            "UPDATE _pole SET country = '" +
+              cc +
+              "', countryChecked = true WHERE tsId = " +
+              ddRows[idx][1]
+          );
+          LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+            event: "updateCountryCode",
+            change: "pole",
+            poleId: ddRows[idx][0],
+            country: cc,
+          });
+        }
+      }
+    }
+    //
+    ddRead = await DDC.runAndReadAll(
+      "SELECT trenchId,tsId,country FROM _trench WHERE countryChecked = false LIMIT " +
+        BULK_MAX_TRENCH
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let idx in ddRows) {
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updateCountryCode",
+            trench: ddRows[idx][0],
+            country: ddRows[idx][2],
+          });
+        }
+        let ddTrenchRead = await DDC.runAndReadAll(
+          "SELECT x,y FROM _trenchCoordinate WHERE trenchId = '" +
+            ddRows[idx][0] +
+            "' LIMIT 1"
+        );
+        let ddTrenchRows = ddTrenchRead.getRows();
+        if (ddTrenchRows.length > 0) {
+          let cc = await countryFromCoordinate(
+            ddTrenchRows[0][0],
+            ddTrenchRows[0][1]
+          );
+          if (cc != null && ddRows[idx][2] != null) {
+            if (cc != ddRows[idx][2]) {
+              await DDC.run(
+                "UPDATE _trench SET country = '" +
+                  cc +
+                  "',countryChecked = true WHERE tsId = " +
+                  ddRows[idx][1]
+              );
+              LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+                event: "updateCountryCode",
+                change: "trench",
+                poleId: ddRows[idx][0],
+                country: cc,
+              });
+            } else {
+              await DDC.run(
+                "UPDATE _trench SET countryChecked = true WHERE tsId = " +
+                  ddRows[idx][1]
+              );
+              LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+                event: "updateCountryCode",
+                change: "trench",
+                trenchId: ddRows[idx][0],
+                country: ddRows[idx][2],
+              });
+            }
+          } else if (cc != null) {
+            await DDC.run(
+              "UPDATE _trench SET country = '" +
+                cc +
+                "',countryChecked = true WHERE tsId = " +
+                ddRows[idx][1]
+            );
+            LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+              event: "updateCountryCode",
+              change: "trench",
+              poleId: ddRows[idx][0],
+              country: cc,
+            });
+          }
+        }
+      }
+    }
+    //
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "updateCountryCode",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "updateCountryCode",
+      state: "failed",
+      error: e,
+    });
+  }
+  updateCountryCodeTimer = setTimeout(
+    jobUpdateCountryCode,
+    updateCountryCodeIntervalMs
+  );
+}
+
+async function jobBulkTrenchDrain() {
+  if (bulkTrenchDrainTimer != null) {
+    clearTimeout(bulkTrenchDrainTimer);
+  }
+  try {
+    // flush DuckDB write-ahead-log (WAL)
+    await DDC.run("CHECKPOINT");
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "bulkTrenchDrain",
+      state: "failed checkpoint",
+      error: e,
+    });
+  }
+  try {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "bulkTrenchDrain",
+      state: "start",
+    });
+    while (TRENCH.length > 0) {
+      let trench = TRENCH.pop();
+      if (trench !== undefined) {
+        LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+          event: "bulkTrenchDrain",
+          state: "processing",
+          trench: trench.trenchId,
+        });
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM trench WHERE id = '" + trench.trenchId + "'"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          ddRead = await DDC.runAndReadAll(
+            "SELECT rowid from _trenchCoordinate WHERE trenchId = '" +
+              trench.trenchId +
+              "'"
+          );
+          ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            await DDC.run(
+              "DELETE FROM _trenchCoordinate WHERE trenchId = '" +
+                trench.trenchId +
+                "'"
+            );
+          }
+          ddRead = await DDC.runAndReadAll(
+            "SELECT rowid from _trench WHERE trenchId = '" +
+              trench.trenchId +
+              "'"
+          );
+          ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            await DDC.run(
+              "DELETE FROM _trench WHERE trenchId = '" + trench.trenchId + "'"
+            );
+          }
+          await DDC.run(
+            "UPDATE trench SET delete = false, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+              trench.trenchId +
+              "'"
+          );
+        }
+
+        if (trench.connectsTo?.siteId != null) {
+          if (!(await dbIdExists(trench.connectsTo.siteId, "site"))) {
+            req.connectsTo.siteId = null;
+          }
+        }
+        if (trench.connectsTo?.trenchId != null) {
+          if (!(await dbIdExists(trench.connectsTo.trenchId, "trench"))) {
+            trench.connectsTo.trenchId = null;
+          }
+        }
+        if (trench.connectsTo?.poleId != null) {
+          if (!(await dbIdExists(trench.connectsTo.poleId, "pole"))) {
+            trench.connectsTo.poleId = null;
+          }
+        }
+        if (trench?.country == null && trench.coordinates.length > 0) {
+          trench.country = mniCountryCode;
+          let country = await countryFromCoordinate(
+            trench.coordinates[0].x,
+            trench.coordinates[0].y
+          );
+          if (country != null) {
+            trench.country = country;
+          }
+        }
+        let tsId = await getSeqNextValue("seq_trench");
+        let tsCol = "historicalTsId";
+        switch (trench.source) {
+          case "historical":
+            tsCol = "historicalTsId";
+            break;
+          case "planned":
+            tsCol = "plannedTsId";
+            break;
+          case "predicted":
+            tsCol = "predictedTsId";
+            break;
+        }
+
+        ddRead = await DDC.runAndReadAll(
+          "SELECT id FROM trench WHERE id = '" + trench.trenchId + "'"
+        );
+        ddRows = ddRead.getRows();
+        if (ddRows.length == 0) {
+          let ddp = await DDC.prepare(
+            "INSERT INTO trench (id,delete," +
+              tsCol +
+              ",tsPoint) VALUES ($1,$2,$3,strptime($4,$5))"
+          );
+          ddp.bindVarchar(1, trench.trenchId);
+          ddp.bindBoolean(2, toBoolean(trench.delete));
+          ddp.bindInteger(3, tsId);
+          ddp.bindVarchar(4, trench.point);
+          ddp.bindVarchar(5, pointFormat);
+          await ddp.run();
+        } else {
+          let ddp = await DDC.prepare(
+            "UPDATE trench SET delete = $1, " + tsCol + " = $2 WHERE id = $3"
+          );
+          ddp.bindBoolean(1, toBoolean(trench.delete));
+          ddp.bindInteger(2, tsId);
+          ddp.bindVarchar(3, trench.trenchId);
+          await ddp.run();
+        }
+
+        let ddp = await DDC.prepare(
+          "INSERT INTO _trench (tsId,point,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,plannedDuration,actualDuration,state,reference,probability,country) VALUES ($1,strptime($2,$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)"
+        );
+        ddp.bindInteger(1, tsId);
+        ddp.bindVarchar(2, trench.point);
+        ddp.bindVarchar(3, pointFormat);
+        ddp.bindVarchar(4, trench.trenchId);
+        ddp.bindVarchar(5, trench.source);
+        ddp.bindVarchar(6, trench.purpose);
+        ddp.bindFloat(7, toDecimal(trench.construction.depth));
+        ddp.bindVarchar(8, trench.construction.classifier);
+        ddp.bindVarchar(9, trench.construction.unit);
+        ddp.bindVarchar(10, trench.construction.type);
+        ddp.bindInteger(11, toInteger(trench.demographics.premises.passed));
+        ddp.bindVarchar(12, trench.demographics.premises.area);
+        ddp.bindInteger(13, toInteger(trench.build.planned.duration));
+        ddp.bindInteger(14, toInteger(trench.build.actual.duration));
+        ddp.bindVarchar(15, trench.state);
+        ddp.bindVarchar(16, trench.reference.replace(/'/g, "''"));
+        ddp.bindFloat(
+          17,
+          validateProbability(trench.probability, trench.source)
+        );
+        ddp.bindVarchar(18, trench.country);
+        await ddp.run();
+
+        if (trench.build?.jobId != null) {
+          await DDC.run(
+            "UPDATE _trench SET jobId = '" +
+              trench.build.jobId +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.permitId != null) {
+          await DDC.run(
+            "UPDATE _trench SET permitId = '" +
+              trench.build.permitId +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.planned?.start != null) {
+          await DDC.run(
+            "UPDATE _trench SET plannedStart = strptime('" +
+              trench.build.planned.start +
+              "','" +
+              dateFormat +
+              "') WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.planned?.completion != null) {
+          await DDC.run(
+            "UPDATE _trench SET plannedCompletion = strptime('" +
+              trench.build.planned.completion +
+              "','" +
+              dateFormat +
+              "') WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.planned?.unit != null) {
+          await DDC.run(
+            "UPDATE _trench SET plannedUnit = '" +
+              trench.build.planned.unit +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.actual?.start != null) {
+          await DDC.run(
+            "UPDATE _trench SET actualStart = strptime('" +
+              trench.build.actual.start +
+              "','" +
+              dateFormat +
+              "') WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.actual?.completion != null) {
+          await DDC.run(
+            "UPDATE _trench SET actualCompletion = strptime('" +
+              trench.build.actual.completion +
+              "','" +
+              dateFormat +
+              "') WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.build?.actual?.unit != null) {
+          await DDC.run(
+            "UPDATE _trench SET actualUnit = '" +
+              trench.build.actual.unit +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.connectsTo?.siteId != null) {
+          await DDC.run(
+            "UPDATE _trench SET connectsToSiteId = '" +
+              trench.connectsTo.siteId +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.connectsTo?.trenchId != null) {
+          await DDC.run(
+            "UPDATE _trench SET connectsToTrenchId = '" +
+              trench.connectsTo.trenchId +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench.connectsTo?.poleId != null) {
+          await DDC.run(
+            "UPDATE _trench SET connectsToPoleId = '" +
+              trench.connectsTo.poleId +
+              "' WHERE tsId = " +
+              tsId
+          );
+        }
+        if (trench?.wkt != null) {
+          await DDC.run(
+            "UPDATE _trench SET wkt = '" +
+              trench.wkt +
+              "' " +
+              "WHERE tsId = " +
+              tsId
+          );
+        }
+
+        for (let c = 0; c < trench.coordinates.length; c++) {
+          let ddtc = await DDC.prepare(
+            "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z) VALUES (strptime($1,$2),$3,$4,$5,$6,$7,$8)"
+          );
+          ddtc.bindVarchar(1, trench.point);
+          ddtc.bindVarchar(2, pointFormat);
+          ddtc.bindInteger(3, tsId);
+          ddtc.bindVarchar(4, trench.trenchId);
+          ddtc.bindVarchar(5, trench.source);
+          ddtc.bindFloat(
+            6,
+            toDecimal(trench.coordinates[c].x, OAS.X_scale, OAS.XY_precision)
+          );
+          ddtc.bindFloat(
+            7,
+            toDecimal(trench.coordinates[c].y, OAS.Y_scale, OAS.XY_precision)
+          );
+          ddtc.bindFloat(
+            8,
+            toDecimal(trench.coordinates[c].z, OAS.Z_scale, OAS.Z_precision)
+          );
+          await ddtc.run();
+          if (trench.coordinates[c]?.m != null) {
+            await DDC.run(
+              "UPDATE _trenchCoordinate SET m = '" +
+                trench.coordinates[c].m +
+                "' WHERE tsId = " +
+                tsCId
+            );
+          }
+          if (trench.source == "historical") {
+            await dbAddPredictQueueItem("trench", trench.trenchId, "create");
+          }
+        }
+      }
+    }
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "bulkTrenchDrain",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "bulkTrenchDrain",
+      state: "failed",
+      error: e,
+    });
+  }
+  bulkTrenchDrainTimer = setTimeout(
+    jobBulkTrenchDrain,
+    bulkTrenchDraineIntervalMs
+  );
+}
+
 async function jobUpdatePremisesPassed() {
-  // checks for premises within 50metres of any a trench
+  // checks for premises within ??metres of any a trench
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
+  }
+  try {
+    // flush DuckDB write-ahead-log (WAL)
+    await DDC.run("CHECKPOINT");
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "updatePremisesPassed",
+      state: "failed checkpoint",
+      error: e,
+    });
   }
 
   try {
@@ -1002,7 +1609,7 @@ async function jobUpdatePremisesPassed() {
     // initially get list of historical sites coordinates
     let sitesCoordaintes = [];
     let ddRead = await DDC.runAndReadAll(
-      "SELECT x,y FROM _site,site WHERE _site.siteId = site.id AND _site.tsId = site.historicalTsId AND delete = false"
+      "SELECT x,y,country FROM _site,site WHERE _site.siteId = site.id AND _site.tsId = site.historicalTsId AND country IS NOT NULL AND geoPoint IS NOT NULL AND delete = false"
     );
     let ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
@@ -1010,17 +1617,18 @@ async function jobUpdatePremisesPassed() {
         sitesCoordaintes.push({
           x: ddRows[idx][0],
           y: ddRows[idx][1],
-          used: false,
+          passed: false,
+          country: ddRows[idx][2],
         });
       }
     }
 
     // process all (historical and predicted) trench point variants where premised passed is zero
-    let trenches = [];
     ddRead = await DDC.runAndReadAll(
       "SELECT _trench.tsId,trench.id,_trench.source,strftime(_trench.point,'" +
         pointFormat +
-        "') FROM trench, _trench WHERE _trench.trenchId = trench.id AND _trench.premisesPassed = 0 AND delete = false"
+        "'),country FROM trench, _trench WHERE _trench.trenchId = trench.id AND country IS NOT NULL AND delete = false AND " +
+        "country IN (SELECT DISTINCT country FROM _site WHERE country IS NOT NULL)"
     );
     ddRows = ddRead.getRows();
     if (ddRows.length > 0) {
@@ -1031,52 +1639,150 @@ async function jobUpdatePremisesPassed() {
             trench: ddRows[idx][1],
             source: ddRows[idx][2],
             point: ddRows[idx][3],
+            country: ddRows[idx][4],
           });
         }
-        let ddTcRead = await DDC.runAndReadAll(
-          "SELECT x,y FROM _trenchCoordinate WHERE trenchTsId = " +
-            ddRows[idx][0]
-        );
-        let ddTcRows = ddTcRead.getRows();
-        if (ddTcRows.length > 0) {
-          let premisesPassed = 0;
-          for (let tdx in ddTcRows) {
-            for (let s = 0; s < sitesCoordaintes.length; s++) {
-              if (sitesCoordaintes[s].used == false) {
-                let ddCompare = await DDC.runAndReadAll(
-                  "SELECT st_distance_spheroid( st_point(" +
-                    ddTcRows[tdx][0] +
-                    "," +
-                    ddTcRows[tdx][1] +
-                    "), st_point(" +
-                    sitesCoordaintes[s].x +
-                    "," +
-                    sitesCoordaintes[s].y +
-                    "))"
-                );
-                let ddCompareRows = ddCompare.getRows();
-                if (ddCompareRows.length > 0) {
-                  if (
-                    toDecimal(ddCompareRows[0][0]) <=
-                    toDecimal(premisesPassedBoundaryDistance)
-                  ) {
-                    sitesCoordaintes[s].used = true;
-                    premisesPassed++;
-                  }
-                }
+        let premisesPassed = 0;
+        for (let s = 0; s < sitesCoordaintes.length; s++) {
+          if (sitesCoordaintes[s].passed == false) {
+            let ddCompare = await DDC.runAndReadAll(
+              "SELECT coalesce(st_distance_spheroid(st_point(x,y),st_point(" +
+                sitesCoordaintes[s].x +
+                "," +
+                sitesCoordaintes[s].y +
+                ")),NULL,0) FROM _trenchCoordinate WHERE trenchTsId = " +
+                ddRows[idx][0]
+            );
+            let ddCompareRows = ddCompare.getRows();
+            if (ddCompareRows.length > 0) {
+              if (
+                toDecimal(ddCompareRows[0][0]) <=
+                toDecimal(premisesPassedBoundaryDistance)
+              ) {
+                sitesCoordaintes[s].passed = true;
+                premisesPassed++;
               }
             }
-            for (let s = 0; s < sitesCoordaintes.length; s++) {
-              sitesCoordaintes[s].used = false;
+          }
+        }
+        for (let s = 0; s < sitesCoordaintes.length; s++) {
+          sitesCoordaintes[s].passed = false;
+        }
+        if (premisesPassed > 0) {
+          await DDC.run(
+            "UPDATE _trench SET premisesPassed = " +
+              toInteger(premisesPassed) +
+              " WHERE tsId = " +
+              ddRows[idx][0]
+          );
+        }
+      }
+    }
+    // update trench distances
+    ddRead = await DDC.runAndReadAll(
+      "SELECT _trench.tsId,trench.id,_trench.source,strftime(_trench.point,'" +
+        pointFormat +
+        "') FROM trench, _trench WHERE _trench.trenchId = trench.id AND distanceTotal = 0 AND delete = false"
+    );
+    ddRows = ddRead.getRows();
+    if (ddRows.length > 0) {
+      for (let tdx in ddRows) {
+        let trenchTsId = ddRows[tdx][0];
+        let trenchId = ddRows[tdx][1];
+        let resCoordinate = [];
+        if (DEBUG) {
+          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+            event: "updatePremisesPassed",
+            trench: trenchId,
+            state: "distance",
+          });
+        }
+        let ddp = await DDC.prepare(
+          "SELECT x,y FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2 AND x IS NOT NULL AND y IS NOT NULL"
+        );
+        ddp.bindVarchar(1, trenchId);
+        ddp.bindInteger(2, trenchTsId);
+        let ddPoint = await ddp.runAndReadAll();
+        let ddPointRows = ddPoint.getRows();
+        if (ddPointRows.length > 0) {
+          for (let idx in ddPointRows) {
+            let resObj = {
+              x: toDecimal(ddPointRows[idx][0], OAS.X_scale, OAS.XY_precision),
+              y: toDecimal(ddPointRows[idx][1], OAS.Y_scale, OAS.XY_precision),
+            };
+            resCoordinate.push(resObj);
+            /*
+            if (DEBUG) {
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+                event: "updatePremisesPassed",
+                trench: trenchId,
+                state: "distance",
+                geom: resObj,
+              });
             }
-            if (premisesPassed > 0) {
-              await DDC.run(
-                "UPDATE _trench SET premisesPassed = " +
-                  toInteger(premisesPassed) +
-                  " WHERE tsId = " +
-                  ddRows[idx][0]
-              );
+              */
+          }
+        }
+        // minimum 2 sets required
+        if (resCoordinate.length > 1) {
+          let distance = 0;
+          let unit = "m";
+          for (let i = 0; i < resCoordinate.length - 1; i++) {
+            /*
+            let geosql =     "SELECT st_distance_spheroid(" +
+                "ST_Point2D(" +
+                resCoordinate[i].x +
+                "," +
+                resCoordinate[i].y +
+                ")," +
+                "ST_Point2D(" +
+                resCoordinate[i + 1].x +
+                "," +
+                resCoordinate[i + 1].y
+              +"))";
+              console.log(geosql);
+              */
+            let ddTcRead = await DDC.runAndReadAll(
+              "SELECT st_distance_spheroid(" +
+                "ST_Point2D(" +
+                resCoordinate[i].x +
+                "," +
+                resCoordinate[i].y +
+                ")," +
+                "ST_Point2D(" +
+                resCoordinate[i + 1].x +
+                "," +
+                resCoordinate[i + 1].y +
+                "))"
+            );
+            let ddTcRows = ddTcRead.getRows();
+            if (ddTcRows.length > 0) {
+              distance =
+                distance +
+                toDecimal(ddTcRows[0][0], OAS.X_scale, OAS.XY_precision);
+              /*
+              if (DEBUG) {
+                LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+                  event: "updatePremisesPassed",
+                  trench: trenchId,
+                  state: "distance",
+                  distance: distance,
+                });
+              }
+                */
             }
+          }
+          if (distance > 0) {
+            await DDC.run(
+              "UPDATE _trench SET distanceTotal = " +
+                distance +
+                ", distanceUnit = '" +
+                unit +
+                "' WHERE trenchId = '" +
+                trenchId +
+                "' AND tsId = " +
+                trenchTsId
+            );
           }
         }
       }
@@ -1210,6 +1916,16 @@ async function jobPruneQueues() {
 async function jobPrune() {
   if (pruneTimer != null) {
     clearTimeout(pruneTimer);
+  }
+  try {
+    // flush DuckDB write-ahead-log (WAL)
+    await DDC.run("CHECKPOINT");
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "prune",
+      state: "failed checkpoint",
+      error: e,
+    });
   }
   // TODO: update pruning for _nePort port configuration tables
   // TODO: update pruning for _serviceIngress and _serviceEgress
@@ -2259,8 +2975,17 @@ function quit() {
   if (licenseTimer != null) {
     clearTimeout(licenseTimer);
   }
+  if (flushInMemoryCron != null) {
+    flushInMemoryCron.stop();
+  }
   if (backupCron != null) {
     backupCron.stop();
+  }
+  if (updateCountryCodeTimer != null) {
+    clearTimeout(updateCountryCodeTimer);
+  }
+  if (bulkTrenchDrainTimer != null) {
+    clearTimeout(bulkTrenchDrainTimer);
   }
   if (updatePremisesPassedTimer != null) {
     clearTimeout(updatePremisesPassedTimer);
@@ -2427,6 +3152,7 @@ var run = async () => {
       // use by default 80% available RAM, and total cores for threads
       DDI = await DuckDBInstance.create(duckDbFile);
       DDC = await DDI.connect();
+      await DDC.run("PRAGMA enable_checkpoint_on_shutdown");
     } catch (e) {
       LOGGER.error(
         dayjs().format(OAS.dayjsFormat),
@@ -2464,7 +3190,7 @@ var run = async () => {
   // request bodies
   app.use(
     express.json({
-      limit: "10Mb",
+      limit: "512Kb",
       type: OAS.mimeJSON,
     })
   );
@@ -13371,7 +14097,7 @@ var run = async () => {
         }
         let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,strftime(plannedStart,'" +
+          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,coalesce(premisesPassed,NULL,0),area,jobId,permitId,strftime(plannedStart,'" +
             dateFormat +
             "'),strftime(plannedCompletion,'" +
             dateFormat +
@@ -13563,7 +14289,7 @@ var run = async () => {
         }
         let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,strftime(plannedStart,'" +
+          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,coalesce(premisesPassed,NULL,0),area,jobId,permitId,strftime(plannedStart,'" +
             dateFormat +
             "'),strftime(plannedCompletion,'" +
             dateFormat +
@@ -13897,7 +14623,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddp = await DDC.runAndReadAll(
-        "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,premisesPassed,area,jobId,permitId,strftime(plannedStart,'" +
+        "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,purpose,height,classifier,unit,coalesce(premisesPassed,NULL,0),area,jobId,permitId,strftime(plannedStart,'" +
           dateFormat +
           "'),strftime(plannedCompletion,'" +
           dateFormat +
@@ -17921,6 +18647,16 @@ var run = async () => {
               });
           }
         }
+        if (req.body?.country == null && req.body.coordinates.length > 0) {
+          req.body.country = mniCountryCode;
+          let country = await countryFromCoordinate(
+            req.body.coordinates[0].x,
+            req.body.coordinates[0].y
+          );
+          if (country != null) {
+            req.body.country = country;
+          }
+        }
 
         let trenchId = uuidv4();
         let tsId = await getSeqNextValue("seq_trench");
@@ -18631,18 +19367,17 @@ var run = async () => {
     }
   }
 
-  async function getTrenchGeometryLifetime(req, res, next) {
+  async function trenchGeomemtryLifetime(trenchId) {
+    let resJson = {};
+    let resSets = [];
     try {
-      let result = validationResult(req);
-      if (result.isEmpty()) {
-        let resJson = {};
-        let resSets = [];
+      if (trenchId != null) {
         let ddp = await DDC.prepare(
           "SELECT strftime(point,'" +
             pointFormat +
-            "'),source FROM trench, _trench WHERE id = $1 AND trenchId = id AND delete = false ORDER BY point"
+            "'),source,distanceTotal,distanceUnit,premisesPassed FROM trench, _trench WHERE id = $1 AND trenchId = id AND delete = false ORDER BY point"
         );
-        ddp.bindVarchar(1, req.params.trenchId);
+        ddp.bindVarchar(1, trenchId);
         let ddRead = await ddp.runAndReadAll();
         let ddRows = ddRead.getRows();
         if (ddRows.length > 0) {
@@ -18650,7 +19385,7 @@ var run = async () => {
             let ddq = await DDC.prepare(
               "SELECT tsId FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
             );
-            ddq.bindVarchar(1, req.params.trenchId);
+            ddq.bindVarchar(1, trenchId);
             ddq.bindVarchar(2, pointFormat);
             ddq.bindVarchar(3, ddRows[idx][0]);
             let ddPoint = await ddq.runAndReadAll();
@@ -18659,7 +19394,7 @@ var run = async () => {
               let ddg = await DDC.prepare(
                 "SELECT x,y,z FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
               );
-              ddg.bindVarchar(1, req.params.trenchId);
+              ddg.bindVarchar(1, trenchId);
               ddg.bindInteger(2, toInteger(ddPointRows[0][0]));
               let ddCoordinate = await ddg.runAndReadAll();
               let ddCoordinateRows = ddCoordinate.getRows();
@@ -18689,6 +19424,9 @@ var run = async () => {
                 resSets.push({
                   point: ddRows[idx][0],
                   source: ddRows[idx][1],
+                  distanceTotal: toDecimal(ddRows[idx][2], OAS.X_scale, 2),
+                  distanceUnit: ddRows[idx][3],
+                  premisesPassed: toInteger(ddRows[idx][4]),
                 });
               }
             }
@@ -18718,7 +19456,21 @@ var run = async () => {
               resJson[right] = newRight;
             }
           }
+        }
+      }
+    } catch (e) {
+      LOGGER.error(e);
+    }
+    return resJson;
+  }
 
+  async function getTrenchGeometryLifetime(req, res, next) {
+    let resJson = null;
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        if (await dbIdExists(req.params.trenchId, "trench")) {
+          resJson = await trenchGeomemtryLifetime(req.params.trenchId);
           //
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
         } else {
@@ -18740,17 +19492,147 @@ var run = async () => {
     }
   }
 
+  async function trenchGeomemtryCountry(country, trenchId) {
+    let resJson = [];
+    try {
+      if (country != null && trenchId != null) {
+        let ddp = await DDC.prepare(
+          "SELECT historicalTsId FROM trench, _trench WHERE id = $1 AND country = $2 AND trenchId = id AND tsId = historicalTsId AND delete = false AND source = 'historical' ORDER BY point LIMIT 1"
+        );
+        ddp.bindVarchar(1, trenchId);
+        ddp.bindVarchar(2, country);
+        let ddRead = await ddp.runAndReadAll();
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          let ddg = await DDC.prepare(
+            "SELECT x,y,z FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
+          );
+          ddg.bindVarchar(1, trenchId);
+          ddg.bindInteger(2, ddRows[0][0]);
+          let ddCoordinate = await ddg.runAndReadAll();
+          let ddCoordinateRows = ddCoordinate.getRows();
+          if (ddCoordinateRows.length > 0) {
+            let resGeometry = [];
+            for (let cdx in ddCoordinateRows) {
+              let resObj = {
+                x: toDecimal(
+                  ddCoordinateRows[cdx][0],
+                  OAS.X_scale,
+                  OAS.XY_precision
+                ),
+                y: toDecimal(
+                  ddCoordinateRows[cdx][1],
+                  OAS.Y_scale,
+                  OAS.XY_precision
+                ),
+                z: toDecimal(
+                  ddCoordinateRows[cdx][2],
+                  OAS.Z_scale,
+                  OAS.XY_precision
+                ),
+              };
+              resJson.push(resObj);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      LOGGER.error(e);
+    }
+    return resJson;
+  }
+
+  async function getTrenchGeometryCountry(req, res, next) {
+    try {
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let resJson = {};
+        let centroid = { x: 0.0, y: 0.0 };
+        let totalDistance = 0.0;
+        let totalDistanceUnit = "m";
+        let premisesPassed = 0;
+        resJson.trenches = [];
+        if (req.query.country != null) {
+          let ddRead = await DDC.runAndReadAll(
+            "SELECT ST_X(point), ST_Y(point) FROM (SELECT ST_Centroid(geoCollection) AS point FROM worldGeo WHERE country = '" +
+              req.query.country +
+              "' LIMIT 1)"
+          );
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            centroid = {
+              x: toDecimal(ddRows[0][0], OAS.X_scale, OAS.XY_precision),
+              y: toDecimal(ddRows[0][1], OAS.Y_scale, OAS.XY_precision),
+            };
+          }
+          resJson.country = req.query.country;
+          resJson.centroid = centroid;
+          let ddReadTrench = await DDC.runAndReadAll(
+            "SELECT id,distanceTotal,distanceUnit,premisesPassed FROM trench,_trench WHERE _trench.trenchId = trench.id AND country = '" +
+              req.query.country +
+              "' AND delete = false"
+          );
+          let ddRowsTrench = ddReadTrench.getRows();
+          if (ddRowsTrench.length > 0) {
+            for (let tdx in ddRowsTrench) {
+              let resTrench = await trenchGeomemtryCountry(
+                req.query.country,
+                ddRowsTrench[tdx][0]
+              );
+              resJson.trenches.push(ddRowsTrench[tdx][0]);
+              resJson[ddRowsTrench[tdx][0]] = resTrench;
+              totalDistance =
+                totalDistance + toDecimal(ddRowsTrench[tdx][1], OAS.X_scale, 2);
+              premisesPassed = premisesPassed + toInteger(ddRowsTrench[tdx][3]);
+            }
+          }
+          // m => km => Mm
+          if (totalDistance < 1000) {
+            totalDistance = toDecimal(totalDistance, OAS.X_scale, 2);
+          } else if (totalDistance >= 1000) {
+            // kilometres
+            totalDistance = toDecimal(totalDistance / 1000, OAS.X_scale, 2);
+            totalDistanceUnit = "km";
+          } else if (totalDistance >= 1000000) {
+            // megametres
+            totalDistance = toDecimal(totalDistance / 1000000, OAS.X_scale, 2);
+            totalDistanceUnit = "Mm";
+          }
+          resJson.distance = totalDistance;
+          resJson.unit = totalDistanceUnit;
+          resJson.passed = premisesPassed;
+          //
+          res.contentType(OAS.mimeJSON).status(200).json(resJson);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(404)
+            .json({
+              errors: "country " + req.query.country + " does not exist",
+            });
+        }
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
+
   async function allTrenchDistance() {
     let totalDistance = 0.0;
     let totalDistanceUnit = "m";
     let ddp = await DDC.runAndReadAll(
-      "SELECT id FROM trench WHERE delete = false"
+      "SELECT DISTINCT id,distanceTotal,distanceUnit FROM trench, _trench WHERE _trench.trenchId = trench.id AND delete = false"
     );
     let ddRows = ddp.getRows();
     if (ddRows.length > 0) {
       for (let idx in ddRows) {
-        let { distance, unit } = await trenchDistance(ddRows[idx][0]);
-        totalDistance = toDecimal(totalDistance + distance, OAS.X_scale, 2);
+        totalDistance = totalDistance + toDecimal(ddRows[0][1], OAS.X_scale, 2);
+        let unit = ddRows[0][2];
         totalDistanceUnit = unit;
       }
     }
@@ -18781,62 +19663,69 @@ var run = async () => {
     let ddRows = ddTrench.getRows();
     if (ddRows.length > 0) {
       let trenchTsId = ddRows[0][1];
+      let ddq = null;
+      console.log(
+        "trenchId=" +
+          trenchId +
+          ", pointFormat=" +
+          pointFormat +
+          ", point=" +
+          point
+      );
       if (point != null) {
-        let ddq = await DDC.prepare(
+        ddq = await DDC.prepare(
           "SELECT tsId FROM _trench WHERE trenchId = $1 AND strftime(point,$2) = $3 ORDER BY point DESC LIMIT 1"
         );
         ddq.bindVarchar(1, trenchId);
         ddq.bindVarchar(2, pointFormat);
         ddq.bindVarchar(3, point);
-        let ddPoint = await ddq.runAndReadAll();
-        let ddPointRows = ddPoint.getRows();
-        if (ddPointRows.length > 0) {
-          trenchTsId = ddPointRows[0][0];
-        } else {
-          trenchTsId = ddRows[0][1];
-        }
+      } else {
+        ddq = await DDC.prepare(
+          "SELECT tsId FROM _trench WHERE trenchId = $1 ORDER BY point DESC LIMIT 1"
+        );
+        ddq.bindVarchar(1, trenchId);
       }
-      let ddc = await DDC.prepare(
-        "SELECT x,y FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2"
-      );
-      ddc.bindVarchar(1, trenchId);
-      ddc.bindInteger(2, toInteger(trenchTsId));
-      let ddCoordinate = await ddc.runAndReadAll();
-      let ddCoordinateRows = ddCoordinate.getRows();
-      if (ddCoordinateRows.length > 0) {
-        for (let idx in ddCoordinateRows) {
-          let resObj = {
-            x: toDecimal(
-              ddCoordinateRows[idx][0],
-              OAS.X_scale,
-              OAS.XY_precision
-            ),
-            y: toDecimal(
-              ddCoordinateRows[idx][1],
-              OAS.Y_scale,
-              OAS.XY_precision
-            ),
-          };
-          resCoordinate.push(resObj);
+      let ddPoint = await ddq.runAndReadAll();
+      let ddPointRows = ddPoint.getRows();
+      if (ddPointRows.length > 0) {
+        let ddc = await DDC.prepare(
+          "SELECT x,y FROM _trenchCoordinate WHERE trenchId = $1 AND trenchTsId = $2 AND x IS NOT NULL AND y IS NOT NULL"
+        );
+        ddc.bindVarchar(1, trenchId);
+        ddc.bindInteger(2, toInteger(ddPointRows[0][0]));
+        let ddCoordinate = await ddc.runAndReadAll();
+        let ddCoordinateRows = ddCoordinate.getRows();
+        if (ddCoordinateRows.length > 0) {
+          for (let idx in ddCoordinateRows) {
+            let resObj = {
+              x: toDecimal(
+                ddCoordinateRows[idx][0],
+                OAS.X_scale,
+                OAS.XY_precision
+              ),
+              y: toDecimal(
+                ddCoordinateRows[idx][1],
+                OAS.Y_scale,
+                OAS.XY_precision
+              ),
+            };
+            resCoordinate.push(resObj);
+          }
         }
       }
       if (resCoordinate.length > 1) {
         for (let i = 0; i < resCoordinate.length - 1; i++) {
-          let fromX = resCoordinate[i].x;
-          let fromY = resCoordinate[i].y;
-          let toX = resCoordinate[i + 1].x;
-          let toY = resCoordinate[i + 1].y;
           let ddRead = await DDC.runAndReadAll(
-            "SELECT st_distance_spheroid(ST_Point2D(" +
-              fromX +
+            "SELECT coalesce(st_distance_spheroid(ST_Point2D(" +
+              toDecimal(resCoordinate[i].x, OAS.X_scale, OAS.XY_precision) +
               "," +
-              fromY +
+              toDecimal(resCoordinate[i].y, OAS.Y_scale, OAS.XY_precision) +
               ")," +
               "ST_Point2D(" +
-              toX +
+              toDecimal(resCoordinate[i + 1].x, OAS.X_scale, OAS.XY_precision) +
               "," +
-              toY +
-              "))"
+              toDecimal(resCoordinate[i + 1].y, OAS.Y_scale, OAS.XY_precision) +
+              ")),NULL,0)"
           );
           let ddRows = ddRead.getRows();
           if (ddRows.length > 0) {
@@ -18852,6 +19741,8 @@ var run = async () => {
   }
 
   async function getTrenchDistance(req, res, next) {
+    let distance = 0;
+    let unit = "m";
     try {
       let result = validationResult(req);
       if (result.isEmpty()) {
@@ -18860,16 +19751,14 @@ var run = async () => {
           unit: "m",
         };
         let ddp = await DDC.prepare(
-          "SELECT id FROM trench  WHERE id = $1 AND delete = false LIMIT 1"
+          "SELECT DISTINCT id,distanceTotal,distanceUnit FROM trench,_trench WHERE id = $1 AND _trench.trenchId = trench.id AND delete = false LIMIT 1"
         );
         ddp.bindVarchar(1, req.params.trenchId);
         let ddTrench = await ddp.runAndReadAll();
         let ddRows = ddTrench.getRows();
         if (ddRows.length > 0) {
-          let { distance, unit } = await trenchDistance(
-            req.params.trenchId,
-            req.query.point
-          );
+          distance = ddRows[0][1];
+          unit = ddRows[0][2];
           // m => km => Mm
           if (distance < 1000) {
             distance = toDecimal(distance, OAS.X_scale, 2);
@@ -18989,7 +19878,7 @@ var run = async () => {
         }
         let resJson = {};
         let ddp = await DDC.prepare(
-          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,strftime(plannedStart,'" +
+          "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,trenchId,source,purpose,depth,classifier,unit,type,coalesce(premisesPassed,NULL,0),area,jobId,permitId,strftime(plannedStart,'" +
             dateFormat +
             "'),strftime(plannedCompletion,'" +
             dateFormat +
@@ -19411,7 +20300,7 @@ var run = async () => {
     try {
       let resJson = [];
       let ddp = await DDC.runAndReadAll(
-        "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,trenchId,source,purpose,depth,classifier,unit,type,premisesPassed,area,jobId,permitId,strftime(plannedStart,'" +
+        "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,trenchId,source,purpose,depth,classifier,unit,type,coalesce(premisesPassed,NULL,0),area,jobId,permitId,strftime(plannedStart,'" +
           dateFormat +
           "'),strftime(plannedCompletion,'" +
           dateFormat +
@@ -19868,6 +20757,40 @@ var run = async () => {
       }
     } catch (e) {
       return next(e);
+    }
+  }
+  async function addMultipleTrenchBulk(req, res, next) {
+    if (TRENCH.length == 0) {
+      try {
+        let result = validationResult(req);
+        if (result.isEmpty()) {
+          if (req.body.length <= BULK_MAX_TRENCH) {
+            for (let i = 0; i < req.body.length; i++) {
+                TRENCH.push(req.body[i]);
+            }
+          } else {
+            return res
+              .status(413)
+              .send(
+                "too many records, try again with reduced payload of <= " +
+                  BULK_MAX_TRENCH
+              );
+          }
+          res.sendStatus(202);
+        } else {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: result.array() });
+        }
+      } catch (e) {
+        return next(e);
+      }
+    } else {
+      res
+        .status(413)
+        .set("Retry-After", "60")
+        .send("bulk queue not yet empty, try again");
     }
   }
 
@@ -20543,6 +21466,32 @@ var run = async () => {
     }
   }
 
+  async function getActiveCountries(req, res, next) {
+    try {
+      let countries = [];
+      let result = validationResult(req);
+      if (result.isEmpty()) {
+        let ddRead = await DDC.runAndReadAll(
+          "SELECT DISTINCT country FROM _cable UNION SELECT DISTINCT country FROM _duct UNION SELECT DISTINCT country FROM _pole UNION SELECT DISTINCT country FROM _ne UNION SELECT DISTINCT country FROM _rack UNION SELECT DISTINCT country FROM _service UNION SELECT DISTINCT country FROM _site UNION SELECT DISTINCT country FROM _trench"
+        );
+        let ddRows = ddRead.getRows();
+        if (ddRows.length > 0) {
+          for (let idx in ddRows) {
+            countries.push(ddRows[idx][0]);
+          }
+        }
+        countries.sort(); 
+        res.status(200).contentType(OAS.mimeJSON).json(countries);
+      } else {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(400)
+          .json({ errors: result.array() });
+      }
+    } catch (e) {
+      return next(e);
+    }
+  }
   async function getSimpleStatistics(req, res, next) {
     try {
       let result = validationResult(req);
@@ -25609,6 +26558,19 @@ var run = async () => {
 
   /*
        Tag:           Trenches
+       operationId:   getTrenchGeometryCountry
+       exposed Route: /mni/v1/trench/geometry/country
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/trench/geometry/country",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    query("country").isIn(OAS.countryCode),
+    getTrenchGeometryCountry
+  );
+
+  /*
+       Tag:           Trenches
        operationId:   getTrenchGeometry
        exposed Route: /mni/v1/trench/geometry/:trenchId
        HTTP method:   GET
@@ -25952,6 +26914,117 @@ var run = async () => {
       .isFloat(OAS.probability),
     body("*.delete").default(false).isBoolean({ strict: true }),
     addMultipleTrench
+  );
+
+  /*
+       Tag:           Trenches
+       operationId:   addMultipleTrenchBulk
+       exposed Route: /mni/v1/trenches/bulk
+       HTTP method:   POST
+    */
+  app.post(
+    serveUrlPrefix + serveUrlVersion + "/trenches/bulk",
+    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    body().isArray({ min: 1 }),
+    body("*.trenchId").isUUID(4),
+    body("*.purpose").isIn(OAS.trenchPurpose),
+    body("*.country").default(mniCountryCode).isIn(OAS.countryCode),
+    body("*.reference").isString().trim(),
+    body("*.construction").isObject(),
+    body("*.construction.depth")
+      .default(914.4)
+      .isFloat({ min: 0, max: Number.MAX_VALUE }),
+    body("*.construction.classifier").isIn(OAS.depthClassifier),
+    body("*.construction.unit").default("mm").isIn(OAS.sizeUnit),
+    body("*.construction.type").isIn(OAS.constructionType),
+    body("*.demographics").optional().isObject(),
+    body("*.demographics.premises").optional().isObject(),
+    body("*.demographics.premises.passed").default(0).isInt(OAS.premisesPassed),
+    body("*.demographics.premises.area")
+      .default("unclassified")
+      .isIn(OAS.areaType),
+    body("*.build").isObject(),
+    body("*.build.jobId").optional().isString().trim(),
+    body("*.build.permitId").optional().isString().trim(),
+    body("*.build.planned").optional().isObject(),
+    body("*.build.planned.start")
+      .optional()
+      .matches(OAS.datePeriodYearMonthDay),
+    body("*.build.planned.completion")
+      .optional()
+      .matches(OAS.datePeriodYearMonthDay),
+    body("*.build.planned.duration").default(0).isInt(OAS.duration),
+    body("*.build.planned.unit").default("day").isIn(OAS.durationUnit),
+    body("*.build.actual").isObject(),
+    body("*.build.actual.start")
+      .if(body("*.build.actual").exists())
+      .optional()
+      .matches(OAS.datePeriodYearMonthDay),
+    body("*.build.actual.completion")
+      .if(body("*.build.actual").exists())
+      .optional()
+      .matches(OAS.datePeriodYearMonthDay),
+    body("*.build.actual.duration")
+      .if(body("*.build.actual").exists())
+      .optional()
+      .default(0)
+      .isInt(OAS.duration),
+    body("*.build.actual.unit")
+      .if(body("*.build.actual").exists())
+      .optional()
+      .default("day")
+      .isIn(OAS.durationUnit),
+    body("*.state").default("free").isIn(OAS.trenchState),
+    body("*.connectsTo").optional().isObject(),
+    oneOf(
+      [
+        // site
+        body("*.connectsTo.siteId")
+          .optional()
+          .if(body("*.connectsTo").exists())
+          .isUUID(4),
+      ],
+      [
+        // trench
+        body("*.connectsTo.trenchId")
+          .optional()
+          .if(body("*.connectsTo").exists())
+          .isUUID(4),
+      ],
+      [
+        // pole
+        body("*.connectsTo.poleId")
+          .optional()
+          .if(body("*.connectsTo").exists())
+          .isUUID(4),
+      ],
+      {
+        message: "either site, trench or pole identifier must be supplied",
+      }
+    ),
+    oneOf(
+      [
+        body("*.coordinates").isArray({ min: 1 }),
+        body("*.coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
+        body("*.coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
+        body("*.coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
+        body("*.coordinates.*.m").optional().isString().trim(),
+      ],
+      [body("*.wkt").isString().trim()],
+      {
+        message: "either coordinates or single WKT must be supplied",
+      }
+    ),
+    body("*.point")
+      .default(dayjs().format(OAS.dayjsFormat))
+      .matches(OAS.dateTime),
+    body("*.source").default("historical").isIn(OAS.source),
+    body("*.probability")
+      .default(OAS.probabilityHistorical)
+      .isFloat(OAS.probability),
+    body("*.delete").default(false).isBoolean({ strict: true }),
+    addMultipleTrenchBulk
   );
 
   /*
@@ -26483,6 +27556,18 @@ var run = async () => {
   );
 
   /*
+       Tag:           UI
+       operationId:   getActiveCountries
+       exposed Route: /mni/v1/ui/countries
+       HTTP method:   GET
+    */
+  app.get(
+    serveUrlPrefix + serveUrlVersion + "/ui/countries",
+    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+    getActiveCountries
+  );
+
+  /*
        Tag:           Predict
        operationId:   getAllPredictedTimeline
        exposed Route: /mni/v1/predict/predictedTimeline
@@ -26949,15 +28034,17 @@ var run = async () => {
 
   // Install non-auto DuckDB extensions
   // DuckDB will ignore the LOAD command if extension already loaded etc.
-  for (let i = 0; i < duckDbExtensions.length; i++) {
+  for (let i = 0; i < duckDbInstallExtensions.length; i++) {
     if (DEBUG) {
       LOGGER.info(dayjs().format(OAS.dayjsFormat), "debug", {
         event: "extension",
-        extension: duckDbExtensions[i],
+        extension: duckDbInstallExtensions[i],
         state: "install",
       });
     }
-    await DDC.run("INSTALL " + duckDbExtensions[i]);
+    await DDC.run("INSTALL " + duckDbInstallExtensions[i]);
+  }
+  for (let i = 0; i < duckDbExtensions.length; i++) {
     if (DEBUG) {
       LOGGER.info(dayjs().format(OAS.dayjsFormat), "debug", {
         event: "extension",
@@ -27023,27 +28110,22 @@ var run = async () => {
   });
 
   // timer jobs - stagger the starts based on interval
-  pruneQueuesTimer = setTimeout(
-    jobPruneQueues,
-    pruneQueuesIntervalMs * Math.floor(Math.random() * 3)
-  );
-  updateGeometryTimer = setTimeout(
-    jobUpdateGeometry,
-    updateGeometryIntervalMs * Math.floor(Math.random() * 5)
-  );
+  pruneQueuesTimer = setTimeout(jobPruneQueues, pruneQueuesIntervalMs);
+  updateGeometryTimer = setTimeout(jobUpdateGeometry, updateGeometryIntervalMs);
   updatePremisesPassedTimer = setTimeout(
     jobUpdatePremisesPassed,
-    updatePremisesPassedIntervalMs * Math.floor(Math.random() * 7)
+    updatePremisesPassedIntervalMs
   );
-  pruneTimer = setTimeout(
-    jobPrune,
-    pruneIntervalMs * Math.floor(Math.random() * 9)
+  pruneTimer = setTimeout(jobPrune, pruneIntervalMs);
+  predictQueueTimer = setTimeout(jobPredictQueueFill, predictQueueIntervalMs);
+  bulkTrenchDrainTimer = setTimeout(
+    jobBulkTrenchDrain,
+    bulkTrenchDraineIntervalMs
   );
-  predictQueueTimer = setTimeout(
-    jobPredictQueueFill,
-    predictQueueIntervalMs * Math.floor(Math.random() * 11)
+  updateCountryCodeTimer = setTimeout(
+    jobUpdateCountryCode,
+    updateCountryCodeIntervalMs
   );
-
   // stdout ticker to indicate alive
   //tickTimer = setTimeout(tick, tickIntervalMs);
 

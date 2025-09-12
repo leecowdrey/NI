@@ -50,9 +50,9 @@ function fetchTrenchPremisesPassed(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
-      }
+      } //else {
+      //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -64,7 +64,8 @@ function fetchTrenchPremisesPassed(id, p) {
       }
     })
     .catch((e) => {
-      ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
+      notify(e);
+      //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
     });
 }
 function fetchTrenchDistance(id, p) {
@@ -89,9 +90,9 @@ function fetchTrenchDistance(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
-      }
+      } //else {
+      //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -103,7 +104,8 @@ function fetchTrenchDistance(id, p) {
       }
     })
     .catch((e) => {
-      ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
+      notify(e);
+      //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
     });
 }
 function fetchListTrench() {
@@ -127,9 +129,9 @@ function fetchListTrench() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fltReady = setTimeout(fetchListTrench, retryMs);
-      }
+      } //else {
+      //fltReady = setTimeout(fetchListTrench, retryMs);
+      //}
     })
     .then((data) => {
       let trenchIds =
@@ -142,7 +144,8 @@ function fetchListTrench() {
       document.getElementById("trenchDistance").setAttribute("value", "");
     })
     .catch((e) => {
-      fltReady = setTimeout(fetchListTrench, retryMs);
+      notify(e);
+      //fltReady = setTimeout(fetchListTrench, retryMs);
     });
 }
 
@@ -161,9 +164,9 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmrReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+      //fmrReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -182,26 +185,35 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      fmrReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //mrReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 async function wipeMapClean() {
-  for (let i = 0; i < startMarker.length; i++) {
-    startMarker[i].setMap(null);
-    startMarker[i] = null;
+  if (startMarker != null) {
+    for (let i = 0; i < startMarker.length; i++) {
+      startMarker[i].setMap(null);
+      startMarker[i] = null;
+    }
+    startMarker.splice(0, startMarker.length);
   }
-  for (let i = 0; i < endMarker.length; i++) {
-    endMarker[i].setMap(null);
-    endMarker[i] = null;
+  if (endMarker != null) {
+    for (let i = 0; i < endMarker.length; i++) {
+      endMarker[i].setMap(null);
+      endMarker[i] = null;
+    }
+    endMarker.splice(0, endMarker.length);
   }
-  for (let i = 0; i < tPoly.length; i++) {
-    tPoly[i].setMap(null);
-    tPoly[i] = null;
+  if (Object.keys(tPoly).length > 0) {
+    for (let trenchId in tPoly) {
+      tPoly[trenchId].setMap(null);
+      tPoly[trenchId] = null;
+    }
+    tPoly = [];
   }
-  startMarker.splice(0, startMarker.length);
-  endMarker.splice(0, endMarker.length);
-  tPoly.splice(0, tPoly.length);
-  tPath.splice(0, tPath.length);
+  if (tPath != null) {
+    tPath.splice(0, tPath.length);
+  }
 }
 async function drawOnMap() {
   if (trenchCoordinates.sets.length > 0) {
@@ -315,9 +327,9 @@ async function fetchTrenchGeometryLifetime() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
-      }
+      } //else {
+      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -343,7 +355,8 @@ async function fetchTrenchGeometryLifetime() {
       }
     })
     .catch((e) => {
-      ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      notify(e);
+      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
     });
   loadScript(mapRenderUrl, function () {
     function displayMap() {
@@ -367,10 +380,12 @@ try {
   countryListPopulate();
   fetchMapRender();
 } catch (e) {
-  fmrReady = setTimeout(fetchMapRender, retryMs);
+  notify(e);
+  //fmrReady = setTimeout(fetchMapRender, retryMs);
 }
 try {
   fetchListTrench();
 } catch (e) {
-  fltReady = setTimeout(fetchListTrench, retryMs);
+  notify(e);
+  //fltReady = setTimeout(fetchListTrench, retryMs);
 }

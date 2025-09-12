@@ -21,6 +21,7 @@ var mniAppName = null;
 var mniAppVersion = null;
 var mniAppBuild = null;
 var mniCountryCode = null;
+var mniUiUrl = "";
 var mniRootUrl = "/";
 var mniGatewayUrl = null;
 var mniGatewayUrlIp = null;
@@ -261,6 +262,13 @@ const countryCode = [
   "ZMB",
   "ZWE",
 ];
+var sequence = (funcs, scope) => {
+  if (funcs.length == 0) return;
+  let f = funcs.shift();
+  f.call(scope, () => {
+    sequence(funcs, scope);
+  });
+};
 
 function mniMetadata() {
   try {
@@ -357,18 +365,22 @@ function mniLicense() {
 function clearSessionStorage() {
   let storageLength = localStorage.length;
   for (var i = 0; i < storageLength; i++) {
-    let keyName = localStorage.key(i);
-    if (keyName.startsWith("mni.")) {
-      localStorage.removeItem(keyName);
+    if (localStorage.key(i) != null) {
+      if (localStorage.key(i).startsWith("mni.")) {
+        localStorage.removeItem(localStorage.key(i));
+      }
     }
   }
 }
 function dumpSessionStorage() {
   let storageLength = localStorage.length;
   for (var i = 0; i < storageLength; i++) {
-    let keyName = localStorage.key(i);
-    if (keyName.startsWith("mni.")) {
-      console.log(keyName + "=" + localStorage.getItem(keyName));
+    if (localStorage.key(i) != null) {
+      if (localStorage.key(i).startsWith("mni.")) {
+        console.log(
+          localStorage.key(i) + "=" + localStorage.getItem(localStorage.key(i))
+        );
+      }
     }
   }
 }
@@ -400,8 +412,13 @@ function menuJump(jumpTo) {
   return false;
 }
 function logout() {
-  clearSessionStorage();
-  window.location.replace("/");
+  try {
+    mniUiUrl = localStorage.getItem("mni.uiUrl");
+  } catch (e) {
+    mniUiUrl = "/";
+  }
+  //clearSessionStorage();
+  window.location.replace(mniUiUrl);
 }
 function loadScript(scriptPath, callback, id = "mapRender") {
   if (
@@ -465,29 +482,55 @@ function toInteger(s) {
 }
 function countryListPopulate() {
   let mniCountryCode = localStorage.getItem("mni.country");
-  let countries = "";
-  if (countryCode.length > 0) {
-    for (let c = 0; c < countryCode.length; c++) {
-      let selected = "'>";
-      if (countryCode[c] == mniCountryCode) {
-        selected = "' selected='selected'>";
+  fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/countries", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    keepalive: true,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      countries +=
-        "<option value='" +
-        countryCode[c] +
-        selected +
-        countryCode[c] +
-        "</option>";
-    }
-    document.getElementById("country").innerHTML = countries;
-  } else {
-    document.getElementById("country").innerHTML =
-      "<option value='" +
-      mniCountryCode +
-      "' selected='selected'>" +
-      mniCountryCode +
-      "</option>";
-  }
+    })
+    .then((data) => {
+      if (data.length > 0 && countryCode.length > 0) {
+        let countries = "";
+        for (let c = 0; c < countryCode.length; c++) {
+          let selected = "'>";
+          if (countryCode[c] == mniCountryCode) {
+            selected = "' selected='selected'>";
+          }
+          let disabled = " disabled";
+          if (
+            data.includes(countryCode[c]) ||
+            countryCode[c] == mniCountryCode
+          ) {
+            disabled = " ";
+          }
+          countries +=
+            "<option" +
+            disabled +
+            " value='" +
+            countryCode[c] +
+            selected +
+            countryCode[c] +
+            "</option>";
+        }
+        document.getElementById("country").innerHTML = countries;
+      } else {
+        document.getElementById("country").innerHTML =
+          "<option value='" +
+          mniCountryCode +
+          "' selected='selected'>" +
+          mniCountryCode +
+          "</option>";
+      }
+    })
+    .catch((e) => {
+      notify(e);
+    });
 }
 try {
   if (!localStorage.getItem("mni.")) {

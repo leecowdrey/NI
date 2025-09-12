@@ -13,7 +13,7 @@ var trenchPath;
 var tPath = [];
 var tPoly = [];
 var lineSymbol;
-let flcready = null;
+let flcReady = null;
 let fmrReady = null;
 let ftgReady = null;
 let fltReady = null;
@@ -265,7 +265,7 @@ function trenchCalc() {
         }
       })
       .catch((e) => {
-        console.error(e);
+        notify(e);
       });
   } else {
     window.alert("At least two trench points are required");
@@ -288,9 +288,9 @@ let c = document.getElementById("country");
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fltReady = setTimeout(fetchListTrench, retryMs);
-      }
+      } //else {
+        //fltReady = setTimeout(fetchListTrench, retryMs);
+      //}
     })
     .then((data) => {
       let trenchIds =
@@ -302,7 +302,8 @@ let c = document.getElementById("country");
       document.getElementById("trenchId").innerHTML = trenchIds;
     })
     .catch((e) => {
-      fltReady = setTimeout(fetchListTrench, retryMs);
+      notify(e);
+      //fltReady = setTimeout(fetchListTrench, retryMs);
     });
 }
 function fetchMapRender() {
@@ -320,9 +321,9 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmrReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+        //fmrReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -341,7 +342,8 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      fmrReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //fmrReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 async function wipeMapClean() {
@@ -464,9 +466,9 @@ async function fetchTrenchGeometryLifetime() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
-      }
+      } //else {
+        //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      //}
     })
     .then((data) => {
       if (data != null) {
@@ -486,13 +488,14 @@ async function fetchTrenchGeometryLifetime() {
         document.getElementById("mapRender") !== undefined &&
         document.getElementById("mapRender") != null
       ) {
-        map.setCenter(mapCenter);
         wipeMapClean();
+        map.setCenter(mapCenter);
         drawOnMap();
       }
     })
     .catch((e) => {
-      ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      notify(e);
+      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
     });
   loadScript(mapRenderUrl, function () {
     function displayMap() {
@@ -544,15 +547,16 @@ function fetchListCurrency() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flcReady = setTimeout(fetchListCurrency, retryMs);
-      }
+      } //else {
+        //flcReady = setTimeout(fetchListCurrency, retryMs);
+      //}
     })
     .then((data) => {
       defaultCurrencyIsoCode = data.isoCode;
     })
     .catch((e) => {
-      flcReady = setTimeout(fetchListCurrency, retryMs);
+      console.error(e);
+      //flcReady = setTimeout(fetchListCurrency, retryMs);
     });
 
   fetch(localStorage.getItem("mni.gatewayUrl") + "/currency", {
@@ -565,9 +569,9 @@ function fetchListCurrency() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flcReady = setTimeout(fetchListCurrency, retryMs);
-      }
+      } //else {
+        //flcReady = setTimeout(fetchListCurrency, retryMs);
+      //}
     })
     .then((data) => {
       data = jsonSortByMultiKeys(data, ["name"]);
@@ -596,22 +600,26 @@ function fetchListCurrency() {
       document.getElementById("currency").innerHTML = currencyIds;
     })
     .catch((e) => {
-      flcReady = setTimeout(fetchListCurrency, retryMs);
+      notify(e);
+      //flcReady = setTimeout(fetchListCurrency, retryMs);
     });
 }
 try {
   fetchListCurrency();
 } catch (e) {
-  flcReady = setTimeout(fetchListCurrency, retryMs);
+  notify(e);
+  //flcReady = setTimeout(fetchListCurrency, retryMs);
 }
 try {
   countryListPopulate();
   fetchMapRender();
 } catch (e) {
-  fmrReady = setTimeout(fetchMapRender, retryMs);
+  notify(e);
+  //fmrReady = setTimeout(fetchMapRender, retryMs);
 }
 try {
   fetchListTrench();
 } catch (e) {
-  fltReady = setTimeout(fetchListTrench, retryMs);
+  notify(e);
+  //fltReady = setTimeout(fetchListTrench, retryMs);
 }

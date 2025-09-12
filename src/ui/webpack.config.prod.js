@@ -103,6 +103,10 @@ module.exports = merge(common, {
       filename: "trenchLifetime.ejs",
     }),
     new HtmlWebpackPlugin({
+      template: "!!raw-loader!./trenchCountry.ejs",
+      filename: "trenchCountry.ejs",
+    }),
+    new HtmlWebpackPlugin({
       template: "!!raw-loader!./q2c.ejs",
       filename: "q2c.ejs",
     }),
@@ -132,10 +136,10 @@ module.exports = merge(common, {
         { from: "js/mni-site.js", to: "js/mni-site.js" },
         { from: "js/mni-trench.js", to: "js/mni-trench.js" },
         { from: "js/mni-trenchLifetime.js", to: "js/mni-trenchLifetime.js" },
+        { from: "js/mni-trenchCountry.js", to: "js/mni-trenchCountry.js" },
         { from: "js/mni-workflow.js", to: "js/mni-workflow.js" },
         { from: "js/mni.js", to: "js/mni.js" },
         { from: "js/vendor", to: "js/vendor" },
-        { from: "js/color.esm.min.js", to: "js/color.esm.min.js" },
         { from: "js/chart.umd.min.js", to: "js/chart.umd.min.js" },
         { from: "js/gridjs.umd.js", to: "js/gridjs.umd.js" },
         { from: "js/selection.umd.js", to: "js/selection.umd.js" },

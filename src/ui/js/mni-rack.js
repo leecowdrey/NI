@@ -31,9 +31,9 @@ let c = document.getElementById("country");
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flrReady = setTimeout(fetchListRack, retryMs);
-      }
+      } //else {
+        //flrReady = setTimeout(fetchListRack, retryMs);
+      //}
     })
     .then((data) => {
       let rackIds =
@@ -44,8 +44,8 @@ let c = document.getElementById("country");
       document.getElementById("rackId").innerHTML = rackIds;
     })
     .catch((e) => {
-      console.error(e);
-      flrReady = setTimeout(fetchListRack, retryMs);
+      notify(e);
+      //flrReady = setTimeout(fetchListRack, retryMs);
     });
 }
 function fetchRack() {
@@ -77,9 +77,9 @@ function fetchRack() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flrReady = setTimeout(fetchRack, retryMs);
-      }
+      } //else {
+        //flrReady = setTimeout(fetchRack, retryMs);
+      //}
     })
     .then((data) => {
       let rackSlots = data.slots;
@@ -254,8 +254,8 @@ function fetchRack() {
       document.getElementById("metadataPanel").innerHTML = metadata;
     })
     .catch((e) => {
-      console.error(e);
-      frReady = setTimeout(fetchRack, retryMs);
+      notify(e);
+      //frReady = setTimeout(fetchRack, retryMs);
     });
 }
 function fetchRackPoints() {
@@ -275,9 +275,9 @@ function fetchRackPoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          frpReady = setTimeout(fetchRackPoints, retryMs);
-        }
+        } //else {
+          //frpReady = setTimeout(fetchRackPoints, retryMs);
+        //}
       })
       .then((data) => {
         let rackPoints =
@@ -293,8 +293,8 @@ function fetchRackPoints() {
         document.getElementById("rackPoint").innerHTML = rackPoints;
       })
       .catch((e) => {
-        console.error(e);
-        frpReady = setTimeout(fetchRackPoints, retryMs);
+        notify(e);
+        //frpReady = setTimeout(fetchRackPoints, retryMs);
       });
   }
 }
@@ -302,6 +302,6 @@ try {
   countryListPopulate();
   fetchListRack();
 } catch (e) {
-  console.error(e);
-  flrReady = setTimeout(fetchListRack, retryMs);
+  notify(e);
+  //flrReady = setTimeout(fetchListRack, retryMs);
 }

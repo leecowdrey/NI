@@ -49,9 +49,9 @@ function fetchListSites() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        flsReady = setTimeout(fetchListSites, retryMs);
-      }
+      } //else {
+        //flsReady = setTimeout(fetchListSites, retryMs);
+      //}
     })
     .then((data) => {
       let siteIds =
@@ -69,7 +69,8 @@ function fetchListSites() {
       document.getElementById("siteType").setAttribute("value", "");
     })
     .catch((e) => {
-      flsReady = setTimeout(fetchListSites, retryMs);
+      notify(e);
+      //flsReady = setTimeout(fetchListSites, retryMs);
     });
 }
 function fetchMapRender() {
@@ -87,9 +88,9 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmrReady = setTimeout(fetchMapRender, retryMs);
-      }
+      } //else {
+        //fmrReady = setTimeout(fetchMapRender, retryMs);
+      //}
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -108,7 +109,8 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      fmrReady = setTimeout(fetchMapRender, retryMs);
+      notify(e);
+      //fmrReady = setTimeout(fetchMapRender, retryMs);
     });
 }
 function fetchSite() {
@@ -130,9 +132,9 @@ function fetchSite() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          ftgReady = setTimeout(fetchSite, retryMs);
-        }
+        } //else {
+          //ftgReady = setTimeout(fetchSite, retryMs);
+        //}
       })
       .then((data) => {
         if (data != null) {
@@ -162,7 +164,8 @@ function fetchSite() {
         }
       })
       .catch((e) => {
-        ftgReady = setTimeout(fetchSite, retryMs);
+        notify(e);
+        //ftgReady = setTimeout(fetchSite, retryMs);
       });
     loadScript(mapRenderUrl, function () {
       function displayMap() {
@@ -192,10 +195,12 @@ try {
   countryListPopulate();
   fetchMapRender();
 } catch (e) {
-  fmrReady = setTimeout(fetchMapRender, retryMs);
+  notify(e);
+  //fmrReady = setTimeout(fetchMapRender, retryMs);
 }
 try {
   fetchListSites();
 } catch (e) {
-  flsReady = setTimeout(fetchListSites, retryMs);
+  notify(e);
+  //flsReady = setTimeout(fetchListSites, retryMs);
 }
