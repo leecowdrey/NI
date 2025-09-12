@@ -1,0 +1,4687 @@
+[
+{
+  "trenchId": "c31afef1-7344-4c8e-8ace-7ac10742d250",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299365296",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.222536,
+      "y": 30.065742,
+      "z": 0
+    },
+    {
+      "x": 31.222284,
+      "y": 30.066888,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7334e2ba-f0fd-48fc-b5e8-9e83f55fbc78",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398201",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21939,
+      "y": 30.068606,
+      "z": 0
+    },
+    {
+      "x": 31.218476,
+      "y": 30.067434,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3d95ca6d-af98-48a4-acfe-f744c133ffa8",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299383225",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219288,
+      "y": 30.064028,
+      "z": 0
+    },
+    {
+      "x": 31.217906,
+      "y": 30.064668,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "5f38840c-fed2-4699-8ca5-3adb11c06423",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355653",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ab4c9c16-599d-4cf5-a620-bb43fa0bd4a2",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299385892",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    },
+    {
+      "x": 31.218542,
+      "y": 30.057456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "35778b5f-8afe-460f-a1ba-4a283b338bd7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299382688",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219976,
+      "y": 30.058182,
+      "z": 0
+    },
+    {
+      "x": 31.219398,
+      "y": 30.057076,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "459a068c-3683-49f6-a1bd-8ad5e67bdc62",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d6a13763-fe0b-442c-88ab-5a7a3f447eaf",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356846",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    },
+    {
+      "x": 31.219624,
+      "y": 30.0593,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "9b6e407d-e589-4b5e-8bf3-0c5e2163b61e",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390929",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    },
+    {
+      "x": 31.223546,
+      "y": 30.057132,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a38a6f3f-519a-4fc5-8e13-199837c98eac",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390516",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "69c189f0-53fc-402f-b1bd-fb7bfa26b021",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390104",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    },
+    {
+      "x": 31.22285,
+      "y": 30.056092,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4c3e9f39-3f25-4317-97fb-d9bc847d6362",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390061",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21833,
+      "y": 30.05888,
+      "z": 0
+    },
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8080b6ff-d8ca-43a7-b73c-7f1bda879d24",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356590",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.21833,
+      "y": 30.05888,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "6326897c-f112-43a1-81b3-bb9ab13263e8",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b79e611f-0b14-4225-ac6a-0bb46bac2c92",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d3238e8e-c472-45a8-9a08-0ccb8b813933",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356847",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219624,
+      "y": 30.0593,
+      "z": 0
+    },
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7f038495-3e21-4d1e-9534-936038786f45",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355620",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    },
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "95166da4-0e8c-434b-abca-95359cdb7119",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347553",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    },
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e187ce1b-567a-4a15-aee3-588e7bb13246",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348497",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.23039,
+      "y": 30.065068,
+      "z": 0
+    },
+    {
+      "x": 31.23105,
+      "y": 30.064826,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "adea1c45-df9e-4f8c-a7d4-898653a3270f",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348533",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.229684,
+      "y": 30.064826,
+      "z": 0
+    },
+    {
+      "x": 31.22877,
+      "y": 30.064918,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4bd5f1b6-0910-487f-80ac-2a9d0bce3517",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348531",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.229856,
+      "y": 30.065206,
+      "z": 0
+    },
+    {
+      "x": 31.229756,
+      "y": 30.065052,
+      "z": 0
+    },
+    {
+      "x": 31.229684,
+      "y": 30.064826,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "842ef376-4369-4464-ab59-4e6d7b8626b0",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299349665",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.222528,
+      "y": 30.062438,
+      "z": 0
+    },
+    {
+      "x": 31.221502,
+      "y": 30.062938,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "34cf4ee7-0287-4ecc-a11b-6c1819cc7118",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299349665",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.222528,
+      "y": 30.062438,
+      "z": 0
+    },
+    {
+      "x": 31.221502,
+      "y": 30.062938,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "533e046c-b688-4f7c-b762-f9ff64dc23d0",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398201",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21939,
+      "y": 30.068606,
+      "z": 0
+    },
+    {
+      "x": 31.218476,
+      "y": 30.067434,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "463d7bb3-5050-4c59-bb80-9f8317f6f5b9",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299393712",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.222128,
+      "y": 30.06702,
+      "z": 0
+    },
+    {
+      "x": 31.221734,
+      "y": 30.06695,
+      "z": 0
+    },
+    {
+      "x": 31.221338,
+      "y": 30.06688,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "af0797a6-5e39-4abc-b487-4212752ee7b9",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299383765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217906,
+      "y": 30.064668,
+      "z": 0
+    },
+    {
+      "x": 31.216714,
+      "y": 30.065254,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "6741e34b-7580-427f-b283-c080d1b786c1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299383260",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218614,
+      "y": 30.064338,
+      "z": 0
+    },
+    {
+      "x": 31.217906,
+      "y": 30.064668,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e37e15ee-351d-4493-b41e-178969f4936b",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0e59eda0-0dbd-4e6c-87e6-6ad13fe9ae3d",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390104",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    },
+    {
+      "x": 31.22285,
+      "y": 30.056092,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "2cbc8f40-ff26-4a99-a392-4fbffa97d4c5",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390104",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    },
+    {
+      "x": 31.22285,
+      "y": 30.056092,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7d6410c9-87e0-4644-9340-f4a94b7c14d7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356847",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219624,
+      "y": 30.0593,
+      "z": 0
+    },
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "30d96596-2470-438f-936c-51d4e3ad5fbb",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299363408",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.229956,
+      "y": 30.070352,
+      "z": 0
+    },
+    {
+      "x": 31.230366,
+      "y": 30.07015,
+      "z": 0
+    },
+    {
+      "x": 31.230796,
+      "y": 30.070866,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7c781d00-164b-48a6-acc6-8f303f277531",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356847",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219624,
+      "y": 30.0593,
+      "z": 0
+    },
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a9d05fd6-deb3-4721-a4d8-2a7adfe6367a",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "06d3c8a5-88be-44a6-8163-37f46cd74fef",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299382688",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219976,
+      "y": 30.058182,
+      "z": 0
+    },
+    {
+      "x": 31.219398,
+      "y": 30.057076,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "5ec734da-b170-4ea0-b4e8-b8c5ba872815",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299382278",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219976,
+      "y": 30.058182,
+      "z": 0
+    },
+    {
+      "x": 31.220792,
+      "y": 30.057818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "aa3e205b-fb96-4a3b-a1cf-0f2ffcdc1b44",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356813",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    },
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "60149f55-9ef0-4dd0-84d9-6990c5c205d3",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356813",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    },
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ba9b62df-e2a7-4d6e-98b6-b6392f60f945",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356813",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    },
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "94c97039-b343-40e3-aadd-b18af51dafdc",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355653",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e543ebe8-cd99-4f2f-9ae8-4d3dddb6d149",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355620",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    },
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "10de5917-b47f-4a6c-b9b9-69a7e3a174fc",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355620",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    },
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "92a38de0-1d4e-4bb9-92bf-456de81b08ff",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299388191",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217758,
+      "y": 30.05786,
+      "z": 0
+    },
+    {
+      "x": 31.218542,
+      "y": 30.057456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "9fee195e-1436-43b2-a996-ec1b956b69af",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299385059",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.223946,
+      "y": 30.057646,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e6f94749-f921-4e0e-99a7-addff195f05d",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299385892",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219172,
+      "y": 30.058512,
+      "z": 0
+    },
+    {
+      "x": 31.218542,
+      "y": 30.057456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "2da46377-4cef-4a16-af0d-a78fef5340b2",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299346800",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22217,
+      "y": 30.064058,
+      "z": 0
+    },
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    },
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3e62ae7b-5eaf-4574-9652-9a88bcbf353a",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299371905",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21981,
+      "y": 30.065298,
+      "z": 0
+    },
+    {
+      "x": 31.219602,
+      "y": 30.065264,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e3a1bd52-59ac-4bf9-8f40-221ddbdb5ec7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398304",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.234524,
+      "y": 30.052792,
+      "z": 0
+    },
+    {
+      "x": 31.233434,
+      "y": 30.053046,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "075084f5-32bc-4c23-ab32-a0df63c60c08",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299368714",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.222128,
+      "y": 30.06702,
+      "z": 0
+    },
+    {
+      "x": 31.221734,
+      "y": 30.06695,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f08996f6-0c29-4b15-8e60-3adbc994b0d9",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398305",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.233434,
+      "y": 30.053046,
+      "z": 0
+    },
+    {
+      "x": 31.232392,
+      "y": 30.05329,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "2805b65b-5bb1-44b7-955e-2cd6dc7fa280",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398304",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.234524,
+      "y": 30.052792,
+      "z": 0
+    },
+    {
+      "x": 31.233434,
+      "y": 30.053046,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ac5d619a-b9a4-4dda-bc4c-3ff6c28845e3",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355653",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "92bd772d-311a-4317-8de5-f50aaab647f3",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299387777",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217236,
+      "y": 30.05807,
+      "z": 0
+    },
+    {
+      "x": 31.217758,
+      "y": 30.05786,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e4baaf74-459b-43f7-bb35-5e03ca1fa6f1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299385890",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    },
+    {
+      "x": 31.220116,
+      "y": 30.058418,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "98a9a6f0-8afa-4e5e-a3dc-30f79b5b6a40",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355653",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ed0e2107-39e3-4e7f-8ac6-1736aaeb858b",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299382278",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219976,
+      "y": 30.058182,
+      "z": 0
+    },
+    {
+      "x": 31.220792,
+      "y": 30.057818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f9f33ca2-4921-4b95-9848-2a83e5952ec0",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299373311",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218788,
+      "y": 30.066184,
+      "z": 0
+    },
+    {
+      "x": 31.218886,
+      "y": 30.065768,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7e9235cb-2efd-4d38-9ee2-b6647a2a5d73",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398166",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220238,
+      "y": 30.069688,
+      "z": 0
+    },
+    {
+      "x": 31.218476,
+      "y": 30.067434,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d140bbde-2b11-49a1-a173-c75b1ef88274",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398166",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220238,
+      "y": 30.069688,
+      "z": 0
+    },
+    {
+      "x": 31.218476,
+      "y": 30.067434,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8b0dd0f4-14a6-49ae-a000-d10fe20416fb",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347011",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    },
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1e249328-3ff1-4896-8f00-8c9805928d2b",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299385890",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    },
+    {
+      "x": 31.220116,
+      "y": 30.058418,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ce2bdb5e-0df4-4786-a129-e200c2fd6e3e",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299384647",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22246,
+      "y": 30.05809,
+      "z": 0
+    },
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "26db88c2-ed34-4f44-b729-e8124ceffb98",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356590",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.21833,
+      "y": 30.05888,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "471e5a7e-b25c-45c3-bf91-4f8f58da76c1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355653",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f8b627e3-026f-477a-a263-94d767289d21",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299355620",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    },
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "045d586c-8f50-4038-b049-6b651d7c0cf1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299384647",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22246,
+      "y": 30.05809,
+      "z": 0
+    },
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "dd695cb8-99e6-4203-895c-ac66b9da3ffe",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299384647",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22246,
+      "y": 30.05809,
+      "z": 0
+    },
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b1ac9313-aec7-42bd-834d-847c63c87214",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299352793",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    },
+    {
+      "x": 31.219608,
+      "y": 30.067888,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7726354b-4694-4113-b9d5-f9abce0504b7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299352793",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    },
+    {
+      "x": 31.219608,
+      "y": 30.067888,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a5a3bd0e-e1d4-4265-8990-7468b461d78f",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299372195",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217734,
+      "y": 30.066556,
+      "z": 0
+    },
+    {
+      "x": 31.21748,
+      "y": 30.06619,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "491bd37f-fbcc-45bf-a5a0-7dfff8a87655",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299363408",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.229956,
+      "y": 30.070352,
+      "z": 0
+    },
+    {
+      "x": 31.230366,
+      "y": 30.07015,
+      "z": 0
+    },
+    {
+      "x": 31.230796,
+      "y": 30.070866,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d00b7b88-1335-42ca-aa58-8851d60dfaf7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348665",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22877,
+      "y": 30.064918,
+      "z": 0
+    },
+    {
+      "x": 31.228852,
+      "y": 30.0652,
+      "z": 0
+    },
+    {
+      "x": 31.22882,
+      "y": 30.065524,
+      "z": 0
+    },
+    {
+      "x": 31.228802,
+      "y": 30.065592,
+      "z": 0
+    },
+    {
+      "x": 31.229018,
+      "y": 30.065816,
+      "z": 0
+    },
+    {
+      "x": 31.22925,
+      "y": 30.065714,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "507482ce-20d6-46f0-b392-e14e50fb3bb5",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299371904",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220078,
+      "y": 30.065344,
+      "z": 0
+    },
+    {
+      "x": 31.21981,
+      "y": 30.065298,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "c094cb83-da3b-462c-a32e-01202267cc31",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299359764",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.216502,
+      "y": 30.061022,
+      "z": 0
+    },
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a90ce43c-9526-4177-890c-4a06fbd51c37",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299358076",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.217088,
+      "y": 30.058558,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "702ef1b5-01af-4f13-84a3-c76585d5917c",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347553",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    },
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "cd682d65-cd4d-4455-ac5e-0960d89f3f52",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348399",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.231172,
+      "y": 30.064046,
+      "z": 0
+    },
+    {
+      "x": 31.230688,
+      "y": 30.064164,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1f03f36f-4566-4af7-a644-96082c66fbb8",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347554",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    },
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "48516510-56aa-4b8d-a24e-d94be09a63cf",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347065",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.231172,
+      "y": 30.064046,
+      "z": 0
+    },
+    {
+      "x": 31.230734,
+      "y": 30.062842,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a1c4ad51-990e-4e0b-aa41-bd82a31bc8c2",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299387777",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217236,
+      "y": 30.05807,
+      "z": 0
+    },
+    {
+      "x": 31.217758,
+      "y": 30.05786,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "629f0b71-63f8-4768-b460-8840ceeb8260",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299388191",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.217758,
+      "y": 30.05786,
+      "z": 0
+    },
+    {
+      "x": 31.218542,
+      "y": 30.057456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "69518c89-95fd-4d95-bfe4-f6873bc5a9c9",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299348667",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22877,
+      "y": 30.064918,
+      "z": 0
+    },
+    {
+      "x": 31.228662,
+      "y": 30.064382,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "bd2d8be2-6c63-49b8-877f-85248a96f83b",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347554",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    },
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "72e9c60a-e981-4091-806b-5ae94788b837",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299369265",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.231544,
+      "y": 30.065138,
+      "z": 0
+    },
+    {
+      "x": 31.230642,
+      "y": 30.06552,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "513d7fe0-04d0-4a6e-9317-6afd3cdec439",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347551",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    },
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    },
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "94da2081-d185-492b-b84f-e4e56158d16a",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299398270",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.234524,
+      "y": 30.052792,
+      "z": 0
+    },
+    {
+      "x": 31.232392,
+      "y": 30.05329,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b79931a0-b1a3-46ca-a0ca-6f636e823a27",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299383260",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218614,
+      "y": 30.064338,
+      "z": 0
+    },
+    {
+      "x": 31.217906,
+      "y": 30.064668,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "388c21ed-cafc-4258-b949-57e31da162e1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299358076",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218158,
+      "y": 30.06032,
+      "z": 0
+    },
+    {
+      "x": 31.217088,
+      "y": 30.058558,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "abfc27a3-20a1-461c-9ed8-96141e6de0ec",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347011",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    },
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "60be8a16-931b-453a-8ca6-37550dfd2f89",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347010",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22217,
+      "y": 30.064058,
+      "z": 0
+    },
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f5ecad02-3ca3-4710-8451-f241600e2624",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299346800",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22217,
+      "y": 30.064058,
+      "z": 0
+    },
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    },
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "01828c5b-8b88-436e-a720-d017d5955916",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299346800",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.22217,
+      "y": 30.064058,
+      "z": 0
+    },
+    {
+      "x": 31.22173,
+      "y": 30.063984,
+      "z": 0
+    },
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1760b5df-5817-414a-846b-bc9aabad9ab7",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347553",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    },
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "71487c1b-4220-4d13-b995-a9ed9bf69835",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347547",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    },
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    },
+    {
+      "x": 31.220014,
+      "y": 30.066034,
+      "z": 0
+    },
+    {
+      "x": 31.21988,
+      "y": 30.06667,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a4c2c274-597e-4ca7-b05a-93051fda1751",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356813",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    },
+    {
+      "x": 31.220606,
+      "y": 30.059258,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f5af798d-5341-4b9b-b856-f4db21bccf2b",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299371870",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.220078,
+      "y": 30.065344,
+      "z": 0
+    },
+    {
+      "x": 31.219602,
+      "y": 30.065264,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "526bd16a-5561-44d2-9f0b-1ff23572a351",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299390516",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.223254,
+      "y": 30.057912,
+      "z": 0
+    },
+    {
+      "x": 31.22288,
+      "y": 30.057156,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "14508157-4bb6-451d-87df-0727b7ebf7b1",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299359764",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.216502,
+      "y": 30.061022,
+      "z": 0
+    },
+    {
+      "x": 31.21731,
+      "y": 30.060654,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b7441292-f302-4b22-8ff8-bc816b2d6586",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299356592",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.218944,
+      "y": 30.059958,
+      "z": 0
+    },
+    {
+      "x": 31.219794,
+      "y": 30.059594,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0d74f507-2f33-44ce-92f7-b8047e2e509e",
+  "purpose": "service/drop",
+  "country": "EGY",
+  "probability": 1,
+  "reference": "esp-299347550",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 31.221566,
+      "y": 30.064712,
+      "z": 0
+    },
+    {
+      "x": 31.221404,
+      "y": 30.065408,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+]

@@ -1,0 +1,6330 @@
+{
+  "trenchId": "90e4da51-b322-4c57-a423-aa25d9240b04",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299199170",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.971658,
+      "y": 37.381124,
+      "z": 0
+    },
+    {
+      "x": -5.971426,
+      "y": 37.382304,
+      "z": 0
+    },
+    {
+      "x": -5.972599,
+      "y": 37.38256,
+      "z": 0
+    },
+    {
+      "x": -5.972539,
+      "y": 37.382744,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "67dad1ca-9351-4ec7-b32c-f1eab8e2f497",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298614183",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.128306,
+      "y": 41.382748,
+      "z": 0
+    },
+    {
+      "x": 2.127952,
+      "y": 41.382544,
+      "z": 0
+    },
+    {
+      "x": 2.128,
+      "y": 41.382412,
+      "z": 0
+    },
+    {
+      "x": 2.127009,
+      "y": 41.381724,
+      "z": 0
+    },
+    {
+      "x": 2.126513,
+      "y": 41.381404,
+      "z": 0
+    },
+    {
+      "x": 2.125376,
+      "y": 41.38082,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3bdbf6e0-61f6-484d-a413-67997fe87cc4",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299266808",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 1.182127,
+      "y": 41.13798,
+      "z": 0
+    },
+    {
+      "x": 1.1809,
+      "y": 41.13724,
+      "z": 0
+    },
+    {
+      "x": 1.17953,
+      "y": 41.13638,
+      "z": 0
+    },
+    {
+      "x": 1.17904,
+      "y": 41.13608,
+      "z": 0
+    },
+    {
+      "x": 1.17811,
+      "y": 41.1355,
+      "z": 0
+    },
+    {
+      "x": 1.17764,
+      "y": 41.13518,
+      "z": 0
+    },
+    {
+      "x": 1.17726,
+      "y": 41.134948,
+      "z": 0
+    },
+    {
+      "x": 1.17649,
+      "y": 41.1345,
+      "z": 0
+    },
+    {
+      "x": 1.17289,
+      "y": 41.1327,
+      "z": 0
+    },
+    {
+      "x": 1.16998,
+      "y": 41.131612,
+      "z": 0
+    },
+    {
+      "x": 1.16565,
+      "y": 41.13044,
+      "z": 0
+    },
+    {
+      "x": 1.16147,
+      "y": 41.129392,
+      "z": 0
+    },
+    {
+      "x": 1.15747,
+      "y": 41.128008,
+      "z": 0
+    },
+    {
+      "x": 1.15348,
+      "y": 41.126028,
+      "z": 0
+    },
+    {
+      "x": 1.15007,
+      "y": 41.123692,
+      "z": 0
+    },
+    {
+      "x": 1.14706,
+      "y": 41.12098,
+      "z": 0
+    },
+    {
+      "x": 1.14564,
+      "y": 41.119732,
+      "z": 0
+    },
+    {
+      "x": 1.14363,
+      "y": 41.118452,
+      "z": 0
+    },
+    {
+      "x": 1.14133,
+      "y": 41.1175,
+      "z": 0
+    },
+    {
+      "x": 1.13883,
+      "y": 41.116692,
+      "z": 0
+    },
+    {
+      "x": 1.13688,
+      "y": 41.1159,
+      "z": 0
+    },
+    {
+      "x": 1.13482,
+      "y": 41.11478,
+      "z": 0
+    },
+    {
+      "x": 1.13408,
+      "y": 41.11426,
+      "z": 0
+    },
+    {
+      "x": 1.13249,
+      "y": 41.11292,
+      "z": 0
+    },
+    {
+      "x": 1.13202,
+      "y": 41.11244,
+      "z": 0
+    },
+    {
+      "x": 1.13177,
+      "y": 41.11216,
+      "z": 0
+    },
+    {
+      "x": 1.1312,
+      "y": 41.111532,
+      "z": 0
+    },
+    {
+      "x": 1.12909,
+      "y": 41.109292,
+      "z": 0
+    },
+    {
+      "x": 1.12841,
+      "y": 41.10866,
+      "z": 0
+    },
+    {
+      "x": 1.12816,
+      "y": 41.108428,
+      "z": 0
+    },
+    {
+      "x": 1.12705,
+      "y": 41.1075,
+      "z": 0
+    },
+    {
+      "x": 1.12517,
+      "y": 41.106188,
+      "z": 0
+    },
+    {
+      "x": 1.12434,
+      "y": 41.1057,
+      "z": 0
+    },
+    {
+      "x": 1.1224,
+      "y": 41.1047,
+      "z": 0
+    },
+    {
+      "x": 1.11931,
+      "y": 41.103468,
+      "z": 0
+    },
+    {
+      "x": 1.11708,
+      "y": 41.102772,
+      "z": 0
+    },
+    {
+      "x": 1.11271,
+      "y": 41.101732,
+      "z": 0
+    },
+    {
+      "x": 1.10664,
+      "y": 41.10068,
+      "z": 0
+    },
+    {
+      "x": 1.10349,
+      "y": 41.099948,
+      "z": 0
+    },
+    {
+      "x": 1.09889,
+      "y": 41.098308,
+      "z": 0
+    },
+    {
+      "x": 1.09562,
+      "y": 41.096648,
+      "z": 0
+    },
+    {
+      "x": 1.09553,
+      "y": 41.096588,
+      "z": 0
+    },
+    {
+      "x": 1.09537,
+      "y": 41.0965,
+      "z": 0
+    },
+    {
+      "x": 1.09508,
+      "y": 41.096328,
+      "z": 0
+    },
+    {
+      "x": 1.08867,
+      "y": 41.092232,
+      "z": 0
+    },
+    {
+      "x": 1.08499,
+      "y": 41.0902,
+      "z": 0
+    },
+    {
+      "x": 1.0807,
+      "y": 41.08822,
+      "z": 0
+    },
+    {
+      "x": 1.07534,
+      "y": 41.086232,
+      "z": 0
+    },
+    {
+      "x": 1.07035,
+      "y": 41.084808,
+      "z": 0
+    },
+    {
+      "x": 1.06604,
+      "y": 41.08388,
+      "z": 0
+    },
+    {
+      "x": 1.06122,
+      "y": 41.08314,
+      "z": 0
+    },
+    {
+      "x": 1.05644,
+      "y": 41.08272,
+      "z": 0
+    },
+    {
+      "x": 1.05631,
+      "y": 41.082712,
+      "z": 0
+    },
+    {
+      "x": 1.0562,
+      "y": 41.082712,
+      "z": 0
+    },
+    {
+      "x": 1.05477,
+      "y": 41.08264,
+      "z": 0
+    },
+    {
+      "x": 1.04692,
+      "y": 41.082568,
+      "z": 0
+    },
+    {
+      "x": 1.0457,
+      "y": 41.082512,
+      "z": 0
+    },
+    {
+      "x": 1.04496,
+      "y": 41.082452,
+      "z": 0
+    },
+    {
+      "x": 1.04417,
+      "y": 41.082372,
+      "z": 0
+    },
+    {
+      "x": 1.03948,
+      "y": 41.08158,
+      "z": 0
+    },
+    {
+      "x": 1.03905,
+      "y": 41.08148,
+      "z": 0
+    },
+    {
+      "x": 1.03881,
+      "y": 41.08142,
+      "z": 0
+    },
+    {
+      "x": 1.03795,
+      "y": 41.081168,
+      "z": 0
+    },
+    {
+      "x": 1.03658,
+      "y": 41.080748,
+      "z": 0
+    },
+    {
+      "x": 1.03557,
+      "y": 41.080412,
+      "z": 0
+    },
+    {
+      "x": 1.0348,
+      "y": 41.08012,
+      "z": 0
+    },
+    {
+      "x": 1.02904,
+      "y": 41.07774,
+      "z": 0
+    },
+    {
+      "x": 1.02178,
+      "y": 41.075132,
+      "z": 0
+    },
+    {
+      "x": 1.01478,
+      "y": 41.072,
+      "z": 0
+    },
+    {
+      "x": 1.0098,
+      "y": 41.07016,
+      "z": 0
+    },
+    {
+      "x": 1.00457,
+      "y": 41.068472,
+      "z": 0
+    },
+    {
+      "x": 0.99987,
+      "y": 41.0665,
+      "z": 0
+    },
+    {
+      "x": 0.99548,
+      "y": 41.06406,
+      "z": 0
+    },
+    {
+      "x": 0.99228,
+      "y": 41.0618,
+      "z": 0
+    },
+    {
+      "x": 0.98784,
+      "y": 41.058092,
+      "z": 0
+    },
+    {
+      "x": 0.98491,
+      "y": 41.05586,
+      "z": 0
+    },
+    {
+      "x": 0.9813,
+      "y": 41.053568,
+      "z": 0
+    },
+    {
+      "x": 0.97872,
+      "y": 41.052212,
+      "z": 0
+    },
+    {
+      "x": 0.97487,
+      "y": 41.05048,
+      "z": 0
+    },
+    {
+      "x": 0.96831,
+      "y": 41.048048,
+      "z": 0
+    },
+    {
+      "x": 0.96533,
+      "y": 41.046732,
+      "z": 0
+    },
+    {
+      "x": 0.96149,
+      "y": 41.044628,
+      "z": 0
+    },
+    {
+      "x": 0.95675,
+      "y": 41.041612,
+      "z": 0
+    },
+    {
+      "x": 0.95377,
+      "y": 41.0401,
+      "z": 0
+    },
+    {
+      "x": 0.95134,
+      "y": 41.039132,
+      "z": 0
+    },
+    {
+      "x": 0.94878,
+      "y": 41.038332,
+      "z": 0
+    },
+    {
+      "x": 0.94466,
+      "y": 41.037472,
+      "z": 0
+    },
+    {
+      "x": 0.94112,
+      "y": 41.037092,
+      "z": 0
+    },
+    {
+      "x": 0.93715,
+      "y": 41.037048,
+      "z": 0
+    },
+    {
+      "x": 0.93246,
+      "y": 41.03728,
+      "z": 0
+    },
+    {
+      "x": 0.92913,
+      "y": 41.037152,
+      "z": 0
+    },
+    {
+      "x": 0.92528,
+      "y": 41.03654,
+      "z": 0
+    },
+    {
+      "x": 0.92089,
+      "y": 41.0352,
+      "z": 0
+    },
+    {
+      "x": 0.91711,
+      "y": 41.033328,
+      "z": 0
+    },
+    {
+      "x": 0.91497,
+      "y": 41.031872,
+      "z": 0
+    },
+    {
+      "x": 0.9137,
+      "y": 41.030812,
+      "z": 0
+    },
+    {
+      "x": 0.91224,
+      "y": 41.02934,
+      "z": 0
+    },
+    {
+      "x": 0.91058,
+      "y": 41.02718,
+      "z": 0
+    },
+    {
+      "x": 0.90957,
+      "y": 41.02538,
+      "z": 0
+    },
+    {
+      "x": 0.90869,
+      "y": 41.023208,
+      "z": 0
+    },
+    {
+      "x": 0.90767,
+      "y": 41.019392,
+      "z": 0
+    },
+    {
+      "x": 0.90724,
+      "y": 41.016048,
+      "z": 0
+    },
+    {
+      "x": 0.90719,
+      "y": 41.01328,
+      "z": 0
+    },
+    {
+      "x": 0.90754,
+      "y": 41.009688,
+      "z": 0
+    },
+    {
+      "x": 0.90754,
+      "y": 41.009688,
+      "z": 0
+    },
+    {
+      "x": 0.90789,
+      "y": 41.007948,
+      "z": 0
+    },
+    {
+      "x": 0.9081,
+      "y": 41.0071,
+      "z": 0
+    },
+    {
+      "x": 0.90852,
+      "y": 41.005508,
+      "z": 0
+    },
+    {
+      "x": 0.90874,
+      "y": 41.004668,
+      "z": 0
+    },
+    {
+      "x": 0.90882,
+      "y": 41.004372,
+      "z": 0
+    },
+    {
+      "x": 0.90885,
+      "y": 41.004248,
+      "z": 0
+    },
+    {
+      "x": 0.9091,
+      "y": 41.002892,
+      "z": 0
+    },
+    {
+      "x": 0.90915,
+      "y": 41.001948,
+      "z": 0
+    },
+    {
+      "x": 0.90892,
+      "y": 40.99986,
+      "z": 0
+    },
+    {
+      "x": 0.90888,
+      "y": 40.999648,
+      "z": 0
+    },
+    {
+      "x": 0.90848,
+      "y": 40.99832,
+      "z": 0
+    },
+    {
+      "x": 0.90734,
+      "y": 40.995992,
+      "z": 0
+    },
+    {
+      "x": 0.90559,
+      "y": 40.993832,
+      "z": 0
+    },
+    {
+      "x": 0.90393,
+      "y": 40.9924,
+      "z": 0
+    },
+    {
+      "x": 0.90056,
+      "y": 40.989912,
+      "z": 0
+    },
+    {
+      "x": 0.89889,
+      "y": 40.988412,
+      "z": 0
+    },
+    {
+      "x": 0.89864,
+      "y": 40.9882,
+      "z": 0
+    },
+    {
+      "x": 0.89793,
+      "y": 40.9875,
+      "z": 0
+    },
+    {
+      "x": 0.89643,
+      "y": 40.98618,
+      "z": 0
+    },
+    {
+      "x": 0.89391,
+      "y": 40.98456,
+      "z": 0
+    },
+    {
+      "x": 0.8929,
+      "y": 40.98406,
+      "z": 0
+    },
+    {
+      "x": 0.89087,
+      "y": 40.98316,
+      "z": 0
+    },
+    {
+      "x": 0.89044,
+      "y": 40.982972,
+      "z": 0
+    },
+    {
+      "x": 0.88995,
+      "y": 40.98272,
+      "z": 0
+    },
+    {
+      "x": 0.88744,
+      "y": 40.98138,
+      "z": 0
+    },
+    {
+      "x": 0.88568,
+      "y": 40.980252,
+      "z": 0
+    },
+    {
+      "x": 0.88308,
+      "y": 40.978068,
+      "z": 0
+    },
+    {
+      "x": 0.88167,
+      "y": 40.976472,
+      "z": 0
+    },
+    {
+      "x": 0.88084,
+      "y": 40.975288,
+      "z": 0
+    },
+    {
+      "x": 0.87827,
+      "y": 40.970928,
+      "z": 0
+    },
+    {
+      "x": 0.87784,
+      "y": 40.97028,
+      "z": 0
+    },
+    {
+      "x": 0.87571,
+      "y": 40.96748,
+      "z": 0
+    },
+    {
+      "x": 0.87373,
+      "y": 40.965372,
+      "z": 0
+    },
+    {
+      "x": 0.86785,
+      "y": 40.960352,
+      "z": 0
+    },
+    {
+      "x": 0.86664,
+      "y": 40.959172,
+      "z": 0
+    },
+    {
+      "x": 0.86481,
+      "y": 40.956908,
+      "z": 0
+    },
+    {
+      "x": 0.86245,
+      "y": 40.952932,
+      "z": 0
+    },
+    {
+      "x": 0.86074,
+      "y": 40.95042,
+      "z": 0
+    },
+    {
+      "x": 0.85719,
+      "y": 40.946252,
+      "z": 0
+    },
+    {
+      "x": 0.85486,
+      "y": 40.943852,
+      "z": 0
+    },
+    {
+      "x": 0.85177,
+      "y": 40.940912,
+      "z": 0
+    },
+    {
+      "x": 0.84821,
+      "y": 40.93724,
+      "z": 0
+    },
+    {
+      "x": 0.83824,
+      "y": 40.926428,
+      "z": 0
+    },
+    {
+      "x": 0.83023,
+      "y": 40.91824,
+      "z": 0
+    },
+    {
+      "x": 0.82588,
+      "y": 40.913588,
+      "z": 0
+    },
+    {
+      "x": 0.82276,
+      "y": 40.91052,
+      "z": 0
+    },
+    {
+      "x": 0.81756,
+      "y": 40.905672,
+      "z": 0
+    },
+    {
+      "x": 0.8138,
+      "y": 40.90152,
+      "z": 0
+    },
+    {
+      "x": 0.80825,
+      "y": 40.89586,
+      "z": 0
+    },
+    {
+      "x": 0.80825,
+      "y": 40.89586,
+      "z": 0
+    },
+    {
+      "x": 0.80485,
+      "y": 40.892368,
+      "z": 0
+    },
+    {
+      "x": 0.80463,
+      "y": 40.89214,
+      "z": 0
+    },
+    {
+      "x": 0.80131,
+      "y": 40.888692,
+      "z": 0
+    },
+    {
+      "x": 0.79933,
+      "y": 40.88686,
+      "z": 0
+    },
+    {
+      "x": 0.79904,
+      "y": 40.886588,
+      "z": 0
+    },
+    {
+      "x": 0.7986,
+      "y": 40.88618,
+      "z": 0
+    },
+    {
+      "x": 0.79839,
+      "y": 40.88596,
+      "z": 0
+    },
+    {
+      "x": 0.79783,
+      "y": 40.885412,
+      "z": 0
+    },
+    {
+      "x": 0.79445,
+      "y": 40.882,
+      "z": 0
+    },
+    {
+      "x": 0.79385,
+      "y": 40.881328,
+      "z": 0
+    },
+    {
+      "x": 0.7908,
+      "y": 40.87804,
+      "z": 0
+    },
+    {
+      "x": 0.78813,
+      "y": 40.8756,
+      "z": 0
+    },
+    {
+      "x": 0.76855,
+      "y": 40.859748,
+      "z": 0
+    },
+    {
+      "x": 0.76418,
+      "y": 40.855888,
+      "z": 0
+    },
+    {
+      "x": 0.7612,
+      "y": 40.853308,
+      "z": 0
+    },
+    {
+      "x": 0.75898,
+      "y": 40.851652,
+      "z": 0
+    },
+    {
+      "x": 0.75577,
+      "y": 40.849592,
+      "z": 0
+    },
+    {
+      "x": 0.75086,
+      "y": 40.84678,
+      "z": 0
+    },
+    {
+      "x": 0.74828,
+      "y": 40.844848,
+      "z": 0
+    },
+    {
+      "x": 0.74592,
+      "y": 40.842412,
+      "z": 0
+    },
+    {
+      "x": 0.74465,
+      "y": 40.840592,
+      "z": 0
+    },
+    {
+      "x": 0.74182,
+      "y": 40.83564,
+      "z": 0
+    },
+    {
+      "x": 0.74008,
+      "y": 40.833468,
+      "z": 0
+    },
+    {
+      "x": 0.73837,
+      "y": 40.831848,
+      "z": 0
+    },
+    {
+      "x": 0.7371,
+      "y": 40.83086,
+      "z": 0
+    },
+    {
+      "x": 0.73315,
+      "y": 40.828448,
+      "z": 0
+    },
+    {
+      "x": 0.72946,
+      "y": 40.826272,
+      "z": 0
+    },
+    {
+      "x": 0.72266,
+      "y": 40.821572,
+      "z": 0
+    },
+    {
+      "x": 0.71798,
+      "y": 40.819,
+      "z": 0
+    },
+    {
+      "x": 0.71767,
+      "y": 40.818852,
+      "z": 0
+    },
+    {
+      "x": 0.71748,
+      "y": 40.81876,
+      "z": 0
+    },
+    {
+      "x": 0.71461,
+      "y": 40.81744,
+      "z": 0
+    },
+    {
+      "x": 0.71265,
+      "y": 40.816528,
+      "z": 0
+    },
+    {
+      "x": 0.70951,
+      "y": 40.81508,
+      "z": 0
+    },
+    {
+      "x": 0.70778,
+      "y": 40.814368,
+      "z": 0
+    },
+    {
+      "x": 0.70569,
+      "y": 40.81356,
+      "z": 0
+    },
+    {
+      "x": 0.70197,
+      "y": 40.812068,
+      "z": 0
+    },
+    {
+      "x": 0.70151,
+      "y": 40.811872,
+      "z": 0
+    },
+    {
+      "x": 0.70004,
+      "y": 40.81106,
+      "z": 0
+    },
+    {
+      "x": 0.69889,
+      "y": 40.810292,
+      "z": 0
+    },
+    {
+      "x": 0.6973,
+      "y": 40.809108,
+      "z": 0
+    },
+    {
+      "x": 0.69482,
+      "y": 40.80726,
+      "z": 0
+    },
+    {
+      "x": 0.69316,
+      "y": 40.806208,
+      "z": 0
+    },
+    {
+      "x": 0.68965,
+      "y": 40.80454,
+      "z": 0
+    },
+    {
+      "x": 0.68654,
+      "y": 40.80362,
+      "z": 0
+    },
+    {
+      "x": 0.68188,
+      "y": 40.8029,
+      "z": 0
+    },
+    {
+      "x": 0.67913,
+      "y": 40.802312,
+      "z": 0
+    },
+    {
+      "x": 0.67574,
+      "y": 40.801188,
+      "z": 0
+    },
+    {
+      "x": 0.67316,
+      "y": 40.79998,
+      "z": 0
+    },
+    {
+      "x": 0.67292,
+      "y": 40.799852,
+      "z": 0
+    },
+    {
+      "x": 0.67088,
+      "y": 40.7986,
+      "z": 0
+    },
+    {
+      "x": 0.66946,
+      "y": 40.79754,
+      "z": 0
+    },
+    {
+      "x": 0.66352,
+      "y": 40.79224,
+      "z": 0
+    },
+    {
+      "x": 0.659,
+      "y": 40.788872,
+      "z": 0
+    },
+    {
+      "x": 0.65165,
+      "y": 40.7843,
+      "z": 0
+    },
+    {
+      "x": 0.64739,
+      "y": 40.78136,
+      "z": 0
+    },
+    {
+      "x": 0.64473,
+      "y": 40.779332,
+      "z": 0
+    },
+    {
+      "x": 0.63959,
+      "y": 40.774992,
+      "z": 0
+    },
+    {
+      "x": 0.63713,
+      "y": 40.77272,
+      "z": 0
+    },
+    {
+      "x": 0.63682,
+      "y": 40.772412,
+      "z": 0
+    },
+    {
+      "x": 0.63301,
+      "y": 40.76894,
+      "z": 0
+    },
+    {
+      "x": 0.63145,
+      "y": 40.767668,
+      "z": 0
+    },
+    {
+      "x": 0.63068,
+      "y": 40.767088,
+      "z": 0
+    },
+    {
+      "x": 0.63056,
+      "y": 40.767,
+      "z": 0
+    },
+    {
+      "x": 0.62502,
+      "y": 40.763452,
+      "z": 0
+    },
+    {
+      "x": 0.62308,
+      "y": 40.76238,
+      "z": 0
+    },
+    {
+      "x": 0.62295,
+      "y": 40.76232,
+      "z": 0
+    },
+    {
+      "x": 0.62275,
+      "y": 40.762212,
+      "z": 0
+    },
+    {
+      "x": 0.61993,
+      "y": 40.76084,
+      "z": 0
+    },
+    {
+      "x": 0.61972,
+      "y": 40.760748,
+      "z": 0
+    },
+    {
+      "x": 0.61961,
+      "y": 40.7607,
+      "z": 0
+    },
+    {
+      "x": 0.61662,
+      "y": 40.75944,
+      "z": 0
+    },
+    {
+      "x": 0.61269,
+      "y": 40.758028,
+      "z": 0
+    },
+    {
+      "x": 0.61117,
+      "y": 40.75752,
+      "z": 0
+    },
+    {
+      "x": 0.61095,
+      "y": 40.757452,
+      "z": 0
+    },
+    {
+      "x": 0.61032,
+      "y": 40.757252,
+      "z": 0
+    },
+    {
+      "x": 0.60777,
+      "y": 40.75638,
+      "z": 0
+    },
+    {
+      "x": 0.60544,
+      "y": 40.755428,
+      "z": 0
+    },
+    {
+      "x": 0.60295,
+      "y": 40.754168,
+      "z": 0
+    },
+    {
+      "x": 0.60167,
+      "y": 40.7534,
+      "z": 0
+    },
+    {
+      "x": 0.60142,
+      "y": 40.75324,
+      "z": 0
+    },
+    {
+      "x": 0.60119,
+      "y": 40.753088,
+      "z": 0
+    },
+    {
+      "x": 0.59872,
+      "y": 40.751252,
+      "z": 0
+    },
+    {
+      "x": 0.59679,
+      "y": 40.749432,
+      "z": 0
+    },
+    {
+      "x": 0.59664,
+      "y": 40.74926,
+      "z": 0
+    },
+    {
+      "x": 0.5965,
+      "y": 40.749112,
+      "z": 0
+    },
+    {
+      "x": 0.5951,
+      "y": 40.74748,
+      "z": 0
+    },
+    {
+      "x": 0.59413,
+      "y": 40.746132,
+      "z": 0
+    },
+    {
+      "x": 0.59252,
+      "y": 40.743192,
+      "z": 0
+    },
+    {
+      "x": 0.59156,
+      "y": 40.74048,
+      "z": 0
+    },
+    {
+      "x": 0.59106,
+      "y": 40.73886,
+      "z": 0
+    },
+    {
+      "x": 0.59086,
+      "y": 40.7383,
+      "z": 0
+    },
+    {
+      "x": 0.59071,
+      "y": 40.73794,
+      "z": 0
+    },
+    {
+      "x": 0.58952,
+      "y": 40.735932,
+      "z": 0
+    },
+    {
+      "x": 0.58814,
+      "y": 40.73442,
+      "z": 0
+    },
+    {
+      "x": 0.58674,
+      "y": 40.73332,
+      "z": 0
+    },
+    {
+      "x": 0.58594,
+      "y": 40.732812,
+      "z": 0
+    },
+    {
+      "x": 0.58566,
+      "y": 40.732652,
+      "z": 0
+    },
+    {
+      "x": 0.58363,
+      "y": 40.7317,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "07d7546a-1d17-454c-a0b6-16ec226455a4",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299204815",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -3.640126,
+      "y": 40.436844,
+      "z": 0
+    },
+    {
+      "x": -3.648176,
+      "y": 40.433108,
+      "z": 0
+    },
+    {
+      "x": -3.657067,
+      "y": 40.4319,
+      "z": 0
+    },
+    {
+      "x": -3.66302,
+      "y": 40.430904,
+      "z": 0
+    },
+    {
+      "x": -3.675871,
+      "y": 40.424864,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "be97d817-c1f6-4744-bd6d-dc35ead798fc",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299199230",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.967084,
+      "y": 37.384488,
+      "z": 0
+    },
+    {
+      "x": -5.96546,
+      "y": 37.38436,
+      "z": 0
+    },
+    {
+      "x": -5.965662,
+      "y": 37.382924,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "11cd41d9-38c8-458a-a1a6-8a1db15853e5",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299342465",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.158879,
+      "y": 41.386084,
+      "z": 0
+    },
+    {
+      "x": 2.158578,
+      "y": 41.385852,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "53118ec1-d3e0-4812-afcc-897c3e17a63b",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299342465",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.158879,
+      "y": 41.386084,
+      "z": 0
+    },
+    {
+      "x": 2.158578,
+      "y": 41.385852,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "01b2bbe4-bfb3-42fe-9743-1fbf8f969f28",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299285809",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.162724,
+      "y": 41.38598,
+      "z": 0
+    },
+    {
+      "x": 2.162572,
+      "y": 41.385908,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "20d07c1a-c05f-4247-9d7d-f0eb4c9a7714",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299558466",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098702,
+      "y": 41.360852,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "dcb0af89-afa1-4beb-82e2-55cc7dfb9aab",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299557289",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075961,
+      "y": 43.556328,
+      "z": 0
+    },
+    {
+      "x": -6.075778,
+      "y": 43.556408,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "712b9ff5-daaa-4123-be80-0dbec2e38246",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299556200",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.076141,
+      "y": 43.556572,
+      "z": 0
+    },
+    {
+      "x": -6.075975,
+      "y": 43.556636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "cad1b451-da9e-4b08-bda7-54c8e7de363b",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299556200",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.076141,
+      "y": 43.556572,
+      "z": 0
+    },
+    {
+      "x": -6.075975,
+      "y": 43.556636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2be7300f-9c28-4f60-a3b0-7584e472fcd2",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554793",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075458,
+      "y": 43.557028,
+      "z": 0
+    },
+    {
+      "x": -6.075876,
+      "y": 43.557116,
+      "z": 0
+    },
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1fdfad0f-5849-4f53-b486-ac7b5121de2b",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554820",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.073932,
+      "y": 43.555196,
+      "z": 0
+    },
+    {
+      "x": -6.073967,
+      "y": 43.55584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "d3be6934-df94-4c21-b045-c965872c7f5d",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554798",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    },
+    {
+      "x": -6.07615,
+      "y": 43.556872,
+      "z": 0
+    },
+    {
+      "x": -6.076201,
+      "y": 43.556724,
+      "z": 0
+    },
+    {
+      "x": -6.076173,
+      "y": 43.556612,
+      "z": 0
+    },
+    {
+      "x": -6.075682,
+      "y": 43.555952,
+      "z": 0
+    },
+    {
+      "x": -6.07516,
+      "y": 43.555292,
+      "z": 0
+    },
+    {
+      "x": -6.075112,
+      "y": 43.55522,
+      "z": 0
+    },
+    {
+      "x": -6.074632,
+      "y": 43.554756,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "c8cf5e2c-d201-40e1-841e-6970df9bc492",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554812",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074632,
+      "y": 43.554756,
+      "z": 0
+    },
+    {
+      "x": -6.073969,
+      "y": 43.55474,
+      "z": 0
+    },
+    {
+      "x": -6.073939,
+      "y": 43.554768,
+      "z": 0
+    },
+    {
+      "x": -6.073948,
+      "y": 43.554956,
+      "z": 0
+    },
+    {
+      "x": -6.073932,
+      "y": 43.555196,
+      "z": 0
+    },
+    {
+      "x": -6.073967,
+      "y": 43.55584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "27edf41d-4208-4127-84c4-d0e9bad139b9",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554795",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075458,
+      "y": 43.557028,
+      "z": 0
+    },
+    {
+      "x": -6.075483,
+      "y": 43.556996,
+      "z": 0
+    },
+    {
+      "x": -6.075475,
+      "y": 43.556992,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "d22a79c8-96c1-4aa6-bcdc-2fe1675d1a45",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554793",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075458,
+      "y": 43.557028,
+      "z": 0
+    },
+    {
+      "x": -6.075876,
+      "y": 43.557116,
+      "z": 0
+    },
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "6924a999-d6e1-441c-aeef-effa9678a2b3",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299244777",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.160431,
+      "y": 41.383576,
+      "z": 0
+    },
+    {
+      "x": 2.160725,
+      "y": 41.383512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3c811d6f-52f6-444e-a9fc-3d6e46d052c6",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299244765",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.160725,
+      "y": 41.383512,
+      "z": 0
+    },
+    {
+      "x": 2.161085,
+      "y": 41.384068,
+      "z": 0
+    },
+    {
+      "x": 2.161852,
+      "y": 41.384264,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "94f11082-5188-46b0-8de3-4cff6e299133",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299243327",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.139001,
+      "y": 41.383116,
+      "z": 0
+    },
+    {
+      "x": 2.140358,
+      "y": 41.383828,
+      "z": 0
+    },
+    {
+      "x": 2.141388,
+      "y": 41.382992,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "ef9dccb3-cc43-4f4c-bc8e-90b4b864b899",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299211507",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -4.466968,
+      "y": 36.690812,
+      "z": 0
+    },
+    {
+      "x": -4.46658,
+      "y": 36.701504,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "5ec64d79-ea47-4374-bcf9-a52426b87fbe",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299243327",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.139001,
+      "y": 41.383116,
+      "z": 0
+    },
+    {
+      "x": 2.140358,
+      "y": 41.383828,
+      "z": 0
+    },
+    {
+      "x": 2.141388,
+      "y": 41.382992,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "e2aef7da-5938-4d6b-ab5b-26a3f97f34b9",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299556200",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.076141,
+      "y": 43.556572,
+      "z": 0
+    },
+    {
+      "x": -6.075975,
+      "y": 43.556636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "ed64966f-a95e-451b-901b-a18cc6ae8b20",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298670307",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.198308,
+      "y": 41.394744,
+      "z": 0
+    },
+    {
+      "x": 2.197915,
+      "y": 41.395044,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3254aeb8-81e4-43a7-8e7b-267fb24a6e90",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554802",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074624,
+      "y": 43.556584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    },
+    {
+      "x": -6.074365,
+      "y": 43.555788,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "e9f97272-c4fc-4e32-8652-c455e60091b1",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298670080",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.198308,
+      "y": 41.394744,
+      "z": 0
+    },
+    {
+      "x": 2.198069,
+      "y": 41.394564,
+      "z": 0
+    },
+    {
+      "x": 2.195881,
+      "y": 41.392968,
+      "z": 0
+    },
+    {
+      "x": 2.191948,
+      "y": 41.392804,
+      "z": 0
+    },
+    {
+      "x": 2.189882,
+      "y": 41.392728,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "246453a3-8303-4d66-998f-0e57eb841475",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298670079",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.198511,
+      "y": 41.394896,
+      "z": 0
+    },
+    {
+      "x": 2.198308,
+      "y": 41.394744,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "0c05edd6-5646-4d99-ba65-75db88edd954",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299516765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "729e7143-16e5-46f1-a6ec-38a148cb2467",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299516765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "373c400f-f9fe-4c1d-beac-6b343b635ee0",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299531265",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.157167,
+      "y": 41.397452,
+      "z": 0
+    },
+    {
+      "x": 2.157932,
+      "y": 41.396872,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3e5c9d25-17bb-432f-aecb-71bbfdfa2731",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298625192",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.171235,
+      "y": 41.386708,
+      "z": 0
+    },
+    {
+      "x": 2.17032,
+      "y": 41.385808,
+      "z": 0
+    },
+    {
+      "x": 2.169163,
+      "y": 41.385676,
+      "z": 0
+    },
+    {
+      "x": 2.164792,
+      "y": 41.38596,
+      "z": 0
+    },
+    {
+      "x": 2.164074,
+      "y": 41.385436,
+      "z": 0
+    },
+    {
+      "x": 2.163572,
+      "y": 41.385192,
+      "z": 0
+    },
+    {
+      "x": 2.1629,
+      "y": 41.385624,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "dfd23dc1-618c-427a-9788-8400cf15eead",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299493756",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.22505,
+      "y": 41.432068,
+      "z": 0
+    },
+    {
+      "x": 2.227679,
+      "y": 41.430488,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "99841257-a3c2-4913-b8aa-6fb221b3cd09",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299523728",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.130508,
+      "y": 41.387668,
+      "z": 0
+    },
+    {
+      "x": 2.130649,
+      "y": 41.387388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3b6cc9d0-8d14-4b30-aca2-d4f24b930c6c",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299256992",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 1.524001,
+      "y": 41.186456,
+      "z": 0
+    },
+    {
+      "x": 1.529946,
+      "y": 41.187276,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "4465d993-2961-4a88-b41a-cd6d33cd9739",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299520198",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.7646,
+      "y": 43.383148,
+      "z": 0
+    },
+    {
+      "x": -5.764493,
+      "y": 43.383656,
+      "z": 0
+    },
+    {
+      "x": -5.765327,
+      "y": 43.383696,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "5012a425-67da-4df5-8e8d-779ccd2926f8",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299393786",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.137907,
+      "y": 41.3369,
+      "z": 0
+    },
+    {
+      "x": 2.133994,
+      "y": 41.336796,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "60523459-b415-458a-9d33-569bd8ece35d",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299311680",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.156742,
+      "y": 41.38572,
+      "z": 0
+    },
+    {
+      "x": 2.157005,
+      "y": 41.385632,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "6a80d6cf-b79d-4c72-b249-cff9c9ff586e",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299393787",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.135002,
+      "y": 41.338188,
+      "z": 0
+    },
+    {
+      "x": 2.132092,
+      "y": 41.338832,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "a6452f23-b349-4997-8d7f-a47d5fc32943",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299517665",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -0.395741,
+      "y": 38.489428,
+      "z": 0
+    },
+    {
+      "x": -0.396186,
+      "y": 38.489404,
+      "z": 0
+    },
+    {
+      "x": -0.396536,
+      "y": 38.489448,
+      "z": 0
+    },
+    {
+      "x": -0.396843,
+      "y": 38.489512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "e1b575e9-f3b4-4e59-92c6-46872b04c04e",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299311446",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.163067,
+      "y": 41.386272,
+      "z": 0
+    },
+    {
+      "x": 2.162916,
+      "y": 41.386388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "606c7a62-58b9-406c-8b38-0db4d6d46b90",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299393787",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.135002,
+      "y": 41.338188,
+      "z": 0
+    },
+    {
+      "x": 2.132092,
+      "y": 41.338832,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "b4afc5b8-1c19-402e-b509-33df77d28ee2",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299301482",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.157652,
+      "y": 41.386264,
+      "z": 0
+    },
+    {
+      "x": 2.157297,
+      "y": 41.386064,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "47afd7d3-8a19-4f0f-a71c-92ce1e4c37e8",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299393786",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.137907,
+      "y": 41.3369,
+      "z": 0
+    },
+    {
+      "x": 2.135002,
+      "y": 41.338188,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "6583ac22-2cf5-4348-8ffc-c12217f84cee",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299523622",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.130649,
+      "y": 41.387388,
+      "z": 0
+    },
+    {
+      "x": 2.131166,
+      "y": 41.387496,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "f86ea887-8618-41ba-b9f5-4f760d5057b3",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299558466",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098702,
+      "y": 41.360852,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "40090c40-a9bb-4c82-92d7-6da32529dbe1",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299285809",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.162724,
+      "y": 41.38598,
+      "z": 0
+    },
+    {
+      "x": 2.162572,
+      "y": 41.385908,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "b06b1658-3427-4360-8316-0ef0223f5e1a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299399178",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.164884,
+      "y": 41.388268,
+      "z": 0
+    },
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "fce70a1f-4299-479e-9763-40fec5e269b2",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299441865",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.156321,
+      "y": 41.378664,
+      "z": 0
+    },
+    {
+      "x": 2.159832,
+      "y": 41.376004,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "305a1483-c623-4a71-a13f-de2127381738",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554793",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075458,
+      "y": 43.557028,
+      "z": 0
+    },
+    {
+      "x": -6.075876,
+      "y": 43.557116,
+      "z": 0
+    },
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1b3832ed-3a15-42bd-b7bd-9d46a2e2db15",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299557289",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075961,
+      "y": 43.556328,
+      "z": 0
+    },
+    {
+      "x": -6.075778,
+      "y": 43.556408,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "6ff71db4-4710-4ca0-bffa-798a559108b8",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299524296",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.130573,
+      "y": 41.38714,
+      "z": 0
+    },
+    {
+      "x": 2.130643,
+      "y": 41.387064,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "9f36a9b3-d912-4f44-bb86-717e33edf13a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298656614",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.163627,
+      "y": 41.40494,
+      "z": 0
+    },
+    {
+      "x": 2.163052,
+      "y": 41.404592,
+      "z": 0
+    },
+    {
+      "x": 2.169877,
+      "y": 41.399396,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "f50086c5-262a-449d-af14-a3c086cd1c76",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298725044",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.170586,
+      "y": 41.409208,
+      "z": 0
+    },
+    {
+      "x": 2.163627,
+      "y": 41.40494,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2770be85-d2b4-4079-a9b6-a03f5ad97165",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298620985",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.190337,
+      "y": 41.402444,
+      "z": 0
+    },
+    {
+      "x": 2.176585,
+      "y": 41.41288,
+      "z": 0
+    },
+    {
+      "x": 2.174292,
+      "y": 41.411272,
+      "z": 0
+    },
+    {
+      "x": 2.173797,
+      "y": 41.41146,
+      "z": 0
+    },
+    {
+      "x": 2.170586,
+      "y": 41.409208,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1a36109a-dd68-42aa-b84e-ace5ae4fd969",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299213186",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -4.46604,
+      "y": 36.690792,
+      "z": 0
+    },
+    {
+      "x": -4.465317,
+      "y": 36.690844,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "8eb0fc03-92ac-454c-ac39-6cfb8cdbe3eb",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299213186",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -4.46604,
+      "y": 36.690792,
+      "z": 0
+    },
+    {
+      "x": -4.465317,
+      "y": 36.690844,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2de13875-f63d-405d-9ac6-332640588398",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299520198",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.7646,
+      "y": 43.383148,
+      "z": 0
+    },
+    {
+      "x": -5.764493,
+      "y": 43.383656,
+      "z": 0
+    },
+    {
+      "x": -5.765327,
+      "y": 43.383696,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2246af5a-0c0d-42de-a5d3-3baf77187006",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299517665",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -0.395914,
+      "y": 38.489512,
+      "z": 0
+    },
+    {
+      "x": -0.396843,
+      "y": 38.489512,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "b9d1c184-9d12-4134-b100-92146b3ce6f3",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299502665",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    },
+    {
+      "x": -6.075864,
+      "y": 43.556824,
+      "z": 0
+    },
+    {
+      "x": -6.075416,
+      "y": 43.556292,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "581d7baf-83bf-45f6-ada8-16ad8360afcb",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299558466",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098702,
+      "y": 41.360852,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1aa38597-2a76-4619-9d7f-a26828c1c724",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299331546",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.190337,
+      "y": 41.402444,
+      "z": 0
+    },
+    {
+      "x": 2.189347,
+      "y": 41.403196,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "01560c60-75d9-4a90-a90b-f612b86df194",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299244765",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.160725,
+      "y": 41.383512,
+      "z": 0
+    },
+    {
+      "x": 2.161085,
+      "y": 41.384068,
+      "z": 0
+    },
+    {
+      "x": 2.161852,
+      "y": 41.384264,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "960f2710-05c6-4afa-9522-0672d4d92f7d",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298670080",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.198308,
+      "y": 41.394744,
+      "z": 0
+    },
+    {
+      "x": 2.198069,
+      "y": 41.394564,
+      "z": 0
+    },
+    {
+      "x": 2.195881,
+      "y": 41.392968,
+      "z": 0
+    },
+    {
+      "x": 2.191948,
+      "y": 41.392804,
+      "z": 0
+    },
+    {
+      "x": 2.189882,
+      "y": 41.392728,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "d0121784-2380-4baa-82c4-2dae494794c9",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554798",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    },
+    {
+      "x": -6.07615,
+      "y": 43.556872,
+      "z": 0
+    },
+    {
+      "x": -6.076201,
+      "y": 43.556724,
+      "z": 0
+    },
+    {
+      "x": -6.076173,
+      "y": 43.556612,
+      "z": 0
+    },
+    {
+      "x": -6.075682,
+      "y": 43.555952,
+      "z": 0
+    },
+    {
+      "x": -6.07516,
+      "y": 43.555292,
+      "z": 0
+    },
+    {
+      "x": -6.075112,
+      "y": 43.55522,
+      "z": 0
+    },
+    {
+      "x": -6.074632,
+      "y": 43.554756,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "de2a6bd5-34d9-422a-b9c9-f5cb9af59427",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554811",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.07516,
+      "y": 43.555292,
+      "z": 0
+    },
+    {
+      "x": -6.075112,
+      "y": 43.55522,
+      "z": 0
+    },
+    {
+      "x": -6.074632,
+      "y": 43.554756,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "8455a819-5102-43f4-b414-cfab0555b6d4",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299342465",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.158879,
+      "y": 41.386084,
+      "z": 0
+    },
+    {
+      "x": 2.158578,
+      "y": 41.385852,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "7593d4ce-a08e-419e-8e6c-f6a3ee5a5218",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299524721",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.131016,
+      "y": 41.386588,
+      "z": 0
+    },
+    {
+      "x": 2.131163,
+      "y": 41.386272,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "20852606-1b7f-4390-9f36-bb3353c69856",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299558465",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098702,
+      "y": 41.360852,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "dd689ffe-10d3-49dd-bec4-3436d30bbad8",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299543634",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075384,
+      "y": 43.556256,
+      "z": 0
+    },
+    {
+      "x": -6.07519,
+      "y": 43.556052,
+      "z": 0
+    },
+    {
+      "x": -6.074891,
+      "y": 43.555788,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "f215a7f6-bba2-4d12-98f2-06f79d2109e3",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299529965",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.070696,
+      "y": 41.381892,
+      "z": 0
+    },
+    {
+      "x": 2.071294,
+      "y": 41.382016,
+      "z": 0
+    },
+    {
+      "x": 2.071905,
+      "y": 41.382112,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "323969ac-b28a-4389-94ac-4141bb089d67",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299339946",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 1.46936,
+      "y": 41.16848,
+      "z": 0
+    },
+    {
+      "x": 1.474109,
+      "y": 41.170864,
+      "z": 0
+    },
+    {
+      "x": 1.480242,
+      "y": 41.170416,
+      "z": 0
+    },
+    {
+      "x": 1.484843,
+      "y": 41.173392,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "f265ab0b-42f8-41d6-8160-c28d80d70861",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554816",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074624,
+      "y": 43.556584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "9c65b89d-141b-4589-a6bc-f5165d7114a5",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299524718",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.131016,
+      "y": 41.386588,
+      "z": 0
+    },
+    {
+      "x": 2.13103,
+      "y": 41.386592,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "9daea933-3945-4f52-bd93-299520b4ac9a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299243327",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.139001,
+      "y": 41.383116,
+      "z": 0
+    },
+    {
+      "x": 2.140358,
+      "y": 41.383828,
+      "z": 0
+    },
+    {
+      "x": 2.141388,
+      "y": 41.382992,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2f5b09c5-9c60-48f6-9601-36fbb539fc3b",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299516765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "9fedd9c7-1981-4258-a016-8f738f3ca270",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299502665",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.07604,
+      "y": 43.556984,
+      "z": 0
+    },
+    {
+      "x": -6.075864,
+      "y": 43.556824,
+      "z": 0
+    },
+    {
+      "x": -6.075416,
+      "y": 43.556292,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "c8bd9ec9-4455-42a2-8232-86fe131ea22e",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298655373",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.123224,
+      "y": 41.386844,
+      "z": 0
+    },
+    {
+      "x": 2.122758,
+      "y": 41.386468,
+      "z": 0
+    },
+    {
+      "x": 2.122722,
+      "y": 41.384644,
+      "z": 0
+    },
+    {
+      "x": 2.122511,
+      "y": 41.382664,
+      "z": 0
+    },
+    {
+      "x": 2.121572,
+      "y": 41.3817,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1ce0ba9f-1e67-422f-9441-96168e0b9895",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299399179",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    },
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    },
+    {
+      "x": 2.165603,
+      "y": 41.388164,
+      "z": 0
+    },
+    {
+      "x": 2.165806,
+      "y": 41.387824,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "12ec4bb9-e42f-4f41-a312-2b38297ebe95",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299399179",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    },
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    },
+    {
+      "x": 2.165603,
+      "y": 41.388164,
+      "z": 0
+    },
+    {
+      "x": 2.165806,
+      "y": 41.387824,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2e213dbc-a6ab-4cae-b8cc-8278ee1e82f6",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299398765",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.164884,
+      "y": 41.388268,
+      "z": 0
+    },
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    },
+    {
+      "x": 2.165603,
+      "y": 41.388164,
+      "z": 0
+    },
+    {
+      "x": 2.165806,
+      "y": 41.387824,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "b172594b-9137-484a-9ce9-2f8500be8a0a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299516765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "01dc260c-b68a-49af-af7a-3394cac40b2a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299244026",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.131146,
+      "y": 41.384016,
+      "z": 0
+    },
+    {
+      "x": 2.134923,
+      "y": 41.385032,
+      "z": 0
+    },
+    {
+      "x": 2.134166,
+      "y": 41.384816,
+      "z": 0
+    },
+    {
+      "x": 2.136596,
+      "y": 41.381844,
+      "z": 0
+    },
+    {
+      "x": 2.136854,
+      "y": 41.381876,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "48665da4-508d-482a-97b4-5d8bf179337a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299557289",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.075961,
+      "y": 43.556328,
+      "z": 0
+    },
+    {
+      "x": -6.075778,
+      "y": 43.556408,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "b29000be-5cb2-4e23-a73f-b08632237ee7",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299344265",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.164902,
+      "y": 41.386324,
+      "z": 0
+    },
+    {
+      "x": 2.164751,
+      "y": 41.38624,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "72a8a160-b976-45ab-b452-5b8c676aba4d",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299520199",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.765327,
+      "y": 43.383696,
+      "z": 0
+    },
+    {
+      "x": -5.766102,
+      "y": 43.38374,
+      "z": 0
+    },
+    {
+      "x": -5.765977,
+      "y": 43.383152,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "bad47e7f-b15a-411d-bfd1-de292f9f76d7",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299516765",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.098875,
+      "y": 41.360876,
+      "z": 0
+    },
+    {
+      "x": 2.098529,
+      "y": 41.360828,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "bb680711-93b1-4f2b-b16f-c88a0b415e2e",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298687497",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.972486,
+      "y": 37.382952,
+      "z": 0
+    },
+    {
+      "x": -5.972539,
+      "y": 37.382744,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "820f5d55-9fb2-4f49-bc8c-df6aad74337a",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554792",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074624,
+      "y": 43.556584,
+      "z": 0
+    },
+    {
+      "x": -6.074868,
+      "y": 43.556912,
+      "z": 0
+    },
+    {
+      "x": -6.075458,
+      "y": 43.557028,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "bb22141b-9d50-442a-9261-a65467410659",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554820",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.073932,
+      "y": 43.555196,
+      "z": 0
+    },
+    {
+      "x": -6.073967,
+      "y": 43.55584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3717bdd4-c965-4574-9e7a-926d3bf8d957",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299243226",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.170586,
+      "y": 41.409208,
+      "z": 0
+    },
+    {
+      "x": 2.170582,
+      "y": 41.40946,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "2b8dbed4-9ff0-416f-b1c0-11110fe9ab31",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554819",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074632,
+      "y": 43.554756,
+      "z": 0
+    },
+    {
+      "x": -6.073969,
+      "y": 43.55474,
+      "z": 0
+    },
+    {
+      "x": -6.073939,
+      "y": 43.554768,
+      "z": 0
+    },
+    {
+      "x": -6.073948,
+      "y": 43.554956,
+      "z": 0
+    },
+    {
+      "x": -6.073932,
+      "y": 43.555196,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "dadccf0a-3328-4868-b29a-a8be3a3d5cff",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299554802",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -6.074624,
+      "y": 43.556584,
+      "z": 0
+    },
+    {
+      "x": -6.074106,
+      "y": 43.555952,
+      "z": 0
+    },
+    {
+      "x": -6.074365,
+      "y": 43.555788,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "611b656f-fbf8-4c50-bdc7-738f31ec25dd",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298625191",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.179524,
+      "y": 41.3915,
+      "z": 0
+    },
+    {
+      "x": 2.173581,
+      "y": 41.389268,
+      "z": 0
+    },
+    {
+      "x": 2.171414,
+      "y": 41.386884,
+      "z": 0
+    },
+    {
+      "x": 2.171235,
+      "y": 41.386708,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "e5506ea0-d35b-4b69-8480-67a21496efb4",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-298748166",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -4.508983,
+      "y": 36.719216,
+      "z": 0
+    },
+    {
+      "x": -4.506943,
+      "y": 36.71258,
+      "z": 0
+    },
+    {
+      "x": -4.49425,
+      "y": 36.713948,
+      "z": 0
+    },
+    {
+      "x": -4.492777,
+      "y": 36.703952,
+      "z": 0
+    },
+    {
+      "x": -4.491896,
+      "y": 36.701352,
+      "z": 0
+    },
+    {
+      "x": -4.492698,
+      "y": 36.698256,
+      "z": 0
+    },
+    {
+      "x": -4.484855,
+      "y": 36.696708,
+      "z": 0
+    },
+    {
+      "x": -4.483016,
+      "y": 36.6961,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "61cebfc8-3d79-477b-b8ce-6d3be5f0f010",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299399183",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.182394,
+      "y": 41.391992,
+      "z": 0
+    },
+    {
+      "x": 2.182352,
+      "y": 41.39132,
+      "z": 0
+    },
+    {
+      "x": 2.184291,
+      "y": 41.39176,
+      "z": 0
+    },
+    {
+      "x": 2.183659,
+      "y": 41.390444,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "3445b02a-3f01-402d-ac3e-bf6ca48b9fa9",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299205458",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.848067,
+      "y": 43.363372,
+      "z": 0
+    },
+    {
+      "x": -5.859375,
+      "y": 43.360956,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "e402ed47-59b4-4561-9691-656d2f02a3ec",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299325382",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.163878,
+      "y": 41.386264,
+      "z": 0
+    },
+    {
+      "x": 2.163675,
+      "y": 41.38612,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "1d771fa1-d802-4db9-a4b4-48ac9f461eeb",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299520199",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": -5.765327,
+      "y": 43.383696,
+      "z": 0
+    },
+    {
+      "x": -5.766102,
+      "y": 43.38374,
+      "z": 0
+    },
+    {
+      "x": -5.765977,
+      "y": 43.383152,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+{
+  "trenchId": "8858b8a1-6c58-4e4d-a1b2-ca3281371609",
+  "purpose": "service/drop",
+  "country": "ESP",
+  "probability": 1,
+  "reference": "esp-299399178",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 2.164884,
+      "y": 41.388268,
+      "z": 0
+    },
+    {
+      "x": 2.165077,
+      "y": 41.388016,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
