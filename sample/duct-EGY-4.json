@@ -1,0 +1,1802 @@
+[
+  {
+    "ductId": "4f0bf548-58e8-4404-8645-70634ffead3d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ab4c9c16-599d-4cf5-a620-bb43fa0bd4a2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "019f614b-3262-475b-a330-788d75aa49f5",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ab4c9c16-599d-4cf5-a620-bb43fa0bd4a2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "695caa45-42b7-4af0-831a-ce0ba5de3529",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "abfc27a3-20a1-461c-9ed8-96141e6de0ec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "1b6b98f0-012f-42ad-9485-3f3cfb163b58",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "abfc27a3-20a1-461c-9ed8-96141e6de0ec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "dcd9a23c-9f12-434e-8517-9e9b5099d5ac",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ac5d619a-b9a4-4dda-bc4c-3ff6c28845e3",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "68d8f745-6b17-4043-8e7c-33b1e329ab28",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ac5d619a-b9a4-4dda-bc4c-3ff6c28845e3",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "37ccfa6d-76a1-4f25-b7a9-fab6c68d4b77",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ad04599c-2e82-4135-994f-8ba3e11334ed",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "81100ea1-b6f3-4370-8d57-4593ac64e991",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ad04599c-2e82-4135-994f-8ba3e11334ed",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "83c2727a-2f1d-4735-85f9-ce9b99ab73b8",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "adb19a31-a72a-4516-ab45-54a8cc8e3221",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "131f79c1-90b7-4381-86c0-da076caa9f24",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "adb19a31-a72a-4516-ab45-54a8cc8e3221",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b6192a0f-3a74-4ccc-9406-7f6ba61b22b6",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "adea1c45-df9e-4f8c-a7d4-898653a3270f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d9cee9be-192d-48b0-9c6b-0377f1f46523",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "adea1c45-df9e-4f8c-a7d4-898653a3270f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "924ce672-ae93-4eea-9042-a8c0381c6e55",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "af0797a6-5e39-4abc-b487-4212752ee7b9",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "749b17f8-354f-4cb6-aceb-1079946fefb1",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "af0797a6-5e39-4abc-b487-4212752ee7b9",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "6f854bab-2733-4863-ad71-1be0a7aae6a2",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b04c0a40-892e-4777-83a7-8dc3814348e6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e408276b-d140-4768-9ed0-2a39f480f27c",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b04c0a40-892e-4777-83a7-8dc3814348e6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "5334bf95-c5ce-42ec-85d1-dbf38aca16f1",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b1ac9313-aec7-42bd-834d-847c63c87214",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "467f7e44-279e-4b65-9368-fbf337aae55a",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b1ac9313-aec7-42bd-834d-847c63c87214",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "aeafd72c-fe09-4370-95cc-c40cb6ebc795",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b255e6de-7528-4098-97b5-115955d95cda",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b1cbd8cf-603b-4aa7-9d97-1a4dfa4c79ad",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b255e6de-7528-4098-97b5-115955d95cda",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b66b0702-e526-4793-be48-6e1df8f7f548",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b32dfab9-12aa-4103-80be-225a9d6c0423",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ba381c8d-113d-4033-acba-16a916ff4a12",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b32dfab9-12aa-4103-80be-225a9d6c0423",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "37c1de46-e056-41d4-8216-1601bd67ce96",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b4aa6efa-c8ce-4f95-abaa-0efa99a524d9",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "91c11a61-6bd8-4173-82c2-e1f6eea1da82",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b4aa6efa-c8ce-4f95-abaa-0efa99a524d9",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "93f2bdd5-bedd-490d-8744-0bb2965ac6ae",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b558367b-bef4-484c-ae5e-7f93bebe9dd0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e138c986-30ae-41e4-8056-4c8fc3fb988b",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b558367b-bef4-484c-ae5e-7f93bebe9dd0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c47aaada-775b-4108-8afd-c98b668cf561",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b5760540-cffc-4d2a-a2b5-c211c98edf1d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4aa7146c-3f38-477c-b928-6244e6815bfb",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b5760540-cffc-4d2a-a2b5-c211c98edf1d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4ba990e4-dd67-4bb1-a144-ca1bc4a25ff5",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b5846c9c-024b-4757-9e94-ace7b169518e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "175f8f35-3d2d-4051-84df-eadc39227ce8",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b5846c9c-024b-4757-9e94-ace7b169518e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "850ca830-d91f-46d1-bcfe-49230eab4157",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b7441292-f302-4b22-8ff8-bc816b2d6586",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "75548731-d3da-4ebb-8bba-31a6412bd835",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b7441292-f302-4b22-8ff8-bc816b2d6586",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c7fd0424-8866-4e46-b11b-f172345969c6",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b79931a0-b1a3-46ca-a0ca-6f636e823a27",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "0f828ba4-6a94-4e6f-8c23-7062bd3ee6e5",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b79931a0-b1a3-46ca-a0ca-6f636e823a27",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "6bac7f76-01cc-4813-92cf-12b2cd762a24",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b79e611f-0b14-4225-ac6a-0bb46bac2c92",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e42c68ab-c2bf-4bce-b628-6622d56b9df2",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b79e611f-0b14-4225-ac6a-0bb46bac2c92",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "5bdc64f8-92a1-4ce3-9a23-a49ab6ccef07",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b85061ac-90cb-42ef-8ecc-e664809ecd17",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a5991559-a38a-41fd-a7f3-37d9abab320d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b85061ac-90cb-42ef-8ecc-e664809ecd17",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3ba91d87-f935-47eb-94d3-cddf985a2532",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b9eb87cc-4feb-4587-83ac-616cdf390963",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c0ac1f74-4b47-4f2c-9403-7f40bcc329ed",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "b9eb87cc-4feb-4587-83ac-616cdf390963",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "61e00ca4-e156-4775-90d4-434e69b469a1",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ba9b62df-e2a7-4d6e-98b6-b6392f60f945",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "aa540b68-00a2-40a9-b7b5-4d7dd6b60f2d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ba9b62df-e2a7-4d6e-98b6-b6392f60f945",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "73c9229f-5b69-4442-88d0-4096b6d22d20",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bcf0d9fd-8f24-431a-9acc-0d0828a293f4",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "025ba016-79ef-43cb-8458-7c21a719d2ae",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bcf0d9fd-8f24-431a-9acc-0d0828a293f4",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3a3cd8a5-139a-439f-ad79-4cb61183e962",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bcfe0e97-8f38-4b64-bc4c-3db5214f73e2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "933511d5-da97-48f6-8169-031ec209289f",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bcfe0e97-8f38-4b64-bc4c-3db5214f73e2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "8d030b42-3405-4efd-95a2-0f8982fb71d5",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bd2d8be2-6c63-49b8-877f-85248a96f83b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3cc8c7b5-b409-442e-b3d9-627dd4338689",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bd2d8be2-6c63-49b8-877f-85248a96f83b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "9a49b583-9690-42de-afd7-58c63426c094",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bebeaabf-2b56-4791-a35b-5a1d59113908",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4d3ec1f0-fafc-4468-860d-c9dab1f64619",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bebeaabf-2b56-4791-a35b-5a1d59113908",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "302c28d3-a48a-4174-bc76-ff5dc6cde705",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bf728a40-fd80-497b-aa2b-4487c6b36872",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "44cd9078-f80e-4221-b9ac-4c311264ec26",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "bf728a40-fd80-497b-aa2b-4487c6b36872",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "40113846-58a7-4594-8326-12aaaae39e4d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c094cb83-da3b-462c-a32e-01202267cc31",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "87994860-be9e-4b51-b473-e65c5f9ad12c",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c094cb83-da3b-462c-a32e-01202267cc31",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c1c73701-4317-4caf-be52-95dc788d1d9a",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c0dd3f26-83ec-4249-95da-4e820b877197",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "400ccf3a-c5e9-46ce-a01e-b1a465ac2102",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c0dd3f26-83ec-4249-95da-4e820b877197",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f9f2ae67-d024-411d-a06a-d1177bb450bd",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c0fd1c06-1043-430c-a613-a45c332fc9b8",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e042d0be-af22-4f0b-9805-7dd7c32c30e2",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c0fd1c06-1043-430c-a613-a45c332fc9b8",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2546f688-b664-420b-b882-5cebafc04ca7",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c13d03f2-04cd-417d-af19-3c9e5691d276",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "db1da1b4-de73-475d-acbc-e3d7ea41bf37",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c13d03f2-04cd-417d-af19-3c9e5691d276",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "abf9b1b2-3d21-473f-97c8-ac3550dd119c",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c31afef1-7344-4c8e-8ace-7ac10742d250",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b662a2c4-3a1a-43d1-b481-3180527ab6b3",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c31afef1-7344-4c8e-8ace-7ac10742d250",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "110a0602-bd98-4ff4-b3d6-da8df63fc072",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c3fd3ac6-63b4-45df-b194-19fd0d0b3060",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "8e07f816-fe7d-4fd3-bfc6-9ae1b5de38f2",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c3fd3ac6-63b4-45df-b194-19fd0d0b3060",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "9e6fa9ac-fc1c-4324-8572-3dcbf64b29fb",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c4f2e10b-04a5-4dde-8651-b0b396509671",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "7d7fc7a8-5f0f-4247-977c-3d1a98bc81db",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c4f2e10b-04a5-4dde-8651-b0b396509671",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4d9b3c27-41e9-42d3-81b2-f5186ad9269c",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c6634a64-42d4-4cd9-aec7-7db1e44c27fb",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f15043e0-e0e6-4256-b4cc-a050811432dc",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c6634a64-42d4-4cd9-aec7-7db1e44c27fb",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e03170ec-fd1d-4c98-a36c-5f64b9ac049d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c9a3385b-6052-461b-9a14-a5de623cde3f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "56a45704-2873-4e48-b445-c070f5feaf7e",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "c9a3385b-6052-461b-9a14-a5de623cde3f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "82d9ba1d-2357-47d1-ba78-24191a748ac0",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cd682d65-cd4d-4455-ac5e-0960d89f3f52",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3f8ad180-8378-4f24-8983-d02a72ca7e83",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cd682d65-cd4d-4455-ac5e-0960d89f3f52",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "58d99805-b8fb-426e-be9a-96c67baffc92",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cd74fd4d-d262-454f-beb3-dcb1c5a7861d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "dd33d467-7684-4d42-8696-0c6279339eac",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cd74fd4d-d262-454f-beb3-dcb1c5a7861d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "060b1357-203b-42cd-92fc-d4bb4f693bce",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ce2bdb5e-0df4-4786-a129-e200c2fd6e3e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "04709caa-c076-4469-8c68-79dc4cb7096b",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ce2bdb5e-0df4-4786-a129-e200c2fd6e3e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "21fff44b-4e4d-4c19-8a0c-994abe5c3258",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ce6141df-2ae9-409d-bc1a-fd7246eb9f23",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "01ec6885-aa4b-4b7f-a159-4ea7dc5f7071",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "ce6141df-2ae9-409d-bc1a-fd7246eb9f23",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "6fc7dce1-5659-4d79-9ed9-6a2f7c95a190",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cf4b0e3d-63e9-4f99-94bf-17c70185caec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "15eff381-19a0-4ea9-a38e-cce0e22e1e51",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cf4b0e3d-63e9-4f99-94bf-17c70185caec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "8678de7e-43fa-41ff-9062-6218ee4e27b0",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cfd958b3-bc72-4d41-878c-ecfc6e5eee59",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f3f6ebf0-2071-47c8-8486-9f867a3f7836",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "cfd958b3-bc72-4d41-878c-ecfc6e5eee59",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "095ad5f0-55f9-4e5c-848f-be17ef167941",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d00b7b88-1335-42ca-aa58-8851d60dfaf7",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "851100c2-b5da-4d16-b23b-919c6a296240",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d00b7b88-1335-42ca-aa58-8851d60dfaf7",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b82e77c5-f66e-4653-9777-ec5e74334b4d",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d073417b-ce04-44cd-915a-934eb6d56459",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b096187f-f13e-4444-b828-be63e76868ba",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d073417b-ce04-44cd-915a-934eb6d56459",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "bd8cd4c9-7160-481a-b419-eb6af79e84d6",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d0d2e740-b13f-4b0d-bf8e-b336334aba9b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2271d259-30a7-4e1a-b987-71684f34e2e6",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d0d2e740-b13f-4b0d-bf8e-b336334aba9b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "95a15143-44f4-4e16-ba07-24649005f8db",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d140bbde-2b11-49a1-a173-c75b1ef88274",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "63433aec-cea2-4aaf-8966-374cc8a53b97",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d140bbde-2b11-49a1-a173-c75b1ef88274",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "615dccf0-6407-4fe0-9118-1c3ef5d3b908",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d3238e8e-c472-45a8-9a08-0ccb8b813933",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ee50548f-3a5a-41dc-8489-194b2850bd03",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d3238e8e-c472-45a8-9a08-0ccb8b813933",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "09a90a59-d61e-4a48-95b7-779f3f6dd30a",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d6917d2a-e3d3-4cc6-ace9-e3b53889e7df",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "64c991c4-5eb1-4162-b1c8-3f8465fa44f2",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d6917d2a-e3d3-4cc6-ace9-e3b53889e7df",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "371f0e4d-defc-4444-939c-d7bcc6e25844",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d6a13763-fe0b-442c-88ab-5a7a3f447eaf",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2452a512-b358-4137-b6bf-bcf2de4b3831",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d6a13763-fe0b-442c-88ab-5a7a3f447eaf",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4f620f92-49bd-4c93-bf97-cbccafc136d5",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d83cc581-dc8c-4cff-9f3d-333943c00799",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "dbc420c1-5f82-44c6-a573-2967b7cf1ecd",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d83cc581-dc8c-4cff-9f3d-333943c00799",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "28e58065-8f21-474b-8049-69038254953c",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d8fa0f44-7348-4226-9529-8f9f87099e7c",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d29e6ab5-be99-4062-a1af-dcb61d0a7255",
+    "point": "20250509T113205",
+    "country": "EGY",
+    "probability": 1,
+    "trenchId": "d8fa0f44-7348-4226-9529-8f9f87099e7c",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

@@ -1,0 +1,776 @@
+[
+  {
+    "ductId": "08c3dac2-8890-47d8-bb07-2c374fe4fe9b",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "0aff1326-4826-458e-9dc5-2c994cd23c86",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "5568876d-58fc-4b29-b2b3-0f5a6797dfd4",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "0aff1326-4826-458e-9dc5-2c994cd23c86",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c67a1b12-4fbb-4c01-98c9-bb6d80caff95",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "30846632-925d-41be-9adc-b013382124de",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f0960669-08f4-4c9f-a5fa-2ffdc1f513bc",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "30846632-925d-41be-9adc-b013382124de",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b9efcbae-a006-4177-96b6-1b756bf962d8",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "5143472e-fa5e-42d4-8a67-98e31055813c",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a26f113a-7d4d-40b2-84da-0b8259370938",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "5143472e-fa5e-42d4-8a67-98e31055813c",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3f880dc6-e41a-489f-aadd-028a78342d2e",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "5801e18f-4f2b-495d-a2be-7ffa41a23381",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a4294c0d-58b7-4c44-b9eb-c6ea69ad05b4",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "5801e18f-4f2b-495d-a2be-7ffa41a23381",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "cfce7106-6cf8-4688-8c0e-e347d71486a2",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "633b2917-7bed-40a3-94bf-a91a8cad9cc6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3c9a4f87-1959-45e0-980d-3b2944db9548",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "633b2917-7bed-40a3-94bf-a91a8cad9cc6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3b1ad3cd-5f00-4f45-8d86-b747f60a74af",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "63daa945-346f-49c8-a570-14dd03fcc046",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d9468a02-07ff-4233-9ff5-c42c0929a4e1",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "63daa945-346f-49c8-a570-14dd03fcc046",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "eada4752-6fdb-4c01-ba38-5e6a80b7f70b",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "722e4a35-7679-4e43-b064-15ac85c4b549",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "729b4d11-423f-4041-bc09-991076f9bfd1",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "722e4a35-7679-4e43-b064-15ac85c4b549",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "24294439-8586-4136-a258-652e02741b71",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "7cfbd067-6499-454c-b3bd-21303fbfe859",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "7f8f3a44-ff4e-4123-a747-cedcdb20c1f1",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "7cfbd067-6499-454c-b3bd-21303fbfe859",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "5db899bc-7460-4537-a032-fd94f6c77b01",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "94286184-2330-4d2c-92ad-bdc00bd493e1",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a56b45e8-56c8-4afe-94c9-4ca9a5692b9c",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "94286184-2330-4d2c-92ad-bdc00bd493e1",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "58991224-2d1a-4d76-b0b0-3876cffdaf67",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "96000c4d-8d75-48fc-a08f-81fcb835a421",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "63e5689e-a16b-45f1-8759-e240593cee0a",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "96000c4d-8d75-48fc-a08f-81fcb835a421",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "413ed149-18db-41b6-ab24-3378947ee2bf",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "96ddaeca-b00b-4de2-938d-fcd1825fde59",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "13bbae43-0400-43d8-ba83-b4c7818c26ce",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "96ddaeca-b00b-4de2-938d-fcd1825fde59",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ed35b35e-6b46-4754-89e2-f9920f05b8b3",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "a7fbea0f-d3c4-403a-830c-4aa3b4f0590b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2bac8502-ed74-4843-b96a-e85da138182f",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "a7fbea0f-d3c4-403a-830c-4aa3b4f0590b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3b9aea07-777e-4d7f-ad88-a93e8df1d61a",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "a955bfec-be27-42d3-8eaa-e24d433e03e0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f747540e-e772-464a-8ac2-7642f3e6ca59",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "a955bfec-be27-42d3-8eaa-e24d433e03e0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d27bd028-d0e1-41ee-8ee1-568911c39b92",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "abcf136e-2694-48e7-9bab-6fa8de7ac748",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "38af9349-fa6a-4e14-bc6f-b703e519a93d",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "abcf136e-2694-48e7-9bab-6fa8de7ac748",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "fcf67ff0-9652-4040-8d9f-beae7a73ff78",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "b1fecdee-b7e0-4be4-8ede-188295e5f6cc",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "9a0559e9-c6f1-476d-8d37-6f8b4c0cafb0",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "b1fecdee-b7e0-4be4-8ede-188295e5f6cc",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "caf327c3-6b6e-413e-a4b5-d29e8d28f75b",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "bb176c24-2d19-46d3-921a-eb3b70dbf94b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "6e8b7810-c03b-4f53-97b1-cb96861f09e6",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "bb176c24-2d19-46d3-921a-eb3b70dbf94b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3fd97665-bcd8-405b-8ec3-81afcd5354ee",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "bbf43c4c-8343-483d-83cc-0f67d2b30ba2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a4aaf02c-00cd-44fb-b763-b781816767d2",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "bbf43c4c-8343-483d-83cc-0f67d2b30ba2",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "50973cb1-665a-44a7-bb6f-6756b8fd2d32",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "cbec03fc-89a5-4ce5-944a-b0d222ebeae0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "1472ac23-86ad-4d41-8ca6-448671adeb37",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "cbec03fc-89a5-4ce5-944a-b0d222ebeae0",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "12bb18bd-3866-4346-8149-41fb2b5945cf",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "d1e98e9e-fc2b-4686-af95-cc4856add094",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2abc96f0-1b41-4554-b235-244aca40bc49",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "d1e98e9e-fc2b-4686-af95-cc4856add094",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b60589ad-528f-4b6f-80c9-da8fd12a83f8",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "d4d48627-7d82-4940-9392-4a5d1b6b2524",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "69e096ad-d94a-48db-8e2d-64c9dc0478d9",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "d4d48627-7d82-4940-9392-4a5d1b6b2524",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "51b27002-58d5-4a56-8987-f94ab39cae7a",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "dafbd7c7-fba3-45cb-8ef7-ed50d0e341df",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "728c9a16-54fb-4840-9258-cd932db13583",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "dafbd7c7-fba3-45cb-8ef7-ed50d0e341df",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "1dd9e740-807e-40e7-9ded-2b32668c8a50",
+    "point": "20250509T113205",
+    "country": "ISL",
+    "probability": 1,
+    "trenchId": "f4ca415e-271e-4feb-ba75-f5bbb555b06e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

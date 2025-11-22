@@ -1,0 +1,63 @@
+[
+  {
+    "rackId": "ee8ff22a-3ede-49f3-8e2d-b75864c17b87",
+    "point": "20241008T174124",
+    "reference": "esp-NIXVAL-A1000",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20241011",
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "coordinate": {
+        "y": 39.51944133536713,
+        "x": -0.46706961673546665,
+        "z": 12
+    },
+    "dimensions": {
+      "depth": 600,
+      "height": 534,
+      "width": 1200,
+      "unit": "mm"
+    },
+    "slots": 12,
+    "slotUsage": [
+      { "slot": 1, "usage": "reserved" },
+      { "slot": 12, "usage": "reserved" }
+    ],
+    "source": "historical",
+    "delete": false,
+    "floor": 0,
+    "area": "exchange",
+    "row": 1,
+    "column": 1
+  },
+  {
+    "rackId": "7b057c28-042c-4c33-9fe9-8d113450d659",
+    "point": "20241008T174124",
+    "reference": "esp-NIXVAL-A1001",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20241011",
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "coordinate": {
+        "y": 39.51944133536713,
+        "x": -0.46706961673546665,
+        "z": 12
+    },
+    "dimensions": {
+      "depth": 600,
+      "height": 534,
+      "width": 1200,
+      "unit": "mm"
+    },
+    "slots": 12,
+    "slotUsage": [
+      { "slot": 1, "usage": "reserved" },
+      { "slot": 12, "usage": "reserved" }
+    ],
+    "source": "historical",
+    "delete": false,
+    "floor": 0,
+    "area": "exchange",
+    "row": 1,
+    "column": 2
+  }]

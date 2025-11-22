@@ -1,0 +1,71 @@
+{
+  "realm" : "MNI",
+  "users" : [ {
+    "id" : "506572d5-94eb-46f6-8d3d-11863e8088e3",
+    "username" : "admin",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1762797779934,
+    "totp" : false,
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-mni" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "34932391-fbdd-4e71-bff7-417160fe7125",
+    "username" : "lee.cowdrey@merkator.com",
+    "firstName" : "Lee",
+    "lastName" : "Cowdrey",
+    "email" : "lee.cowdrey@merkator.com",
+    "emailVerified" : true,
+    "enabled" : true,
+    "createdTimestamp" : 1762797807156,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "498c93d0-b96c-4924-ab12-df7b3c19a4bd",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1763053031778,
+      "secretData" : "{\"value\":\"0lMFjRK9deLIKmyOJUmhswK5Jw0ypxji/uqGChigyI0=\",\"salt\":\"R1nuM7bJKGfCtCnSgsTAsA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "read:mni_ui", "read:mni_duct", "read:mni_rack", "write:mni_pole", "write:mni_ui", "write:mni_site", "read:mni_alert", "write:mni_alert", "read:mni_fetch", "write:mni_fetch", "write:mni_predict", "write:mni_rack", "read:mni_admin", "read:mni_service", "write:mni_duct", "default-roles-mni", "read:mni_cable", "write:mni_admin", "write:mni_service", "read:mni_trench", "read:mni_pole", "write:mni_trench", "read:mni_predict", "read:mni_ne", "write:mni_cable", "write:mni_ne", "read:mni_site" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "c022ad36-cc4c-4a05-a6c9-9a10a60dbdb4",
+    "username" : "service-account-mni",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1763043072673,
+    "totp" : false,
+    "serviceAccountClientId" : "MNI",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-mni" ],
+    "clientRoles" : {
+      "MNI" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "9dfc3dc5-8e9f-4657-9dc3-df25e7a8be74",
+    "username" : "support@marlindt.net",
+    "email" : "support@marlindt.net",
+    "emailVerified" : true,
+    "enabled" : true,
+    "createdTimestamp" : 1762797696176,
+    "totp" : false,
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "read:mni_ui", "read:mni_admin", "read:mni_service", "read:mni_duct", "read:mni_rack", "default-roles-mni", "read:mni_cable", "read:mni_trench", "read:mni_pole", "read:mni_predict", "read:mni_alert", "read:mni_ne", "read:mni_fetch", "read:mni_site" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

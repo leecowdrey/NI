@@ -1,0 +1,3610 @@
+[{
+  "trenchId": "2d4cb1e2-f32a-4968-8c73-4f814af6d69f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "2ad9ee27-8b3b-499c-b372-d9fcb315ea87",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793156,
+      "y": 24.69521,
+      "z": 0
+    },
+    {
+      "x": 46.793284,
+      "y": 24.695038,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "185a1c80-276f-4b0f-b479-35060ab49b3f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a1df3c7b-10a2-4d12-9add-f5e69c5b82a7",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d64dae7d-f526-4f42-a780-0f94fd8a496d",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e3bd6ec1-ea43-4b00-a318-de4f9835c2de",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7890f131-8360-40ec-b183-40dc7610078f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "bcbbbd88-d861-4d75-93c3-16f81441ef53",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ba95ea6c-0704-4b8f-8828-5b3062ef76c8",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a1801210-512d-434a-80d9-ce26dbe6ed34",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400270",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "55217c23-4ec6-4cb5-97c5-83c8d8abb5a5",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8c69b6d3-92ee-43cd-bf46-7535269db5de",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401726",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793024,
+      "y": 24.695912,
+      "z": 0
+    },
+    {
+      "x": 46.800816,
+      "y": 24.700602,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "060f06c1-377b-4fb9-857f-f73be4a2f87b",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "639c65af-70c6-41a9-a86f-a61e25b395e2",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401726",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793024,
+      "y": 24.695912,
+      "z": 0
+    },
+    {
+      "x": 46.800816,
+      "y": 24.700602,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b77f2b96-8055-41e2-a994-9aed21fbe65f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432865",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.804408,
+      "y": 24.697114,
+      "z": 0
+    },
+    {
+      "x": 46.799884,
+      "y": 24.694448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "18e07433-9688-4148-911b-b88b64162254",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432865",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.804408,
+      "y": 24.697114,
+      "z": 0
+    },
+    {
+      "x": 46.799884,
+      "y": 24.694448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0ca0f329-6d83-4b19-83e0-a47e6f1ef799",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432865",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.804408,
+      "y": 24.697114,
+      "z": 0
+    },
+    {
+      "x": 46.799884,
+      "y": 24.694448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "aa632447-38b2-4023-bca0-acb95c108506",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "46145638-cd83-4abc-9d45-47095d3f2d0c",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "67a7dbcf-d358-4901-bcb9-6d831546179b",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4ab720d5-5f00-4277-942c-384549ca6ed5",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793156,
+      "y": 24.69521,
+      "z": 0
+    },
+    {
+      "x": 46.793284,
+      "y": 24.695038,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d12c6696-659e-4806-864d-a108505f5e27",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.79242,
+      "y": 24.695626,
+      "z": 0
+    },
+    {
+      "x": 46.792164,
+      "y": 24.695466,
+      "z": 0
+    },
+    {
+      "x": 46.791828,
+      "y": 24.695254,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ac6f57cb-802f-4a21-b1de-c370353aae77",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.791828,
+      "y": 24.695254,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "efe0fb27-28c6-4f2b-80df-ffa5e70863b7",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "88be5309-f02f-46b6-8858-925a12932da4",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400274",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "06985c12-9c43-4519-89b9-60b3453d839c",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3602bfc6-178a-4e05-b9ba-253201ee57e3",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "37e8e653-6f5e-4ad7-b105-451eaaf45127",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0f542c58-5f54-49f0-8d13-c7d5c5efccf1",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400270",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "e65032d5-1524-463e-96b5-f70e9640c8ff",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0ef82474-af13-4d4c-af57-1590c784dfd1",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400274",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "c88290bb-7d42-4480-82b2-b03249e7ced9",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "99dcfed6-cd5c-4ece-8b09-b7fdd3c452c5",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400134",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8a95ff5f-f7aa-4f9e-8f76-50a301273427",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432899",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.804408,
+      "y": 24.697114,
+      "z": 0
+    },
+    {
+      "x": 46.802168,
+      "y": 24.695794,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "18aa267f-d2d4-4c52-930f-9a775af37f47",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.79242,
+      "y": 24.695626,
+      "z": 0
+    },
+    {
+      "x": 46.792164,
+      "y": 24.695466,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "eea60db4-5f8b-4c6f-9ebf-39af3076506f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793156,
+      "y": 24.69521,
+      "z": 0
+    },
+    {
+      "x": 46.793284,
+      "y": 24.695038,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "844f2b17-fd4a-4d2c-821b-443885d06b73",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400273",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1800c67f-57bc-4e11-8b41-2c8bba17ca8f",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400134",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1f2a8be0-780e-456b-b2f5-22cb36c1044a",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400276",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787716,
+      "y": 24.702736,
+      "z": 0
+    },
+    {
+      "x": 46.787672,
+      "y": 24.7028,
+      "z": 0
+    },
+    {
+      "x": 46.788584,
+      "y": 24.703372,
+      "z": 0
+    },
+    {
+      "x": 46.788552,
+      "y": 24.703414,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "810addd5-b54b-4965-9f07-89463a20e843",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "2455f5cd-ce85-4b55-ac02-d222c24094c6",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3fe5fd3a-7221-4b31-9ca2-413a744e3010",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400273",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7597f329-03e3-4d23-8d2b-dd50ef3da5e9",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ea3089e7-fd59-40af-86b5-8b4cb9786ea9",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "c1acbaf7-dccd-47c8-b953-3deb82fb1c73",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432900",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.802168,
+      "y": 24.695794,
+      "z": 0
+    },
+    {
+      "x": 46.799884,
+      "y": 24.694448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b487fa21-2ae2-41f6-8527-118f95e8f6d4",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432899",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.804408,
+      "y": 24.697114,
+      "z": 0
+    },
+    {
+      "x": 46.802168,
+      "y": 24.695794,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fe6b0602-2cb6-4790-886b-547ad88fd9d1",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "386a1369-98c0-4d75-ae24-3c36e687c599",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "407ccbe8-edae-4092-b5a2-5f09138ec3c3",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401965",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.792788,
+      "y": 24.695588,
+      "z": 0
+    },
+    {
+      "x": 46.792636,
+      "y": 24.695766,
+      "z": 0
+    },
+    {
+      "x": 46.79042,
+      "y": 24.69443,
+      "z": 0
+    },
+    {
+      "x": 46.79038,
+      "y": 24.694474,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "450c218d-ea05-4374-8f46-b8e53f9ada9e",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400270",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8c6d7e56-1659-4c0d-bf07-404061745f7b",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7eb8aed4-8441-475a-8287-93d57c7d4a73",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.79242,
+      "y": 24.695626,
+      "z": 0
+    },
+    {
+      "x": 46.792164,
+      "y": 24.695466,
+      "z": 0
+    },
+    {
+      "x": 46.791828,
+      "y": 24.695254,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fa2acbdf-ed5c-4c6e-b193-850ca050d7d3",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "40330f2a-308d-40bd-ad1d-ffa9ce491ad4",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    },
+    {
+      "x": 46.789024,
+      "y": 24.700612,
+      "z": 0
+    },
+    {
+      "x": 46.788676,
+      "y": 24.701084,
+      "z": 0
+    },
+    {
+      "x": 46.788264,
+      "y": 24.700814,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "53163f7f-3713-492b-84ae-df98616de8a7",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400274",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.789116,
+      "y": 24.70066,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "19dc2c35-002f-425b-9a46-ba992ad4c09b",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793108,
+      "y": 24.695204,
+      "z": 0
+    },
+    {
+      "x": 46.793296,
+      "y": 24.695088,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fbf8a9e1-feb2-4d2b-b60c-188afc444277",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299432900",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.802168,
+      "y": 24.695794,
+      "z": 0
+    },
+    {
+      "x": 46.799884,
+      "y": 24.694448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "478f4b4c-18be-4f58-b0bd-22397cefe63d",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793108,
+      "y": 24.695204,
+      "z": 0
+    },
+    {
+      "x": 46.793296,
+      "y": 24.695088,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "39b8711f-db15-45bb-9958-d5f3ab6a46ef",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401726",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793024,
+      "y": 24.695912,
+      "z": 0
+    },
+    {
+      "x": 46.800816,
+      "y": 24.700602,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1c3023cb-9020-4d4a-808d-4f5046a98241",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400134",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.787676,
+      "y": 24.702616,
+      "z": 0
+    },
+    {
+      "x": 46.790004,
+      "y": 24.699446,
+      "z": 0
+    },
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ace344ef-c3fa-4c7d-a90c-2dba633f5d64",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400321",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793156,
+      "y": 24.69521,
+      "z": 0
+    },
+    {
+      "x": 46.793284,
+      "y": 24.695038,
+      "z": 0
+    },
+    {
+      "x": 46.793732,
+      "y": 24.694378,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7f82d84a-77cb-42ee-900c-02f28a31d763",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299401726",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.793024,
+      "y": 24.695912,
+      "z": 0
+    },
+    {
+      "x": 46.800816,
+      "y": 24.700602,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "9f9399be-c9b4-495f-b194-675ba1a5e503",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400271",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.79286,
+      "y": 24.695634,
+      "z": 0
+    },
+    {
+      "x": 46.80084,
+      "y": 24.700668,
+      "z": 0
+    },
+    {
+      "x": 46.800728,
+      "y": 24.700818,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fbdfbaf5-8c10-40b8-ac67-744b1f4bcab9",
+  "purpose": "service/drop",
+  "country": "SAU",
+  "probability": 1,
+  "reference": "esp-299400273",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 46.786584,
+      "y": 24.703746,
+      "z": 0
+    },
+    {
+      "x": 46.786716,
+      "y": 24.703852,
+      "z": 0
+    },
+    {
+      "x": 46.78762,
+      "y": 24.70269,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+}
+]

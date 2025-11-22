@@ -1,0 +1,1442 @@
+[
+  {
+    "ductId": "68efbd8b-4309-48c1-9a33-3c938c0fe76d",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "7a98ad69-b1d5-4451-a556-2d299b4fce0e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "395a90fa-9818-448d-8264-052e917198e2",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "7cef485d-dc0c-4596-897d-c89171a05a0a",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "027e380a-d889-4d92-94a0-c72a666b7742",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "7cef485d-dc0c-4596-897d-c89171a05a0a",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "40443276-9e0f-45c6-b98e-8bc1f764832f",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "811a9360-c375-4589-b912-7eec14cbe9a3",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "59b1a69b-faa2-4d01-bdd4-75629173e36a",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "811a9360-c375-4589-b912-7eec14cbe9a3",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ae320945-7063-4846-b540-f9733eab2fbf",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "81dc55ff-7a5e-4beb-8989-a923c7b81488",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "8a364a83-a9a2-4fe1-91ad-e1f297fa3ed0",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "81dc55ff-7a5e-4beb-8989-a923c7b81488",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ac1d0375-2ccf-4237-9977-b714a105d694",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "87711407-4796-4369-a827-92d63d0d1a74",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2c0cc11f-30dd-4068-addc-8b5ad67f9999",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "87711407-4796-4369-a827-92d63d0d1a74",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "0241dda2-93b5-4e9f-baf4-4624bd8c5bd9",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "88688c5b-f8ce-46a2-8b78-2b57100d3889",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a97ec84b-fdf5-4148-b385-cfffa45c26bb",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "88688c5b-f8ce-46a2-8b78-2b57100d3889",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "cd924f7c-b3b4-475b-a819-33367918300e",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "8f762a6d-d3bd-4483-811b-7e337ff60f52",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d2d9c103-abc4-4cc9-8e89-32f62e7163cd",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "8f762a6d-d3bd-4483-811b-7e337ff60f52",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "6f62b38d-057c-485d-b11b-024f3c8326c7",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "962ffdfd-b4a1-4bf4-8e8f-0d0001eccabe",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "7b68ed58-219f-4afd-83d6-14ee77419d05",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "962ffdfd-b4a1-4bf4-8e8f-0d0001eccabe",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e6920dd9-8dc4-4507-8991-20e168ec3b9f",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "9b0c09eb-f69a-4076-b74b-ba98d4c3f234",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c6738460-a66f-4094-ad68-42cbd01d9717",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "9b0c09eb-f69a-4076-b74b-ba98d4c3f234",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "883040ad-83a1-45d0-bcbc-d5ef8053193d",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "9d42e80d-a7f3-4c51-962d-7ac47969cfae",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "5eb34323-6b19-4274-9c63-09420df3fca6",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "9d42e80d-a7f3-4c51-962d-7ac47969cfae",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3e36c358-64c6-460e-a26c-fd7651e0886d",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a02ac211-3c9e-47a5-a4f7-5cf486e6d32f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2b0ef5ce-362d-4a2c-9d7c-d24c058c8b16",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a02ac211-3c9e-47a5-a4f7-5cf486e6d32f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "df727b41-13f8-4766-89db-b0c71299db39",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a0342471-9526-4b2d-bac2-3342a8745a0d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "15fb4522-1703-4f0a-8fdd-f395cddd05a0",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a0342471-9526-4b2d-bac2-3342a8745a0d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "1ed09660-893b-4991-83c4-ec7da3a9f683",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a1498608-0498-479b-8476-bec78b8793db",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "db8e1ccf-d725-4995-b80c-863efbbdd2f3",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a1498608-0498-479b-8476-bec78b8793db",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "9ab24d28-40e1-463d-9b13-ef58c573c76f",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a1ae33dc-67a3-4086-8955-ca638bcc6560",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "8b7d82c2-55fa-486d-979a-6c1c9e289cbb",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a1ae33dc-67a3-4086-8955-ca638bcc6560",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f3e9b3f7-5efe-48bf-acb0-e7e45a39e908",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a593a28e-8061-4712-8886-26da4ecc892d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2280b37c-cd6e-4eb1-8235-5bd08c5c9f40",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "a593a28e-8061-4712-8886-26da4ecc892d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ffc73b45-fc2b-4936-ad55-5639501c3bd6",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "afebd183-a0c6-4b10-a9c8-d74e2eb51e03",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "1e440c37-f999-41fc-9c0e-0fd351a9c205",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "afebd183-a0c6-4b10-a9c8-d74e2eb51e03",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b9f290d2-a3ff-40ec-a5a3-ca1040257866",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b7b98fe7-2f0f-490c-96b8-59de12c41dd6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "9a5dc876-67b9-42e4-b9d4-5e1bd82236ba",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b7b98fe7-2f0f-490c-96b8-59de12c41dd6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "54c7c0c8-6265-4a94-81be-584ad8e675c6",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b8e71da2-f3bc-4385-8bb7-dfaf7e524eac",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "48228c03-5de0-4251-8016-10c31a0b77cf",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b8e71da2-f3bc-4385-8bb7-dfaf7e524eac",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "490e3a59-3b3b-4543-8451-98516871a9f0",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b8ea3eec-b6b3-416c-adf3-bc7668f17d78",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "f9ba076a-3eea-480c-83ca-95264c149f0d",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b8ea3eec-b6b3-416c-adf3-bc7668f17d78",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "eb947f12-fb69-42d2-b836-9f08be36745b",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b9a14f1d-bb45-42cf-8e93-f01fac96af2d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "61c53e07-337c-4751-919a-6f5d6cbaa38b",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "b9a14f1d-bb45-42cf-8e93-f01fac96af2d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "91fac258-f367-4be7-8730-f5cfb7584775",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "baf8769c-6f1a-40e1-86be-ed1a003bccfa",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3224150a-549e-490d-a759-18fe4e3edf3d",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "baf8769c-6f1a-40e1-86be-ed1a003bccfa",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "67b58c49-b7ba-4985-8f44-916a878b4818",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "bd426577-aa58-45eb-86c4-37ee919cff0a",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "beb505be-874f-4047-ad5b-e305e86f94e3",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "bd426577-aa58-45eb-86c4-37ee919cff0a",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e820c399-fb09-44af-84c1-bdd43bde61d1",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "c0ab835b-af3a-4601-bf91-52f4fdf08807",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "400ea9e6-fc99-47cc-9fb3-7bca371635ce",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "c0ab835b-af3a-4601-bf91-52f4fdf08807",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "2272c6df-cfb9-473a-915f-9e24e48284d9",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "c5b41158-438c-4a21-81cb-ab3af4dae306",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "3b388615-be94-4f44-b2dd-e1f3d872b208",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "c5b41158-438c-4a21-81cb-ab3af4dae306",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "69ccf912-b8dc-435d-8f0d-ad55b660bd97",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "cac95719-7dd1-4b65-a820-a2b9680d5408",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c0f58976-f294-46ee-9562-9e70772d1d94",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "cac95719-7dd1-4b65-a820-a2b9680d5408",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e2d6e09d-3853-4379-80e7-91d718cfe4ac",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "cad9e43b-4368-4e92-85ff-50cb5d017b11",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "4c8118a0-72b2-45df-9aa5-cb90072896c0",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "cad9e43b-4368-4e92-85ff-50cb5d017b11",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "993a61c1-10f9-4f66-968a-81068e030c86",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d117fb4f-bb5a-4b80-8f30-7da33ee1f440",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "cd448f7e-19e4-415c-a7ec-cb356a211173",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d117fb4f-bb5a-4b80-8f30-7da33ee1f440",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "fc1c4b58-9e9d-40b5-9892-b9f2e2350c52",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d39e8770-ceb3-48c1-93e8-027c6d793d3e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "a3ac4bbe-39f5-4ee6-a799-194af8b6f326",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d39e8770-ceb3-48c1-93e8-027c6d793d3e",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d0fd5d06-7f03-43cc-8fd3-f7552ccb7bfa",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d9679292-1d45-4cb6-aed2-deb1a08452ec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "37bae6a6-3481-4d40-8c38-43b9fbebc567",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "d9679292-1d45-4cb6-aed2-deb1a08452ec",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "398f66dc-483a-46d6-b765-0069adf32080",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e15f60fc-7f3c-4c77-9c55-a33519142a3b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "77097adf-eb03-4919-836d-d73c04424942",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e15f60fc-7f3c-4c77-9c55-a33519142a3b",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "82638378-143a-44d9-940f-0b195313a6dd",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e304f322-dc4f-4d0b-b08f-9bb82b869bba",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "0c04dc42-068f-4456-85c2-ec75d1326706",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e304f322-dc4f-4d0b-b08f-9bb82b869bba",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b6904a8b-a4bc-49e4-879a-05ba92615168",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e3b25cd0-e42c-46b1-9951-262ecbdacc82",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "dbc87073-7d74-48a7-870d-2cfe375c5696",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e3b25cd0-e42c-46b1-9951-262ecbdacc82",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "e232fa90-efe5-4014-81ec-e301eb752bce",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e543706a-b596-4062-8fa2-0e2df7cb724d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "332d4cfa-de5f-4d7c-822c-459e984adbbd",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e543706a-b596-4062-8fa2-0e2df7cb724d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "0ab80bdf-c1c6-4e46-92f9-68017370c0ba",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e678700d-12c8-4bc0-a723-4a30187fde7d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "66422962-be47-4c20-8e13-d00d44730b61",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e678700d-12c8-4bc0-a723-4a30187fde7d",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b8ed974e-bc41-4d8e-b573-3458018dbc87",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e6a7dded-edbd-4b36-b413-a675338d1f86",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "7d0fbaef-c87f-496d-9ba2-afae287513f9",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "e6a7dded-edbd-4b36-b413-a675338d1f86",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "52e3bae9-5cb7-4f47-bc5c-fd115e8695d0",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "eb0ac73d-cae0-45a5-8404-c60303be2536",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "bcbb6e47-8f2e-4822-b4c2-b05a0305e86b",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "eb0ac73d-cae0-45a5-8404-c60303be2536",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b4ab3333-f1b2-4add-b0a3-58ec388ac539",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "edeb6678-7c4c-419e-b801-2f3a9e2ad1f1",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ba7e5295-3bcd-429f-ac19-34dba9c0acc6",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "edeb6678-7c4c-419e-b801-2f3a9e2ad1f1",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "43079c8a-5f15-458d-a59d-c170a9a2fced",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "f487476b-a904-4e90-a11e-bf00b47eb2c6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "16da2fec-7183-4888-8380-6721df626b69",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "f487476b-a904-4e90-a11e-bf00b47eb2c6",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "b72b227c-f32c-44ea-976a-3ce6630cae5e",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "f6c3cc4a-2c74-450f-9a5a-c8521b9f5075",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "d34a19d5-7f84-4898-9655-c4352c1a5424",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "f6c3cc4a-2c74-450f-9a5a-c8521b9f5075",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c73b0d1d-999c-4788-a8f1-45b949a38758",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "fbb3bccd-678d-4018-9b49-380103bcf3ba",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "7ae490f1-fff5-491d-b850-4fa079241519",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "fbb3bccd-678d-4018-9b49-380103bcf3ba",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "c95e4aa8-a895-4b8c-b961-e77181c3a162",
+    "point": "20250509T113205",
+    "country": "ZAF",
+    "probability": 1,
+    "trenchId": "ff2de91f-cd59-4065-858c-d072bd564546",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 1,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

@@ -1,0 +1,8864 @@
+[
+  {
+    "cableId": "ae6de3ea-2dbd-4aad-9ad0-452479888cb8",
+    "country": "ISL",
+    "reference": "isl-0f5a6797dfd4",
+    "ductId": "5568876d-58fc-4b29-b2b3-0f5a6797dfd4",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "8459e0ec-ea05-4208-bbed-6dd8e453e974",
+    "country": "ISL",
+    "reference": "isl-bb6d80caff95",
+    "ductId": "c67a1b12-4fbb-4c01-98c9-bb6d80caff95",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "634eb174-d7eb-4955-9dae-534b2ccda2b4",
+    "country": "ISL",
+    "reference": "isl-2ffdc1f513bc",
+    "ductId": "f0960669-08f4-4c9f-a5fa-2ffdc1f513bc",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "e63d9bd4-bba6-4aa2-b691-8ba0f2db106f",
+    "country": "ISL",
+    "reference": "isl-1b756bf962d8",
+    "ductId": "b9efcbae-a006-4177-96b6-1b756bf962d8",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "819e520a-7410-4c28-9063-d13d329b615c",
+    "country": "ISL",
+    "reference": "isl-0b8259370938",
+    "ductId": "a26f113a-7d4d-40b2-84da-0b8259370938",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "9d6c9772-c209-4a29-b35a-a3f1836ddd72",
+    "country": "ISL",
+    "reference": "isl-028a78342d2e",
+    "ductId": "3f880dc6-e41a-489f-aadd-028a78342d2e",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "83e17709-5309-4e2f-8a56-87a09b069369",
+    "country": "ISL",
+    "reference": "isl-c6ea69ad05b4",
+    "ductId": "a4294c0d-58b7-4c44-b9eb-c6ea69ad05b4",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "0bbfcab7-743b-44ec-a000-a9cec82a3d9e",
+    "country": "ISL",
+    "reference": "isl-e347d71486a2",
+    "ductId": "cfce7106-6cf8-4688-8c0e-e347d71486a2",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "51286fa5-66c0-481b-99d8-6c67221a7cff",
+    "country": "ISL",
+    "reference": "isl-3b2944db9548",
+    "ductId": "3c9a4f87-1959-45e0-980d-3b2944db9548",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "bb9b5e68-9a31-4c6d-bbd4-e5465836917f",
+    "country": "ISL",
+    "reference": "isl-b747f60a74af",
+    "ductId": "3b1ad3cd-5f00-4f45-8d86-b747f60a74af",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "e9d8d7af-a28b-4142-9a21-6298c169f7cf",
+    "country": "ISL",
+    "reference": "isl-c42c0929a4e1",
+    "ductId": "d9468a02-07ff-4233-9ff5-c42c0929a4e1",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "91c864f5-112c-453b-8815-5aab2d62b908",
+    "country": "ISL",
+    "reference": "isl-5e6a80b7f70b",
+    "ductId": "eada4752-6fdb-4c01-ba38-5e6a80b7f70b",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "5cc7720a-30de-4d1b-9836-9cbadf619996",
+    "country": "ISL",
+    "reference": "isl-991076f9bfd1",
+    "ductId": "729b4d11-423f-4041-bc09-991076f9bfd1",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "980b9b8e-d47d-4984-9486-47f274582954",
+    "country": "ISL",
+    "reference": "isl-652e02741b71",
+    "ductId": "24294439-8586-4136-a258-652e02741b71",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "10f1eadb-5d2e-48e7-814e-8e554a890ad9",
+    "country": "ISL",
+    "reference": "isl-cedcdb20c1f1",
+    "ductId": "7f8f3a44-ff4e-4123-a747-cedcdb20c1f1",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "2fefcffd-4764-4ab0-8a5b-20b35cf299da",
+    "country": "ISL",
+    "reference": "isl-fd94f6c77b01",
+    "ductId": "5db899bc-7460-4537-a032-fd94f6c77b01",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "3a955574-03c8-44ae-a33d-1daac55594df",
+    "country": "ISL",
+    "reference": "isl-4ca9a5692b9c",
+    "ductId": "a56b45e8-56c8-4afe-94c9-4ca9a5692b9c",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "35613dc6-a3b0-470e-81bf-ecff1b446d31",
+    "country": "ISL",
+    "reference": "isl-3876cffdaf67",
+    "ductId": "58991224-2d1a-4d76-b0b0-3876cffdaf67",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "61481ccf-434a-4878-b1b8-e97df306f61e",
+    "country": "ISL",
+    "reference": "isl-e240593cee0a",
+    "ductId": "63e5689e-a16b-45f1-8759-e240593cee0a",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "8ffdfda5-2259-4820-bee4-5173d8e5e7bf",
+    "country": "ISL",
+    "reference": "isl-3378947ee2bf",
+    "ductId": "413ed149-18db-41b6-ab24-3378947ee2bf",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "449dd19f-3b4d-4013-92d6-acfece9aae5a",
+    "country": "ISL",
+    "reference": "isl-b4c7818c26ce",
+    "ductId": "13bbae43-0400-43d8-ba83-b4c7818c26ce",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "f2efd69a-cdfa-4cc9-8395-9f47334bc071",
+    "country": "ISL",
+    "reference": "isl-f9920f05b8b3",
+    "ductId": "ed35b35e-6b46-4754-89e2-f9920f05b8b3",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "ce870e29-f6af-4936-abfa-460a9d33577c",
+    "country": "ISL",
+    "reference": "isl-e85da138182f",
+    "ductId": "2bac8502-ed74-4843-b96a-e85da138182f",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "c9669bbd-686c-4a78-9dba-5d8f450741a7",
+    "country": "ISL",
+    "reference": "isl-a93e8df1d61a",
+    "ductId": "3b9aea07-777e-4d7f-ad88-a93e8df1d61a",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "fc04f349-b955-448f-bf1d-f4f458d8592e",
+    "country": "ISL",
+    "reference": "isl-7642f3e6ca59",
+    "ductId": "f747540e-e772-464a-8ac2-7642f3e6ca59",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "b7983c95-fb43-4305-874f-45ebd3f15122",
+    "country": "ISL",
+    "reference": "isl-568911c39b92",
+    "ductId": "d27bd028-d0e1-41ee-8ee1-568911c39b92",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "4d370406-2031-490b-b5ed-963394c9c8f6",
+    "country": "ISL",
+    "reference": "isl-b703e519a93d",
+    "ductId": "38af9349-fa6a-4e14-bc6f-b703e519a93d",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "da5e321c-3d47-476b-8422-b5b6b8eaaafc",
+    "country": "ISL",
+    "reference": "isl-beae7a73ff78",
+    "ductId": "fcf67ff0-9652-4040-8d9f-beae7a73ff78",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "a2c8cb54-5f20-4445-bba9-f83244f8d8b8",
+    "country": "ISL",
+    "reference": "isl-6f8b4c0cafb0",
+    "ductId": "9a0559e9-c6f1-476d-8d37-6f8b4c0cafb0",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "a1c8013a-c246-493f-ba32-e237cd8ffe61",
+    "country": "ISL",
+    "reference": "isl-d29e8d28f75b",
+    "ductId": "caf327c3-6b6e-413e-a4b5-d29e8d28f75b",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "f6fc0e24-283e-4af1-89e3-ba1d19084aae",
+    "country": "ISL",
+    "reference": "isl-cb96861f09e6",
+    "ductId": "6e8b7810-c03b-4f53-97b1-cb96861f09e6",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "156c06b6-fc68-4380-86b7-1b07b5bf162d",
+    "country": "ISL",
+    "reference": "isl-81afcd5354ee",
+    "ductId": "3fd97665-bcd8-405b-8ec3-81afcd5354ee",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "ec1accc9-c69c-48a5-878d-20b2a6d50d65",
+    "country": "ISL",
+    "reference": "isl-b781816767d2",
+    "ductId": "a4aaf02c-00cd-44fb-b763-b781816767d2",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "c4ef54a3-4db5-4cfa-bccd-28fcee5adca5",
+    "country": "ISL",
+    "reference": "isl-6756b8fd2d32",
+    "ductId": "50973cb1-665a-44a7-bb6f-6756b8fd2d32",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "a0df040f-85da-4e99-9f2e-a5b1892edd01",
+    "country": "ISL",
+    "reference": "isl-448671adeb37",
+    "ductId": "1472ac23-86ad-4d41-8ca6-448671adeb37",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "76134ee1-2645-4cb3-b3f8-7a0fad322fa8",
+    "country": "ISL",
+    "reference": "isl-41fb2b5945cf",
+    "ductId": "12bb18bd-3866-4346-8149-41fb2b5945cf",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "ddd886d6-b3d6-4625-a674-5512415f14e2",
+    "country": "ISL",
+    "reference": "isl-244aca40bc49",
+    "ductId": "2abc96f0-1b41-4554-b235-244aca40bc49",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "04643d9f-a5a5-4cbb-9ce6-729346103da8",
+    "country": "ISL",
+    "reference": "isl-da8fd12a83f8",
+    "ductId": "b60589ad-528f-4b6f-80c9-da8fd12a83f8",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "9fcb6346-394c-40cb-a20b-a250edce07e6",
+    "country": "ISL",
+    "reference": "isl-64c9dc0478d9",
+    "ductId": "69e096ad-d94a-48db-8e2d-64c9dc0478d9",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "9d5ccac1-f605-488e-8600-e8a37343208d",
+    "country": "ISL",
+    "reference": "isl-f94ab39cae7a",
+    "ductId": "51b27002-58d5-4a56-8987-f94ab39cae7a",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "c13ea0dc-975a-4ef9-a189-57e12c7c0d1f",
+    "country": "ISL",
+    "reference": "isl-cd932db13583",
+    "ductId": "728c9a16-54fb-4840-9258-cd932db13583",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  },
+  {
+    "cableId": "ed98553b-047a-4d9c-94f7-3b59ae9643e3",
+    "country": "ISL",
+    "reference": "isl-2b32668c8a50",
+    "ductId": "1dd9e740-807e-40e7-9ded-2b32668c8a50",
+    "probability": 1,
+    "technology": "singleFiber",
+    "delete": false,
+    "configuration": {
+      "strands": 48,
+      "mode": "SMOF",
+      "rate": 1,
+      "unit": "Gbps",
+      "states": [
+        {
+          "strand": 1,
+          "state": "free"
+        },
+        {
+          "strand": 2,
+          "state": "free"
+        },
+        {
+          "strand": 3,
+          "state": "free"
+        },
+        {
+          "strand": 4,
+          "state": "free"
+        },
+        {
+          "strand": 5,
+          "state": "free"
+        },
+        {
+          "strand": 6,
+          "state": "free"
+        },
+        {
+          "strand": 7,
+          "state": "free"
+        },
+        {
+          "strand": 8,
+          "state": "free"
+        },
+        {
+          "strand": 9,
+          "state": "free"
+        },
+        {
+          "strand": 10,
+          "state": "free"
+        },
+        {
+          "strand": 11,
+          "state": "free"
+        },
+        {
+          "strand": 12,
+          "state": "free"
+        },
+        {
+          "strand": 13,
+          "state": "free"
+        },
+        {
+          "strand": 14,
+          "state": "free"
+        },
+        {
+          "strand": 15,
+          "state": "free"
+        },
+        {
+          "strand": 16,
+          "state": "free"
+        },
+        {
+          "strand": 17,
+          "state": "free"
+        },
+        {
+          "strand": 18,
+          "state": "free"
+        },
+        {
+          "strand": 19,
+          "state": "free"
+        },
+        {
+          "strand": 20,
+          "state": "free"
+        },
+        {
+          "strand": 21,
+          "state": "free"
+        },
+        {
+          "strand": 22,
+          "state": "free"
+        },
+        {
+          "strand": 23,
+          "state": "free"
+        },
+        {
+          "strand": 24,
+          "state": "free"
+        },
+        {
+          "strand": 25,
+          "state": "free"
+        },
+        {
+          "strand": 26,
+          "state": "free"
+        },
+        {
+          "strand": 27,
+          "state": "free"
+        },
+        {
+          "strand": 28,
+          "state": "free"
+        },
+        {
+          "strand": 29,
+          "state": "free"
+        },
+        {
+          "strand": 30,
+          "state": "free"
+        },
+        {
+          "strand": 31,
+          "state": "free"
+        },
+        {
+          "strand": 32,
+          "state": "free"
+        },
+        {
+          "strand": 33,
+          "state": "free"
+        },
+        {
+          "strand": 34,
+          "state": "free"
+        },
+        {
+          "strand": 35,
+          "state": "free"
+        },
+        {
+          "strand": 36,
+          "state": "free"
+        },
+        {
+          "strand": 37,
+          "state": "free"
+        },
+        {
+          "strand": 38,
+          "state": "free"
+        },
+        {
+          "strand": 39,
+          "state": "free"
+        },
+        {
+          "strand": 40,
+          "state": "free"
+        },
+        {
+          "strand": 41,
+          "state": "free"
+        },
+        {
+          "strand": 42,
+          "state": "free"
+        },
+        {
+          "strand": 43,
+          "state": "free"
+        },
+        {
+          "strand": 44,
+          "state": "free"
+        },
+        {
+          "strand": 45,
+          "state": "free"
+        },
+        {
+          "strand": 46,
+          "state": "free"
+        },
+        {
+          "strand": 47,
+          "state": "free"
+        },
+        {
+          "strand": 48,
+          "state": "free"
+        }
+      ]
+    },
+    "point": "20250509T113205",
+    "source": "historical"
+  }
+]

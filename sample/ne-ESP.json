@@ -1,0 +1,827 @@
+[
+  {
+    "neId": "9c30b686-69f5-491a-b74c-a0de51e06221",
+    "point": "20250917T180019",
+    "host": "esp-20000198",
+    "reference": "20000198",
+    "commissioned": "20250917",
+    "probability": 1,
+    "country": "ESP",
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "rackId": "ee8ff22a-3ede-49f3-8e2d-b75864c17b87",
+    "slotPosition": "2,4",
+    "mgmtIP": "10.243.122.48",
+    "mgmtProtocol": "ssh",
+    "mgmtPort": 22,
+    "vendor": "Nokia",
+    "model": "unknown",
+    "image": "unknown",
+    "version": "unknown",
+    "source": "historical",
+    "delete": false,
+    "ports": [
+      {
+        "name": "11QPA4_OS/C1",
+        "macAddress": "97:cf:24:69:fe:5e",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C2",
+        "macAddress": "ed:6a:44:64:db:b7",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C3",
+        "macAddress": "f2:4e:b9:08:fd:1d",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C4",
+        "macAddress": "13:09:f5:de:d2:aa",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L1",
+        "macAddress": "ce:b3:72:3c:4c:94",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L2",
+        "macAddress": "1c:68:ea:3b:7e:36",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L3",
+        "macAddress": "96:25:08:24:60:d9",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L4",
+        "macAddress": "13:0a:6a:13:e5:ee",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA1",
+        "macAddress": "bf:a6:19:2a:f9:ca",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA2",
+        "macAddress": "4b:ac:b7:7d:e5:03",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA3",
+        "macAddress": "55:c9:48:16:13:f9",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA4",
+        "macAddress": "20:81:dc:a1:81:16",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT1",
+        "macAddress": "00:14:4e:f2:45:3c",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT2",
+        "macAddress": "83:70:06:86:06:a5",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT3",
+        "macAddress": "b8:5d:d1:20:f2:65",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT4",
+        "macAddress": "0d:24:bf:e9:2d:2d",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/DCM",
+        "macAddress": "e9:7d:b9:0e:70:d0",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEIN",
+        "macAddress": "f2:49:9a:07:b1:23",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEOUT",
+        "macAddress": "03:26:41:1c:f5:d5",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSC",
+        "macAddress": "05:0f:f6:9b:10:9f",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSCSFP",
+        "macAddress": "de:76:21:6f:c2:e2",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      }
+    ]
+  },
+  {
+    "neId": "c6bb21ef-14b4-4bb8-943c-d2392d96c8ac",
+    "point": "20250917T180641",
+    "host": "esp-110000198",
+    "reference": "110000198",
+    "commissioned": "20250917",
+    "probability": 1,
+    "country": "ESP",
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "rackId": "7b057c28-042c-4c33-9fe9-8d113450d659",
+    "slotPosition": "2,3",
+    "mgmtIP": "10.79.102.246",
+    "mgmtProtocol": "ssh",
+    "mgmtPort": 22,
+    "vendor": "Nokia",
+    "model": "unknown",
+    "image": "unknown",
+    "version": "unknown",
+    "source": "historical",
+    "delete": false,
+    "ports": [
+      {
+        "name": "11QPA4_OS/C1",
+        "macAddress": "ac:44:c9:37:51:26",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C2",
+        "macAddress": "db:b2:62:2b:9d:f0",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C3",
+        "macAddress": "1a:80:e8:40:ba:50",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C4",
+        "macAddress": "af:04:84:99:16:b9",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L1",
+        "macAddress": "e1:25:4f:f9:56:a1",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L2",
+        "macAddress": "87:2c:a0:84:33:dc",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L3",
+        "macAddress": "5c:8a:11:7a:37:4e",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L4",
+        "macAddress": "1e:8e:c6:35:ba:6c",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA1",
+        "macAddress": "2a:4b:53:8c:74:74",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA2",
+        "macAddress": "f6:11:8a:91:0e:9c",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA3",
+        "macAddress": "47:54:b2:03:e4:0d",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA4",
+        "macAddress": "65:8e:33:e8:03:8d",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT1",
+        "macAddress": "8a:42:a5:0c:e3:01",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT2",
+        "macAddress": "b9:cd:fe:7a:bb:7f",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT3",
+        "macAddress": "a4:8d:52:f5:f4:5c",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT4",
+        "macAddress": "93:49:83:5b:4f:d9",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/DCM",
+        "macAddress": "60:e9:44:bc:b1:44",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEIN",
+        "macAddress": "8b:d7:65:a3:f6:9f",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEOUT",
+        "macAddress": "f4:b3:aa:cf:e6:51",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSC",
+        "macAddress": "a0:cf:52:a0:af:9e",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSCSFP",
+        "macAddress": "b3:d4:d9:a0:46:8f",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      }
+    ]
+  },
+  {
+    "neId": "be86d165-5d67-4f8d-b1f0-c57836b8bca0",
+    "point": "20250917T180645",
+    "host": "esp-10000198",
+    "reference": "10000198",
+    "commissioned": "20250917",
+    "probability": 1,
+    "country": "ESP",
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "rackId": "7b057c28-042c-4c33-9fe9-8d113450d659",
+    "slotPosition": "4,6",
+    "mgmtIP": "10.49.170.87",
+    "mgmtProtocol": "ssh",
+    "mgmtPort": 22,
+    "vendor": "Nokia",
+    "model": "unknown",
+    "image": "unknown",
+    "version": "unknown",
+    "source": "historical",
+    "delete": false,
+    "ports": [
+      {
+        "name": "11QPA4_OS/C1",
+        "macAddress": "50:8b:c8:05:5c:03",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C2",
+        "macAddress": "b1:ce:32:06:94:b3",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C3",
+        "macAddress": "a0:75:82:fc:34:07",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/C4",
+        "macAddress": "05:ff:32:8c:d5:64",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L1",
+        "macAddress": "85:47:08:8c:18:f9",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L2",
+        "macAddress": "2a:bc:55:ea:65:40",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L3",
+        "macAddress": "94:e3:c9:81:aa:74",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/L4",
+        "macAddress": "ce:7d:42:5c:a0:8c",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA1",
+        "macAddress": "fb:eb:1a:13:1c:a9",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA2",
+        "macAddress": "75:f7:0b:2a:e4:3a",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA3",
+        "macAddress": "d6:c8:25:f9:6d:f8",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "11QPA4_OS/VA4",
+        "macAddress": "2a:d8:ac:4b:6f:6f",
+        "technology": "ethernet",
+        "state": "used",
+        "configuration": {
+          "category": "Cat6A",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT1",
+        "macAddress": "ae:c5:26:f1:83:b3",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT2",
+        "macAddress": "81:dd:ff:df:d3:8f",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT3",
+        "macAddress": "f6:9d:87:96:85:01",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/ADT4",
+        "macAddress": "54:0b:40:be:07:b2",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/DCM",
+        "macAddress": "77:13:2e:b6:2b:41",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEIN",
+        "macAddress": "38:fe:96:4a:9a:56",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/LINEOUT",
+        "macAddress": "86:40:c1:dd:6a:75",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSC",
+        "macAddress": "87:4b:70:54:01:c8",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      },
+      {
+        "name": "IROADMV_OTS/OSCSFP",
+        "macAddress": "6c:b3:26:68:f7:32",
+        "technology": "fiber",
+        "state": "used",
+        "configuration": {
+          "mode": "SMOF",
+          "rate": 1,
+          "unit": "Gbps"
+        },
+        "errorCount": 0
+      }
+    ]
+  }
+]

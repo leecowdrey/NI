@@ -1,0 +1,17 @@
+[Unit]
+Description=Identity and Access Management Server
+After=multi-user.target
+
+[Service]
+Type=simple
+User=mniiam
+Group=mni
+Restart=on-failure
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+WorkingDirectory=/usr/local/mni/iam
+StandardOutput=append:/var/log/mni/iam.log
+StandardError=append:/var/log/mni/iam.log
+ExecStart=/usr/local/mni/iam/bin/kc.sh start-dev
+
+[Install]
+WantedBy=multi-user.target
