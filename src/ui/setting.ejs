@@ -10,8 +10,8 @@
     <title>MNI</title>
     <link rel="stylesheet" href="/mni/css/style.css">
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="img/icon.png">
+    <link rel="icon" href="<%=payload.icon%>" sizes="any">
+    <link rel="apple-touch-icon" href="mni/img/icon.png">
     <style>
         .panel {
             width: auto;
@@ -63,7 +63,7 @@
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
     </div>
     <div class="panel">

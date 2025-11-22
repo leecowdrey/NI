@@ -73,7 +73,7 @@ function deleteProvider() {
           window.alert(`Failed to delete provider ${id}`);
         }
       })
-      .catch((e) => {notify(e);});
+      .catch((e) => {console.error(e);});
   }
 }
 function redisplayProvider() {
@@ -221,7 +221,7 @@ function fetchProvider() {
         displayProvider(data);
       })
       .catch((e) => {
-        notify(e);
+        console.error(e);
         //fpReady = setTimeout(fetchProvider, retryMs);
       });
   } //else {
@@ -274,13 +274,13 @@ function fetchProviderList() {
       fetchProvider();
     })
     .catch((e) => {
-      notify(e);
+      console.error(e);
       //fplReady = setTimeout(fetchProviderList, retryMs);
     });
 }
 try {
   fetchProviderList();
 } catch (e) {
-  notify(e);
+  console.error(e);
   //fplReady = setTimeout(fetchProviderList, retryMs);
 }

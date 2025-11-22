@@ -1,10 +1,10 @@
 [
 {
-  "trenchId": "91a8e2f7-0839-4315-8ea0-233d893b9790",
+  "trenchId": "dc497e56-e3a0-4e88-b11c-28796383e0ee",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299262645",
+  "reference": "esp-299258864",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -31,13 +31,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.277587,
-      "y": 50.885992,
+      "x": 3.628539,
+      "y": 51.038608,
       "z": 0
     },
     {
-      "x": 4.278942,
-      "y": 50.88492,
+      "x": 3.628296,
+      "y": 51.039048,
+      "z": 0
+    },
+    {
+      "x": 3.628392,
+      "y": 51.03918,
       "z": 0
     }
   ],
@@ -46,730 +51,7 @@
   "delete": false
 },
 {
-  "trenchId": "3ad3426e-c41d-4fae-a3b6-dc61b97706af",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299262645",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.277587,
-      "y": 50.885992,
-      "z": 0
-    },
-    {
-      "x": 4.278942,
-      "y": 50.88492,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "110016d5-d8c7-4b05-90c1-41195834bb1b",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299254495",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.65427,
-      "y": 51.052612,
-      "z": 0
-    },
-    {
-      "x": 3.654007,
-      "y": 51.05246,
-      "z": 0
-    },
-    {
-      "x": 3.654865,
-      "y": 51.051912,
-      "z": 0
-    },
-    {
-      "x": 3.655126,
-      "y": 51.051692,
-      "z": 0
-    },
-    {
-      "x": 3.655228,
-      "y": 51.051572,
-      "z": 0
-    },
-    {
-      "x": 3.655228,
-      "y": 51.051484,
-      "z": 0
-    },
-    {
-      "x": 3.655178,
-      "y": 51.051424,
-      "z": 0
-    },
-    {
-      "x": 3.655135,
-      "y": 51.051388,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "98e87f2d-7fdc-45b1-a733-9fc56b8ddcd0",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299215306",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.485132,
-      "y": 51.037112,
-      "z": 0
-    },
-    {
-      "x": 4.485556,
-      "y": 51.03648,
-      "z": 0
-    },
-    {
-      "x": 4.485304,
-      "y": 51.036464,
-      "z": 0
-    },
-    {
-      "x": 4.484911,
-      "y": 51.037072,
-      "z": 0
-    },
-    {
-      "x": 4.483794,
-      "y": 51.03672,
-      "z": 0
-    },
-    {
-      "x": 4.483014,
-      "y": 51.035448,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "5488aa27-7755-4189-9910-59758e58ad34",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299256488",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.27026,
-      "y": 50.888956,
-      "z": 0
-    },
-    {
-      "x": 4.271683,
-      "y": 50.8893,
-      "z": 0
-    },
-    {
-      "x": 4.271915,
-      "y": 50.889616,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "8545d836-f2d1-41de-8b29-02e95f40b5e9",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278604",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.353119,
-      "y": 50.856808,
-      "z": 0
-    },
-    {
-      "x": 4.34903,
-      "y": 50.857944,
-      "z": 0
-    },
-    {
-      "x": 4.349283,
-      "y": 50.858948,
-      "z": 0
-    },
-    {
-      "x": 4.351728,
-      "y": 50.861992,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "f15ac024-37dc-4707-a001-e6db0464d618",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278667",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.364872,
-      "y": 50.870348,
-      "z": 0
-    },
-    {
-      "x": 4.364866,
-      "y": 50.869812,
-      "z": 0
-    },
-    {
-      "x": 4.361224,
-      "y": 50.861708,
-      "z": 0
-    },
-    {
-      "x": 4.359874,
-      "y": 50.858708,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "83105d21-2d04-49ab-8bad-673f741bdb23",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278663",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.351728,
-      "y": 50.861992,
-      "z": 0
-    },
-    {
-      "x": 4.353303,
-      "y": 50.863952,
-      "z": 0
-    },
-    {
-      "x": 4.354912,
-      "y": 50.864816,
-      "z": 0
-    },
-    {
-      "x": 4.357193,
-      "y": 50.867644,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "9e7bc42e-6d18-4775-9667-73b9763b6f74",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278666",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.357193,
-      "y": 50.867644,
-      "z": 0
-    },
-    {
-      "x": 4.360223,
-      "y": 50.871404,
-      "z": 0
-    },
-    {
-      "x": 4.360844,
-      "y": 50.872172,
-      "z": 0
-    },
-    {
-      "x": 4.364878,
-      "y": 50.870876,
-      "z": 0
-    },
-    {
-      "x": 4.364872,
-      "y": 50.870348,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "89a11322-74bb-4b06-9ebc-25062a227c92",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278601",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.357402,
-      "y": 50.859428,
-      "z": 0
-    },
-    {
-      "x": 4.357149,
-      "y": 50.8595,
-      "z": 0
-    },
-    {
-      "x": 4.355518,
-      "y": 50.85614,
-      "z": 0
-    },
-    {
-      "x": 4.353119,
-      "y": 50.856808,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "2fcc486a-889b-4bb0-96af-dffe3bc28893",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299483565",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.482976,
-      "y": 51.035488,
-      "z": 0
-    },
-    {
-      "x": 4.483023,
-      "y": 51.035488,
-      "z": 0
-    },
-    {
-      "x": 4.483026,
-      "y": 51.035496,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "6ac5f2c8-3a79-4b7a-b529-b3f38749a91b",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299340065",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.626161,
-      "y": 51.039248,
-      "z": 0
-    },
-    {
-      "x": 3.626171,
-      "y": 51.039372,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "a6601290-3951-4b2d-92da-85fe476c6cad",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299471476",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.406055,
-      "y": 51.209384,
-      "z": 0
-    },
-    {
-      "x": 4.406874,
-      "y": 51.209536,
-      "z": 0
-    },
-    {
-      "x": 4.407165,
-      "y": 51.2092,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "cb432cb0-4279-443f-bebe-fc5ca99b5f90",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299260227",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.286789,
-      "y": 50.878804,
-      "z": 0
-    },
-    {
-      "x": 4.285926,
-      "y": 50.878336,
-      "z": 0
-    },
-    {
-      "x": 4.284693,
-      "y": 50.87904,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "f5d62c60-a50b-4be0-bd1b-6c12b6d425be",
+  "trenchId": "0a980aa9-e555-4fef-86e6-d0914daa6bb7",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -820,11 +102,11 @@
   "delete": false
 },
 {
-  "trenchId": "fbbb3779-6208-4fc2-91a4-7a243d49ef93",
+  "trenchId": "40196759-ce35-48ee-9f6a-7ab8e3ed7abb",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299510737",
+  "reference": "esp-299215603",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -851,13 +133,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 3.944992,
-      "y": 50.79046,
+      "x": 4.484057,
+      "y": 51.036388,
       "z": 0
     },
     {
-      "x": 3.944429,
-      "y": 50.790456,
+      "x": 4.484526,
+      "y": 51.036348,
       "z": 0
     }
   ],
@@ -866,470 +148,11 @@
   "delete": false
 },
 {
-  "trenchId": "ea003c30-9a69-4705-9f27-1fc0e4c9d1ad",
+  "trenchId": "4843484d-41ad-4162-9875-0bf5c9279fb4",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299278601",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.357402,
-      "y": 50.859428,
-      "z": 0
-    },
-    {
-      "x": 4.357149,
-      "y": 50.8595,
-      "z": 0
-    },
-    {
-      "x": 4.355518,
-      "y": 50.85614,
-      "z": 0
-    },
-    {
-      "x": 4.353119,
-      "y": 50.856808,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "b2be9234-615a-48b0-9ee8-d5916f1c30c3",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299349888",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.343716,
-      "y": 51.257192,
-      "z": 0
-    },
-    {
-      "x": 4.343395,
-      "y": 51.257316,
-      "z": 0
-    },
-    {
-      "x": 4.342657,
-      "y": 51.256556,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "843cc33c-dc89-4267-879b-62e401abe31e",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299258864",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.628539,
-      "y": 51.038608,
-      "z": 0
-    },
-    {
-      "x": 3.628296,
-      "y": 51.039048,
-      "z": 0
-    },
-    {
-      "x": 3.626161,
-      "y": 51.039248,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "36122687-0b4e-49cf-b4e5-b6daf6a5fdc4",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299256488",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.27026,
-      "y": 50.888956,
-      "z": 0
-    },
-    {
-      "x": 4.271683,
-      "y": 50.8893,
-      "z": 0
-    },
-    {
-      "x": 4.272481,
-      "y": 50.889156,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "15f69b6c-9be6-4d78-b798-b483ac957e91",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299252649",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.034669,
-      "y": 50.927968,
-      "z": 0
-    },
-    {
-      "x": 4.033975,
-      "y": 50.92824,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "00e089e0-2636-408c-a323-42d3e58a6adb",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299261101",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.268579,
-      "y": 50.88366,
-      "z": 0
-    },
-    {
-      "x": 4.268146,
-      "y": 50.883696,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "e6b8c8ee-c34f-43c0-b222-0d58885a420a",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299278667",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.364872,
-      "y": 50.870348,
-      "z": 0
-    },
-    {
-      "x": 4.364866,
-      "y": 50.869812,
-      "z": 0
-    },
-    {
-      "x": 4.361224,
-      "y": 50.861708,
-      "z": 0
-    },
-    {
-      "x": 4.359874,
-      "y": 50.858708,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "71d95e0f-b70f-480e-88f6-7ea2b93f44cd",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299244547",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.477506,
-      "y": 51.02656,
-      "z": 0
-    },
-    {
-      "x": 4.478734,
-      "y": 51.027964,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "f486bc75-b8bc-4ca8-8a5e-87bdaa58d082",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299349893",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.340761,
-      "y": 51.257708,
-      "z": 0
-    },
-    {
-      "x": 4.341614,
-      "y": 51.257404,
-      "z": 0
-    },
-    {
-      "x": 4.342624,
-      "y": 51.2585,
-      "z": 0
-    },
-    {
-      "x": 4.34501,
-      "y": 51.25766,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "b25fcd2c-e037-411b-94d6-0eb4d10e6b8a",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299533565",
+  "reference": "esp-299537855",
   "construction": {
     "depth": 900,
     "classifier": "low",
@@ -1356,13 +179,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 3.722694,
-      "y": 51.045248,
+      "x": 3.730203,
+      "y": 51.049712,
       "z": 0
     },
     {
-      "x": 3.732934,
-      "y": 51.053436,
+      "x": 3.729664,
+      "y": 51.049776,
+      "z": 0
+    },
+    {
+      "x": 3.729299,
+      "y": 51.050008,
       "z": 0
     }
   ],
@@ -1371,272 +199,7 @@
   "delete": false
 },
 {
-  "trenchId": "efb1f60a-b349-4f50-b8a0-15dfc0b5a79b",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299565164",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.420277,
-      "y": 50.876404,
-      "z": 0
-    },
-    {
-      "x": 4.42783,
-      "y": 50.874128,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "4c9e39ac-1536-4533-91ea-161645be5dde",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299483565",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.483022,
-      "y": 51.03548,
-      "z": 0
-    },
-    {
-      "x": 4.483023,
-      "y": 51.035488,
-      "z": 0
-    },
-    {
-      "x": 4.483026,
-      "y": 51.035496,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "b37dd4f0-a1c8-4d37-a28e-814a8ff750bc",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299262886",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.194229,
-      "y": 50.910388,
-      "z": 0
-    },
-    {
-      "x": 4.196452,
-      "y": 50.908956,
-      "z": 0
-    },
-    {
-      "x": 4.196938,
-      "y": 50.90878,
-      "z": 0
-    },
-    {
-      "x": 4.19819,
-      "y": 50.907908,
-      "z": 0
-    },
-    {
-      "x": 4.199085,
-      "y": 50.907636,
-      "z": 0
-    },
-    {
-      "x": 4.200056,
-      "y": 50.9076,
-      "z": 0
-    },
-    {
-      "x": 4.200899,
-      "y": 50.907844,
-      "z": 0
-    },
-    {
-      "x": 4.203378,
-      "y": 50.90878,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "b944a3fc-f8e5-460c-b0e2-ab00d928f2ac",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299535562",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.722694,
-      "y": 51.045248,
-      "z": 0
-    },
-    {
-      "x": 3.72956,
-      "y": 51.05074,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "561c53e6-e05a-4433-add5-ad7afe0f7aaa",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299510737",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.944992,
-      "y": 50.79046,
-      "z": 0
-    },
-    {
-      "x": 3.944429,
-      "y": 50.790456,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "1ba4d2a3-39b2-4124-92ea-577551b11d17",
+  "trenchId": "8cdf70f7-d0b5-4a96-a627-3291e9faefd6",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -1682,124 +245,7 @@
   "delete": false
 },
 {
-  "trenchId": "55c9a9e5-3f96-4127-813e-440ddc6c603c",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299564664",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.366986,
-      "y": 50.870876,
-      "z": 0
-    },
-    {
-      "x": 4.37057,
-      "y": 50.86924,
-      "z": 0
-    },
-    {
-      "x": 4.37126,
-      "y": 50.869844,
-      "z": 0
-    },
-    {
-      "x": 4.375033,
-      "y": 50.868464,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "9055e494-7aa4-466f-820a-4afda458957f",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299263076",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.194229,
-      "y": 50.910388,
-      "z": 0
-    },
-    {
-      "x": 4.196452,
-      "y": 50.908956,
-      "z": 0
-    },
-    {
-      "x": 4.196938,
-      "y": 50.90878,
-      "z": 0
-    },
-    {
-      "x": 4.19819,
-      "y": 50.907908,
-      "z": 0
-    },
-    {
-      "x": 4.199085,
-      "y": 50.907636,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "616170db-968b-4ee6-a52b-6f34aaf06152",
+  "trenchId": "b2628c9e-2be2-447c-b326-dca5048ab076",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -1850,7 +296,7 @@
   "delete": false
 },
 {
-  "trenchId": "99599125-df37-4509-b3df-b447ddca1be7",
+  "trenchId": "e8310936-df80-4ead-9d2a-83fcff1a31b8",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -1906,11 +352,11 @@
   "delete": false
 },
 {
-  "trenchId": "8f109469-b9c4-40d8-a216-25f0a37fb037",
+  "trenchId": "b669dd4c-d15e-44f6-a8e0-cf47a96dee35",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299262266",
+  "reference": "esp-299259805",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -1937,13 +383,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.275447,
-      "y": 50.882432,
+      "x": 4.006148,
+      "y": 50.94838,
       "z": 0
     },
     {
-      "x": 4.276891,
-      "y": 50.882048,
+      "x": 4.017748,
+      "y": 50.950468,
       "z": 0
     }
   ],
@@ -1952,11 +398,11 @@
   "delete": false
 },
 {
-  "trenchId": "933c94d1-757f-480d-bb2f-c356160ae667",
+  "trenchId": "0bc80fb0-3918-4d3c-85cd-9c61fe4f1d74",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299262545",
+  "reference": "esp-299263346",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -1983,13 +429,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.26967,
-      "y": 50.882724,
+      "x": 4.274061,
+      "y": 50.884168,
       "z": 0
     },
     {
-      "x": 4.272179,
-      "y": 50.882468,
+      "x": 4.273862,
+      "y": 50.885676,
       "z": 0
     }
   ],
@@ -1998,67 +444,11 @@
   "delete": false
 },
 {
-  "trenchId": "4f9d122c-9108-4571-985a-e694c61d948f",
+  "trenchId": "bb5a6466-5986-4c39-a2da-5bfb0bc6dfba",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299564664",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.366986,
-      "y": 50.870876,
-      "z": 0
-    },
-    {
-      "x": 4.37057,
-      "y": 50.86924,
-      "z": 0
-    },
-    {
-      "x": 4.37126,
-      "y": 50.869844,
-      "z": 0
-    },
-    {
-      "x": 4.375033,
-      "y": 50.868464,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "c411240d-60c3-4a4b-8969-1c91626afb53",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299263076",
+  "reference": "esp-299261086",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -2085,28 +475,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.194229,
-      "y": 50.910388,
+      "x": 4.268341,
+      "y": 50.882652,
       "z": 0
     },
     {
-      "x": 4.196452,
-      "y": 50.908956,
+      "x": 4.268402,
+      "y": 50.883192,
       "z": 0
     },
     {
-      "x": 4.196938,
-      "y": 50.90878,
-      "z": 0
-    },
-    {
-      "x": 4.19819,
-      "y": 50.907908,
-      "z": 0
-    },
-    {
-      "x": 4.199085,
-      "y": 50.907636,
+      "x": 4.268579,
+      "y": 50.88366,
       "z": 0
     }
   ],
@@ -2115,62 +495,11 @@
   "delete": false
 },
 {
-  "trenchId": "415ff9e9-8dac-4560-a30e-f9cf5880f7ad",
+  "trenchId": "d3dbee4b-4654-4f35-8235-28f53d19f0b0",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299260248",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.286128,
-      "y": 50.879068,
-      "z": 0
-    },
-    {
-      "x": 4.284693,
-      "y": 50.87904,
-      "z": 0
-    },
-    {
-      "x": 4.285866,
-      "y": 50.879492,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "65fb8165-f191-4c55-bbe6-8a8f04b27c6c",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299256488",
+  "reference": "esp-299261147",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -2197,18 +526,23 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.27026,
-      "y": 50.888956,
+      "x": 4.268822,
+      "y": 50.884304,
       "z": 0
     },
     {
-      "x": 4.271683,
-      "y": 50.8893,
+      "x": 4.269086,
+      "y": 50.885004,
       "z": 0
     },
     {
-      "x": 4.272481,
-      "y": 50.889156,
+      "x": 4.269454,
+      "y": 50.885448,
+      "z": 0
+    },
+    {
+      "x": 4.269944,
+      "y": 50.885692,
       "z": 0
     }
   ],
@@ -2217,13 +551,344 @@
   "delete": false
 },
 {
-  "trenchId": "9e28588e-94f3-4416-8241-964b2cd3a63d",
+  "trenchId": "ea5f77f3-0476-42e5-9f1a-e0ee4507c1de",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299254815",
+  "reference": "esp-299261146",
   "construction": {
-    "depth": 900,
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    },
+    {
+      "x": 4.268822,
+      "y": 50.884304,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "361182cb-3b58-4725-833f-6188828edd7a",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261087",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    },
+    {
+      "x": 4.269086,
+      "y": 50.885004,
+      "z": 0
+    },
+    {
+      "x": 4.269454,
+      "y": 50.885448,
+      "z": 0
+    },
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3bb3f40a-a1b1-4461-b510-a041f82c5eb9",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261087",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    },
+    {
+      "x": 4.269086,
+      "y": 50.885004,
+      "z": 0
+    },
+    {
+      "x": 4.269454,
+      "y": 50.885448,
+      "z": 0
+    },
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "74e24995-644f-43e3-acb8-1fc8d6448b37",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261147",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268822,
+      "y": 50.884304,
+      "z": 0
+    },
+    {
+      "x": 4.269086,
+      "y": 50.885004,
+      "z": 0
+    },
+    {
+      "x": 4.269454,
+      "y": 50.885448,
+      "z": 0
+    },
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "382354ab-8b09-4f27-8f25-7cc36fa3f881",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261146",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    },
+    {
+      "x": 4.268822,
+      "y": 50.884304,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8a3563ea-ba2f-432f-8a87-a55e7b7854c1",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256466",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.632586,
+      "y": 51.038732,
+      "z": 0
+    },
+    {
+      "x": 3.63211,
+      "y": 51.038584,
+      "z": 0
+    },
+    {
+      "x": 3.63118,
+      "y": 51.038388,
+      "z": 0
+    },
+    {
+      "x": 3.630489,
+      "y": 51.038328,
+      "z": 0
+    },
+    {
+      "x": 3.629748,
+      "y": 51.038332,
+      "z": 0
+    },
+    {
+      "x": 3.628818,
+      "y": 51.038548,
+      "z": 0
+    },
+    {
+      "x": 3.628539,
+      "y": 51.038608,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "6a4ce75b-0724-4f11-b19b-c34373fc2982",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256465",
+  "construction": {
+    "depth": 600,
     "classifier": "low",
     "unit": "mm",
     "type": "narrow"
@@ -2308,33 +973,8 @@
       "z": 0
     },
     {
-      "x": 3.63211,
-      "y": 51.038584,
-      "z": 0
-    },
-    {
-      "x": 3.63118,
-      "y": 51.038388,
-      "z": 0
-    },
-    {
-      "x": 3.630489,
-      "y": 51.038328,
-      "z": 0
-    },
-    {
-      "x": 3.629748,
-      "y": 51.038332,
-      "z": 0
-    },
-    {
-      "x": 3.628818,
-      "y": 51.038548,
-      "z": 0
-    },
-    {
-      "x": 3.628539,
-      "y": 51.038608,
+      "x": 3.632586,
+      "y": 51.038732,
       "z": 0
     }
   ],
@@ -2343,159 +983,11 @@
   "delete": false
 },
 {
-  "trenchId": "6651c03f-32cb-4d5f-9e41-372d21a49fe7",
+  "trenchId": "dfeba791-c9da-49f5-9840-539ae77b7e18",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299215730",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.475571,
-      "y": 51.033592,
-      "z": 0
-    },
-    {
-      "x": 4.475579,
-      "y": 51.033188,
-      "z": 0
-    },
-    {
-      "x": 4.475785,
-      "y": 51.033144,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "41d536fd-31d8-4dfd-a250-a06aaccf2e5e",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299565164",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.420277,
-      "y": 50.876404,
-      "z": 0
-    },
-    {
-      "x": 4.42783,
-      "y": 50.874128,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "8c56ea7b-f895-45d4-b25f-20626ada0f2c",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299261066",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.272071,
-      "y": 50.885116,
-      "z": 0
-    },
-    {
-      "x": 4.27201,
-      "y": 50.88338,
-      "z": 0
-    },
-    {
-      "x": 4.268579,
-      "y": 50.88366,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "48281160-428c-4a55-8892-15254426dc55",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299471466",
+  "reference": "esp-299537855",
   "construction": {
     "depth": 900,
     "classifier": "low",
@@ -2522,18 +1014,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.403398,
-      "y": 51.20916,
+      "x": 3.730203,
+      "y": 51.049712,
       "z": 0
     },
     {
-      "x": 4.404952,
-      "y": 51.209664,
-      "z": 0
-    },
-    {
-      "x": 4.406055,
-      "y": 51.209384,
+      "x": 3.729299,
+      "y": 51.050008,
       "z": 0
     }
   ],
@@ -2542,7 +1029,517 @@
   "delete": false
 },
 {
-  "trenchId": "5e73bfe4-df84-4d4e-95fc-69c05246aa28",
+  "trenchId": "3f30a77e-29ef-41bf-af3f-dddd82f7b752",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299552766",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.727569,
+      "y": 51.048148,
+      "z": 0
+    },
+    {
+      "x": 3.730203,
+      "y": 51.049712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0ab1a577-ecac-4bb0-913f-a97d4f69d2f6",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299552766",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.727569,
+      "y": 51.048148,
+      "z": 0
+    },
+    {
+      "x": 3.730203,
+      "y": 51.049712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b5d5a836-85f0-4f14-86ff-0cedb8e71402",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263076",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.194229,
+      "y": 50.910388,
+      "z": 0
+    },
+    {
+      "x": 4.196452,
+      "y": 50.908956,
+      "z": 0
+    },
+    {
+      "x": 4.196938,
+      "y": 50.90878,
+      "z": 0
+    },
+    {
+      "x": 4.19819,
+      "y": 50.907908,
+      "z": 0
+    },
+    {
+      "x": 4.199085,
+      "y": 50.907636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "46a22d33-359a-4509-8613-ae9077535462",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299510737",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.944992,
+      "y": 50.79046,
+      "z": 0
+    },
+    {
+      "x": 3.944429,
+      "y": 50.790456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a948d9f4-e6ae-4816-9e50-93aa99728291",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263076",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.194229,
+      "y": 50.910388,
+      "z": 0
+    },
+    {
+      "x": 4.196452,
+      "y": 50.908956,
+      "z": 0
+    },
+    {
+      "x": 4.196938,
+      "y": 50.90878,
+      "z": 0
+    },
+    {
+      "x": 4.19819,
+      "y": 50.907908,
+      "z": 0
+    },
+    {
+      "x": 4.199085,
+      "y": 50.907636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3d8b656c-6b93-4742-a8ed-b3766eb61ffc",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299501294",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.20015,
+      "y": 50.906912,
+      "z": 0
+    },
+    {
+      "x": 4.200469,
+      "y": 50.90694,
+      "z": 0
+    },
+    {
+      "x": 4.200876,
+      "y": 50.907084,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "25a0ebc6-50ea-4dc5-8fc0-1d7fa83ac434",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299535562",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.722694,
+      "y": 51.045248,
+      "z": 0
+    },
+    {
+      "x": 3.730203,
+      "y": 51.049712,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "9a9e476c-a32b-4c1d-80e6-45d34cc5a491",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299262866",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.196442,
+      "y": 50.911988,
+      "z": 0
+    },
+    {
+      "x": 4.195379,
+      "y": 50.911468,
+      "z": 0
+    },
+    {
+      "x": 4.194229,
+      "y": 50.910388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "887481fe-6cfd-4dab-b458-3534ee94fd26",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299258864",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.628539,
+      "y": 51.038608,
+      "z": 0
+    },
+    {
+      "x": 3.628296,
+      "y": 51.039048,
+      "z": 0
+    },
+    {
+      "x": 3.628392,
+      "y": 51.03918,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "834d4eaa-4d69-4e9f-887d-80129cd437b6",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256488",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.27026,
+      "y": 50.888956,
+      "z": 0
+    },
+    {
+      "x": 4.271683,
+      "y": 50.8893,
+      "z": 0
+    },
+    {
+      "x": 4.271915,
+      "y": 50.889616,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "434265e1-385a-481b-994b-7caff4cc8f18",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -2588,270 +1585,11 @@
   "delete": false
 },
 {
-  "trenchId": "3ce17a4e-e307-4111-a066-acc833505c12",
+  "trenchId": "d93d1d13-23b8-47c4-b00e-2dacfd6ad45d",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299254495",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.65427,
-      "y": 51.052612,
-      "z": 0
-    },
-    {
-      "x": 3.654007,
-      "y": 51.05246,
-      "z": 0
-    },
-    {
-      "x": 3.654865,
-      "y": 51.051912,
-      "z": 0
-    },
-    {
-      "x": 3.655126,
-      "y": 51.051692,
-      "z": 0
-    },
-    {
-      "x": 3.655228,
-      "y": 51.051572,
-      "z": 0
-    },
-    {
-      "x": 3.655228,
-      "y": 51.051484,
-      "z": 0
-    },
-    {
-      "x": 3.655178,
-      "y": 51.051424,
-      "z": 0
-    },
-    {
-      "x": 3.655135,
-      "y": 51.051388,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "deeb1cbe-8e6b-48b6-806a-83dec234cdbb",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299471476",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.406055,
-      "y": 51.209384,
-      "z": 0
-    },
-    {
-      "x": 4.406874,
-      "y": 51.209536,
-      "z": 0
-    },
-    {
-      "x": 4.407165,
-      "y": 51.2092,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "8779b8d8-dd8f-45f4-b075-63d58a0dd208",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299471480",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.406055,
-      "y": 51.209384,
-      "z": 0
-    },
-    {
-      "x": 4.406355,
-      "y": 51.20898,
-      "z": 0
-    },
-    {
-      "x": 4.407165,
-      "y": 51.2092,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "44a0bacc-baa0-4b02-8220-cefcba12a6be",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299268727",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.080006,
-      "y": 50.936268,
-      "z": 0
-    },
-    {
-      "x": 4.080279,
-      "y": 50.935756,
-      "z": 0
-    },
-    {
-      "x": 4.080455,
-      "y": 50.935324,
-      "z": 0
-    },
-    {
-      "x": 4.080767,
-      "y": 50.934812,
-      "z": 0
-    },
-    {
-      "x": 4.081278,
-      "y": 50.934136,
-      "z": 0
-    },
-    {
-      "x": 4.08109,
-      "y": 50.934004,
-      "z": 0
-    },
-    {
-      "x": 4.081043,
-      "y": 50.933936,
-      "z": 0
-    },
-    {
-      "x": 4.079703,
-      "y": 50.93346,
-      "z": 0
-    },
-    {
-      "x": 4.079185,
-      "y": 50.933268,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "bbe2b246-abc2-4c1d-95e1-8bfb450ab803",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299261045",
+  "reference": "esp-299262545",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -2878,13 +1616,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.275311,
-      "y": 50.886088,
+      "x": 4.26967,
+      "y": 50.882724,
       "z": 0
     },
     {
-      "x": 4.276121,
-      "y": 50.884592,
+      "x": 4.272179,
+      "y": 50.882468,
       "z": 0
     }
   ],
@@ -2893,7 +1631,236 @@
   "delete": false
 },
 {
-  "trenchId": "0e80d851-5917-4992-90ac-ec300fce0873",
+  "trenchId": "a92f901b-41b3-4e47-b1ee-c4b576895f54",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299260248",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.286128,
+      "y": 50.879068,
+      "z": 0
+    },
+    {
+      "x": 4.284693,
+      "y": 50.87904,
+      "z": 0
+    },
+    {
+      "x": 4.285866,
+      "y": 50.879492,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "33864f7d-007c-42d2-83dd-22e2514b5e8e",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299260348",
+  "construction": {
+    "depth": 1,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    },
+    {
+      "x": 4.270555,
+      "y": 50.88554,
+      "z": 0
+    },
+    {
+      "x": 4.2715,
+      "y": 50.885296,
+      "z": 0
+    },
+    {
+      "x": 4.271813,
+      "y": 50.885176,
+      "z": 0
+    },
+    {
+      "x": 4.272071,
+      "y": 50.885116,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "0ba0c917-2847-4fcd-9fc6-1e8fda91094f",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299260327",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268341,
+      "y": 50.882652,
+      "z": 0
+    },
+    {
+      "x": 4.268402,
+      "y": 50.883192,
+      "z": 0
+    },
+    {
+      "x": 4.269086,
+      "y": 50.885004,
+      "z": 0
+    },
+    {
+      "x": 4.269454,
+      "y": 50.885448,
+      "z": 0
+    },
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a1687a01-8ae6-4804-9d9d-42896560468b",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299259509",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.632586,
+      "y": 51.038732,
+      "z": 0
+    },
+    {
+      "x": 3.632557,
+      "y": 51.038836,
+      "z": 0
+    },
+    {
+      "x": 3.63207,
+      "y": 51.038956,
+      "z": 0
+    },
+    {
+      "x": 3.631677,
+      "y": 51.039108,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "7d1826a7-833a-491b-9de1-0ebe17ce5787",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -2949,7 +1916,659 @@
   "delete": false
 },
 {
-  "trenchId": "f0eae1b1-e9b6-416f-b54d-b5e92200ba04",
+  "trenchId": "15e75cd4-55f0-4648-8720-a4e67798cef1",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263346",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.274061,
+      "y": 50.884168,
+      "z": 0
+    },
+    {
+      "x": 4.273862,
+      "y": 50.885676,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "afe5267b-26e5-49aa-9594-f20b5d9a6442",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299421566",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.910705,
+      "y": 50.803664,
+      "z": 0
+    },
+    {
+      "x": 3.91254,
+      "y": 50.803908,
+      "z": 0
+    },
+    {
+      "x": 3.912043,
+      "y": 50.805404,
+      "z": 0
+    },
+    {
+      "x": 3.910695,
+      "y": 50.80534,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a1286679-2982-42d2-b4ec-af7e602cdd32",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299537855",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.730203,
+      "y": 51.049712,
+      "z": 0
+    },
+    {
+      "x": 3.729664,
+      "y": 51.049776,
+      "z": 0
+    },
+    {
+      "x": 3.729299,
+      "y": 51.050008,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fc093cc0-d39a-46e1-a4ae-deb94fa623dd",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299537855",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.730203,
+      "y": 51.049712,
+      "z": 0
+    },
+    {
+      "x": 3.729299,
+      "y": 51.050008,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "cfd0136e-d3d7-4993-b112-92f94ecfaacf",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299350215",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.343716,
+      "y": 51.257192,
+      "z": 0
+    },
+    {
+      "x": 4.343746,
+      "y": 51.257228,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "5d6954f0-ae33-4d5b-b82b-4ead81ab6ae4",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299350819",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.342657,
+      "y": 51.256556,
+      "z": 0
+    },
+    {
+      "x": 4.342466,
+      "y": 51.25662,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b8aad260-6d55-47b7-a164-1420a8bb4aff",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299483565",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.483022,
+      "y": 51.03548,
+      "z": 0
+    },
+    {
+      "x": 4.482976,
+      "y": 51.03548,
+      "z": 0
+    },
+    {
+      "x": 4.483026,
+      "y": 51.035496,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "504df528-392d-4d39-a722-d8444ed77a8f",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349895",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.34501,
+      "y": 51.25766,
+      "z": 0
+    },
+    {
+      "x": 4.344915,
+      "y": 51.257536,
+      "z": 0
+    },
+    {
+      "x": 4.345165,
+      "y": 51.257436,
+      "z": 0
+    },
+    {
+      "x": 4.344899,
+      "y": 51.257128,
+      "z": 0
+    },
+    {
+      "x": 4.344922,
+      "y": 51.25712,
+      "z": 0
+    },
+    {
+      "x": 4.344876,
+      "y": 51.257064,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b7591494-6ce5-495d-8736-c93bcb89d7a5",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349891",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.342657,
+      "y": 51.256556,
+      "z": 0
+    },
+    {
+      "x": 4.340615,
+      "y": 51.254176,
+      "z": 0
+    },
+    {
+      "x": 4.340509,
+      "y": 51.254176,
+      "z": 0
+    },
+    {
+      "x": 4.337319,
+      "y": 51.255316,
+      "z": 0
+    },
+    {
+      "x": 4.337261,
+      "y": 51.255444,
+      "z": 0
+    },
+    {
+      "x": 4.338705,
+      "y": 51.257072,
+      "z": 0
+    },
+    {
+      "x": 4.337891,
+      "y": 51.25738,
+      "z": 0
+    },
+    {
+      "x": 4.338909,
+      "y": 51.258564,
+      "z": 0
+    },
+    {
+      "x": 4.340324,
+      "y": 51.258084,
+      "z": 0
+    },
+    {
+      "x": 4.340189,
+      "y": 51.257892,
+      "z": 0
+    },
+    {
+      "x": 4.340761,
+      "y": 51.257708,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4ac99221-9839-40c8-9818-6ca012dd6c2b",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349886",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.344562,
+      "y": 51.257036,
+      "z": 0
+    },
+    {
+      "x": 4.344476,
+      "y": 51.256908,
+      "z": 0
+    },
+    {
+      "x": 4.343716,
+      "y": 51.257192,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d0e92957-3fb5-4c7f-92ca-a99521704dab",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256488",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.27026,
+      "y": 50.888956,
+      "z": 0
+    },
+    {
+      "x": 4.271683,
+      "y": 50.8893,
+      "z": 0
+    },
+    {
+      "x": 4.271915,
+      "y": 50.889616,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "787edece-a96d-4968-8649-ee5d92b7912f",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299550465",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.743387,
+      "y": 51.049568,
+      "z": 0
+    },
+    {
+      "x": 3.738489,
+      "y": 51.050944,
+      "z": 0
+    },
+    {
+      "x": 3.74401,
+      "y": 51.05334,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "b59c41e1-8f1d-4480-b816-25587e2acbfa",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -2995,11 +2614,57 @@
   "delete": false
 },
 {
-  "trenchId": "2bc972a6-e4ea-4636-948f-0a6d9337b9c1",
+  "trenchId": "ebbc9956-6486-4f58-86be-cb815d3511d8",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299269122",
+  "reference": "esp-299552765",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.725781,
+      "y": 51.047084,
+      "z": 0
+    },
+    {
+      "x": 3.727569,
+      "y": 51.048148,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a4ea0e87-da0e-4057-87a1-ebd715127953",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261086",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3026,28 +2691,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.078698,
-      "y": 50.934016,
+      "x": 4.268341,
+      "y": 50.882652,
       "z": 0
     },
     {
-      "x": 4.078908,
-      "y": 50.934164,
+      "x": 4.268402,
+      "y": 50.883192,
       "z": 0
     },
     {
-      "x": 4.079046,
-      "y": 50.934164,
-      "z": 0
-    },
-    {
-      "x": 4.079174,
-      "y": 50.934024,
-      "z": 0
-    },
-    {
-      "x": 4.079332,
-      "y": 50.933856,
+      "x": 4.268579,
+      "y": 50.88366,
       "z": 0
     }
   ],
@@ -3056,11 +2711,11 @@
   "delete": false
 },
 {
-  "trenchId": "7cb05c93-99bb-48fc-bb72-0a0c5336194c",
+  "trenchId": "06721d7f-a90f-4b37-a26f-57198f67f5ab",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299269122",
+  "reference": "esp-299256488",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3087,28 +2742,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.078698,
-      "y": 50.934016,
+      "x": 4.27026,
+      "y": 50.888956,
       "z": 0
     },
     {
-      "x": 4.078908,
-      "y": 50.934164,
+      "x": 4.271683,
+      "y": 50.8893,
       "z": 0
     },
     {
-      "x": 4.079046,
-      "y": 50.934164,
-      "z": 0
-    },
-    {
-      "x": 4.079174,
-      "y": 50.934024,
-      "z": 0
-    },
-    {
-      "x": 4.079332,
-      "y": 50.933856,
+      "x": 4.271915,
+      "y": 50.889616,
       "z": 0
     }
   ],
@@ -3117,7 +2762,7 @@
   "delete": false
 },
 {
-  "trenchId": "37128db7-ecc6-4a93-bfd0-9f1a002a1de9",
+  "trenchId": "6deb9ce3-5e20-47bb-85b1-ec93f4493afa",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -3193,7 +2838,1938 @@
   "delete": false
 },
 {
-  "trenchId": "e7f74128-1360-45cc-b88f-cf979036cc3d",
+  "trenchId": "cf9c0fa7-1a62-4092-9dd9-569066db6185",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299262266",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.275447,
+      "y": 50.882432,
+      "z": 0
+    },
+    {
+      "x": 4.276891,
+      "y": 50.882048,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "82f04790-c353-41bd-96ad-0e72c827dd86",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261146",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    },
+    {
+      "x": 4.268822,
+      "y": 50.884304,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "858be316-af2e-4bb7-b7b1-199d0d0f7068",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256488",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.27026,
+      "y": 50.888956,
+      "z": 0
+    },
+    {
+      "x": 4.271683,
+      "y": 50.8893,
+      "z": 0
+    },
+    {
+      "x": 4.271915,
+      "y": 50.889616,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "492a3e4b-4216-47b3-b2af-174abddf6cfd",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299252649",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.034669,
+      "y": 50.927968,
+      "z": 0
+    },
+    {
+      "x": 4.033975,
+      "y": 50.92824,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "afc1bd0e-b526-4210-b279-757aed5ffcc9",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299269123",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.079332,
+      "y": 50.933856,
+      "z": 0
+    },
+    {
+      "x": 4.079703,
+      "y": 50.93346,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "655472f5-b746-4561-b44b-14a598a01aa9",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299269117",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.078835,
+      "y": 50.93354,
+      "z": 0
+    },
+    {
+      "x": 4.078513,
+      "y": 50.933788,
+      "z": 0
+    },
+    {
+      "x": 4.078504,
+      "y": 50.93388,
+      "z": 0
+    },
+    {
+      "x": 4.078908,
+      "y": 50.934164,
+      "z": 0
+    },
+    {
+      "x": 4.079046,
+      "y": 50.934164,
+      "z": 0
+    },
+    {
+      "x": 4.079174,
+      "y": 50.934024,
+      "z": 0
+    },
+    {
+      "x": 4.079703,
+      "y": 50.93346,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "5d8bfba9-72fa-42da-a079-b6d59f116047",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299269116",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.079185,
+      "y": 50.933268,
+      "z": 0
+    },
+    {
+      "x": 4.078835,
+      "y": 50.93354,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "a3f12585-335a-4098-a0b8-ee9e891ac87a",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299262445",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.271778,
+      "y": 50.882696,
+      "z": 0
+    },
+    {
+      "x": 4.273309,
+      "y": 50.882836,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3403a1fa-8fce-4680-81a7-98dd30a8fbb5",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299262445",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.271778,
+      "y": 50.882696,
+      "z": 0
+    },
+    {
+      "x": 4.273309,
+      "y": 50.882836,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "bd17b404-d020-4834-b2e8-cc95be556a88",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299471466",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.403398,
+      "y": 51.20916,
+      "z": 0
+    },
+    {
+      "x": 4.404952,
+      "y": 51.209664,
+      "z": 0
+    },
+    {
+      "x": 4.406055,
+      "y": 51.209384,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "37a78173-1356-4a11-a6a8-96170f5edcd6",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299471476",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.406055,
+      "y": 51.209384,
+      "z": 0
+    },
+    {
+      "x": 4.406874,
+      "y": 51.209536,
+      "z": 0
+    },
+    {
+      "x": 4.407165,
+      "y": 51.2092,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4d63d926-fc5d-4426-be11-c7c16d9d0213",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299471466",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.403398,
+      "y": 51.20916,
+      "z": 0
+    },
+    {
+      "x": 4.404952,
+      "y": 51.209664,
+      "z": 0
+    },
+    {
+      "x": 4.406055,
+      "y": 51.209384,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "77114c75-3102-4b33-bb66-77b734634dcf",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299421566",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.910705,
+      "y": 50.803664,
+      "z": 0
+    },
+    {
+      "x": 3.91254,
+      "y": 50.803908,
+      "z": 0
+    },
+    {
+      "x": 3.912043,
+      "y": 50.805404,
+      "z": 0
+    },
+    {
+      "x": 3.910695,
+      "y": 50.80534,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "1d057548-5c5e-4c4d-aa6d-453b85ae433e",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299259509",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.632586,
+      "y": 51.038732,
+      "z": 0
+    },
+    {
+      "x": 3.632557,
+      "y": 51.038836,
+      "z": 0
+    },
+    {
+      "x": 3.63207,
+      "y": 51.038956,
+      "z": 0
+    },
+    {
+      "x": 3.631677,
+      "y": 51.039108,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8658c614-957b-4604-bfe4-cc8f49df9306",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299254495",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.65427,
+      "y": 51.052612,
+      "z": 0
+    },
+    {
+      "x": 3.654007,
+      "y": 51.05246,
+      "z": 0
+    },
+    {
+      "x": 3.654865,
+      "y": 51.051912,
+      "z": 0
+    },
+    {
+      "x": 3.655126,
+      "y": 51.051692,
+      "z": 0
+    },
+    {
+      "x": 3.655228,
+      "y": 51.051572,
+      "z": 0
+    },
+    {
+      "x": 3.655228,
+      "y": 51.051484,
+      "z": 0
+    },
+    {
+      "x": 3.655178,
+      "y": 51.051424,
+      "z": 0
+    },
+    {
+      "x": 3.655135,
+      "y": 51.051388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "d74633dd-9a7f-4e85-8a8e-d7ada712a503",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349886",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.344562,
+      "y": 51.257036,
+      "z": 0
+    },
+    {
+      "x": 4.344476,
+      "y": 51.256908,
+      "z": 0
+    },
+    {
+      "x": 4.343716,
+      "y": 51.257192,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "3bcb13fb-18d3-4776-b09e-0c80f4e566ea",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349893",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.340761,
+      "y": 51.257708,
+      "z": 0
+    },
+    {
+      "x": 4.341614,
+      "y": 51.257404,
+      "z": 0
+    },
+    {
+      "x": 4.342624,
+      "y": 51.2585,
+      "z": 0
+    },
+    {
+      "x": 4.34501,
+      "y": 51.25766,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8403790a-68ec-4c2b-a8c1-1ecbfbba6c8c",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299349888",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.343716,
+      "y": 51.257192,
+      "z": 0
+    },
+    {
+      "x": 4.343395,
+      "y": 51.257316,
+      "z": 0
+    },
+    {
+      "x": 4.342657,
+      "y": 51.256556,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8b79d22a-ba26-45f7-9eca-136de35054d8",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299256488",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.27026,
+      "y": 50.888956,
+      "z": 0
+    },
+    {
+      "x": 4.271683,
+      "y": 50.8893,
+      "z": 0
+    },
+    {
+      "x": 4.271881,
+      "y": 50.889572,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "09a05608-b0a0-4601-9783-da706aed92c8",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299510737",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.944992,
+      "y": 50.79046,
+      "z": 0
+    },
+    {
+      "x": 3.944429,
+      "y": 50.790456,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "4f54e462-2868-4d8b-8cfb-0aeb82d8bbb3",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299402866",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.997193,
+      "y": 51.09158,
+      "z": 0
+    },
+    {
+      "x": 3.997719,
+      "y": 51.091728,
+      "z": 0
+    },
+    {
+      "x": 3.997947,
+      "y": 51.091544,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "c85fc37d-3dab-407f-88a7-5f209b0607c9",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215306",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.485132,
+      "y": 51.037112,
+      "z": 0
+    },
+    {
+      "x": 4.485556,
+      "y": 51.03648,
+      "z": 0
+    },
+    {
+      "x": 4.485304,
+      "y": 51.036464,
+      "z": 0
+    },
+    {
+      "x": 4.484911,
+      "y": 51.037072,
+      "z": 0
+    },
+    {
+      "x": 4.483794,
+      "y": 51.03672,
+      "z": 0
+    },
+    {
+      "x": 4.484057,
+      "y": 51.036388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "6ff28b27-ad67-4bb7-85e2-dd5847879824",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299252650",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.033975,
+      "y": 50.92824,
+      "z": 0
+    },
+    {
+      "x": 4.03292,
+      "y": 50.928656,
+      "z": 0
+    },
+    {
+      "x": 4.02918,
+      "y": 50.935604,
+      "z": 0
+    },
+    {
+      "x": 4.026862,
+      "y": 50.937756,
+      "z": 0
+    },
+    {
+      "x": 4.015558,
+      "y": 50.93996,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "69884b81-b1b3-4dd8-92f7-d651fd1a1191",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215306",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.485132,
+      "y": 51.037112,
+      "z": 0
+    },
+    {
+      "x": 4.485556,
+      "y": 51.03648,
+      "z": 0
+    },
+    {
+      "x": 4.485304,
+      "y": 51.036464,
+      "z": 0
+    },
+    {
+      "x": 4.484911,
+      "y": 51.037072,
+      "z": 0
+    },
+    {
+      "x": 4.483794,
+      "y": 51.03672,
+      "z": 0
+    },
+    {
+      "x": 4.483014,
+      "y": 51.035448,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ba84533a-59c1-4949-8e00-431507217b68",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299535563",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.72956,
+      "y": 51.05074,
+      "z": 0
+    },
+    {
+      "x": 3.732934,
+      "y": 51.053436,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f49a6ffd-23ff-4bbc-9c87-47d1fd1b9261",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263346",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.274061,
+      "y": 50.884168,
+      "z": 0
+    },
+    {
+      "x": 4.273862,
+      "y": 50.885676,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "14e1609b-387f-422b-97aa-081c0ed435ac",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215730",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.475571,
+      "y": 51.033592,
+      "z": 0
+    },
+    {
+      "x": 4.475579,
+      "y": 51.033188,
+      "z": 0
+    },
+    {
+      "x": 4.475785,
+      "y": 51.033144,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "97ebc725-3ca8-4e54-a1b2-4ec472bed610",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215729",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.474501,
+      "y": 51.033472,
+      "z": 0
+    },
+    {
+      "x": 4.475571,
+      "y": 51.033592,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ceea3bf5-f91b-4e32-9cf1-6e42ef96ba2e",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215707",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.474501,
+      "y": 51.033472,
+      "z": 0
+    },
+    {
+      "x": 4.475571,
+      "y": 51.033592,
+      "z": 0
+    },
+    {
+      "x": 4.475579,
+      "y": 51.033188,
+      "z": 0
+    },
+    {
+      "x": 4.475785,
+      "y": 51.033144,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "fd51a9fc-e4a4-4d20-87e9-5e84a90bfc7d",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263461",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.277937,
+      "y": 50.882288,
+      "z": 0
+    },
+    {
+      "x": 4.278668,
+      "y": 50.882304,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "dae28df4-0856-4bdd-b7c1-e1b8b6149ef7",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299262445",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.271778,
+      "y": 50.882696,
+      "z": 0
+    },
+    {
+      "x": 4.273309,
+      "y": 50.882836,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "8f2d4cef-ee3e-4516-91fa-448f7051d752",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299261086",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.268341,
+      "y": 50.882652,
+      "z": 0
+    },
+    {
+      "x": 4.268402,
+      "y": 50.883192,
+      "z": 0
+    },
+    {
+      "x": 4.268579,
+      "y": 50.88366,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "615cee2f-4cf1-44d3-a664-3b7dee6ecbdd",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299260348",
+  "construction": {
+    "depth": 1,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.269944,
+      "y": 50.885692,
+      "z": 0
+    },
+    {
+      "x": 4.270555,
+      "y": 50.88554,
+      "z": 0
+    },
+    {
+      "x": 4.2715,
+      "y": 50.885296,
+      "z": 0
+    },
+    {
+      "x": 4.271813,
+      "y": 50.885176,
+      "z": 0
+    },
+    {
+      "x": 4.272071,
+      "y": 50.885116,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "5b09abf5-31a9-4cc3-851b-4cf001bab663",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299254495",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 3.65427,
+      "y": 51.052612,
+      "z": 0
+    },
+    {
+      "x": 3.654007,
+      "y": 51.05246,
+      "z": 0
+    },
+    {
+      "x": 3.654865,
+      "y": 51.051912,
+      "z": 0
+    },
+    {
+      "x": 3.655126,
+      "y": 51.051692,
+      "z": 0
+    },
+    {
+      "x": 3.655228,
+      "y": 51.051572,
+      "z": 0
+    },
+    {
+      "x": 3.655228,
+      "y": 51.051484,
+      "z": 0
+    },
+    {
+      "x": 3.655178,
+      "y": 51.051424,
+      "z": 0
+    },
+    {
+      "x": 3.655135,
+      "y": 51.051388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "567b96b8-2c3f-43f3-98a8-c6bbbbe6fc89",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215306",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.485132,
+      "y": 51.037112,
+      "z": 0
+    },
+    {
+      "x": 4.485556,
+      "y": 51.03648,
+      "z": 0
+    },
+    {
+      "x": 4.485304,
+      "y": 51.036464,
+      "z": 0
+    },
+    {
+      "x": 4.484911,
+      "y": 51.037072,
+      "z": 0
+    },
+    {
+      "x": 4.483794,
+      "y": 51.03672,
+      "z": 0
+    },
+    {
+      "x": 4.484057,
+      "y": 51.036388,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "de248f32-8305-48a9-a78b-dff96a8ebbf2",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299215707",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.474501,
+      "y": 51.033472,
+      "z": 0
+    },
+    {
+      "x": 4.475571,
+      "y": 51.033592,
+      "z": 0
+    },
+    {
+      "x": 4.475579,
+      "y": 51.033188,
+      "z": 0
+    },
+    {
+      "x": 4.475785,
+      "y": 51.033144,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "f0355482-1993-47be-9261-bf1a953fb4a9",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -3249,11 +4825,11 @@
   "delete": false
 },
 {
-  "trenchId": "0b20ebd1-d6da-43d1-8dbe-abfa60f6d3db",
+  "trenchId": "c5521476-49e2-4b37-baf8-1302eb172441",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299278663",
+  "reference": "esp-299349888",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3280,23 +4856,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.351728,
-      "y": 50.861992,
+      "x": 4.343716,
+      "y": 51.257192,
       "z": 0
     },
     {
-      "x": 4.353303,
-      "y": 50.863952,
+      "x": 4.343395,
+      "y": 51.257316,
       "z": 0
     },
     {
-      "x": 4.354912,
-      "y": 50.864816,
-      "z": 0
-    },
-    {
-      "x": 4.357193,
-      "y": 50.867644,
+      "x": 4.342657,
+      "y": 51.256556,
       "z": 0
     }
   ],
@@ -3305,11 +4876,11 @@
   "delete": false
 },
 {
-  "trenchId": "5acdc3f2-1cab-42da-a0c4-74ad6f95e936",
+  "trenchId": "76f635f3-9564-4b05-9e43-3e3524c433ef",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299261101",
+  "reference": "esp-299349886",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3336,13 +4907,18 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.268579,
-      "y": 50.88366,
+      "x": 4.344562,
+      "y": 51.257036,
       "z": 0
     },
     {
-      "x": 4.268146,
-      "y": 50.883696,
+      "x": 4.344476,
+      "y": 51.256908,
+      "z": 0
+    },
+    {
+      "x": 4.343716,
+      "y": 51.257192,
       "z": 0
     }
   ],
@@ -3351,7 +4927,7 @@
   "delete": false
 },
 {
-  "trenchId": "3ef82eb0-ffbb-4e88-8658-bef87ae3ea1f",
+  "trenchId": "36916221-fd8d-46cb-877d-9b00bcf6325e",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -3382,8 +4958,8 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.27026,
-      "y": 50.888956,
+      "x": 4.270912,
+      "y": 50.889016,
       "z": 0
     },
     {
@@ -3392,8 +4968,8 @@
       "z": 0
     },
     {
-      "x": 4.272039,
-      "y": 50.889504,
+      "x": 4.271915,
+      "y": 50.889616,
       "z": 0
     }
   ],
@@ -3402,7 +4978,119 @@
   "delete": false
 },
 {
-  "trenchId": "27e4c4cf-01e1-4209-a9f1-0bfcbd1c7332",
+  "trenchId": "6af6d1a1-0b5f-409d-b3d0-174fce8c63b8",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299499611",
+  "construction": {
+    "depth": 900,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.199615,
+      "y": 50.90686,
+      "z": 0
+    },
+    {
+      "x": 4.200469,
+      "y": 50.90694,
+      "z": 0
+    },
+    {
+      "x": 4.200876,
+      "y": 50.907084,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "ccdb9c9f-9ea4-47e5-9312-fe1aff2b665c",
+  "purpose": "service/drop",
+  "country": "BEL",
+  "probability": 1,
+  "reference": "esp-299263076",
+  "construction": {
+    "depth": 600,
+    "classifier": "low",
+    "unit": "mm",
+    "type": "narrow"
+  },
+  "demographics": {
+    "premises": {
+      "passed": 0,
+      "area": "unclassified"
+    }
+  },
+  "build": {
+    "planned": {
+      "duration": 0,
+      "unit": "day"
+    },
+    "actual": {
+      "duration": 0,
+      "unit": "day"
+    }
+  },
+  "state": "free",
+  "connectsTo": {},
+  "coordinates": [
+    {
+      "x": 4.194229,
+      "y": 50.910388,
+      "z": 0
+    },
+    {
+      "x": 4.196452,
+      "y": 50.908956,
+      "z": 0
+    },
+    {
+      "x": 4.196938,
+      "y": 50.90878,
+      "z": 0
+    },
+    {
+      "x": 4.19819,
+      "y": 50.907908,
+      "z": 0
+    },
+    {
+      "x": 4.199085,
+      "y": 50.907636,
+      "z": 0
+    }
+  ],
+  "point": "20250820T000000",
+  "source": "historical",
+  "delete": false
+},
+{
+  "trenchId": "50b57fee-e3eb-4153-9018-f197fe861c6f",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
@@ -3463,11 +5151,11 @@
   "delete": false
 },
 {
-  "trenchId": "f29229ed-d952-431b-aac2-478b8e8122d7",
+  "trenchId": "8164d026-9a6d-49d5-855e-fa16410a5a38",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299510701",
+  "reference": "esp-299261101",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3494,13 +5182,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 3.944739,
-      "y": 50.79086,
+      "x": 4.268579,
+      "y": 50.88366,
       "z": 0
     },
     {
-      "x": 3.944992,
-      "y": 50.79046,
+      "x": 4.268146,
+      "y": 50.883696,
       "z": 0
     }
   ],
@@ -3509,57 +5197,11 @@
   "delete": false
 },
 {
-  "trenchId": "1343c9d3-218f-46b0-ba2b-d25faa0706a0",
+  "trenchId": "b95db58c-437f-4af2-b320-66d06840bd76",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299533565",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.722694,
-      "y": 51.045248,
-      "z": 0
-    },
-    {
-      "x": 3.732934,
-      "y": 51.053436,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "ca4bc798-d3be-4a94-8705-81d8296cda8d",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299510701",
+  "reference": "esp-299263346",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3586,13 +5228,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 3.944739,
-      "y": 50.79086,
+      "x": 4.274061,
+      "y": 50.884168,
       "z": 0
     },
     {
-      "x": 3.944992,
-      "y": 50.79046,
+      "x": 4.273862,
+      "y": 50.885676,
       "z": 0
     }
   ],
@@ -3601,11 +5243,11 @@
   "delete": false
 },
 {
-  "trenchId": "45c30b78-0a5d-454d-bc1c-3d133aa6a044",
+  "trenchId": "ff82bbc9-a2b8-4dcc-85eb-a1f4f6900216",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299263461",
+  "reference": "esp-299262345",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3632,13 +5274,13 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.277937,
-      "y": 50.882288,
+      "x": 4.280334,
+      "y": 50.884244,
       "z": 0
     },
     {
-      "x": 4.278668,
-      "y": 50.882304,
+      "x": 4.281363,
+      "y": 50.882408,
       "z": 0
     }
   ],
@@ -3647,11 +5289,11 @@
   "delete": false
 },
 {
-  "trenchId": "9f5768da-2345-45c3-8753-c1f9cda2dc58",
+  "trenchId": "e12953db-5161-4a2b-a7e1-1fac65578ab3",
   "purpose": "service/drop",
   "country": "BEL",
   "probability": 1,
-  "reference": "esp-299262145",
+  "reference": "esp-299261147",
   "construction": {
     "depth": 600,
     "classifier": "low",
@@ -3678,161 +5320,23 @@
   "connectsTo": {},
   "coordinates": [
     {
-      "x": 4.276345,
-      "y": 50.883468,
+      "x": 4.268822,
+      "y": 50.884304,
       "z": 0
     },
     {
-      "x": 4.278929,
-      "y": 50.883704,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "86782b17-b1b6-4d47-bdee-82968ae9bfab",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299537855",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.730203,
-      "y": 51.049712,
+      "x": 4.269086,
+      "y": 50.885004,
       "z": 0
     },
     {
-      "x": 3.729664,
-      "y": 51.049776,
+      "x": 4.269454,
+      "y": 50.885448,
       "z": 0
     },
     {
-      "x": 3.729299,
-      "y": 51.050008,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "99f89309-dcc0-4418-91b6-1c29f39cf56c",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299535563",
-  "construction": {
-    "depth": 900,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 3.730203,
-      "y": 51.049712,
-      "z": 0
-    },
-    {
-      "x": 3.732934,
-      "y": 51.053436,
-      "z": 0
-    }
-  ],
-  "point": "20250820T000000",
-  "source": "historical",
-  "delete": false
-},
-{
-  "trenchId": "338205ec-1ee6-4552-9132-2816b823b844",
-  "purpose": "service/drop",
-  "country": "BEL",
-  "probability": 1,
-  "reference": "esp-299260227",
-  "construction": {
-    "depth": 600,
-    "classifier": "low",
-    "unit": "mm",
-    "type": "narrow"
-  },
-  "demographics": {
-    "premises": {
-      "passed": 0,
-      "area": "unclassified"
-    }
-  },
-  "build": {
-    "planned": {
-      "duration": 0,
-      "unit": "day"
-    },
-    "actual": {
-      "duration": 0,
-      "unit": "day"
-    }
-  },
-  "state": "free",
-  "connectsTo": {},
-  "coordinates": [
-    {
-      "x": 4.286789,
-      "y": 50.878804,
-      "z": 0
-    },
-    {
-      "x": 4.285926,
-      "y": 50.878336,
-      "z": 0
-    },
-    {
-      "x": 4.284693,
-      "y": 50.87904,
+      "x": 4.269944,
+      "y": 50.885692,
       "z": 0
     }
   ],

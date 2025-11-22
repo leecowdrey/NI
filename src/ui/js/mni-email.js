@@ -1,9 +1,13 @@
-let retryMs = 1000;
-let refreshMs = 300000;
-let fpReady = null;
-let dpReady = null;
-let spReady = null;
-let fplReady = null;
+//=====================================================================
+// MarlinDT Network Intelligence (MNI) - JavaScript: Email Providers
+//
+// Corporate Headquarters:
+// Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
+// https://www.merkator.com/
+//
+// © 2024-2025 Merkator nv/sa. All rights reserved.
+//=====================================================================
+//
 function firstProvider() {
   let p = document.getElementById("provider");
   let i = p.selectedIndex;
@@ -63,7 +67,9 @@ function deleteProvider() {
           window.alert(`Failed to delete provider ${id}`);
         }
       })
-      .catch((e) => {notify(e);});
+      .catch((e) => {
+        console.error(e);
+      });
   }
 }
 function redisplayProvider() {
@@ -316,9 +322,6 @@ function displayProvider(d) {
   }
 }
 function fetchProvider() {
-  if (fpReady != null) {
-    clearTimeout(fpReady);
-  }
   let p = document.getElementById("provider");
   let id = p.options[p.selectedIndex].value;
   if (id != null) {
@@ -335,26 +338,17 @@ function fetchProvider() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //fpReady = setTimeout(fetchProvider, retryMs);
-        //}
+        }
       })
       .then((data) => {
         displayProvider(data);
       })
       .catch((e) => {
-        notify(e);
-        //fpReady = setTimeout(fetchProvider, retryMs);
+        console.error(e);
       });
-  } //else {
-    //fpReady = setTimeout(fetchProvider, retryMs);
-  //}
+  }
 }
 function fetchProviderList() {
-  if (fplReady != null) {
-    clearTimeout(fplReady);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/admin/email/provider", {
     method: "GET",
     headers: {
@@ -365,9 +359,7 @@ function fetchProviderList() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fplReady = setTimeout(fetchProviderList, retryMs);
-      //}
+      }
     })
     .then((data) => {
       let Ids =
@@ -396,13 +388,11 @@ function fetchProviderList() {
       fetchProvider();
     })
     .catch((e) => {
-      notify(e);
-      //fplReady = setTimeout(fetchProviderList, retryMs);
+      console.error(e);
     });
 }
 try {
   fetchProviderList();
 } catch (e) {
-  notify(e);
-  //fplReady = setTimeout(fetchProviderList, retryMs);
+  console.error(e);
 }

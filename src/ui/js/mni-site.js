@@ -11,11 +11,6 @@
 var map;
 var polePath;
 var lineSymbol;
-let fmrReady = null;
-let ftgReady = null;
-let flsReady = null;
-let fppReady = null;
-let retryMs = 5000;
 let siteId = null;
 let point = null;
 let mapVendor = null;
@@ -26,18 +21,34 @@ let endMarker = null;
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
 let urlOnOffNetSuffix = "";
-function fetchListSites() {
-  if (flsReady != null) {
-    clearTimeout(flsReady);
+var trenchPanel = null;
+var polePanel = null;
+let trenchList = "";
+let poleList = "";
+var tipObj = null;
+
+function injectTooltip(event, data) {
+  if (!tipObj && event) {
+    tipObj = document.createElement("div");
+    tipObj.setAttribute("class", "mappolytooltip");
+    tipObj.innerHTML = data;
+    document.body.appendChild(tipObj);
   }
+}
+function deleteTooltip(event) {
+  if (tipObj) {
+    //delete the tooltip if it exists in the DOM
+    document.body.removeChild(tipObj);
+    tipObj = null;
+  }
+}
+function fetchListSites() {
   let c = document.getElementById("country");
   let selectedCountry = c.options[c.selectedIndex].value;
   if (document.getElementById("onNet").checked) {
-    urlOnOffNetSuffix = "onnet?country=" +
-      selectedCountry;
+    urlOnOffNetSuffix = "onnet?country=" + selectedCountry;
   } else {
-    urlOnOffNetSuffix = "offnet?country=" +
-      selectedCountry;
+    urlOnOffNetSuffix = "offnet?country=" + selectedCountry;
   }
   fetch(localStorage.getItem("mni.gatewayUrl") + "/site/" + urlOnOffNetSuffix, {
     method: "GET",
@@ -49,35 +60,47 @@ function fetchListSites() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flsReady = setTimeout(fetchListSites, retryMs);
-      //}
+      }
     })
     .then((data) => {
+      let suppliedSiteId = window.location.pathname.replace(
+        localStorage.getItem("mni.rootUrl") + "/site/",
+        ""
+      );
       let siteIds =
         "<option disabled value='-1' selected='selected'> -- select a site -- </option>";
+      if (suppliedSiteId != null) {
+        siteIds = "<option disabled value='-1'> -- select a site -- </option>";
+      }
       for (var i = 0; i < data.length; i++) {
-        siteIds +=
-          "<option value='" +
-          data[i].siteId +
-          "' >" +
-          data[i].reference +
-          "</option>";
+        if (suppliedSiteId == data[i]) {
+          siteIds +=
+            "<option value='" +
+            data[i].siteId +
+            "' selected='selected'>" +
+            data[i].reference +
+            "</option>";
+        } else {
+          siteIds +=
+            "<option value='" +
+            data[i].siteId +
+            "' >" +
+            data[i].reference +
+            "</option>";
+        }
       }
       document.getElementById("siteId").innerHTML = siteIds;
       document.getElementById("siteArea").setAttribute("value", "");
       document.getElementById("siteType").setAttribute("value", "");
+      if (suppliedSiteId != null) {
+        fetchSite();
+      }
     })
     .catch((e) => {
-      notify(e);
-      //flsReady = setTimeout(fetchListSites, retryMs);
+      console.error(e);
     });
 }
 function fetchMapRender() {
-  if (fmrReady != null) {
-    clearTimeout(fmrReady);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/mapRender", {
     method: "GET",
     headers: {
@@ -88,9 +111,7 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fmrReady = setTimeout(fetchMapRender, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -109,14 +130,10 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      notify(e);
-      //fmrReady = setTimeout(fetchMapRender, retryMs);
+      console.error(e);
     });
 }
 function fetchSite() {
-  if (ftgReady != null) {
-    clearTimeout(ftgReady);
-  }
   let t = document.getElementById("siteId");
   siteId = t.options[t.selectedIndex].value;
   poleCoordinates = [];
@@ -132,14 +149,44 @@ function fetchSite() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //ftgReady = setTimeout(fetchSite, retryMs);
-        //}
+        }
       })
       .then((data) => {
         if (data != null) {
           siteX = data.location.coordinate.x;
           siteY = data.location.coordinate.y;
+          if (data.trench != null) {
+            trenchList = "<ul>";
+            for (let p = 0; p < data.trench.length; p++) {
+              trenchList +=
+                '<li><a href="' +
+                localStorage.getItem("mni.rootUrl") +
+                "/trench/" +
+                data.trench[p] +
+                "?country=" +
+                mniSelectedCountry +
+                '">' +
+                data.trench[p] +
+                "</a></li>";
+            }
+            trenchList += "</ul>";
+          }
+          if (data.pole != null) {
+            poleList = "<ul>";
+            for (let p = 0; p < data.pole.length; p++) {
+              poleList +=
+                '<li><a href="' +
+                localStorage.getItem("mni.rootUrl") +
+                "/pole/" +
+                data.pole[p] +
+                "?country=" +
+                mniSelectedCountry +
+                '">' +
+                data.pole[p] +
+                "</a></li>";
+            }
+            poleList += "</ul>";
+          }
           if (
             document.getElementById("mapRender") !== undefined &&
             document.getElementById("mapRender") != null
@@ -150,6 +197,36 @@ function fetchSite() {
             }
             marker.setPosition({ lat: siteY, lng: siteX });
             marker.setMap(map);
+            if (document.getElementById("onNet").checked) {
+              google.maps.event.addListener(marker, "click", function (h) {
+                trenchPanel = new google.maps.InfoWindow({
+                  headerContent: "Trenches",
+                  position: { lat: siteY, lng: siteX },
+                  content: trenchList,
+                });
+                trenchPanel.open({
+                  shouldFocus: true,
+                  map,
+                });
+              });
+              google.maps.event.addListener(marker, "mouseover", function (e) {
+                injectTooltip(e, siteId);
+              });
+              google.maps.event.addListener(marker, "mouseout", function (e) {
+                deleteTooltip(e);
+              });
+              google.maps.event.addListener(marker, "rightclick", function (h) {
+                polePanel = new google.maps.InfoWindow({
+                  headerContent: "Poles",
+                  position: { lat: siteY, lng: siteX },
+                  content: poleList,
+                });
+                polePanel.open({
+                  shouldFocus: true,
+                  map,
+                });
+              });
+            }
           }
           if (data.area != null) {
             document
@@ -164,8 +241,7 @@ function fetchSite() {
         }
       })
       .catch((e) => {
-        notify(e);
-        //ftgReady = setTimeout(fetchSite, retryMs);
+        console.error(e);
       });
     loadScript(mapRenderUrl, function () {
       function displayMap() {
@@ -186,21 +262,42 @@ function fetchSite() {
           },
           map: map,
         });
+        google.maps.event.addListener(marker, "mouseover", function (e) {
+          injectTooltip(e, siteId);
+        });
+        google.maps.event.addListener(marker, "mouseout", function (e) {
+          deleteTooltip(e);
+        });
+        google.maps.event.addListener(marker, "click", function (h) {
+          trenchPanel = new google.maps.InfoWindow({
+            headerContent: "Trenches",
+            position: { lat: siteY, lng: siteX },
+            content: trenchList,
+          });
+          trenchPanel.open({
+            shouldFocus: true,
+            map,
+          });
+        });
+        google.maps.event.addListener(marker, "rightclick", function (h) {
+          polePanel = new google.maps.InfoWindow({
+            headerContent: "Poles",
+            position: { lat: siteY, lng: siteX },
+            content: poleList,
+          });
+          polePanel.open({
+            shouldFocus: true,
+            map,
+          });
+        });
       }
       window.displayMap = displayMap;
     });
   }
 }
 try {
-  countryListPopulate();
   fetchMapRender();
+  countryListPopulate(fetchListSites);
 } catch (e) {
-  notify(e);
-  //fmrReady = setTimeout(fetchMapRender, retryMs);
-}
-try {
-  fetchListSites();
-} catch (e) {
-  notify(e);
-  //flsReady = setTimeout(fetchListSites, retryMs);
+  console.error(e);
 }

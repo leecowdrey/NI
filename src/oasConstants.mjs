@@ -9,15 +9,50 @@
 //=====================================================================
 //
 // OpenAPI types, enums and sizes
+export const roleStandalone = "standalone";
+export const roleMaster = "master";
+export const roleSlave = "slave";
+export const role = [roleStandalone, roleMaster, roleSlave];
 export const probability_scale = 1;
 export const probability_precision = 2;
 export const probability = { min: 0, max: 1 };
 export const probabilityHistorical = 1;
 export const probabilityPredicted = 0.25;
+export const queueResourceTypeCreate = "create";
+export const queueResourceTypeDelete = "delete";
+export const queueResourceTypeUpdate = "update";
+export const queueResourceTypeUndelete = "undelete";
+export const queueResourceTypeRead = "read";
+export const queueResourceType = [
+  queueResourceTypeCreate,
+  queueResourceTypeDelete,
+  queueResourceTypeUpdate,
+  queueResourceTypeUndelete,
+  queueResourceTypeRead,
+];
+export const queueResourceCable = "cable";
+export const queueResourceDuct = "duct";
+export const queueResourceNe = "ne";
+export const queueResourcePole = "pole";
+export const queueResourceRack = "rack";
+export const queueResourceService = "service";
+export const queueResourceSite = "site";
+export const queueResourceTrench = "trench";
+export const queueResource = [
+  queueResourceCable,
+  queueResourceDuct,
+  queueResourceNe,
+  queueResourcePole,
+  queueResourceRack,
+  queueResourceService,
+  queueResourceSite,
+  queueResourceTrench,
+];
 export const currency_scale = 5;
 export const currency_precision = 5;
 export const currency_rate = { min: 0, max: 99999.99999 };
 export const costPerUnit = { min: 0, max: 999999.99 };
+export const cost = { min: 0, max: 999999999.99 };
 export const fts_resources = [
   "adminEmail",
   "adminKafka",
@@ -60,7 +95,7 @@ export const fetchProtocolScp = "scp";
 export const fetchProtocolSnmp = "snmp";
 export const fetchProtocolSsh = "ssh";
 export const fetchProtocolTelnet = "telnet";
-export const fetchProtocolWorkflow = "workflow"
+export const fetchProtocolWorkflow = "workflow";
 export const fetchProtocol = [
   fetchProtocolEmail,
   fetchProtocolFtp,
@@ -80,6 +115,7 @@ export const float_precision = 2;
 export const mimeWildcard = "*/*";
 export const mimeJSON = "application/json";
 export const mimeYAML = "application/yaml";
+export const mimeUrlFormEncoded = "application/x-www-form-urlencoded";
 export const mimeContentType = [mimeJSON];
 export const mimeAcceptType = [mimeJSON, mimeYAML];
 export const mimeType = [
@@ -2291,11 +2327,12 @@ export const areaType = [
   "utility",
 ];
 export const cableCoaxConfigurationFrequency = ["MHz", "GHz"];
-export const cableConfiguration_coax_channels = { min: 1, max: 512 };
-export const cableConfiguration_coax_frequency = { min: 0.1, max: 100000 };
-export const cableConfiguration_coax_width = { min: 1, max: 1000 };
+export const cableConfiguration_coax_channels = { min: 1, max: 1024 };
+export const cableConfiguration_coax_frequency = { min: 0.1, max: 128000 };
+export const cableConfiguration_coax_width = { min: 1, max: 128000 };
 export const cableConfiguration_copper_twistedPairs = { min: 1, max: 48 };
 export const cableConfiguration_ethernet_rate = { min: 1, max: 768 };
+export const cableConfiguration_fiber_rate = { min: 1, max: 768 };
 export const cableConfiguration_single_fiber_channel = { min: 1, max: 512 };
 export const cableConfiguration_single_fiber_strands = { min: 1, max: 48 };
 export const cableConfiguration_single_fiber_width = { min: 1, max: 1000 };
@@ -2312,7 +2349,16 @@ export const cableEthernetConfiguration = [
 export const cableEthernetConfigurationRate = ["Mbps", "Gbps", "Tbps"];
 export const cableFiberConfigurationMode = ["SMOF", "MMOF"];
 export const cableFiberConfigurationRate = ["Gbps", "Tbps"];
-export const cableState = ["free", "used", "reserved", "faulty"];
+export const cableStateFree = "free";
+export const cableStateUsed = "used";
+export const cableStateReserved = "reserved";
+export const cableStateFaulty = "faulty";
+export const cableState = [
+  cableStateFree,
+  cableStateUsed,
+  cableStateReserved,
+  cableStateFaulty,
+];
 export const cableTechnology = [
   "coax",
   "ethernet",
@@ -2339,6 +2385,8 @@ export const X_min = -180;
 export const X_max = 180;
 export const Y_min = -90;
 export const Y_max = 90;
+export const Z_min = -1230000;
+export const Z_max = 10000000;
 export const X_scale = 3;
 export const Y_scale = 2;
 export const Z_scale = 8;
@@ -2346,7 +2394,7 @@ export const XY_precision = 6;
 export const Z_precision = 2;
 export const coordinate_x = { min: X_min, max: X_max };
 export const coordinate_y = { min: Y_min, max: Y_max };
-export const coordinate_z = { min: Number.MIN_VALUE, max: Number.MAX_VALUE };
+export const coordinate_z = { min: Z_min, max: Z_max };
 export const channels = { min: 1, max: 512 };
 export const cveId = "CVE-[0-9]{4}-[0-9]{4,}";
 export const csv_uuids =
@@ -2371,8 +2419,17 @@ export const dayjsDateFormat = "YYYYMMDD";
 export const depthClassifier = ["low", "medium", "deep"];
 export const ductConfiguration = { min: 1, max: 48 };
 export const ductPurpose = ["gas", "power", "cable", "water"];
-export const ductSizeCategory = ["duct", "microduct", "subduct"];
-export const ductState = ["free", "used", "reserved", "faulty"];
+export const ductSizeCategory = ["duct", "subduct"];
+export const ductStateFree = "free";
+export const ductStateUsed = "used";
+export const ductStateReserved = "reserved";
+export const ductStateFaulty = "faulty";
+export const ductState = [
+  ductStateFree,
+  ductStateUsed,
+  ductStateReserved,
+  ductStateFaulty,
+];
 export const duration = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const durationUnit = [
   "second",
@@ -2399,6 +2456,20 @@ export const emailSendAuthentication = [
 ];
 export const emailSendProtocol = ["smtp"];
 export const emailSubject = { min: 1, max: 998 };
+
+export const hvacModeCooling = "cooling";
+export const hvacModeHeating = "heating";
+export const hvacModeVentilation = "ventilation";
+export const hvacModeDependant = "dependant";
+export const hvacMode = [
+  hvacModeCooling,
+  hvacModeHeating,
+  hvacModeVentilation,
+  hvacModeDependant,
+];
+export const hvacTemperatureC = "celsius";
+export const hvacTemperatureF = "fahrenheit";
+export const hvacTemperatureUnit = [hvacTemperatureC, hvacTemperatureF];
 export const rack_floor = { min: 0, max: 256 };
 export const rack_row = { min: 0, max: 256 };
 export const rack_column = { min: 0, max: 256 };
@@ -2945,7 +3016,16 @@ export const pageSize = { min: 1, max: 128 };
 export const placement_horizontal = { min: 0, max: Number.MAX_VALUE };
 export const placement_vertical = { min: 0, max: Number.MAX_VALUE };
 export const polePurpose = ["service/drop", "link", "backhaul", "unclassified"];
-export const poleState = ["free", "used", "reserved", "faulty"];
+export const poleStateFree = "free";
+export const poleStateUsed = "used";
+export const poleStateReserved = "reserved";
+export const poleStateFaulty = "faulty";
+export const poleState = [
+  poleStateUsed,
+  poleStateUsed,
+  poleStateReserved,
+  poleStateFaulty,
+];
 export const port = { min: 1, max: 65536 };
 export const portCoaxConfigurationRate = ["MHz", "GHz"];
 export const portConfiguration_coax_channels = { min: 1, max: 512 };
@@ -2971,14 +3051,22 @@ export const portFiberConfigurationRate = ["Gbps", "Tbps"];
 export const portErrorCount = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const portName = { min: 3, max: 64 };
 export const portMacAddress = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
-export const portState = ["free", "used", "reserved", "faulty"];
+export const portStateFree = "free";
+export const portStateUsed = "used";
+export const portStateReserved = "reserved";
+export const portStateFaulty = "faulty";
+export const portState = [
+  portStateFree,
+  portStateUsed,
+  portStateReserved,
+  portStateFaulty,
+];
 export const portTechnology = [
   "coax",
   "ethernet",
   "loopback",
   "fiber",
   "xdsl",
-  ,
   "virtual",
 ];
 export const portXdslConfiguration = [
@@ -2991,7 +3079,16 @@ export const portXdslConfiguration = [
 export const portXdslConfigurationRate = ["Mbps"];
 export const premisesPassed = { min: 0, max: Number.MAX_SAFE_INTEGER };
 export const rackSlots = { min: 1, max: 58 };
-export const rackSlotUsage = ["free", "used", "reserved", "faulty"];
+export const rackSlotUsageFree = "free";
+export const rackSlotUsageUsed = "used";
+export const rackSlotUsageReserved = "reserved";
+export const rackSlotUsageFaulty = "faulty";
+export const rackSlotUsage = [
+  rackSlotUsageFree,
+  rackSlotUsageUsed,
+  rackSlotUsageReserved,
+  rackSlotUsageFaulty,
+];
 export const rackSlotPosition =
   "([1-9]|[1-4][0-9]|5[0-8])+(,([1-9]|[1-4][0-9]|5[0-8]))?";
 export const ribbons = { min: 1, max: 36 };
@@ -3036,7 +3133,10 @@ export const siteType = [
   "utility",
 ];
 export const sizeUnit = ["cm", "mm", "m", "km", "Mm", "inch", "feet"];
-export const source = ["historical", "predicted"];
+export const sourceHistorical = "historical";
+export const sourcePlanned = "planned";
+export const sourcePredicted = "predicted";
+export const source = [sourceHistorical, sourcePlanned, sourcePredicted];
 export const trenchPurpose = [
   "backhaul",
   "pole",
@@ -3045,7 +3145,16 @@ export const trenchPurpose = [
   "tower",
   "unclassified",
 ];
-export const trenchState = ["free", "used", "reserved", "faulty"];
+export const trenchStateFree = "free";
+export const trenchStateUsed = "used";
+export const trenchStateReserved = "reserved";
+export const trenchStateFaulty = "faulty";
+export const trenchState = [
+  trenchStateFree,
+  trenchStateUsed,
+  trenchStateReserved,
+  trenchStateFaulty,
+];
 export const url_protocols = ["http", "https"];
 export const vlanId = { min: 0, max: 4095 };
 export const vxlanId = { min: 4096, max: 16777215 };
@@ -3055,7 +3164,10 @@ export const wktEpsg4326 = "EPSG:4326";
 export const wktCrs = [wktEpsg3857, wktEpsg4326];
 export const worldGeometryPolygon = "Polygon";
 export const worldGeometryMultiPolygon = "MultiPolygon";
-export const worldGeometryType = [worldGeometryPolygon,worldGeometryMultiPolygon];
+export const worldGeometryType = [
+  worldGeometryPolygon,
+  worldGeometryMultiPolygon,
+];
 export const bannerGraffti = [
   32, 95, 95, 32, 32, 95, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 95,
   32, 32, 32, 32, 32, 32, 32, 32, 32, 95, 32, 32, 32, 32, 32, 32, 32, 32, 32,

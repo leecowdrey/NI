@@ -160,6 +160,7 @@ BUILD_NUMBER=$(date +'%s')
 doing "Pipeline build ${BUILD_NUMBER}"
 build/buildtag.sh && \
 build/cvescan.sh && \
+build/builddepjs.sh && \
 build/openapi.sh && \
 build/erd2svg.sh && \
 build/buildui.sh && \

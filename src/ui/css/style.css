@@ -136,6 +136,19 @@ textarea {
   vertical-align: middle;
 }
 
+.login {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  border-radius: 10px;
+  background-color: #b3b3b3;
+  color: #000000;
+  align-items: center;
+  text-align: left;
+  justify-content: center;
+  display: grid;
+}
+
 .inner {
   margin-left: auto;
   margin-right: auto;
@@ -328,7 +341,38 @@ textarea {
   width: 50%;
   padding: 10px;
   height: auto;
-  /* Should be removed. Only for demonstration */
+}
+#stateusage-faulty
+{
+    background: #ff0000;
+}
+#stateusage-reserved
+{
+    background: #808080;
+}
+#stateusage-used
+{
+    background: #000000;
+}
+#stateusage-free
+{
+    background: #008000;
+}
+#stateusage-error
+{
+    background: yellow;
+    color: black;
+}
+
+.stateusage
+{
+    float: left;
+    height: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 0.85em;
+    border: 0;
+    padding: 5px;
 }
 
 /* Clear floats after the columns */

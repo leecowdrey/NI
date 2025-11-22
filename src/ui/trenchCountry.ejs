@@ -10,8 +10,8 @@
     <title>MNI</title>
     <link rel="stylesheet" href="/mni/css/style.css">
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="img/icon.png">
+    <link rel="icon" href="<%=payload.icon%>" sizes="any">
+    <link rel="apple-touch-icon" href="mni/img/icon.png">
     <style>
         .panel {
             width: 30%;
@@ -32,6 +32,27 @@
             text-align: center;
             margin-top: 5px;
             min-height: 86vh;
+        }
+        .mappolytooltip {
+          background-color: #555;
+          position: fixed;
+          left: 5%;
+          top: 25%;
+          display: inline-block;
+          padding: 5px;
+          text-align: center;
+          color: white;
+          font-size: 1em;
+          font-family: 'Courier New', Courier, monospace;
+        }
+        /* positioning of infowindow */
+        .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+        .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+        .gm-style .gm-style-iw-c,
+        .gm-style .gm-style-iw-t::after {
+          background: #808080;
+          color: #000000;
+          font-family: 'Courier New', Courier, monospace;
         }
     </style>
     <script src="/mni/js/mni.js"></script>
@@ -73,7 +94,7 @@
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
     </div>
     <div class="wrapper">
@@ -83,11 +104,12 @@
           </div>
           <div>
             <label for="country">Country</label>
-        <select id="country" onchange="if(this.selectedIndex !== undefined) fetchTrenchCountry();"></select>
+        <select id="country" onchange="if(this.selectedIndex !== undefined) {updateSelectedCountry();fetchTrenchCountry();}"></select>
                     <label for="trenchDistance">Length</label>
             <input type="text" id="trenchDistance" disabled></select>
             <label for="trenchPremisesPassed">Premises Passed</label>
             <input type="text" id="trenchPremisesPassed" disabled></select>
+            <div id="notePanel" style="float:right; color: white;"><i class="fa fa-superpowers"></i> <i class="fa fa-caret-left"></i>&#x1F5B1;<i class="fa fa-caret-right"></i> <i class="fa fa-arrows-v"></i></div>
         </div>
     </div>
     <div class="map" id="map"></div>

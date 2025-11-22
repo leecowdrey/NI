@@ -13,14 +13,6 @@ var trenchPath;
 var tPath = [];
 var tPoly = [];
 var lineSymbol;
-let flcReady = null;
-let fmrReady = null;
-let ftgReady = null;
-let fltReady = null;
-let ftpReady = null;
-let ftdReady = null;
-let ftppReady = null;
-let retryMs = 5000;
 let trenchId = null;
 let mapVendor = null;
 let trenchCoordinates = {};
@@ -84,7 +76,7 @@ function trenchExportKml() {
   if (path != null) {
     if (path.getLength() > 0) {
       path.forEach((p) => {
-        coordinates.push({ x: p.lat(), y: p.lng() });
+        coordinates.push({ x: p.lng(), y: p.lat() });
       });
       coordinates = Array.from(new Set(coordinates.map(JSON.stringify))).map(
         JSON.parse
@@ -173,7 +165,7 @@ function trenchExportKml() {
   if (coordinates.length > 0) {
     for (let c = 0; c < coordinates.length; c++) {
       kmlData +=
-        "          " + coordinates[c].y + "," + coordinates[c].x + ",0\n";
+        "          " + coordinates[c].x + "," + coordinates[c].y + ",0\n";
     }
   }
   kmlData += "        </coordinates>\n";
@@ -220,11 +212,11 @@ function trenchCalc() {
   if (path != null) {
     if (path.getLength() > 0) {
       path.forEach((p) => {
-        reqJson.coordinates.push({ x: p.lat(), y: p.lng() });
+        reqJson.coordinates.push({ x: p.lng(), y: p.lat() });
       });
       reqJson.coordinates = Array.from(
-        new Set(reqJson.coordinates.map(JSON.stringify))
-      ).map(JSON.parse);
+      new Set(reqJson.coordinates.map(JSON.stringify))
+    ).map(JSON.parse);
     }
   }
   if (reqJson.coordinates.length > 1) {
@@ -265,31 +257,32 @@ function trenchCalc() {
         }
       })
       .catch((e) => {
-        notify(e);
+        console.error(e);
       });
   } else {
     window.alert("At least two trench points are required");
   }
 }
 function fetchListTrench() {
-  if (fltReady != null) {
-    clearTimeout(fltReady);
-  }
-let c = document.getElementById("country");
+  let c = document.getElementById("country");
   let selectedCountry = c.options[c.selectedIndex].value;
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/trench?country=" +
-      selectedCountry, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  fetch(
+    localStorage.getItem("mni.gatewayUrl") +
+      "/trench?country=" +
+      selectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
       } //else {
-        //fltReady = setTimeout(fetchListTrench, retryMs);
+      //fltReady = setTimeout(fetchListTrench, retryMs);
       //}
     })
     .then((data) => {
@@ -302,15 +295,11 @@ let c = document.getElementById("country");
       document.getElementById("trenchId").innerHTML = trenchIds;
     })
     .catch((e) => {
-      notify(e);
+      console.error(e);
       //fltReady = setTimeout(fetchListTrench, retryMs);
     });
 }
 function fetchMapRender() {
-  if (fmrReady != null) {
-    clearTimeout(fmrReady);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/mapRender", {
     method: "GET",
     headers: {
@@ -321,9 +310,7 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fmrReady = setTimeout(fetchMapRender, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -342,17 +329,18 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      notify(e);
-      //fmrReady = setTimeout(fetchMapRender, retryMs);
+      console.error(e);
     });
 }
 async function wipeMapClean() {
-  for (let i = 0; i < tPoly.length; i++) {
-    tPoly[i].setMap(null);
-    tPoly[i] = null;
+  if (Object.keys(tPoly).length > 0) {
+    for (let trenchId in tPoly) {
+      tPoly[trenchId].setMap(null);
+      tPoly[trenchId] = null;
+    }
   }
-  tPoly.splice(0, tPoly.length);
-  tPath.splice(0, tPath.length);
+  tPoly = [];
+  tPath = [];
   if (path != null) {
     path.clear();
     polyline.setPath(path);
@@ -385,69 +373,79 @@ async function wipePath() {
   calcUnit = "m";
 }
 async function drawOnMap() {
-  for (let s = 0; s < trenchCoordinates.sets.length; s++) {
-    let tSet = trenchCoordinates.sets[s].point;
-    if (trenchCoordinates.sets[s].source == "predicted") {
-      trenchOpacity = 0;
-      if (s % 2 == 0) {
-        trenchColor = "#FFFF00";
-      } else {
-        trenchColor = "#CCCC00";
+  try {
+    if (Object.keys(tPoly).length > 0) {
+      for (let trenchId in tPoly) {
+        tPoly[trenchId].setMap(null);
+        tPoly[trenchId] = null;
       }
-    } else {
-      trenchOpacity = 1.0;
-      if (s % 2 == 0) {
-        trenchColor = "#8B0000";
-      } else {
-        trenchColor = "#FF6600";
-      }
+      tPoly = [];
+      tPath = [];
     }
-    tPath[tSet] = [];
-    for (let c = 0; c < trenchCoordinates[tSet].length; c++) {
-      tPath[tSet].push({
-        lat: trenchCoordinates[tSet][c].x,
-        lng: trenchCoordinates[tSet][c].y,
+    //
+    for (let s = 0; s < trenchCoordinates.sets.length; s++) {
+      let tSet = trenchCoordinates.sets[s].point;
+      if (trenchCoordinates.sets[s].source == "predicted") {
+        trenchOpacity = 0;
+        if (s % 2 == 0) {
+          trenchColor = "#FFFF00";
+        } else {
+          trenchColor = "#CCCC00";
+        }
+      } else {
+        trenchOpacity = 1.0;
+        if (s % 2 == 0) {
+          trenchColor = "#8B0000";
+        } else {
+          trenchColor = "#FF6600";
+        }
+      }
+      tPath[tSet] = [];
+      for (let c = 0; c < trenchCoordinates[tSet].length; c++) {
+        tPath[tSet].push({
+          lat: trenchCoordinates[tSet][c].y,
+          lng: trenchCoordinates[tSet][c].x,
+        });
+      }
+      tPoly[tSet] = new google.maps.Polyline({
+        path: tPath[tSet],
+        clickable: false,
+        strokeOpacity: trenchOpacity,
+        strokeColor: trenchColor,
+        strokeWeight: 4,
+        icons: [
+          {
+            icon: lineSymbol,
+            offset: "0",
+            repeat: "20px",
+          },
+        ],
+        map: map,
+      });
+      tPoly[tSet].setMap(map);
+      // custom trench path
+      polyline = new google.maps.Polyline({
+        strokeColor: mniStrokeColor,
+        strokeOpacity: mniStrokeOpacity,
+        strokeWeight: mniStrokeWeight,
+        map: map,
+      });
+      path = polyline.getPath();
+      map.addListener("click", (event) => {
+        path.push(event.latLng);
+      });
+      map.addListener("rightclick", (event) => {
+        if (path.length > 0) {
+          path.removeAt(path.getLength() - 1);
+          polyline.setPath(path);
+        }
       });
     }
-    tPoly[tSet] = new google.maps.Polyline({
-      path: tPath[tSet],
-      clickable: false,
-      strokeOpacity: trenchOpacity,
-      strokeColor: trenchColor,
-      strokeWeight: 4,
-      icons: [
-        {
-          icon: lineSymbol,
-          offset: "0",
-          repeat: "20px",
-        },
-      ],
-      map: map,
-    });
-    tPoly[tSet].setMap(map);
-    // custom trench path
-    polyline = new google.maps.Polyline({
-      strokeColor: mniStrokeColor,
-      strokeOpacity: mniStrokeOpacity,
-      strokeWeight: mniStrokeWeight,
-      map: map,
-    });
-    path = polyline.getPath();
-    map.addListener("click", (event) => {
-      path.push(event.latLng);
-    });
-    map.addListener("rightclick", (event) => {
-      if (path.length > 0) {
-        path.removeAt(path.getLength() - 1);
-        polyline.setPath(path);
-      }
-    });
+  } catch (e) {
+    console.error(e);
   }
 }
 async function fetchTrenchGeometryLifetime() {
-  if (ftgReady != null) {
-    clearTimeout(ftgReady);
-  }
   let t = document.getElementById("trenchId");
   trenchId = t.options[t.selectedIndex].value;
 
@@ -466,9 +464,7 @@ async function fetchTrenchGeometryLifetime() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data != null) {
@@ -478,8 +474,8 @@ async function fetchTrenchGeometryLifetime() {
           let tSet = trenchCoordinates.sets[0].point;
           if (trenchCoordinates[tSet].length > 0) {
             mapCenter = {
-              lat: trenchCoordinates[tSet][0].x,
-              lng: trenchCoordinates[tSet][0].y,
+              lng: trenchCoordinates[tSet][0].x,
+              lat: trenchCoordinates[tSet][0].y,
             };
           }
         }
@@ -488,14 +484,12 @@ async function fetchTrenchGeometryLifetime() {
         document.getElementById("mapRender") !== undefined &&
         document.getElementById("mapRender") != null
       ) {
-        wipeMapClean();
         map.setCenter(mapCenter);
         drawOnMap();
       }
     })
     .catch((e) => {
-      notify(e);
-      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      console.error(e);
     });
   loadScript(mapRenderUrl, function () {
     function displayMap() {
@@ -511,6 +505,7 @@ async function fetchTrenchGeometryLifetime() {
         strokeOpacity: 1.0,
         scale: 4,
       };
+      map.setCenter(mapCenter);
       drawOnMap();
       //
       polyline = new google.maps.Polyline({
@@ -534,9 +529,6 @@ async function fetchTrenchGeometryLifetime() {
   });
 }
 function fetchListCurrency() {
-  if (flcReady != null) {
-    clearTimeout(flcReady);
-  }
   fetch(localStorage.getItem("mni.gatewayUrl") + "/currency/default", {
     method: "GET",
     headers: {
@@ -547,16 +539,13 @@ function fetchListCurrency() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flcReady = setTimeout(fetchListCurrency, retryMs);
-      //}
+      }
     })
     .then((data) => {
       defaultCurrencyIsoCode = data.isoCode;
     })
     .catch((e) => {
       console.error(e);
-      //flcReady = setTimeout(fetchListCurrency, retryMs);
     });
 
   fetch(localStorage.getItem("mni.gatewayUrl") + "/currency", {
@@ -569,9 +558,7 @@ function fetchListCurrency() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flcReady = setTimeout(fetchListCurrency, retryMs);
-      //}
+      }
     })
     .then((data) => {
       data = jsonSortByMultiKeys(data, ["name"]);
@@ -600,26 +587,14 @@ function fetchListCurrency() {
       document.getElementById("currency").innerHTML = currencyIds;
     })
     .catch((e) => {
-      notify(e);
-      //flcReady = setTimeout(fetchListCurrency, retryMs);
+      console.error(e);
     });
 }
 try {
   fetchListCurrency();
-} catch (e) {
-  notify(e);
-  //flcReady = setTimeout(fetchListCurrency, retryMs);
-}
-try {
-  countryListPopulate();
   fetchMapRender();
+  countryListPopulate(fetchListTrench);
+  countryListPopulate();
 } catch (e) {
-  notify(e);
-  //fmrReady = setTimeout(fetchMapRender, retryMs);
-}
-try {
-  fetchListTrench();
-} catch (e) {
-  notify(e);
-  //fltReady = setTimeout(fetchListTrench, retryMs);
+  console.error(e);
 }

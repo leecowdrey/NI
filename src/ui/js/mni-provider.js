@@ -8,8 +8,6 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-let ready = null;
-let retryMs = 5000;
 let refreshMs = 300000;
 let chartProvider = null;
 let emailProvider = 0;
@@ -17,10 +15,6 @@ let kafkaProvider = 0;
 let mapProvider = 0;
 let workflowProvider = 0;
 function fetchProviderStats() {
-  if (ready != null) {
-    clearTimeout(ready);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/statistic", {
     method: "GET",
     headers: {
@@ -31,9 +25,7 @@ function fetchProviderStats() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //ready = setTimeout(fetchProviderStats, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.providers != null) {
@@ -111,13 +103,11 @@ function fetchProviderStats() {
       ready = setTimeout(fetchProviderStats, refreshMs);
     })
     .catch((e) => {
-      notify(e);
-      //ready = setTimeout(fetchProviderStats, retryMs);
+      console.error(e);
     });
 }
 try {
   fetchProviderStats();
 } catch (e) {
-  notify(e);
-  //ready = setTimeout(fetchProviderStats, retryMs);
+  console.error(e);
 }

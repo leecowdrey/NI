@@ -10,8 +10,8 @@
     <title>MNI</title>
     <link rel="stylesheet" href="/mni/css/style.css">
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="img/icon.png">
+    <link rel="icon" href="<%=payload.icon%>" sizes="any">
+    <link rel="apple-touch-icon" href="mni/img/icon.png">
     <style>
         .panel {
             width: 85%;
@@ -64,7 +64,7 @@
             text-align: left;
             margin-top: 20px;
             margin-left: 20px;
-            font-size: 0.7em;
+            font-size: 1em;
             display: inline-block;
         }
 
@@ -81,9 +81,8 @@
             border: 1px solid white;
             background-color: green;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -91,9 +90,8 @@
             border: 1px solid white;
             background-color: black;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -101,9 +99,8 @@
             border: 1px solid white;
             background-color: #808080;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -111,9 +108,8 @@
             border: 1px solid white;
             background-color: red;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -124,9 +120,8 @@
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -134,9 +129,8 @@
             border: 1px solid #ffff00;
             background-color: green;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -144,9 +138,8 @@
             border: 1px solid #ffff00;
             background-color: black;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -154,9 +147,8 @@
             border: 1px solid #ffff00;
             background-color: #808080;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -164,9 +156,8 @@
             border: 1px solid #ffff00;
             background-color: red;
             font-family: 'Courier New', Courier, monospace;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -177,9 +168,8 @@
             background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
             background-size: 1.25em 1.25em;
             opacity: 1;
-            text-align: left;
+            text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
     </style>
@@ -222,9 +212,9 @@
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
-        <select id="country" onchange="if(this.selectedIndex !== undefined) fetchListRack();"></select>
+        <select id="country" onchange="if(this.selectedIndex !== undefined) {updateSelectedCountry();fetchListRack();}"></select>
     </div>
     <div class="panel" id="resourcePanel">
         <div class="rack-select" id="rackList">

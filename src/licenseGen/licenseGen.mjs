@@ -26,6 +26,7 @@ const mniDefaultUnit = "month";
 const mniDefaultHost = "mni";
 const mniDefaultDomain = "merkator.local";
 const mniDefaultKey = "mni.key";
+const mniDefaultRole = OAS.roleStandalone;
 
 var DEBUG = false;
 
@@ -136,7 +137,9 @@ function help() {
       "\t\t[--unit=" +
       mniDefaultUnit +
       "]\t\t\tsecond,minute,hour,day,week,month,quarter or year\n" +
-      "\t\t[--host=" +
+      "\t\t[--role=" +
+      mniDefaultRole +
+      "\n\t\t[--host=" +
       mniDefaultHost +
       "]\t\t\tthe hostname executing API Server\n" + 
       "\t\t[--domain=" +
@@ -149,7 +152,7 @@ function help() {
   LOGGER.info(
     "\tnode " +
       argv.$0 +
-      " --generate --start=20250801T000000 --duration=1 --unit=month --domain=marlindt.net --out=mdt.pem"
+      " --generate --start=20250801T000000 --duration=1 --unit=month --role=standalone --host=mdt --domain=marlindt.net --out=mdt.pem"
   );
 }
 
@@ -157,6 +160,7 @@ function generate({
   duration = mniDefaultDuration,
   unit = mniDefaultUnit,
   start = null,
+  role = mniDefaultRole,
   host = mniDefaultHost,
   domain = mniDefaultDomain,
   pemFile = mniDefaultKey,
@@ -210,6 +214,7 @@ function generate({
     .format(OAS.dayjsFormat);
 
   keyData = {
+    role: role,
     host: host,
     domain: domain,
     start: start,
@@ -219,6 +224,7 @@ function generate({
   key = generator.generateLicense(keyData);
   LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     out: pemFile,
+    role: keyData.role,
     host: keyData.host,
     domain: keyData.domain,
     start: keyData.start,
@@ -237,6 +243,7 @@ function verify({ pemFile = mniDefaultKey } = {}) {
     keyData = JSON.parse(JSON.stringify(validator.validateLicense(key)));
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
       key: key,
+      role: keyData.role,
       host: keyData.host,
       domain: keyData.domain,
       start: keyData.start,
@@ -259,6 +266,7 @@ var run = async () => {
       duration: argv.duration,
       unit: argv.unit,
       start: argv.start,
+      role: argv.role,
       host: argv.host,
       domain: argv.domain,
       pemFile: argv.out,

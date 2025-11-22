@@ -76,16 +76,17 @@ RETVAL=$?
 doing "Updating (if necessary) DuckDB installation"
 which duckdb &> /dev/null
 RETVAL=$?
-if [[ ${RETVAL} -ne 0 ]] ; then
+if [[ ${RETVAL} -eq 0 ]] ; then
   DDB_VERSION=$(duckdb --version|cut -d" " -f1)
   RETVAL=$?
-  if [[ "${DDB_VERSION}" != "${DUCKDB_VERSION}" ]] ; then
+  info "DuckDB: installed=${DDB_VERSION}, specified=${DUCKDB_VERSION}"
+  if [[ "${DDB_VERSION,,}" != "${DUCKDB_VERSION,,}" ]] ; then
     [[ ! -f "/tmp/duckdb_cli-linux-amd64.zip" ]] && rm -f /tmp/duckdb_cli-linux-amd64.zip &>/dev/null
     curl --fail --location --output /tmp/duckdb_cli-linux-amd64.zip \
        "https://github.com/duckdb/duckdb/releases/download/${DUCKDB_VERSION}/duckdb_cli-linux-amd64.zip" &>/dev/null
     RETVAL=$?
     if [[ ${RETVAL} -eq 0 ]] ; then
-      unzip -d /usr/local/bin /tmp/duckdb_cli-linux-amd64.zip &>/dev/null && \
+      unzip -o -d /usr/local/bin /tmp/duckdb_cli-linux-amd64.zip &>/dev/null && \
       chmod 755 /usr/local/bin/duckdb 
       RETVAL=$?
     fi

@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.merkator.com/
     x-copyright: © 2024-2025 Merkator nv/sa. All rights reserved.
-  version: 1.0.0.1757673362
+  version: 1.0.0.1763724098
 externalDocs:
   description: Application User Manual
   url: /mni/v1/doc/html/user-guide/index.html
@@ -2620,7 +2620,7 @@ paths:
                   requestorId: 7c48ef5f-3499-4daf-be2c-82d2b487d869
                   alerts:
                     - alertId: ff9bf3a0-682e-43ff-b38c-0ab962ef2fe7
-                      kafkaProducerId: 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                      kafkaProducerId: 5b1ef698-1cf3-4f12-a671-d60ff283db41
                       topic: mni-L23-classifiers
       responses:
         "200":
@@ -3058,6 +3058,9 @@ paths:
                           $ref: "#/components/schemas/cableId"
                         country:
                           $ref: "#/components/schemas/countryCode"
+                        cost:
+                          type: number
+                          format: currency
                         poleId:
                           $ref: "#/components/schemas/poleId"
                         point:
@@ -3078,6 +3081,11 @@ paths:
                       properties:
                         cableId:
                           $ref: "#/components/schemas/cableId"
+                        country:
+                          $ref: "#/components/schemas/countryCode"
+                        cost:
+                          type: number
+                          format: currency
                         ductId:
                           $ref: "#/components/schemas/ductId"
                         point:
@@ -3133,6 +3141,9 @@ paths:
                         $ref: "#/components/schemas/cableId"
                       country:
                         $ref: "#/components/schemas/countryCode"
+                      cost:
+                        type: number
+                        format: currency
                       poleId:
                         $ref: "#/components/schemas/poleId"
                       point:
@@ -3160,6 +3171,11 @@ paths:
                       cableId:
                         description: optionally specify the internal cable identifier
                         $ref: "#/components/schemas/cableId"
+                      country:
+                        $ref: "#/components/schemas/countryCode"
+                      cost:
+                        type: number
+                        format: currency
                       ductId:
                         $ref: "#/components/schemas/ductId"
                       point:
@@ -3256,10 +3272,14 @@ paths:
                     - poleId
                     - technology
                     - configuration
-                    - state
                   properties:
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
+                    reference:
+                      type: string
                     poleId:
                       $ref: "#/components/schemas/poleId"
                     technology:
@@ -3281,18 +3301,20 @@ paths:
                     - ductId
                     - technology
                     - configuration
-                    - state
                   properties:
                     ductId:
                       $ref: "#/components/schemas/ductId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
+                    reference:
+                      type: string
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -3306,12 +3328,13 @@ paths:
                 value:
                   ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
                   country: BEL
+                  cost: 2.50
                   technology: ethernet
                   configuration:
                     category: Cat6A
                     rate: 10
                     unit: Gbps
-                  state: free
+                    state: free
                   source: historical
                   probability: 1
                   delete: false
@@ -3319,10 +3342,16 @@ paths:
                 value:
                   poleId: 4f61c862-cbd6-4455-9cf2-3d478406c693
                   country: BEL
+                  cost: 7.50
                   technology: singleFiber
                   configuration:
                     strands: 1
                     mode: SMOF
+                    states:
+                      - strand: 1
+                        state: used
+                      - strand: 2
+                        state: used
                   state: free
                   source: historical
                   probability: 1
@@ -3330,11 +3359,19 @@ paths:
               multi:
                 value:
                   poleId: 4f61c862-cbd6-4455-9cf2-3d478406c693
+                  cost: 15.25
                   technology: multiFiber
                   configuration:
                     ribbons: 12
                     strands: 24
                     mode: MMOF
+                    states:
+                      - ribbon: 1
+                        strand: 1
+                        state: used
+                      - ribbon: 1
+                        strand: 2
+                        state: used
                   state: free
                   source: historical
                   probability: 1
@@ -3477,18 +3514,20 @@ paths:
                     - ductId
                     - technology
                     - configuration
-                    - state
                   properties:
                     ductId:
                       $ref: "#/components/schemas/ductId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
+                    reference:
+                      type: string
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -3502,18 +3541,18 @@ paths:
                     - poleId
                     - technology
                     - configuration
-                    - state
                   properties:
                     poleId:
                       $ref: "#/components/schemas/poleId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -3529,10 +3568,22 @@ paths:
                   country: BEL
                   technology: multiFiber
                   configuration:
-                    ribbons: 24
-                    strands: 48
+                    ribbons: 2
+                    strands: 2
                     mode: MMOF
-                  state: used
+                    states:
+                      - ribbon: 1
+                        strand: 1
+                        state: free
+                      - ribbon: 1
+                        strand: 2
+                        state: free
+                      - ribbon: 2
+                        strand: 1
+                        state: used
+                      - ribbon: 2
+                        strand: 2
+                        state: used
                   source: historical
                   probability: 1
                   delete: false
@@ -3542,9 +3593,11 @@ paths:
                   country: BEL
                   technology: singleFiber
                   configuration:
-                    strands: 18
+                    strands: 1
                     mode: SMOF
-                  state: used
+                    states:
+                      - strand: 1
+                        state: used
                   source: historical
                   probability: 1
                   delete: false
@@ -3579,14 +3632,17 @@ paths:
                       $ref: "#/components/schemas/cableId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
+                    reference:
+                      type: string
                     ductId:
                       $ref: "#/components/schemas/ductId"
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -3603,12 +3659,13 @@ paths:
                       $ref: "#/components/schemas/poleId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
                     technology:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -3628,7 +3685,10 @@ paths:
                     ribbons: 24
                     strands: 48
                     mode: MMOF
-                  state: free
+                    states:
+                      - ribbon: 1
+                        strand: 1
+                        state: free
                   source: historical
                   probability: 1
                   delete: false
@@ -3641,7 +3701,9 @@ paths:
                   configuration:
                     strands: 18
                     mode: SMOF
-                  state: free
+                    states:
+                      - strand: 1
+                        state: free
                   source: historical
                   probability: 1
                   delete: false
@@ -3679,6 +3741,11 @@ paths:
                         $ref: "#/components/schemas/cableId"
                       ductId:
                         $ref: "#/components/schemas/ductId"
+                      country:
+                        $ref: "#/components/schemas/countryCode"
+                      cost:
+                        type: number
+                        format: currency
                       technology:
                         $ref: "#/components/schemas/cableTechnology"
                       configuration:
@@ -3699,12 +3766,15 @@ paths:
                         $ref: "#/components/schemas/cableId"
                       poleId:
                         $ref: "#/components/schemas/poleId"
+                      country:
+                        $ref: "#/components/schemas/countryCode"
+                      cost:
+                        type: number
+                        format: currency
                       technology:
                         $ref: "#/components/schemas/cableTechnology"
                       configuration:
                         $ref: "#/components/schemas/cableConfiguration"
-                      state:
-                        $ref: "#/components/schemas/cableState"
                       point:
                         $ref: "#/components/schemas/dateTime"
                       source:
@@ -3722,8 +3792,8 @@ paths:
                       category: Cat6A
                       rate: 10
                       unit: Gbps
+                      state: used
                     technology: ethernet
-                    state: used
                     source: historical
                     probability: 1
                     delete: false
@@ -3732,10 +3802,12 @@ paths:
                     cableId: 5520aca1-4727-431a-aa9c-23f2e54b8a41
                     ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
                     configuration:
-                      strands: 48
+                      strands: 1
                       mode: SMOF
+                      states:
+                        - strand: 1
+                          state: free
                     technology: singleFiber
-                    state: free
                     source: historical
                     probability: 1
                     delete: false
@@ -3744,11 +3816,23 @@ paths:
                     cableId: 5520aca1-4727-431a-aa9c-23f2e54b8a41
                     ductId: 4f61c862-cbd6-4455-9cf2-3d478406c693
                     configuration:
-                      ribbons: 24
-                      strands: 48
+                      ribbons: 2
+                      strands: 2
                       mode: MMOF
+                      states:
+                        - ribbon: 1
+                          strand: 1
+                          state: free
+                        - ribbon: 1
+                          strand: 2
+                          state: free
+                        - ribbon: 2
+                          strand: 1
+                          state: used
+                        - ribbon: 2
+                          strand: 2
+                          state: used
                     technology: multiFiber
-                    state: free
                     source: historical
                     probability: 1
                     delete: false
@@ -4093,6 +4177,9 @@ paths:
                       $ref: "#/components/schemas/dateTime"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
                     trenchId:
                       $ref: "#/components/schemas/trenchId"
                     purpose:
@@ -4156,6 +4243,9 @@ paths:
                     $ref: "#/components/schemas/dateTime"
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   trenchId:
                     $ref: "#/components/schemas/trenchId"
                   purpose:
@@ -4268,6 +4358,11 @@ paths:
                   $ref: "#/components/schemas/ductPurpose"
                 country:
                   $ref: "#/components/schemas/countryCode"
+                reference:
+                  type: string
+                cost:
+                  type: number
+                  format: currency
                 category:
                   $ref: "#/components/schemas/ductSizeCategory"
                 configuration:
@@ -4492,6 +4587,11 @@ paths:
                   $ref: "#/components/schemas/trenchId"
                 country:
                   $ref: "#/components/schemas/countryCode"
+                reference:
+                  type: string
+                cost:
+                  type: number
+                  format: currency
                 purpose:
                   $ref: "#/components/schemas/ductPurpose"
                 category:
@@ -4560,6 +4660,11 @@ paths:
                   $ref: "#/components/schemas/trenchId"
                 country:
                   $ref: "#/components/schemas/countryCode"
+                reference:
+                  type: string
+                cost:
+                  type: number
+                  format: currency
                 purpose:
                   $ref: "#/components/schemas/ductPurpose"
                 category:
@@ -4617,6 +4722,13 @@ paths:
                 properties:
                   ductId:
                     $ref: "#/components/schemas/ductId"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
+                  reference:
+                    type: string
+                  cost:
+                    type: number
+                    format: currency
                   trenchId:
                     $ref: "#/components/schemas/trenchId"
                   purpose:
@@ -4662,6 +4774,68 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /duct/cable/{ductId}:
+    get:
+      summary: Get list of cables within specified duct
+      security:
+        - openId:
+            - read:mni_duct
+            - read:mni_ui
+      operationId: getSingleDuctCables
+      tags:
+        - Ducts
+      parameters:
+        - $ref: "#/components/parameters/ductId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/cableId"
+              examples:
+                sample:
+                  value:
+                    - 5520aca1-4727-431a-aa9c-23f2e54b8a41
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /duct/subduct/{ductId}:
+    get:
+      summary: Get list of subducts within specified duct
+      security:
+        - openId:
+            - read:mni_duct
+            - read:mni_ui
+      operationId: getSingleDuctSubDucts
+      tags:
+        - Ducts
+      parameters:
+        - $ref: "#/components/parameters/ductId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ductId"
+              examples:
+                sample:
+                  value:
+                    - 5520aca1-4727-431a-aa9c-23f2e54b8a41
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /services:
     get:
       summary: Export services in bulk
@@ -4690,6 +4864,9 @@ paths:
                       $ref: "#/components/schemas/serviceId"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
                     point:
                       $ref: "#/components/schemas/dateTime"
                     reference:
@@ -4805,6 +4982,9 @@ paths:
                     $ref: "#/components/schemas/dateTime"
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   reference:
                     type: string
                   customer:
@@ -5120,6 +5300,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 customer:
@@ -5298,6 +5481,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 customer:
@@ -5429,6 +5615,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 customer:
@@ -5625,6 +5814,9 @@ paths:
                     type: string
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   customer:
                     type: object
                     required:
@@ -5795,6 +5987,9 @@ paths:
                     type:
                       $ref: "#/components/schemas/siteType"
                       default: unclassified
+                    cost:
+                      type: number
+                      format: currency
                     location:
                       type: object
                       properties:
@@ -5869,6 +6064,9 @@ paths:
                   type:
                     $ref: "#/components/schemas/siteType"
                     default: unclassified
+                  cost:
+                    type: number
+                    format: currency
                   location:
                     type: object
                     required:
@@ -6089,6 +6287,9 @@ paths:
                 type:
                   $ref: "#/components/schemas/siteType"
                   default: unclassified
+                cost:
+                  type: number
+                  format: currency
                 location:
                   type: object
                   required:
@@ -6297,6 +6498,9 @@ paths:
                   $ref: "#/components/schemas/areaType"
                 type:
                   $ref: "#/components/schemas/siteType"
+                cost:
+                  type: number
+                  format: currency
                 location:
                   type: object
                   properties:
@@ -6396,6 +6600,9 @@ paths:
                   $ref: "#/components/schemas/areaType"
                 type:
                   $ref: "#/components/schemas/siteType"
+                cost:
+                  type: number
+                  format: currency
                 location:
                   type: object
                   required:
@@ -6517,6 +6724,11 @@ paths:
                     $ref: "#/components/schemas/areaType"
                   type:
                     $ref: "#/components/schemas/siteType"
+                  country:
+                    $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   location:
                     type: object
                     properties:
@@ -6651,6 +6863,9 @@ paths:
                       $ref: "#/components/schemas/dateTime"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
                     reference:
                       type: string
                     commissioned:
@@ -6723,6 +6938,9 @@ paths:
                     $ref: "#/components/schemas/dateTime"
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   reference:
                     type: string
                   commissioned:
@@ -6880,6 +7098,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 commissioned:
@@ -6996,6 +7217,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 commissioned:
@@ -7081,6 +7305,9 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
                 reference:
                   type: string
                 commissioned:
@@ -7215,6 +7442,9 @@ paths:
                     type: string
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
                   commissioned:
                     $ref: "#/components/schemas/date"
                   decommissioned:
@@ -7531,6 +7761,11 @@ paths:
                       $ref: "#/components/schemas/dateTime"
                     country:
                       $ref: "#/components/schemas/countryCode"
+                    cost:
+                      type: number
+                      format: currency
+                    reference:
+                      type: string
                     host:
                       type: string
                       format: hostname
@@ -7770,6 +8005,11 @@ paths:
                     $ref: "#/components/schemas/dateTime"
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
+                  reference:
+                    type: string
                   host:
                     type: string
                     format: hostname
@@ -8149,6 +8389,11 @@ paths:
               properties:
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
+                reference:
+                  type: string
                 host:
                   type: string
                   format: hostname
@@ -8447,6 +8692,11 @@ paths:
                     $ref: "#/components/schemas/neId"
                   country:
                     $ref: "#/components/schemas/countryCode"
+                  cost:
+                    type: number
+                    format: currency
+                  reference:
+                    type: string
                   host:
                     type: string
                     format: hostname
@@ -8705,6 +8955,11 @@ paths:
                   format: hostname
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
+                reference:
+                  type: string
                 commissioned:
                   $ref: "#/components/schemas/date"
                 decommissioned:
@@ -8944,6 +9199,11 @@ paths:
                   format: hostname
                 country:
                   $ref: "#/components/schemas/countryCode"
+                cost:
+                  type: number
+                  format: currency
+                reference:
+                  type: string
                 commissioned:
                   $ref: "#/components/schemas/date"
                 decommissioned:
@@ -9110,6 +9370,9 @@ paths:
                           default: unclassified
                         unit:
                           $ref: "#/components/schemas/sizeUnit"
+                        cost:
+                          type: number
+                          format: currency
                     demographics:
                       type: object
                       required:
@@ -9233,6 +9496,9 @@ paths:
                         default: unclassified
                       unit:
                         $ref: "#/components/schemas/sizeUnit"
+                      cost:
+                        type: number
+                        format: currency
                   demographics:
                     type: object
                     required:
@@ -9506,6 +9772,9 @@ paths:
                       default: unclassified
                     unit:
                       $ref: "#/components/schemas/sizeUnit"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   required:
@@ -9751,6 +10020,9 @@ paths:
                       default: unclassified
                     unit:
                       $ref: "#/components/schemas/sizeUnit"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   required:
@@ -9913,6 +10185,9 @@ paths:
                       default: unclassified
                     unit:
                       $ref: "#/components/schemas/sizeUnit"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   properties:
@@ -10030,6 +10305,9 @@ paths:
                         defalt: unclassified
                       unit:
                         $ref: "#/components/schemas/sizeUnit"
+                      cost:
+                        type: number
+                        format: currency
                   demographics:
                     type: object
                     properties:
@@ -10131,6 +10409,37 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFound"
+  /pole/cable/{poleId}:
+    get:
+      summary: Get list of cables on specified pole
+      security:
+        - openId:
+            - read:mni_pole
+            - read:mni_ui
+      operationId: getSinglePoleCables
+      tags:
+        - Poles
+      parameters:
+        - $ref: "#/components/parameters/poleId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/cableId"
+              examples:
+                sample:
+                  value:
+                    - 5520aca1-4727-431a-aa9c-23f2e54b8a41
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /pole/timeline/{poleId}:
     get:
       summary: timeline points for specified pole
@@ -10222,6 +10531,9 @@ paths:
                           $ref: "#/components/schemas/sizeUnit"
                         type:
                           $ref: "#/components/schemas/constructionType"
+                        cost:
+                          type: number
+                          format: currency
                     demographics:
                       type: object
                       required:
@@ -10353,6 +10665,9 @@ paths:
                         $ref: "#/components/schemas/sizeUnit"
                       type:
                         $ref: "#/components/schemas/constructionType"
+                      cost:
+                        type: number
+                        format: currency
                   demographics:
                     type: object
                     required:
@@ -10536,6 +10851,9 @@ paths:
                       $ref: "#/components/schemas/sizeUnit"
                     type:
                       $ref: "#/components/schemas/constructionType"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   required:
@@ -10636,6 +10954,7 @@ paths:
                     classifier: low
                     unit: m
                     type: micro
+                    cost: 2000
                   demographics:
                     premises:
                       passed: 4
@@ -10800,6 +11119,9 @@ paths:
                       $ref: "#/components/schemas/sizeUnit"
                     type:
                       $ref: "#/components/schemas/constructionType"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   required:
@@ -10900,6 +11222,7 @@ paths:
                     classifier: low
                     unit: m
                     type: micro
+                    cost: 2500
                   demographics:
                     premises:
                       passed: 4
@@ -10979,6 +11302,9 @@ paths:
                       $ref: "#/components/schemas/sizeUnit"
                     type:
                       $ref: "#/components/schemas/constructionType"
+                    cost:
+                      type: number
+                      format: currency
                 demographics:
                   type: object
                   properties:
@@ -11111,6 +11437,9 @@ paths:
                         $ref: "#/components/schemas/sizeUnit"
                       type:
                         $ref: "#/components/schemas/constructionType"
+                      cost:
+                        type: number
+                        format: currency
                   demographics:
                     type: object
                     properties:
@@ -11192,6 +11521,7 @@ paths:
                       depthClassifier: low
                       unit: m
                       type: micro
+                      cost: 2500
                     demographics:
                       premises:
                         passed: 4
@@ -12345,7 +12675,7 @@ paths:
               examples:
                 sample:
                   value:
-                    - kafkaProducerId: 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                    - kafkaProducerId: 5b1ef698-1cf3-4f12-a671-d60ff283db41
                       name: west
                       clientId: mni
                       producer:
@@ -12409,7 +12739,7 @@ paths:
             examples:
               sample:
                 value:
-                  - kafkaProducerId: 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                  - kafkaProducerId: 5b1ef698-1cf3-4f12-a671-d60ff283db41
                     name: west
                     clientId: mni
                     producer:
@@ -12439,7 +12769,7 @@ paths:
               examples:
                 sample:
                   value:
-                    - 7e3360a0-ce0e-406c-b3a3-d04c6c5500
+                    - f3fd73b2-f08b-43f5-ad36-54299bf7dfab
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -12472,7 +12802,7 @@ paths:
               examples:
                 sample:
                   value:
-                    - 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                    - 5b1ef698-1cf3-4f12-a671-d60ff283db41
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -12534,7 +12864,7 @@ paths:
                   kafkaProducerId:
                     $ref: "#/components/schemas/kafkaProducerId"
               example:
-                kafkaProducerId: 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                kafkaProducerId: 5b1ef698-1cf3-4f12-a671-d60ff283db41
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -12593,7 +12923,7 @@ paths:
               examples:
                 sample:
                   value:
-                    kafkaProducerId: 7e3360a0-ce0e-406c-b3a3-d04c6c5500c
+                    kafkaProducerId: 5b1ef698-1cf3-4f12-a671-d60ff283db41
                     name: west
                     clientId: mni
                     producer:
@@ -14490,7 +14820,7 @@ paths:
         - $ref: "#/components/parameters/pageSize"
         - $ref: "#/components/parameters/pageNumber"
       tags:
-        - Cables
+        - Documents
       responses:
         "200":
           description: OK
@@ -17956,13 +18286,6 @@ components:
           enum:
             - SMOF
             - MMOF
-        channels:
-          $ref: "#/components/schemas/channels"
-        width:
-          description: channel bandwith width
-          type: integer
-          minimum: 1
-          maximum: 1000
     portState:
       description: usage state of interface port
       type: string
@@ -18926,9 +19249,8 @@ components:
       description: copper cable properties
       type: object
       required:
-        - category
-        - rate
-        - unit
+        - twistedPairs
+        - state
       properties:
         twistedPairs:
           description: number of twisted-pairs within the cable
@@ -18936,6 +19258,8 @@ components:
           minimum: 1
           maximum: 48
           default: 7
+        state:
+          $ref: "#/components/schemas/cableState"
     cableEthernetConfiguration:
       description: ethernet cable properties
       type: object
@@ -18943,6 +19267,7 @@ components:
         - category
         - rate
         - unit
+        - state
       properties:
         category:
           type: string
@@ -18970,6 +19295,8 @@ components:
             - Gbps
             - Tbps
           default: Gbps
+        state:
+          $ref: "#/components/schemas/cableState"
     cableCoaxConfiguration:
       description: coaxial cable properties
       type: object
@@ -18978,6 +19305,7 @@ components:
         - channels
         - width
         - unit
+        - state
       properties:
         frequencyRange:
           type: object
@@ -19008,6 +19336,8 @@ components:
           enum:
             - MHz
             - GHz
+        state:
+          $ref: "#/components/schemas/cableState"
     cableSingleFiberConfiguration:
       description: single fiber optic cable properties
       type: object
@@ -19027,13 +19357,12 @@ components:
           enum:
             - SMOF
             - MMOF
-        channels:
-          $ref: "#/components/schemas/channels"
-        width:
-          description: channel bandwith width
+        rate:
+          description: maximum transmission rate
           type: integer
           minimum: 1
-          maximum: 1000
+          maximum: 768
+          default: 10
         unit:
           description: bandwidth unit
           type: string
@@ -19041,6 +19370,15 @@ components:
             - Gbps
             - Tbps
           default: Gbps
+        states:
+          type: array
+          items:
+            type: object
+            properties:
+              strand:
+                $ref: "#/components/schemas/strand"
+              state:
+                $ref: "#/components/schemas/cableState"
     cableMultiFiberConfiguration:
       description: multi-fiber optic cable properties
       type: object
@@ -19064,13 +19402,12 @@ components:
           enum:
             - SMOF
             - MMOF
-        channels:
-          $ref: "#/components/schemas/channels"
-        width:
-          description: channel bandwith width
+        rate:
+          description: maximum transmission rate
           type: integer
           minimum: 1
-          maximum: 1000
+          maximum: 768
+          default: 10
         unit:
           description: bandwidth unit
           type: string
@@ -19078,6 +19415,17 @@ components:
             - Gbps
             - Tbps
           default: Gbps
+        states:
+          type: array
+          items:
+            type: object
+            properties:
+              ribbon:
+                $ref: "#/components/schemas/ribbon"
+              strand:
+                $ref: "#/components/schemas/strand"
+              state:
+                $ref: "#/components/schemas/cableState"
     cableState:
       description: usage state of cable
       type: string
@@ -19236,7 +19584,6 @@ components:
       type: string
       enum:
         - duct
-        - microduct
         - subduct
     ductConfiguration:
       description: |
@@ -19531,7 +19878,6 @@ components:
         - used
         - reserved
         - faulty
-        - predicted
     alertId:
       description: internal alert identifier
       type: string
@@ -19750,6 +20096,7 @@ components:
         - free
         - used
         - reserved
+        - faulty
     rackId:
       description: internal (telegraph) pole identifier
       type: string
@@ -19867,6 +20214,7 @@ components:
         - free
         - used
         - reserved
+        - faulty
     workflowEngine:
       description: workflow engine host, credentials etc.
       type: object
@@ -20915,7 +21263,6 @@ security:
       - read:mni_admin
       - read:mni_alert
       - read:mni_cable
-      - read:mni_duct
       - read:mni_duct
       - read:mni_fetch
       - read:mni_ne

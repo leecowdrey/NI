@@ -42,6 +42,8 @@ Primary and Foreign Relationships
 - dataset presented via API will include point values
 - dataset presented via API will optionally include internal identifiers (UUID)
 - dataset (JSON array) will be unpackaged into individual records
+- each bulk (JSON array) import will have a maximum size of 1000 records
+  > **Note:** it is the responsibility of the client to ensure maximum and the API Server will return HTTP status code 413 if the internal queues are currently full. 
 - If the request is invalid, HTTP status code 400 will be returned
 - For non-administrative datasets:
   - When record is stored, the metadata fields are automatically populated with:
@@ -50,7 +52,7 @@ Primary and Foreign Relationships
     - `delete` - extracted from supplied dataset record
 - For all datasets:
   - the internal identifiers (UUID), created if not supplied or used if supplied
-- HTTP status code 200 will be returned
+- HTTP status code 202 will be returned
 
 ### Bulk Read (Export)
 

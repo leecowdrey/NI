@@ -8,9 +8,6 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-let fadReady = null;
-let sadReady = null;
-let retryMs = 1000;
 function resetMinMax(w) {
   let u = document.getElementById(w + "Unit");
   let v = u.options[u.selectedIndex].value;
@@ -42,9 +39,6 @@ function resetMinMax(w) {
   }
 }
 function saveAdminData() {
-  if (sadReady != null) {
-    clearTimeout(sadReady);
-  }
   let a = document.getElementById("historicalDuration");
   let b = document.getElementById("historicalUnit");
   let c = document.getElementById("predictedDuration");
@@ -70,21 +64,11 @@ function saveAdminData() {
     },
     body: JSON.stringify(reqJson),
     keepalive: true,
-  })
-    //.then((response) => {
-    //  if (!response.ok) {
-    //    sadReady = setTimeout(saveAdminData, retryMs);
-    //  }
-    //})
-    .catch((e) => {
-      notify(e);
-      //sadReady = setTimeout(saveAdminData, retryMs);
-    });
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 function fetchAdminData() {
-  if (fadReady != null) {
-    clearTimeout(fadReady);
-  }
   fetch(localStorage.getItem("mni.gatewayUrl") + "/admin/data", {
     method: "GET",
     headers: {
@@ -95,9 +79,7 @@ function fetchAdminData() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fadReady = setTimeout(fetchAdminData, retryMs);
-      //}
+      }
     })
     .then((data) => {
       let hD = 3;
@@ -122,17 +104,13 @@ function fetchAdminData() {
       document.getElementById("predictedUnit").value = pU;
     })
     .catch((e) => {
-      notify(e);
-      //fadReady = setTimeout(fetchAdminData, retryMs);
+      console.error(e);
     });
 }
 try {
   resetMinMax("historical");
   resetMinMax("predicted");
-} catch (e) {notify(e);}
-try {
   fetchAdminData();
 } catch (e) {
-  notify(e);
-  //fadReady = setTimeout(fetchAdminData, retryMs);
+  console.error(e);
 }

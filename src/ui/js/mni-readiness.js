@@ -405,12 +405,9 @@ function readiness() {
     });
 }
 try {
-  if (!localStorage.getItem("mni.")) {
-    mniMetadata();
-  }
   readiness();
 } catch (e) {
-  notify(e);
+  console.error(e);
   if (attempt >= maxAttempt) {
     logout();
   }

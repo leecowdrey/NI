@@ -8,6 +8,9 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
+import SegfaultHandler from "segfault-handler";
+SegfaultHandler.registerHandler("crash.log");
+
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";
@@ -32,6 +35,8 @@ const secretScope = "fetch";
 var DEBUG = false;
 var ENDPOINT_READY = false;
 var ENDPOINT = null;
+var endpointHost = null;
+var endpointDomain = null;
 
 //const output = fs.createWriteStream('./stdout.log');
 //const errorOutput = fs.createWriteStream('./stderr.log');
@@ -46,6 +51,9 @@ var dateBoundaryTimer = null;
 var dateBoundaryIntervalMs = 3600000;
 var endpointTimer = null;
 var dnsSdTimer = null;
+var serviceUsername = null;
+var serviceKey = null;
+var serviceAuthentication = null;
 var endpointRetryMs = null;
 var endpointKeepaliveMs = null;
 var endPointUrlPrefix = null;
@@ -219,12 +227,19 @@ function loadEnv() {
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
+  endpointHost = process.env.DNSSERV_HOST || "mni";
+  endpointDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
   endpointRetryMs =
-    toInteger(process.env.FETCHSRV_ENDPOINT_RETRY_INTERVAL_MS) || 5000;
+    toInteger(process.env.FETCHSRV_ENDPOINT_RETRY_INTERVAL_MS) || 15000;
   endpointKeepaliveMs =
     toInteger(process.env.FETCHSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS) || 60000;
   endPointUrlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
   endPointUrlVersion = process.env.APISERV_URL_VERSION || "/v1";
+  serviceUsername = process.env.MNI_SERVICE_USERNAME || "internal";
+  serviceKey = process.env.MNI_SERVICE_KEY || "internal";
+  serviceAuthentication =
+    "Basic " +
+    Buffer.from(serviceUsername + ":" + serviceKey).toString("base64");
   cveScan = toBoolean(process.env.FETCHSRV_CVE_SCAN || false);
   cveDirectory =
     path.resolve(process.env.FETCHSRV_CVE_DIRECTORY) ||
@@ -300,10 +315,7 @@ async function dnsSd() {
     let dnsPromises = dns.promises;
     let address = null;
     let srvRec = await dnsPromises.resolve(
-      "_https._tcp.gateway." +
-        (process.env.DNSSERV_HOST || "mni") +
-        "." +
-        (process.env.DNSSERV_DOMAIN || "merkator.local"),
+      "_https._tcp.apiserver." + endpointHost + "." + endpointDomain,
       "SRV"
     );
     let aRec = await dnsPromises.lookup(srvRec[0].name, { all: true });
@@ -363,6 +375,7 @@ async function fetchJobs() {
       method: "GET",
       headers: {
         Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
       },
       keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
@@ -425,6 +438,7 @@ async function fetchTokenSecretKey(realm) {
       method: "GET",
       headers: {
         Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
       },
       keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
@@ -507,6 +521,7 @@ async function jobFxRateUpdate(fxRateApiUrl) {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -555,6 +570,7 @@ async function jobFxRateUpdate(fxRateApiUrl) {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -614,6 +630,7 @@ async function jobFxRateUpdate(fxRateApiUrl) {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         signal: AbortSignal.timeout(endpointRetryMs),
       })
@@ -691,6 +708,7 @@ async function jobFxRateUpdate(fxRateApiUrl) {
               method: "PATCH",
               headers: {
                 "Content-Type": OAS.mimeJSON,
+                Authorization: serviceAuthentication,
               },
               keepalive: true,
               body: JSON.stringify({ rate: currency[c].rate }),
@@ -737,29 +755,6 @@ async function jobFxRateUpdate(fxRateApiUrl) {
     } catch (e) {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
         event: "fxRateUpdate",
-        state: "failed",
-        error: e,
-      });
-    }
-  }
-}
-
-async function jobAlertNeCveScan(threshold = 100) {
-  if (cveScan) {
-    try {
-      LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-        event: "alertNeCveScan",
-        state: "start",
-        threshold: threshold,
-      });
-      // TODO:
-      LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-        event: "alertNeCveScan",
-        state: "stop",
-      });
-    } catch (e) {
-      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        event: "alertNeCveScan",
         state: "failed",
         error: e,
       });
@@ -863,6 +858,7 @@ async function jobCveListBuild(target = cveDirectory) {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -977,6 +973,7 @@ async function jobCveListBuild(target = cveDirectory) {
                               headers: {
                                 "Content-Type": OAS.mimeJSON,
                                 Accept: OAS.mimeJSON,
+                                Authorization: serviceAuthentication,
                               },
                               keepalive: true,
                               body: JSON.stringify(cveJson),
@@ -1075,6 +1072,7 @@ async function checkEndpointReadiness() {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -1180,6 +1178,7 @@ async function queueDrain() {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -1209,7 +1208,7 @@ async function queueDrain() {
             }
           }
         })
-        .then((data) => {
+        .then(async (data) => {
           if (data != null) {
             if (data.qId != null) {
               let q = {
@@ -1221,7 +1220,7 @@ async function queueDrain() {
               // do something
 
               //
-              deleteQueueItem(q.qId);
+              await deleteQueueItem(q.qId);
             }
           }
         })
@@ -1242,40 +1241,45 @@ async function queueDrain() {
 
 async function deleteQueueItem(qId) {
   try {
-    while (!ENDPOINT_READY) {
-      await sleep(endpointRetryMs);
-    }
-    let url = ENDPOINT + "/fetch/queue/" + qId;
-    await fetch(url, {
-      method: "DELETE",
-      keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
-    })
-      .then((response) => {
-        if (!response.ok) {
+    if (qId != null) {
+      while (!ENDPOINT_READY) {
+        await sleep(endpointRetryMs);
+      }
+      let url = ENDPOINT + "/fetch/queue/" + qId;
+      await fetch(url, {
+        method: "DELETE",
+        keepalive: true,
+        headers: {
+          Authorization: serviceAuthentication,
+        },
+        signal: AbortSignal.timeout(endpointRetryMs),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            LOGGER.error(
+              dayjs().format(OAS.dayjsFormat),
+              "error",
+              "deleteQueueItem",
+              {
+                url: url,
+                status: response.status,
+                response: response.statusText,
+              }
+            );
+          }
+        })
+        .catch((err) => {
           LOGGER.error(
             dayjs().format(OAS.dayjsFormat),
             "error",
             "deleteQueueItem",
             {
               url: url,
-              status: response.status,
-              response: response.statusText,
+              error: err,
             }
           );
-        }
-      })
-      .catch((err) => {
-        LOGGER.error(
-          dayjs().format(OAS.dayjsFormat),
-          "error",
-          "deleteQueueItem",
-          {
-            url: url,
-            error: err,
-          }
-        );
-      });
+        });
+    }
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
       error: err,
@@ -1307,9 +1311,13 @@ var run = async () => {
     },
     endpoint: {
       fqdn: ENDPOINT,
+      keepaliveInterval: endpointKeepaliveMs,
       ready: ENDPOINT_READY,
       retryInterval: endpointRetryMs,
-      keepaliveInterval: endpointKeepaliveMs,
+      credentials: {
+        username: serviceUsername.replace(allPrintableRegEx, "*"),
+        key: serviceKey.replace(allPrintableRegEx, "*"),
+      },
     },
     environment: {
       timestamp: OAS.dayjsFormat,

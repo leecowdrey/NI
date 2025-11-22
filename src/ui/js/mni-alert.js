@@ -1,20 +1,19 @@
-let ready = null;
-let retryMs = 5000;
-let refreshMs = 300000;
-let chartAlert = null;
+//=====================================================================
+// MarlinDT Network Intelligence (MNI) - JavaScript: Alert
+//
+// Corporate Headquarters:
+// Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
+// https://www.merkator.com/
+//
+// © 2024-2025 Merkator nv/sa. All rights reserved.
+//=====================================================================
+//let chartAlert = null;
 let availableAlert = 0;
 let activeCallback = 0;
 let activePublish = 0;
 let activeNotify = 0;
 let activeWorkflow = 0;
-let fmaReady = null;
-let fmalReady = null;
-let umaReady = null;
 function fetchStats() {
-  if (ready != null) {
-    clearTimeout(ready);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/statistic", {
     method: "GET",
     headers: {
@@ -25,8 +24,6 @@ function fetchStats() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        ready = setTimeout(fetchStats, refreshMs, response.status);
       }
     })
     .then((data) => {
@@ -116,10 +113,9 @@ function fetchStats() {
           },
         });
       }
-      ready = setTimeout(fetchStats, refreshMs);
     })
     .catch((e) => {
-      ready = setTimeout(fetchStats, refreshMs);
+      console.error(e);
     });
 }
 function firstMasterAlert() {
@@ -165,9 +161,6 @@ function lastMasterAlert() {
 function updateMasterAlert() {
   let p = document.getElementById("alert");
   let id = p.options[p.selectedIndex].value;
-  if (umaReady != null) {
-    clearTimeout(umaReady);
-  }
 }
 function deleteMasterAlert() {
   let p = document.getElementById("alert");
@@ -187,7 +180,7 @@ function deleteMasterAlert() {
         }
       })
       .catch((e) => {
-        notify(e);
+        console.error(e);
       });
   }
 }
@@ -237,7 +230,7 @@ function saveMasterAlert() {
           lastMasterAlert();
         })
         .catch((e) => {
-          notify(e);
+          console.error(e);
         });
     } else {
       let reqJson = null;
@@ -261,7 +254,7 @@ function saveMasterAlert() {
           }
         })
         .catch((e) => {
-          notify(e);
+          console.error(e);
         });
     }
   } else {
@@ -282,9 +275,6 @@ function displayMasterAlert(d) {
   }
 }
 function fetchMasterAlert() {
-  if (fmaReady != null) {
-    clearTimeout(fmaReady);
-  }
   let p = document.getElementById("alert");
   let id = p.options[p.selectedIndex].value;
   if (id != null && id != "-1") {
@@ -298,24 +288,17 @@ function fetchMasterAlert() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          fmaReady = setTimeout(fetchMasterAlert, retryMs);
         }
       })
       .then((data) => {
         displayMasterAlert(data);
       })
       .catch((e) => {
-        fmaReady = setTimeout(fetchMasterAlert, retryMs);
+        console.error(e);
       });
-  } else {
-    fmaReady = setTimeout(fetchMasterAlert, retryMs);
   }
 }
 function fetchMasterAlertList() {
-  if (fmalReady != null) {
-    clearTimeout(fmalReady);
-  }
   fetch(localStorage.getItem("mni.gatewayUrl") + "/alert", {
     method: "GET",
     headers: {
@@ -326,8 +309,6 @@ function fetchMasterAlertList() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } else {
-        fmalReady = setTimeout(fetchMasterAlertList, retryMs);
       }
     })
     .then((data) => {
@@ -357,16 +338,12 @@ function fetchMasterAlertList() {
       fetchMasterAlert();
     })
     .catch((e) => {
-      fmalReady = setTimeout(fetchMasterAlertList, retryMs);
+      console.error(e);
     });
 }
 try {
   fetchMasterAlertList();
-} catch (e) {
-  fmalReady = setTimeout(fetchMasterAlertList, retryMs);
-}
-try {
   fetchStats();
 } catch (e) {
-  ready = setTimeout(fetchStats, refreshMs);
+  console.error(e);
 }

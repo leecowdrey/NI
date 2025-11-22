@@ -8,13 +8,17 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
+import SegfaultHandler from "segfault-handler";
+SegfaultHandler.registerHandler("crash.log");
+
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 //import { Base64 } from "js-base64";
 import dns from "dns";
 import { MAX, v4 as uuidv4 } from "uuid";
-//import cors from "cors";
 import express from "express";
+import cacheControl from "express-cache-controller";
+import bodyParser from "body-parser";
 import morgan from "morgan";
 import favicon from "serve-favicon";
 import https from "https";
@@ -31,6 +35,7 @@ const app = express();
 const clientRetryMs = 5000;
 const clientRefreshMs = 60000;
 const clientReadinessAttempts = 10;
+const endpointRetryMs = 15000;
 
 global.DEBUG = false;
 global.DDI = null;
@@ -45,14 +50,13 @@ global.LOGGER = new Console({
 });
 
 //
+var tlsSslVerification = false;
 var mniCountryCode = null;
 var tickTimer = null;
 var tickIntervalMs = null;
-var serveName = null;
 var serveAddress = null;
 var servePort = null;
 var serveUrlPrefix = null;
-var serveUseDnsSd = null;
 var serveHost = null;
 var serveDomain = null;
 var serveTimeOutRequest = null;
@@ -67,6 +71,15 @@ var apiGatewayResolve = null;
 var apiGatewayDns = null;
 var apiGatewayIp = null;
 var dnsResolveIntervalMs = null;
+var urlPrefix = null;
+var urlVerison = null;
+var oauth = null;
+var oauthDiscovery = null;
+var oauthAuthorize = null;
+var oauthToken = null;
+var oauthLogout = null;
+var oauthSecretId = null;
+var oauthSecret = null;
 
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
@@ -112,14 +125,15 @@ function getDirectoriesRecursive(srcPath) {
 
 // repeative DNS resolve for API Gateway service discovery
 async function apiGatewayDnsSD() {
+  if (apiGatewayResolve != null) {
+    clearTimeout(apiGatewayResolve);
+  }
   try {
     let dnsPromises = dns.promises;
     let srvRec = await dnsPromises.resolve(
       "_https._tcp.gateway." + serveHost + "." + serveDomain,
       "SRV"
     );
-    let urlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
-    let urlVerison = process.env.APISERV_URL_VERSION || "/v1";
     let aRec = await dnsPromises.lookup(srvRec[0].name, { all: true });
     if (srvRec[0].port != null) {
       if (aRec[0].address != null) {
@@ -159,27 +173,43 @@ function tick() {
 
 // load env
 function loadEnv() {
-  DEBUG = toBoolean(process.env.UISERV_DEBUG || false);
-  appName = process.env.MNI_NAME || "MNI";
-  appVersion = process.env.MNI_VERSION || "0.0.0";
-  appBuild = process.env.MNI_BUILD || "00000000.00";
-  mniCountryCode = process.env.MNI_DEFAULT_COUNTRY_CODE || "BEL";
-  tickIntervalMs = toInteger(process.env.UISERV_TICK_INTERVAL_MS) || 60000;
-  serveHost = process.env.DNSSERV_HOST || "mni";
-  serveDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
-  //serveAddress and servePort can be overridden through DNS SD
-  serveUseDnsSd = toBoolean(process.env.UISERV_USE_DNS_SD || false);
-  serveAddress = process.env.UISERV_ADDRESS || "127.0.0.1";
-  servePort = toInteger(process.env.UISERV_PORT) || 443;
-  serveUrlPrefix = process.env.UISERV_URL_PREFIX || "/mni";
-  serveTimeOutRequest = toInteger(process.env.UISERV_TIMEOUT_REQUEST) || 120000;
-  dnsResolveIntervalMs = toInteger(process.env.UISERV_DNS_RESOLVE) || 300000;
-  sslKey = process.env.UISERV_SSL_KEY || "apiServer.key";
-  sslCert = process.env.UISERV_SSL_CERT || "apiServer.crt";
-  configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
-  distDirectory = path.resolve(
-    process.env.UISERV_DIST_DIRECTORY || "/usr/local/mni/apiServer/dist"
-  );
+  try {
+    DEBUG = toBoolean(process.env.UISERV_DEBUG || false);
+    appName = process.env.MNI_NAME || "MNI";
+    appVersion = process.env.MNI_VERSION || "0.0.0";
+    appBuild = process.env.MNI_BUILD || "00000000.00";
+    mniCountryCode = process.env.MNI_DEFAULT_COUNTRY_CODE || "BEL";
+    tickIntervalMs = toInteger(process.env.UISERV_TICK_INTERVAL_MS) || 60000;
+    urlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
+    urlVerison = process.env.APISERV_URL_VERSION || "/v1";
+    //serveAddress and servePort can be overridden through DNS SD
+    serveHost = process.env.DNSSERV_HOST || "mni";
+    serveDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
+    serveAddress = process.env.UISERV_ADDRESS || "127.0.0.1";
+    servePort = toInteger(process.env.UISERV_PORT) || 443;
+    serveUrlPrefix = process.env.UISERV_URL_PREFIX || "/mni";
+    serveTimeOutRequest =
+      toInteger(process.env.UISERV_TIMEOUT_REQUEST) || 120000;
+    dnsResolveIntervalMs = toInteger(process.env.UISERV_DNS_RESOLVE) || 300000;
+    sslKey = process.env.UISERV_SSL_KEY || "apiServer.key";
+    sslCert = process.env.UISERV_SSL_CERT || "apiServer.crt";
+    configDirectory = path.resolve(process.env.CONFIG_DIRECTORY || "/etc/mni");
+    distDirectory = path.resolve(
+      process.env.UISERV_DIST_DIRECTORY || "/usr/local/mni/apiServer/dist"
+    );
+    oauth = toBoolean(process.env.OAUTH) || false;
+    oauthDiscovery = process.env.OAUTH_DISCOVERY_URL || serveUrlPrefix;
+    oauthSecretId = process.env.OAUTH_CLIENT_ID || "mni";
+    oauthSecret = process.env.OAUTH_CLIENT_SECRET || "mni";
+    tlsSslVerification = toBoolean(
+      process.env.UISERV_TLS_INSECURE_CONNECTIONS || false
+    );
+    if (tlsSslVerification) {
+      process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+    }
+  } catch (err) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "loadenv", err);
+  }
 }
 
 // quit
@@ -282,44 +312,13 @@ signalTraps.forEach((sigType) => {
   }
 });
 
-async function dnsSD() {
-  try {
-    let dnsPromises = dns.promises;
-    let srvRec = await dnsPromises.resolve(
-      "_https._tcp.apiserver." + serveHost + "." + serveDomain,
-      "SRV"
-    );
-    serveName = srvRec[0].name;
-    let aRec = await dnsPromises.lookup(serveName, { all: true });
-    if (srvRec[0].port != null) {
-      servePort = srvRec[0].port;
-      if (aRec[0].address != null) {
-        serveAddress = aRec[0].address;
-      }
-    }
-  } catch (e) {
-    if (DEBUG) {
-      LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
-        dns: e,
-      });
-    }
-  }
-}
-
 //
 var run = async () => {
   // load env
   loadEnv();
 
-  // use DNS service discovery to determine own listening address:port
-  // these values will override local .env
-  if (serveUseDnsSd) {
-    dnsSD();
-  }
-
   // start the DNS resolver for API Gateway service discovery
   await apiGatewayDnsSD();
-  apiGatewayResolve = setTimeout(apiGatewayDnsSD, dnsResolveIntervalMs);
 
   // banner
   process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
@@ -332,14 +331,13 @@ var run = async () => {
       build: appBuild,
     },
     endpoint: {
-      useDnsSD: serveUseDnsSd,
       host: serveHost,
       domain: serveDomain,
       fqdn: serveHost + "." + serveDomain,
-      name: serveName,
       address: serveAddress,
       port: servePort,
-      urlPrefix: serveUrlPrefix,
+      urlPrefix: urlPrefix,
+      urlVersion: urlVerison,
     },
     environment: {
       configDirectory: configDirectory,
@@ -347,10 +345,19 @@ var run = async () => {
       distDirectory: distDirectory,
       tickInterval: tickIntervalMs,
       timestamp: OAS.dayjsFormat,
+      ignoreTlsSsl: tlsSslVerification,
     },
     apiGateway: {
       dns: apiGatewayDns,
       ip: apiGatewayIp,
+    },
+    ouath: {
+      enabled: oauth,
+      discovery: oauthDiscovery,
+      credentials: {
+        id: oauthSecretId.replace(allPrintableRegEx, "*"),
+        secret: oauthSecret.replace(allPrintableRegEx, "*"),
+      },
     },
     ssl: {
       key: sslKey,
@@ -361,7 +368,74 @@ var run = async () => {
     },
   });
 
+  // oauth Discovery if enabled
+  if (oauth) {
+    if (oauthDiscovery != null) {
+      await fetch(oauthDiscovery, {
+        method: "GET",
+        headers: {
+          Accept: OAS.mimeJSON,
+        },
+        keepalive: true,
+        signal: AbortSignal.timeout(endpointRetryMs),
+      })
+        .then((response) => {
+          if (response.ok) {
+            if (
+              response.status == 200 &&
+              toInteger(response.headers.get("Content-Length")) > 0
+            ) {
+              return response.json();
+            }
+          } else {
+            LOGGER.error(
+              dayjs().format(OAS.dayjsFormat),
+              "error",
+              "oauthDiscovery",
+              {
+                url: oauthDiscovery,
+                status: response.status,
+                error: response.statusText,
+              }
+            );
+          }
+        })
+        .then(async (data) => {
+          if (data != null) {
+            oauthAuthorize = data.authorization_endpoint;
+            oauthLogout = data.end_session_endpoint;
+            oauthToken = data.token_endpoint;
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(OAS.dayjsFormat),
+                "debug",
+                "oauthDiscovery",
+                {
+                  authorize: oauthAuthorize,
+                  logout: oauthLogout,
+                  token: oauthToken,
+                }
+              );
+            }
+          }
+        })
+        .catch((err) => {
+          LOGGER.error(
+            dayjs().format(OAS.dayjsFormat),
+            "error",
+            "oauthDiscovery",
+            {
+              error: err,
+            }
+          );
+        });
+    }
+  }
+
   // setup Express middleware
+
+  // enable caching
+  app.use(cacheControl({ maxAge: 1 }));
 
   // request bodies
   app.use(
@@ -370,6 +444,8 @@ var run = async () => {
       type: OAS.mimeJSON,
     })
   );
+
+  app.use(bodyParser.urlencoded());
 
   // cosmetic and middleware tweaks
   //app.set("title", appName);
@@ -422,7 +498,7 @@ var run = async () => {
         url: req.originalUrl,
       });
       res
-        .contentType("application/json")
+        .contentType(OAS.mimeJSON)
         .status(408)
         .json({ errors: "time out", url: req.originalUrl });
     });
@@ -479,36 +555,229 @@ var run = async () => {
   app.get(serveUrlPrefix, function (req, res, next) {
     let payload = {
       rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      oauth: oauth,
     };
     res.render("index", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/metadata", function (req, res, next) {
     let resJson = {
-      shortName: "MNI",
-      icon: "/favicon.ico",
-      notificatonIcon: "/favicon.ico",
-      name: appName,
-      version: appVersion,
-      country: mniCountryCode,
       build: appBuild,
-      rootUrl: serveUrlPrefix,
+      country: mniCountryCode,
+      currencyIsoCode: "EUR",
+      currencyName: "Euro",
+      currencySymbol: "€",
       gatewayUrl: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
       gatewayUrlDns: apiGatewayDns,
-      retryMs: clientRetryMs,
-      refreshMs: clientRefreshMs,
+      gatewayUrlIp: apiGatewayIp,
+      icon: "/favicon.ico",
+      name: appName,
+      notificatonIcon: "/favicon.ico",
       readinessAttempts: clientReadinessAttempts,
+      refreshMs: clientRefreshMs,
+      retryMs: clientRetryMs,
+      rootUrl: serveUrlPrefix,
+      shortName: "MNI",
+      version: appVersion,
     };
+    res.cacheControl = { noCache: true };
     res.contentType(OAS.mimeJSON).status(200).json(resJson);
   });
 
   app.post(serveUrlPrefix, function (req, res, next) {
-    res.render("readiness");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("readiness", { payload: payload });
+  });
+
+  app.post(serveUrlPrefix + "/logout", function (req, res, next) {
+    if (oauth) {
+      if (req.body?.access_token != null && req.body?.refresh_token != null) {
+        let auth = new URLSearchParams({
+          client_id: oauthSecretId,
+          client_secret: oauthSecret,
+          refresh_token: req.body.refresh_token,
+        });
+        fetch(oauthLogout, {
+          method: "POST",
+          headers: {
+            "Content-Type": OAS.mimeUrlFormEncoded,
+            Accept: OAS.mimeJSON,
+            Authentication: "Bearer " + req.body.access_token,
+          },
+          body: auth,
+          keepalive: true,
+        })
+          .then((response) => {
+            if (response.ok) {
+              res.sendStatus(204);
+            } else {
+              res.sendStatus(response.status);
+            }
+          })
+          .catch((err) => {
+            LOGGER.debug(dayjs().format(OAS.dayjsFormat), "logout", {
+              url: oauthLogout,
+              status: response.status,
+              error: err,
+            });
+            res.sendStatus(response.status);
+          });
+      } else {
+        res.sendStatus(401);
+      }
+    } else {
+      res.sendStatus(410);
+    }
+  });
+
+  app.post(serveUrlPrefix + "/login/refresh", function (req, res, next) {
+    if (oauth) {
+      if (req.body?.refresh_token != null) {
+        let resJson = {};
+        let auth = new URLSearchParams({
+          client_id: oauthSecretId,
+          client_secret: oauthSecret,
+          grant_type: "refresh_token",
+          scope: "openid MNI",
+        });
+        fetch(oauthToken, {
+          method: "POST",
+          headers: {
+            "Content-Type": OAS.mimeUrlFormEncoded,
+            Accept: OAS.mimeJSON,
+          },
+          body: auth,
+          keepalive: true,
+        })
+          .then((response) => {
+            if (response.ok) {
+              if (
+                response.status == 200 &&
+                toInteger(response.headers.get("Content-Length")) > 0
+              ) {
+                return response.json();
+              }
+            } else {
+              res.sendStatus(response.status);
+            }
+          })
+          .then(async (data) => {
+            if (data != null) {
+              resJson = data;
+              res.contentType(OAS.mimeJSON).status(200).json(resJson);
+            } else {
+              res.sendStatus(401);
+            }
+          })
+          .catch((err) => {
+            res.contentType(OAS.mimeJSON).status(404).json({
+              errors: err,
+            });
+          });
+      } else {
+        res.sendStatus(401);
+      }
+    } else {
+      res.sendStatus(410);
+    }
+  });
+
+  app.post(serveUrlPrefix + "/login", function (req, res, next) {
+    if (oauth) {
+      if (req.body?.username != null && req.body?.password != null) {
+        let resJson = {};
+        let auth = new URLSearchParams({
+          client_id: oauthSecretId,
+          client_secret: oauthSecret,
+          grant_type: "password",
+          password: req.body.password,
+          scope: "openid MNI",
+          username: req.body.username,
+        });
+        fetch(oauthToken, {
+          method: "POST",
+          headers: {
+            "Content-Type": OAS.mimeUrlFormEncoded,
+            Accept: OAS.mimeJSON,
+          },
+          body: auth,
+          keepalive: true,
+        })
+          .then((response) => {
+            if (response.ok) {
+              if (
+                response.status == 200 &&
+                toInteger(response.headers.get("Content-Length")) > 0
+              ) {
+                return response.json();
+              }
+            } else {
+              res.sendStatus(response.status);
+            }
+          })
+          .then(async (data) => {
+            if (data != null) {
+              resJson = {
+                access_token: data.access_token,
+                expires_in: data.expires_in,
+                refresh_expires_in: data.refresh_expires_in,
+                refresh_token: data.refresh_token,
+                session_state: data.session_state,
+                token_type: data.token_type,
+                scope: data.scope,
+              };
+              res.contentType(OAS.mimeJSON).status(200).json(resJson);
+            } else {
+              res.sendStatus(401);
+            }
+          })
+          .catch((err) => {
+            res.contentType(OAS.mimeJSON).status(404).json({
+              errors: err,
+            });
+          });
+      } else {
+        res.sendStatus(401);
+      }
+    } else {
+      res.sendStatus(410);
+    }
+  });
+
+  app.get(serveUrlPrefix + "/readiness", function (req, res, next) {
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("readiness", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/dashboard", function (req, res, next) {
-    res.render("dashboard");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("dashboard", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/cable/:cableId", function (req, res, next) {
@@ -517,14 +786,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      cableId: cableId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      cableId: req.params.cableId,
       point: point,
     };
     res.render("cable", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/cable", function (req, res, next) {
-    res.render("cable");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("cable", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/duct/:ductId", function (req, res, next) {
@@ -533,14 +817,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      ductId: ductId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      ductId: req.params.ductId,
       point: point,
     };
     res.render("duct", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/duct", function (req, res, next) {
-    res.render("duct");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("duct", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/pole/:poleId", function (req, res, next) {
@@ -549,14 +848,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      poleId: poleId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      poleId: req.params.poleId,
       point: point,
     };
     res.render("pole", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/pole", function (req, res, next) {
-    res.render("pole");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("pole", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/ne/:neId", function (req, res, next) {
@@ -565,6 +879,13 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
       neId: req.params.neId,
       point: point,
     };
@@ -572,7 +893,15 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/ne", function (req, res, next) {
-    res.render("ne");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("ne", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/rack/:rackId", function (req, res, next) {
@@ -581,14 +910,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      rackId: rackId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      rackId: req.params.rackId,
       point: point,
     };
     res.render("rack", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/rack", function (req, res, next) {
-    res.render("rack");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("rack", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/site/:siteId", function (req, res, next) {
@@ -597,14 +941,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      siteId: siteId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      siteId: req.params.siteId,
       point: point,
     };
     res.render("site", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/site", function (req, res, next) {
-    res.render("site");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("site", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/service/:serviceId", function (req, res, next) {
@@ -613,14 +972,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      serviceId: serviceId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      serviceId: req.params.serviceId,
       point: point,
     };
     res.render("service", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/service", function (req, res, next) {
-    res.render("service");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("service", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/trench/:trenchId", function (req, res, next) {
@@ -629,14 +1003,29 @@ var run = async () => {
       point = req.query.point;
     }
     let payload = {
-      trenchId: trenchId,
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+      country: (req.query.country ||= mniCountryCode),
+      trenchId: req.params.trenchId,
       point: point,
     };
     res.render("trench", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/trench", function (req, res, next) {
-    res.render("trench");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("trench", { payload: payload });
   });
 
   app.get(
@@ -647,7 +1036,14 @@ var run = async () => {
         point = req.query.point;
       }
       let payload = {
-        trenchId: trenchId,
+        rootUrl: serveUrlPrefix,
+        name: appName,
+        icon: "/favicon.ico",
+        notificatonIcon: "/favicon.ico",
+        shortName: "MNI",
+        version: appVersion,
+        country: (req.query.country ||= mniCountryCode),
+        trenchId: req.params.trenchId,
         point: point,
       };
       res.render("trenchLifetime", { payload: payload });
@@ -655,67 +1051,195 @@ var run = async () => {
   );
 
   app.get(serveUrlPrefix + "/trenchLifetime", function (req, res, next) {
-    res.render("trenchLifetime");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("trenchLifetime", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/trenchCountry", function (req, res, next) {
-    res.render("trenchCountry");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("trenchCountry", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/q2c", function (req, res, next) {
-    res.render("q2c");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("q2c", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/email", function (req, res, next) {
-    res.render("email");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("email", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/map", function (req, res, next) {
-    res.render("map");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("map", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/provider", function (req, res, next) {
-    res.render("provider");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("provider", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/kafka", function (req, res, next) {
-    res.render("kafka");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("kafka", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/workflow", function (req, res, next) {
-    res.render("workflow");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("workflow", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/alert", function (req, res, next) {
-    res.render("alert");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("alert", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/workalert", function (req, res, next) {
-    res.render("workalert");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("workalert", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/callbackalert", function (req, res, next) {
-    res.render("callbackalert");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("callbackalert", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/publishalert", function (req, res, next) {
-    res.render("publishalert");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("publishalert", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/notifyalert", function (req, res, next) {
-    res.render("notifyalert");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("notifyalert", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/setting", function (req, res, next) {
-    res.render("setting");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("setting", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/openapi", function (req, res, next) {
-    res.render("openapi");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("openapi", { payload: payload });
   });
 
   app.get(serveUrlPrefix + "/help", function (req, res, next) {
-    res.render("help");
+    let payload = {
+      rootUrl: serveUrlPrefix,
+      name: appName,
+      icon: "/favicon.ico",
+      notificatonIcon: "/favicon.ico",
+      shortName: "MNI",
+      version: appVersion,
+    };
+    res.render("help", { payload: payload });
   });
 
   // Express 404 handling ¯\_(ツ)_/¯
@@ -728,10 +1252,15 @@ var run = async () => {
     !fs.existsSync(path.join(configDirectory, sslKey)) ||
     !fs.existsSync(path.join(configDirectory, sslCert))
   ) {
-    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "SSL files missing", {
-      key: path.join(configDirectory, sslKey),
-      cert: path.join(configDirectory, sslCert),
-    });
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "SSL files missing",
+      {
+        key: path.join(configDirectory, sslKey),
+        cert: path.join(configDirectory, sslCert),
+      }
+    );
     try {
       quit();
     } finally {

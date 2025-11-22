@@ -8,11 +8,6 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-let flrReady = null;
-let frpReady = null;
-let frReady = null;
-let fvnReady = null;
-let retryMs = 5000;
 let neId = null;
 let neRawPoints = [];
 let point = null;
@@ -48,20 +43,10 @@ function fetchCveNe(neId = null) {
       }
     })
     .catch((e) => {
-      notify(e);
+      console.error(e);
     });
 }
-function updateNePointFromSlider() {
-  document.getElementById("nePoint").value =
-    neRawPoints[
-      neRawPoints.length - document.getElementById("nePointRange").value
-    ];
-  fetchNe();
-}
 function fetchListNe() {
-  if (flrReady != null) {
-    clearTimeout(flrReady);
-  }
   let c = document.getElementById("country");
   let selectedCountry = c.options[c.selectedIndex].value;
   fetch(
@@ -77,27 +62,40 @@ function fetchListNe() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flrReady = setTimeout(fetchListNe, retryMs);
-      //}
+      }
     })
     .then((data) => {
+      let suppliedNeId = window.location.pathname.replace(
+        localStorage.getItem("mni.rootUrl") + "/ne/",
+        ""
+      );
       let neIds =
         "<option disabled value='-1' selected='selected'> -- select a ne -- </option>";
+      if (suppliedNeId != null) {
+        trenchIds = "<option disabled value='-1'> -- select a ne -- </option>";
+      }
       for (var i = 0; i < data.length; i++) {
-        neIds += "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        if (suppliedNeId == data[i]) {
+          neIds +=
+            "<option value='" +
+            data[i] +
+            "' selected='selected'>" +
+            data[i] +
+            "</option>";
+        } else {
+          neIds += "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        }
       }
       document.getElementById("neId").innerHTML = neIds;
+      if (suppliedNeId != null) {
+        fetchNePoints();
+      }
     })
     .catch((e) => {
-      notify(e);
-      //flrReady = setTimeout(fetchListNe, retryMs);
+      console.error(e);
     });
 }
 function fetchNe(neId, point = null) {
-  if (frReady != null) {
-    clearTimeout(flrReady);
-  }
   if (neId == null) {
     let r = document.getElementById("neId");
     neId = r.options[r.selectedIndex].value;
@@ -123,12 +121,12 @@ function fetchNe(neId, point = null) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flrReady = setTimeout(fetchNe, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.ports != null) {
+        let c = document.getElementById("country");
+        let selectedCountry = c.options[c.selectedIndex].value;
         let nePorts = data.ports.length;
         let neGridMaxColumns = 8;
         let neGridColumns = 8;
@@ -136,7 +134,6 @@ function fetchNe(neId, point = null) {
         let portFree = 0;
         let portReserved = 0;
         let portFaulty = 0;
-        let portPredicted = 0;
         let portErrorCount = 0;
         let source = "historical";
         if (data.source != null) {
@@ -200,14 +197,6 @@ function fetchNe(neId, point = null) {
               }
               portFaulty = portFaulty + 1;
               break;
-            case "predicted":
-              if (source == "predicted") {
-                cell.setAttribute("class", "predictedPortPredicted");
-              } else {
-                cell.setAttribute("class", "portPredicted");
-              }
-              portPredicted = portPredicted + 1;
-              break;
           }
           cell.classList.add("cell");
           grid.appendChild(cell);
@@ -227,7 +216,7 @@ function fetchNe(neId, point = null) {
           data.decommissioned = "";
         }
         let metadata =
-          "<small><b>Host</b>:&emsp;" +
+          "<b>Host</b>:&emsp;" +
           data.host +
           "<br>" +
           "<center>( " +
@@ -259,53 +248,63 @@ function fetchNe(neId, point = null) {
           data.version +
           "<br>" +
           "<br><b>Location</b>:<br>" +
-          "Site:&emsp;" +
+          'Site:&emsp;<a href="' +
+          localStorage.getItem("mni.rootUrl") +
+          "/site/" +
           data.siteId +
-          "<br>" +
-          "Rack:&emsp;" +
+          "?country=" +
+          selectedCountry +
+          '" target="_self">' +
+          data.siteId +
+          "</a>" +
+          '<br>Rack:&emsp;<a href="' +
+          localStorage.getItem("mni.rootUrl") +
+          "/rack/" +
           data.rackId +
+          "?country=" +
+          selectedCountry +
+          '" target="_self">' +
+          data.rackId +
+          "</a>" +
           "<br>" +
           "Slot(s):&emsp;" +
           data.slotPosition +
           "<br>" +
           "<br><b>Usage Summary:</b><br>" +
-          "Free:&emsp;&emsp;&emsp;" +
-          portFree +
-          "<br>" +
-          "Used:&emsp;&emsp;&emsp;" +
-          portUsed +
-          "<br>" +
-          "Reserved:&emsp;" +
-          portReserved +
-          "<br>" +
-          "Faulty:&emsp;&emsp;" +
+          '<div class="stateusage-key">' +
+          '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
           portFaulty +
-          "<br>" +
-          "Predicted:&emsp;" +
-          portPredicted +
-          "<br>" +
-          "Error Count:&emsp;" +
+          "</div>" +
+          '<div id="stateusage-reserved" class="stateusage">Reserved: ' +
+          portReserved +
+          "</div>" +
+          '<div id="stateusage-used" class="stateusage">Used: ' +
+          portUsed +
+          "</div>" +
+          '<div id="stateusage-free" class="stateusage">Free: ' +
+          portFree +
+          "</div>" +
+          '<div id="stateusage-error" class="stateusage">Errors: ' +
           portErrorCount +
-          "<br>" +
+          "</div>" +
+          "</div><br>" +
           "<br><b>Common vulnerabilities and Exposures (CVE):</b><br>" +
-          "Known:&emsp;&emsp;" +
-          cveKnown +
-          "<br>" +
-          "Impacting:&emsp;" +
+          '<div class="stateusage-key">' +
+          '<div id="stateusage-faulty" class="stateusage">Impacting: ' +
           cveImpacting +
-          "</small>";
+          "</div>" +
+          '<div id="stateusage-reserved" class="stateusage">Known: ' +
+          cveKnown +
+          "</div>" +
+          "</div>";
         document.getElementById("metadataPanel").innerHTML = metadata;
       }
     })
     .catch((e) => {
-      notify(e);
-      //frReady = setTimeout(fetchNe, retryMs);
+      console.error(e);
     });
 }
 function fetchNePoints() {
-  if (frpReady != null) {
-    clearTimeout(frpReady);
-  }
   let r = document.getElementById("neId");
   neId = r.options[r.selectedIndex].value;
   if (neId != "-1") {
@@ -319,56 +318,40 @@ function fetchNePoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //frpReady = setTimeout(fetchNePoints, retryMs);
-        //}
+        }
       })
       .then((data) => {
         neRawPoints = [];
         let nePoints =
-          "<option disabled value='-1' selected='selected'> -- select a date/time -- </option>";
+          "<option disabled value='-1'> -- select a date/time -- </option>";
         for (var i = 0; i < data.length; i++) {
-          nePoints +=
-            "<option value='" +
-            data[i].point +
-            "' >" +
-            data[i].point +
-            "</option>";
+          if (i == 0) {
+            nePoints +=
+              "<option selected='selected' value='" +
+              data[i].point +
+              "' >" +
+              data[i].point +
+              "</option>";
+          } else {
+            nePoints +=
+              "<option value='" +
+              data[i].point +
+              "' >" +
+              data[i].point +
+              "</option>";
+          }
           neRawPoints.push(data[i].point);
         }
         document.getElementById("nePoint").innerHTML = nePoints;
-        // slider
-        if (neRawPoints.length > 0) {
-          document.getElementById("nePointRange").disabled = false;
-          document.getElementById("nePointRange").setAttribute("min", 1);
-          document
-            .getElementById("nePointRange")
-            .setAttribute("max", neRawPoints.length);
-          document
-            .getElementById("nePointRange")
-            .setAttribute("value", neRawPoints.length);
-          document.getElementById("nePoint").value =
-            neRawPoints[
-              neRawPoints.length - document.getElementById("nePointRange").value
-            ];
           fetchNe();
-        } else {
-          document.getElementById("nePointRange").setAttribute("min", 0);
-          document.getElementById("nePointRange").setAttribute("max", 0);
-          document.getElementById("nePointRange").setAttribute("value", 0);
-          document.getElementById("nePointRange").disabled = true;
-        }
       })
       .catch((e) => {
-        notify(e);
-        //frpReady = setTimeout(fetchNePoints, retryMs);
+        console.error(e);
       });
   }
 }
 try {
-  countryListPopulate();
-  fetchListNe();
+  countryListPopulate(fetchListNe);
 } catch (e) {
-  notify(e);
-  //flrReady = setTimeout(fetchListNe, retryMs);
+  console.error(e);
 }

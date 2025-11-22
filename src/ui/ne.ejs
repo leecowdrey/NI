@@ -10,8 +10,8 @@
     <title>MNI</title>
     <link rel="stylesheet" href="/mni/css/style.css">
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="img/icon.png">
+    <link rel="icon" href="<%=payload.icon%>" sizes="any">
+    <link rel="apple-touch-icon" href="mni/img/icon.png">
     <style>
         .panel {
             width: 85%;
@@ -30,7 +30,7 @@
             font-family: 'Courier New', Courier, monospace;
             color: #ffffff;
             text-align: left;
-            font-size: 0.7em;
+            font-size: 1em;
             margin-top: 20px;
             margin-left: 20px;
             display: inline-block;
@@ -84,7 +84,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -94,7 +93,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -104,7 +102,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -114,7 +111,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -127,7 +123,6 @@
             opacity: 1;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -137,7 +132,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -147,7 +141,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -157,7 +150,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -167,7 +159,6 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
 
@@ -180,7 +171,6 @@
             opacity: 1;
             text-align: center;
             font-size: 0.7em;
-            text-indent: 1em;
             color: white;
         }
     </style>
@@ -224,9 +214,9 @@
             title="OpenAPI"><i class="fa fa-info-circle"></i></a>
         <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
             title="Help"><i class="fa fa-question-circle"></i></a>
-        <a onmouseover="" style="cursor: pointer;" nohref onclick="logout();" title="Quit"><i
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return logout();" title="Quit"><i
                 class="fa fa-window-close"></i></a>
-        <select id="country" onchange="if(this.selectedIndex !== undefined) fetchListNe();"></select>
+        <select id="country" onchange="if(this.selectedIndex !== undefined) {updateSelectedCountry();fetchListNe();}"></select>
     </div>
     </div>
     <div class="panel" id="resourcePanel">
@@ -235,7 +225,6 @@
             <select id="neId" onchange="if(this.selectedIndex !== undefined) fetchCveNe(); fetchNePoints();"></select>
             <a accesskey="@" nohref onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
             <label for="nePoint">Point</label>
-            <input type="range" min="0" max="0" value="0" id="nePointRange" onchange="updateNePointFromSlider();">
             <select id="nePoint" onchange="if(this.selectedIndex !== undefined) fetchNe();"></select>
         </div>
     </div>

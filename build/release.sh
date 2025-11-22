@@ -329,6 +329,14 @@ js_obfuscate "uiServer" "*.mjs" "node" "low"
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+## work out which platform
+MNIMD5="md5"
+if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+  MNIMD5="md5sum"
+elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+  MNIMD5="md5"
+fi
+
 ## create distribution archive
 doing "Creating distribution archive"
 TAR_OPTIONS="--exclude .git* --exclude cveignore.json --dereference -zcf"
@@ -340,16 +348,16 @@ tar ${TAR_OPTIONS} mni_fetchService_${MNI_VERSION}.tar.gz fetchService/* && \
 tar ${TAR_OPTIONS} mni_iamServer_${MNI_VERSION}.tar.gz iamServer/* && \
 tar ${TAR_OPTIONS} mni_predictService_${MNI_VERSION}.tar.gz predictService/* && \
 tar ${TAR_OPTIONS} mni_uiServer_${MNI_VERSION}.tar.gz uiServer/* && \
-tar ${TAR_OPTIONS} mni_${MNI_VERSION}.tar.gz mni_*_${MNI_VERSION}.tar.gz && \
-md5 -b mni_alertService_${MNI_VERSION}.tar.gz > mni_alertService_${MNI_VERSION}.md5 && \
-md5 -b mni_apiGateway_${MNI_VERSION}.tar.gz > mni_apiGateway_${MNI_VERSION}.md5 && \
-md5 -b mni_apiServer_${MNI_VERSION}.tar.gz > mni_apiServer_${MNI_VERSION}.md5 && \
-md5 -b mni_dnsServer_${MNI_VERSION}.tar.gz > mni_dnsServer_${MNI_VERSION}.md5 && \
-md5 -b mni_fetchService_${MNI_VERSION}.tar.gz > mni_fetchService_${MNI_VERSION}.md5 && \
-md5 -b mni_iamServer_${MNI_VERSION}.tar.gz > mni_iamServer_${MNI_VERSION}.md5 && \
-md5 -b mni_predictService_${MNI_VERSION}.tar.gz > mni_predictService_${MNI_VERSION}.md5 && \
-md5 -b mni_uiServer_${MNI_VERSION}.tar.gz > mni_uiServer_${MNI_VERSION}.md5 && \
-md5 -b mni_${MNI_VERSION}.tar.gz > mni_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_alertService_${MNI_VERSION}.tar.gz > mni_alertService_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_apiGateway_${MNI_VERSION}.tar.gz > mni_apiGateway_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_apiServer_${MNI_VERSION}.tar.gz > mni_apiServer_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_dnsServer_${MNI_VERSION}.tar.gz > mni_dnsServer_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_fetchService_${MNI_VERSION}.tar.gz > mni_fetchService_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_iamServer_${MNI_VERSION}.tar.gz > mni_iamServer_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_predictService_${MNI_VERSION}.tar.gz > mni_predictService_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_uiServer_${MNI_VERSION}.tar.gz > mni_uiServer_${MNI_VERSION}.md5 && \
+tar ${TAR_OPTIONS} mni_${MNI_VERSION}.tar.gz mni_*_${MNI_VERSION}.tar.gz mni_*_${MNI_VERSION}.md5 && \
+${MNIMD5} mni_${MNI_VERSION}.tar.gz > mni_${MNI_VERSION}.md5 && \
 rm -f mni_alertService_${MNI_VERSION}.* \
       mni_apiGateway_${MNI_VERSION}.* \
       mni_apiServer_${MNI_VERSION}.* \

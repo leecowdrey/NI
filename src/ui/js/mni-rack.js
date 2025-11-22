@@ -8,54 +8,65 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-let flrReady = null;
-let frpReady = null;
-let frReady = null;
-let retryMs = 5000;
 let rackId = null;
 let point = null;
 function fetchListRack() {
-  if (flrReady != null) {
-    clearTimeout(flrReady);
-  }
-let c = document.getElementById("country");
+  let c = document.getElementById("country");
   let selectedCountry = c.options[c.selectedIndex].value;
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/rack?country=" +
-      selectedCountry, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  fetch(
+    localStorage.getItem("mni.gatewayUrl") + "/rack?country=" + selectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flrReady = setTimeout(fetchListRack, retryMs);
-      //}
+      }
     })
     .then((data) => {
+      let suppliedRackId = window.location.pathname.replace(
+        localStorage.getItem("mni.rootUrl") + "/rack/",
+        ""
+      );
       let rackIds =
         "<option disabled value='-1' selected='selected'> -- select a rack -- </option>";
+      if (suppliedRackId != null) {
+        rackIds = "<option disabled value='-1'> -- select a rack -- </option>";
+      }
       for (var i = 0; i < data.length; i++) {
-        rackIds += "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        if (suppliedRackId == data[i]) {
+          rackIds +=
+            "<option value='" +
+            data[i] +
+            "' selected='selected'>" +
+            data[i] +
+            "</option>";
+        } else {
+          rackIds +=
+            "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        }
       }
       document.getElementById("rackId").innerHTML = rackIds;
+      if (suppliedRackId != null) {
+        fetchRackPoints();
+      }
     })
     .catch((e) => {
-      notify(e);
-      //flrReady = setTimeout(fetchListRack, retryMs);
+      console.error(e);
     });
 }
 function fetchRack() {
-  if (frReady != null) {
-    clearTimeout(flrReady);
-  }
   let r = document.getElementById("rackId");
   rackId = r.options[r.selectedIndex].value;
   let p = document.getElementById("rackPoint");
   point = p.options[p.selectedIndex].value;
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
   let grid = document.querySelector(".grid");
   while (grid.firstChild) {
     grid.removeChild(grid.firstChild);
@@ -77,9 +88,7 @@ function fetchRack() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //flrReady = setTimeout(fetchRack, retryMs);
-      //}
+      }
     })
     .then((data) => {
       let rackSlots = data.slots;
@@ -87,7 +96,6 @@ function fetchRack() {
       let slotFree = 0;
       let slotReserved = 0;
       let slotFaulty = 0;
-      let slotPredicted = 0;
       let slotUsage = data.slotUsage.reverse();
       let source = "historical";
       if (data.source != null) {
@@ -151,18 +159,6 @@ function fetchRack() {
             }
             slotFaulty = slotFaulty + 1;
             break;
-          case "predicted":
-            cell.setAttribute(
-              "title",
-              rackSlots - j + ": " + slotUsage[j].usage
-            );
-            if (source == "predicted") {
-              cell.setAttribute("class", "predictedSlotPredicted");
-            } else {
-              cell.setAttribute("class", "slotPredicted");
-            }
-            slotPredicted = slotPredicted + 1;
-            break;
         }
         cell.classList.add("cell");
         grid.appendChild(cell);
@@ -170,13 +166,20 @@ function fetchRack() {
         switch (slotUsage[j].usage) {
           case "used":
             if (slotUsage[j].neId != null) {
+              let c = document.getElementById("country");
+              let selectedCountry = c.options[c.selectedIndex].value;
               cellHTML =
                 "&emsp;" +
                 (rackSlots - j) +
-                ' <a href="<%=payload.rootUrl%>/ne/' +
+                ' <a href="' +
+                localStorage.getItem("mni.rootUrl") +
+                "/ne/" +
                 slotUsage[j].neId +
-                '" target="_self">+</a>&emsp;' +
-                slotUsage[j].host;
+                "?country=" +
+                selectedCountry +
+                '" target="_self">' +
+                slotUsage[j].host +
+                "</a>&emsp;";
             } else {
               cellHTML = "&emsp;" + (rackSlots - j);
             }
@@ -190,7 +193,7 @@ function fetchRack() {
         data.decommissioned = "";
       }
       let metadata =
-        "<small><b>Reference</b>:&emsp;" +
+        "<b>Reference</b>:&emsp;" +
         data.reference +
         "<br>" +
         "<center>( " +
@@ -219,7 +222,16 @@ function fetchRack() {
         data.slots +
         "<br>" +
         "<br><b>Location</b>:<br>" +
-        "X,Y,Z:&emsp;&emsp;" +
+        'Site:&emsp;<a href="' +
+        localStorage.getItem("mni.rootUrl") +
+        "/site/" +
+        data.siteId +
+        "?country=" +
+        selectedCountry +
+        '" target="_self">' +
+        data.siteId +
+        "</a>" +
+        "<br>X,Y,Z:&emsp;&emsp;" +
         data.coordinate.x +
         " , " +
         data.coordinate.y +
@@ -234,34 +246,27 @@ function fetchRack() {
         "<br>" +
         "Row:&emsp;&emsp;" +
         data.row +
-        "<br>" +
-        "<br><b>Usage Summary:</b><br>" +
-        "Free:&emsp;&emsp;&emsp;&emsp;" +
-        slotFree +
-        "<br>" +
-        "Used:&emsp;&emsp;&emsp;&emsp;" +
-        slotUsed +
-        "<br>" +
-        "Reserved:&emsp;&emsp;" +
-        slotReserved +
-        "<br>" +
-        "Faulty:&emsp;&emsp;&emsp;" +
+        "<br><br><b>Usage Summary:</b><br>" +
+        '<div class="stateusage-key">' +
+        '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
         slotFaulty +
-        "<br>" +
-        "Predicted:&emsp;&emsp;" +
-        slotPredicted +
-        "</small>";
+        "</div>" +
+        '<div id="stateusage-reserved" class="stateusage">Reserved: ' +
+        slotReserved +
+        "</div>" +
+        '<div id="stateusage-used" class="stateusage">Used: ' +
+        slotUsed +
+        "</div>" +
+        '<div id="stateusage-free" class="stateusage">Free: ' +
+        slotFree +
+        "</div></div>";
       document.getElementById("metadataPanel").innerHTML = metadata;
     })
     .catch((e) => {
-      notify(e);
-      //frReady = setTimeout(fetchRack, retryMs);
+      console.error(e);
     });
 }
 function fetchRackPoints() {
-  if (frpReady != null) {
-    clearTimeout(frpReady);
-  }
   let r = document.getElementById("rackId");
   rackId = r.options[r.selectedIndex].value;
   if (rackId != "-1") {
@@ -275,33 +280,38 @@ function fetchRackPoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //frpReady = setTimeout(fetchRackPoints, retryMs);
-        //}
+        }
       })
       .then((data) => {
         let rackPoints =
-          "<option disabled value='-1' selected='selected'> -- select a date/time -- </option>";
+          "<option disabled value='-1'> -- select a date/time -- </option>";
         for (var i = 0; i < data.length; i++) {
+          if (i==0) {
+          rackPoints +=
+            "<option selected='selected' value='" +
+            data[i].point +
+            "' >" +
+            data[i].point +
+            "</option>";
+          } else {
           rackPoints +=
             "<option value='" +
             data[i].point +
             "' >" +
             data[i].point +
             "</option>";
+          }
         }
         document.getElementById("rackPoint").innerHTML = rackPoints;
+        fetchRack();
       })
       .catch((e) => {
-        notify(e);
-        //frpReady = setTimeout(fetchRackPoints, retryMs);
+        console.error(e);
       });
   }
 }
 try {
-  countryListPopulate();
-  fetchListRack();
+  countryListPopulate(fetchListRack);
 } catch (e) {
-  notify(e);
-  //flrReady = setTimeout(fetchListRack, retryMs);
+  console.error(e);
 }

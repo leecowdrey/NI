@@ -8,8 +8,6 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-var mmdReady = null;
-var mmlReady = null;
 var mniLicenseHost = null;
 var mniLicenseDomain = null;
 var mniLicenseStart = null;
@@ -20,15 +18,19 @@ var mniAppNotificationIcon = "/favicon.ico";
 var mniAppName = null;
 var mniAppVersion = null;
 var mniAppBuild = null;
-var mniCountryCode = null;
-var mniUiUrl = "";
-var mniRootUrl = "/";
+var mniCountryCode = "BEL";
+var mniCurrencyName = "Euro";
+var mniCurrencyIsoCode = "EUR";
+var mniCurrencySymbol = "€";
+var mniSelectedCountry = null;
+var mniRootUrl = "/mni";
 var mniGatewayUrl = null;
 var mniGatewayUrlIp = null;
 var mniGatewayUrlDns = null;
 var mniRetryMs = 1000;
 var mniRefreshMs = 60000;
 var mniReadinessAttempts = 10;
+var mniOAuthRefresh = null;
 const countryCode = [
   "ABW",
   "AFG",
@@ -262,19 +264,28 @@ const countryCode = [
   "ZMB",
   "ZWE",
 ];
-var sequence = (funcs, scope) => {
-  if (funcs.length == 0) return;
-  let f = funcs.shift();
-  f.call(scope, () => {
-    sequence(funcs, scope);
-  });
-};
-
+function toBoolean(s) {
+  return String(s).toLowerCase() === "true";
+}
+function toPercent(n, t) {
+  let r = 0;
+  try {
+    if (t > 0) {
+      r = Number.parseFloat((n / t) * 100).toFixed(0);
+    }
+    return r;
+  } catch (e) {
+    return 0;
+  }
+}
+function toInteger(s) {
+  if (Number.isNaN(Number.parseInt(s, 10))) {
+    return 0;
+  }
+  return Number.parseInt(s, 10);
+}
 function mniMetadata() {
   try {
-    if (mmdReady != null) {
-      clearTimeout(mmdReady);
-    }
     fetch("/mni/metadata", {
       method: "GET",
       headers: {
@@ -284,8 +295,6 @@ function mniMetadata() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          mmdReady = setTimeout(mniMetadata, mniRetryMs);
         }
       })
       .then((data) => {
@@ -296,6 +305,10 @@ function mniMetadata() {
         localStorage.setItem("mni.appVersion", data.version);
         localStorage.setItem("mni.appBuild", data.build);
         localStorage.setItem("mni.country", data.country);
+        localStorage.setItem("mni.selectedCountry", data.country);
+        localStorage.setItem("mni.currencyName", data.currencyName);
+        localStorage.setItem("mni.currencyIsoCode", data.currencyIsoCode);
+        localStorage.setItem("mni.currencySymbol", data.currencySymbol);
         localStorage.setItem("mni.rootUrl", data.rootUrl);
         localStorage.setItem("mni.gatewayUrl", data.gatewayUrl);
         localStorage.setItem("mni.gatewayUrlIp", data.gatewayUrlIp);
@@ -306,7 +319,7 @@ function mniMetadata() {
         localStorage.setItem("mni.", true);
       })
       .catch((e) => {
-        mmdReady = setTimeout(mniMetadata, mniRetryMs);
+        console.error(e);
       });
     mniAppName = localStorage.getItem("mni.appName");
     mniAppShortName = localStorage.getItem("mni.appShortName");
@@ -315,6 +328,9 @@ function mniMetadata() {
     mniAppVersion = localStorage.getItem("mni.appVersion");
     mniAppBuild = localStorage.getItem("mni.appBuild");
     mniCountryCode = localStorage.getItem("mni.country");
+    mniCurrencyName = localStorage.getItem("mni.currencyName");
+    mniCurrencyIsoCode = localStorage.getItem("mni.currencyIsoCode");
+    mniCurrencySymbol = localStorage.getItem("mni.currencySymbol");
     mniRootUrl = localStorage.getItem("mni.rootUrl");
     mniGatewayUrl = localStorage.getItem("mni.gatewayUrl");
     mniGatewayUrlIp = localStorage.getItem("mni.gatewayUrlIp");
@@ -322,15 +338,13 @@ function mniMetadata() {
     mniRetryMs = localStorage.getItem("mni.retryMs");
     mniRefreshMs = localStorage.getItem("mni.refreshMs");
     mniReadinessAttempts = localStorage.getItem("mni.readinessAttempts");
+    mniSelectedCountry = localStorage.getItem("mni.selectedCountry");
   } catch (e) {
-    mmdReady = setTimeout(mniMetadata, mniRetryMs);
+    console.error(e);
   }
 }
 function mniLicense() {
   try {
-    if (mmlReady != null) {
-      clearTimeout(mmlReady);
-    }
     fetch(localStorage.getItem("mni.gatewayUrl") + "/license", {
       method: "GET",
       headers: {
@@ -340,8 +354,6 @@ function mniLicense() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } else {
-          mmlReady = setTimeout(mniLicense, mniRetryMs);
         }
       })
       .then((data) => {
@@ -352,15 +364,24 @@ function mniLicense() {
         localStorage.setItem("mni.license.", true);
       })
       .catch((e) => {
-        mmlReady = setTimeout(mniLicense, mniRetryMs);
+        console.error(e);
       });
     mniLicenseHost = localStorage.getItem("mni.license.host");
     mniLicenseDomain = localStorage.getItem("mni.license.domain");
     mniLicenseStart = localStorage.getItem("mni.license.start");
     mniLicenseExpiry = localStorage.getItem("mni.license.expiry");
   } catch (e) {
-    mmlReady = setTimeout(mniLicense, mniRetryMs);
+    console.error(e);
   }
+}
+function mniLoadScript(url, callback) {
+  let head = document.head;
+  let script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = url;
+  script.onreadystatechange = callback;
+  script.onload = callback;
+  head.appendChild(script);
 }
 function clearSessionStorage() {
   let storageLength = localStorage.length;
@@ -408,17 +429,165 @@ function jump(jumpTo) {
   return false;
 }
 function menuJump(jumpTo) {
-  window.location = localStorage.getItem("mni.rootUrl") + "/" + jumpTo;
+  jump(localStorage.getItem("mni.rootUrl") + "/" + jumpTo);
   return false;
 }
-function logout() {
-  try {
-    mniUiUrl = localStorage.getItem("mni.uiUrl");
-  } catch (e) {
-    mniUiUrl = "/";
+function tokenRefresh() {
+  if (toBoolean(localStorage.getItem("mni.auth.oauth"))) {
+    if (mniOAuthRefresh != null) {
+      clearTimeout(mniOAuthRefresh);
+    }
+    let auth = new URLSearchParams({
+      client_id: clientId,
+      grant_type: "refresh_token",
+      scope: localStorage.getItem("mni.auth.scope"),
+      refresh_token: localStorage.getItem("mni.auth.refreshToken"),
+    });
+    let status = fetch(localStorage.getItem("mni.rootUrl") + "/login/refresh", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: auth,
+      keepalive: true,
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (
+            response.status == 200 &&
+            toInteger(response.headers.get("Content-Length")) > 0
+          ) {
+            return response.json();
+          }
+        } else if (response.status == 401) {
+          window.alert("Authorization time-out");
+          window.location.replace("/");
+        }
+      })
+      .then(async (data) => {
+        if (data != null) {
+          localStorage.setItem("mni.auth.accessToken", data.access_token);
+          localStorage.setItem("mni.auth.expiresIn", data.expires_in);
+          localStorage.setItem(
+            "mni.auth.refreshExpiresIn",
+            data.refresh_expires_in
+          );
+          localStorage.setItem("mni.auth.refreshToken", data.refresh_token);
+          mniOAuthRefresh = setTimeout(
+            tokenRefresh,
+            localStorage.getItem("mni.auth.refreshExpiresIn") * 1000
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
-  //clearSessionStorage();
-  window.location.replace(mniUiUrl);
+}
+function login(username, password, oauth = false) {
+  if (username != null && password != null) {
+    if (oauth) {
+      localStorage.setItem("mni.auth.oauth", true);
+      let auth = new URLSearchParams({
+        username: username,
+        password: password,
+      });
+      let status = fetch(localStorage.getItem("mni.rootUrl") + "/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        body: auth,
+        keepalive: true,
+      })
+        .then((response) => {
+          if (response.ok) {
+            if (
+              response.status == 200 &&
+              toInteger(response.headers.get("Content-Length")) > 0
+            ) {
+              return response.json();
+            }
+          } else if (response.status == 400) {
+            window.alert("Bad request");
+            window.location.replace("/");
+          } else if (response.status == 401) {
+            window.alert(
+              "Authorization failed\nInvalid or unknown username or password"
+            );
+            window.location.replace("/");
+          } else {
+            console.error(response.status, response.statusText);
+          }
+        })
+        .then(async (data) => {
+          if (data != null) {
+            localStorage.setItem("mni.auth.idToken", data.id_token);
+            localStorage.setItem("mni.auth.accessToken", data.access_token);
+            localStorage.setItem("mni.auth.expiresIn", data.expires_in);
+            localStorage.setItem(
+              "mni.auth.refreshExpiresIn",
+              data.refresh_expires_in
+            );
+            localStorage.setItem("mni.auth.refreshToken", data.refresh_token);
+            localStorage.setItem("mni.auth.sessionState", data.session_state);
+            localStorage.setItem("mni.auth.tokenType", data.token_type);
+            localStorage.setItem("mni.auth.scope", data.scope);
+            mniOAuthRefresh = setTimeout(
+              tokenRefresh,
+              localStorage.getItem("mni.auth.refreshExpiresIn") * 1000
+            );
+            window.location.replace(
+              localStorage.getItem("mni.rootUrl") + "/readiness"
+            );
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      localStorage.setItem("mni.auth.oauth", false);
+      res.sendStatus(401);
+    }
+  } else {
+    window.location.replace("/");
+  }
+}
+function logout() {
+  if (mniOAuthRefresh != null) {
+    clearTimeout(mniOAuthRefresh);
+  }
+  let oauth = toBoolean(localStorage.getItem("mni.auth.oauth"));
+  if (oauth) {
+    let auth = new URLSearchParams({
+      access_token: localStorage.getItem("mni.auth.accessToken"),
+      refresh_token: localStorage.getItem("mni.auth.refreshToken"),
+    });
+    let status = fetch(localStorage.getItem("mni.rootUrl") + "/logout", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: auth,
+      keepalive: true,
+    })
+      .then((response) => {
+        return response.ok;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    localStorage.removeItem("mni.auth.idToken");
+    localStorage.removeItem("mni.auth.accessToken");
+    localStorage.removeItem("mni.auth.expiresIn");
+    localStorage.removeItem("mni.auth.refreshExpiresIn");
+    localStorage.removeItem("mni.auth.refreshToken");
+    localStorage.removeItem("mni.auth.sessionState");
+    localStorage.removeItem("mni.auth.tokenType");
+    localStorage.removeItem("mni.auth.scope");
+    localStorage.removeItem("mni.auth.oauth");
+  }
+  window.location.replace(localStorage.getItem("mni.rootUrl"));
 }
 function loadScript(scriptPath, callback, id = "mapRender") {
   if (
@@ -463,24 +632,13 @@ function toggleDiv(id) {
   let div = document.getElementById(id);
   div.style.display = div.style.display == "none" ? "block" : "none";
 }
-function toPercent(n, t) {
-  let r = 0;
-  try {
-    if (t > 0) {
-      r = Number.parseFloat((n / t) * 100).toFixed(0);
-    }
-    return r;
-  } catch (e) {
-    return 0;
-  }
+function updateSelectedCountry() {
+  let c = document.getElementById("country");
+  let selectedCountry = c.options[c.selectedIndex].value;
+  mniSelectedCountry = selectedCountry;
+  localStorage.setItem("mni.selectedCountry", selectedCountry);
 }
-function toInteger(s) {
-  if (Number.isNaN(Number.parseInt(s, 10))) {
-    return 0;
-  }
-  return Number.parseInt(s, 10);
-}
-function countryListPopulate() {
+function countryListPopulate(nextfunc = null) {
   let mniCountryCode = localStorage.getItem("mni.country");
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/countries", {
     method: "GET",
@@ -495,30 +653,34 @@ function countryListPopulate() {
       }
     })
     .then((data) => {
-      if (data.length > 0 && countryCode.length > 0) {
-        let countries = "";
-        for (let c = 0; c < countryCode.length; c++) {
-          let selected = "'>";
-          if (countryCode[c] == mniCountryCode) {
-            selected = "' selected='selected'>";
-          }
-          let disabled = " disabled";
-          if (
-            data.includes(countryCode[c]) ||
-            countryCode[c] == mniCountryCode
-          ) {
-            disabled = " ";
-          }
+      let testCountry = null;
+      let suppliedCountry = null;
+      let countryPattern = /\?country=(.*)(&|$)/g;
+      let countries =
+        "<option disabled value='-1' selected='selected'> -- select a country -- </option>";
+      if (data.length > 0) {
+        data.sort();
+        for (let c = 0; c < data.length; c++) {
           countries +=
-            "<option" +
-            disabled +
-            " value='" +
-            countryCode[c] +
-            selected +
-            countryCode[c] +
-            "</option>";
+            "<option value='" + data[c] + "'>" + data[c] + "</option>";
         }
         document.getElementById("country").innerHTML = countries;
+        if (window.location.search != null) {
+          if (
+            (testCountry = countryPattern.exec(window.location.search)) != null
+          ) {
+            suppliedCountry = String(testCountry[1]).toUpperCase();
+            mniSelectedCountry = suppliedCountry;
+            localStorage.setItem("mni.selectedCountry", suppliedCountry);
+            document.getElementById("country").value = suppliedCountry;
+          } else {
+            mniSelectedCountry = localStorage.getItem("mni.selectedCountry");
+            document.getElementById("country").value = mniSelectedCountry;
+          }
+        } else {
+          mniSelectedCountry = localStorage.getItem("mni.selectedCountry");
+          document.getElementById("country").value = mniSelectedCountry;
+        }
       } else {
         document.getElementById("country").innerHTML =
           "<option value='" +
@@ -526,23 +688,22 @@ function countryListPopulate() {
           "' selected='selected'>" +
           mniCountryCode +
           "</option>";
+        localStorage.setItem("mni.selectedCountry", mniCountryCode);
+        document.getElementById("country").value = mniCountryCode;
+      }
+      if (nextfunc != null) {
+        nextfunc();
       }
     })
     .catch((e) => {
-      notify(e);
+      console.error(e);
     });
 }
 try {
-  if (!localStorage.getItem("mni.")) {
+  if (window.location.pathname == "/mni/") {
     mniMetadata();
-  }
-} catch (e) {
-  mmdReady = setTimeout(mniMetadata, mniRetryMs);
-}
-try {
-  if (!localStorage.getItem("mni.license.")) {
     mniLicense();
   }
 } catch (e) {
-  mmlReady = setTimeout(mniLicense, mniRetryMs);
+  console.error(e);
 }

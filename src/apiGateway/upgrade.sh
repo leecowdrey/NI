@@ -63,6 +63,7 @@ IAM_ADDRESS=$(grep -E "^IAM_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 IAM_PORT_HTTPS=$(grep -E "^IAM_PORT_HTTPS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 IAM_URL_SUFFIX=$(grep -E "^IAM_URL_SUFFIX=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 MNI_LOG_DIRECTORY=$(dirname ${LOG_FILE})
+OAUTH=$(grep -E "^OAUTH=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 
 #INSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
@@ -71,6 +72,21 @@ systemctl is-active ${HOST_SERVICE} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && (systemctl stop ${HOST_SERVICE} &>/dev/null ; RETVAL=$?)
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
+
+doing "API Gateway (KrakenD) installation"
+[[ ! -f "/tmp/krakend-linux-amd64.tar.gz" ]] && rm -f /tmp/krakend-linux-amd64.tar.gz &>/dev/null
+curl --fail --location --progress-bar --output /tmp/krakend-linux-amd64.tar.gz \
+    "https://repo.krakend.io/bin/krakend_${KRAKEND_VERSION}_amd64_generic-linux.tar.gz" &>/dev/null
+RETVAL=$?
+if [[ ${RETVAL} -eq 0 ]] ; then
+  tar --strip-components=3 -C ${WORKING_DIRECTORY}/bin -zxvf /tmp/krakend-linux-amd64.tar.gz ./usr/bin/krakend &>/dev/null && \
+  chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/bin/krakend && \
+  chmod 770 ${WORKING_DIRECTORY}/bin/krakend && \
+  mv -f ${WORKING_DIRECTORY}/bin/krakend ${WORKING_DIRECTORY}/bin/apigw
+  RETVAL=$?
+fi
+[[ -f "/tmp/krakend-linux-amd64.tar.gz" ]] && rm -f /tmp/krakend-linux-amd64.tar.gz &>/dev/null
+[[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Setting directory permissions"
 chown root:${GROUP} ${CONFIG_DIRECTORY} && chmod 770 ${CONFIG_DIRECTORY} && \
@@ -109,12 +125,22 @@ sed -i -e "s|\"max_rate\": 32767|\"max_rate\": ${RATE_LIMIT_REQUESTS}|g" ${WORKI
 sed -i -e "s|\"capacity\": 32767|\"capacity\": ${CAPACITY_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"every\": \"1m\"|\"every\": \"${RATE_LIMIT_EVERY}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json
-sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
-sed -i -e "s|\"https://url/to/jwks.json\"|\"https://${IAM_ADDRESS}:${IAM_PORT_HTTPS}${IAM_URL_SUFFIX}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json
+sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json&& \
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/config/apiGateway.json && \
+chmod 660 ${WORKING_DIRECTORY}/config/apiGateway.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
-if [[ "${KRAKEND_IGNORE_AUTH_VALIDATOR,,}" == "true" ]] ; then
+if [[  "${OAUTH,,}" == "true" ]] ; then
+  doing "Enabling OpenID auth/validation in API Gateway deployed config"
+  sed -i -e "s|\"https://iam.mni.merkator.local:6443|\"https://${IAM_ADDRESS}:${IAM_PORT_HTTPS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
+  chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/config/apiGateway.json && \
+  chmod 660 ${WORKING_DIRECTORY}/config/apiGateway.json
+  RETVAL=$?
+  [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
+
+if [[ "${KRAKEND_IGNORE_AUTH_VALIDATOR,,}" == "true" || "${OAUTH,,}" == "false" ]] ; then
   doing "Removing OpenID auth/validation from API Gateway deployed config"
   CONFIG_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
   cat ${WORKING_DIRECTORY}/config/apiGateway.json | jq 'del(.endpoints[].extra_config."auth/validator")' > ${CONFIG_TMP} && \

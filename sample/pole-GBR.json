@@ -32,6 +32,10 @@
       "x": -2.17728,
       "z": 61
     },
+    "connectsTo": {
+      "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+      "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74"
+    },
     "point": "20250508T174124",
     "source": "historical",
     "delete": false

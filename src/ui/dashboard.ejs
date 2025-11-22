@@ -12,33 +12,42 @@
     <title>MNI</title>
     <link rel="stylesheet" href="/mni/css/style.css" />
     <link rel="stylesheet" href="/mni/css/font-awesome.min.css" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="img/icon.png" />
+    <link rel="icon" href="<%=payload.icon%>" sizes="any" />
+    <link rel="apple-touch-icon" href="mni/img/icon.png" />
     <style>
       .panel {
-        width: 50%;
+        width: 60%;
         height: 40%;
         border-radius: 10px;
         background-color: #b3b3b3;
         color: #000000;
         text-align: center;
-        margin-top: 10px;
-        margin-left: 10px;
-        display: inline-block;
+        margin: 10px auto 0 auto;
         font-size: 1em;
       }
 
       .metrics-panel {
-        width: 95%;
+        width: 100%;
         height: 30%;
         border-radius: 10px;
         background-color: #b3b3b3;
         color: #000000;
         text-align: center;
-        margin-top: 10px;
-        margin-left: 10px;
+        margin: 10px auto 0 auto;
         display: inline-block;
-        font-size: 0.7em;
+        font-size: 1em;
+      }
+
+      .costs-panel {
+        width: 100%;
+        height: 30%;
+        border-radius: 10px;
+        background-color: #b3b3b3;
+        color: #000000;
+        text-align: center;
+        margin: 10px auto 10px auto;
+        display: inline-block;
+        font-size: 0.8em;
       }
 
       .graph_container {
@@ -200,7 +209,7 @@
         onmouseover=""
         style="cursor: pointer"
         nohref
-        onclick="logout();"
+        onclick="return logout();"
         title="Quit"
         ><i class="fa fa-window-close"></i
       ></a>
@@ -223,9 +232,9 @@
         >
         <canvas id="resourceSummary"></canvas>
       </div>
+      <div class="metrics-panel" id="businessMetricsPanel">...</div>
+      <div class="costs-panel" id="businessCostsPanel">...</div>
     </div>
-    <hr />
-    <div class="metrics-panel" id="businessMetricsPanel">...</div>
     <div class="footer">
       <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
     </div>

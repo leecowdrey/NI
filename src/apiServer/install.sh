@@ -44,8 +44,8 @@ GROUP=$(grep -E "^HOST_SERVICE_GROUP=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 HOST_SERVICE=$(grep -E "^APISERV_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 LOG_FILE=$(grep -E "^APISERV_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 PORT=$(grep -E "^APISERV_PORT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-SERVICE_USERNAME=$(grep -E "^APISERV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-SERVICE_KEY=$(grep -E "^APISERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_USERNAME=$(grep -E "^MNI_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_KEY=$(grep -E "^MNI_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 ENCRYPTION_KEY=$(grep -E "^APISERV_ENCRYPTION_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 ENCRYPTION_IV==$(grep -E "^APISERV_ENCRYPTION_IV=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_CERT=$(grep -E "^APISERV_SSL_CERT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -280,7 +280,7 @@ RETVAL=$?
 if [[ -z "${SERVICE_USERNAME}" ]] ; then
   doing "Generating service credential - username"
   SERVICE_USERNAME=$(openssl rand -hex 24 | tr -d '\n'| tr -d '"' | tr -d '|') && \
-  sed -i -e "s|APISERV_SERVICE_USERNAME=.*|APISERV_SERVICE_USERNAME=\"${SERVICE_USERNAME}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  sed -i -e "s|MNI_SERVICE_USERNAME=.*|MNI_SERVICE_USERNAME=\"${SERVICE_USERNAME}\"|" ${CONFIG_DIRECTORY}/mni.ini
   RETVAL=$?
   [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 fi
@@ -288,7 +288,7 @@ fi
 if [[ -z "${SERVICE_KEY}" ]] ; then
   doing "Generating service credential - key"
   SERVICE_KEY=$(openssl rand -base64 60 | tr -d '\n' | tr -d '"' | tr -d '|') && \
-  sed -i -e "s|APISERV_SERVICE_KEY=.*|APISERV_SERVICE_KEY=\"${SERVICE_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
+  sed -i -e "s|MNI_SERVICE_KEY=.*|MNI_SERVICE_KEY=\"${SERVICE_KEY}\"|" ${CONFIG_DIRECTORY}/mni.ini
   RETVAL=$?
   [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 fi

@@ -28,6 +28,7 @@
       }
     },
     "state": "free",
+    "connectsTo": { "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74" },
     "coordinates": [
       {
         "y": 52.314812,
@@ -88,7 +89,7 @@
       }
     },
     "state": "free",
-    "connectsTo": {},
+    "connectsTo": { "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74" },
     "coordinates": [
       {
         "y": 52.314812,
@@ -169,6 +170,7 @@
       }
     },
     "state": "free",
+    "connectsTo": { "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74" },
     "coordinates": [
       {
         "y": 52.314812,
@@ -264,6 +266,7 @@
       }
     },
     "state": "free",
+    "connectsTo": { "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74" },
     "coordinates": [
       {
         "y": 52.314812,

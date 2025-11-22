@@ -1,1 +1,70 @@
-<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>MNI</title><meta name="description" content="MarlinDT Network Intelligence provides analytical and prediction insights for telecommunications infrastructure and services"><meta property="og:title" content="MarlinDT Network Intelligence"><meta property="og:type" content=""><meta property="og:url" content="https://marlindt.com/"><meta property="og:image" content=""><meta property="og:image:alt" content=""><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="img/icon.png"><link rel="stylesheet" href="/mni/css/style.css"><meta name="theme-color" content="#fafafa"><script>function toggleLoginPassword() { var x = document.getElementById("password"); if (x.type === "password") { x.type = "text"; } else { x.type = "password"; } }</script></head><body><div class="icon-bar" id="icon-bar"><a class="active" nohref="nohref" onmouseover="" style="cursor: pointer;" title="MarlinDT Network Intelligence"><img src="/favicon.ico" width="25%" height="25%"></a></div><form action="<%=payload.rootUrl%>" method="post"><div class="outer"><div class="middle"><div class="inner" id="loginPanel">Login<br><label for="uname">Username</label><input placeholder="Enter Username" id="uname" name="username" required minlength="4"><br><label for="psw">Password</label><input type="password" placeholder="Enter Password" id="psw" name="password" required minlength="12"><br><button type="submit">login</button><br><label><input type="checkbox" checked="checked" onclick="toggleLoginPassword()" name="togglePwd"> <font size="1">hide</font></label></div></div></div></form><div class="footer"><p>© 2024-2025 Merkator nv/sa. All rights reserved.</p></div><script>localStorage.setItem("mni.uiUrl", window.location.href);</script></body></html>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>MNI</title>
+    <meta name="description" content="MarlinDT Network Intelligence provides analytical and prediction insights for telecommunications infrastructure and services"/>
+    <meta property="og:title" content="MarlinDT Network Intelligence"/>
+    <meta property="og:type" content=""/>
+    <meta property="og:url" content="https://marlindt.com/"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:image:alt" content=""/>
+    <link rel="icon" href="<%=payload.icon%>" sizes="any"/>
+    <link rel="apple-touch-icon" href="/mni/img/icon.png"/>
+    <link rel="stylesheet" href="/mni/css/style.css"/>
+    <meta name="theme-color" content="#fafafa"/>
+    <script src="/mni/js/mni.js"></script>
+  </head>
+  <body">
+    <div class="icon-bar" id="icon-bar">
+      <a class="active" nohref onmouseover="" style="cursor: pointer" title="MarlinDT Network Intelligence">
+        <img src="<%=payload.icon%>" width="25%" height="25%"/>
+      </a>
+    </div>
+    <div class="outer">
+      <div class="middle">
+        <div class="login" id="loginPanel">
+          <center><%=payload.name%> <%=payload.version%></center>
+          <form id="loginForm" method="post">
+            <br/>
+            <label for="username">Username</label>
+            <input type="text" placeholder="Enter Username" id="username" name="username" required minlength="5" size="30"/>
+            <br/>
+            <label for="password">Password</label>
+            <input type="password" placeholder="Enter Password" id="password" name="password" required minlength="5" size="30"/>
+            <label><input type="checkbox" checked="checked" onclick="togglePassword()" name="togglePwd"/>
+              <font size="1">hide</font>
+            </label>
+            <br/>
+            <hr>
+            <center><button type="submit">login</button>&emsp;<img id="oidcLogo" src="/mni/img/oidc.png" alt="OpenID Connect" width="15%" height="15%"/></button></center>
+          </form>
+          <script>
+            let lf = document.getElementById("loginForm");
+            let oauth = toBoolean("<%=payload.oauth%>");
+            let oLogo = document.getElementById("oidcLogo");
+            if (oauth) {
+              oLogo.style.visibility = "visible";
+              lf.onsubmit = () => {
+                  lf.action = 'javascript:login("'+document.getElementById("username").value+'","'+document.getElementById("password").value+'",true);';
+              }
+            } else {
+              oLogo.style.visibility = "hidden";
+              lf.onsubmit = () => {
+                lf.action = "<%=payload.rootUrl%>";
+              }
+            }
+          </script>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2024-2025 Merkator nv/sa. All rights reserved.</p>
+    </div>
+  </body>
+</html>

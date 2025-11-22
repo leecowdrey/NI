@@ -7,25 +7,41 @@
 //
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
+/*
+```mermaid
+stateDiagram-v2
+    [*] --> free
+    faulty --> used
+    faulty --> free
+    free --> used
+    free --> reserved
+    free --> faulty
+    used --> free
+    used --> faulty
+    reserved --> free
+    reserved --> used
+```
+*/
 //
+import SegfaultHandler from "segfault-handler";
+SegfaultHandler.registerHandler("crash.log");
+
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";
 import { MAX, v4 as uuidv4 } from "uuid";
 import { Console } from "node:console";
 import dayjs from "dayjs";
-import os from "os";
-import workerpool from "workerpool";
-
 const allPrintableRegEx = /[ -~]/gi;
-const maxParallelism = os.availableParallelism() - 4; // 4 is default nodejs thread pool size
-const threadsDuplicate = 1;
-const threadsPredictMethodOne = 2;
 
 var DEBUG = false;
 var ENDPOINT_READY = false;
 var ENDPOINT = null;
-var predictMethodOne = null;
+var endpointHost = null;
+var endpointDomain = null;
+var serviceUsername = null;
+var serviceKey = null;
+var serviceAuthentication = null;
 
 //const output = fs.createWriteStream('./stdout.log');
 //const errorOutput = fs.createWriteStream('./stderr.log');
@@ -53,6 +69,20 @@ var historicalDuration = 1;
 var historicalUnit = "year";
 var predictedDuration = 6;
 var predictedUnit = "month";
+
+const countOccurrences = (arr, val) =>
+  arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+// countOccurrences([1, 1, 2, 1, 2, 3], 1); results 1 appearing 3 times
+
+function findLargestInteger(arr) {
+  let largest = null;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] > largest) {
+      largest = arr[i];
+    }
+  }
+  return largest;
+}
 
 function noop() {}
 
@@ -87,6 +117,35 @@ function toDecimal(n, s = OAS.float_scale, p = OAS.float_precision) {
     return Number(0);
   }
   return Number(parseFloat(n).toFixed(p));
+}
+
+function findMode(arr) {
+  let frequencyTable = {};
+  arr.forEach((elem) => (frequencyTable[elem] = frequencyTable[elem] + 1 || 1));
+  let modes = [];
+  let maxFrequency = 0;
+  for (let key in frequencyTable) {
+    if (frequencyTable[key] > maxFrequency) {
+      modes = [Number(key)];
+      maxFrequency = frequencyTable[key];
+    } else if (frequencyTable[key] === maxFrequency) {
+      modes.push(Number(key));
+    }
+  }
+  return modes[0];
+}
+
+function findSMA(states, interval = states.length) {
+  let index = interval - 1;
+  let length = states.length + 1;
+  let results = [];
+  while (index < length) {
+    index = index + 1;
+    let intervalSlice = states.slice(index - interval, index);
+    let sum = intervalSlice.reduce((prev, curr) => prev + curr, 0);
+    results.push(sum / interval);
+  }
+  return results;
 }
 
 function sleep(ms) {
@@ -184,8 +243,15 @@ function loadEnv() {
   appName = process.env.MNI_NAME || "MNI";
   appVersion = process.env.MNI_VERSION || "0.0.0";
   appBuild = process.env.MNI_BUILD || "00000000.00";
+  serviceUsername = process.env.MNI_SERVICE_USERNAME || "internal";
+  serviceKey = process.env.MNI_SERVICE_KEY || "internal";
+  serviceAuthentication =
+    "Basic " +
+    Buffer.from(serviceUsername + ":" + serviceKey).toString("base64");
+  endpointHost = process.env.DNSSERV_HOST || "mni";
+  endpointDomain = process.env.DNSSERV_DOMAIN || "merkator.local";
   endpointRetryMs =
-    toInteger(process.env.PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS) || 5000;
+    toInteger(process.env.PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS) || 15000;
   endpointKeepaliveMs =
     toInteger(process.env.PREDICTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS) || 60000;
   endPointUrlPrefix = process.env.APISERV_URL_PREFIX || "/mni";
@@ -203,9 +269,6 @@ function quit() {
   LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
     event: "quit",
   });
-  if (predictMethodOne != null) {
-    predictMethodOne.terminate({ force: true, timeout: endpointRetryMs });
-  }
   if (queueDrainTimer != null) {
     clearTimeout(queueDrainTimer);
   }
@@ -232,10 +295,7 @@ async function dnsSd() {
     let dnsPromises = dns.promises;
     let address = null;
     let srvRec = await dnsPromises.resolve(
-      "_https._tcp.gateway." +
-        (process.env.DNSSERV_HOST || "mni") +
-        "." +
-        (process.env.DNSSERV_DOMAIN || "merkator.local"),
+      "_https._tcp.apiserver." + endpointHost + "." + endpointDomain,
       "SRV"
     );
     let aRec = await dnsPromises.lookup(srvRec[0].name, { all: true });
@@ -296,6 +356,7 @@ async function getDateBoundary() {
       method: "GET",
       headers: {
         Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
       },
       keepalive: true,
       signal: AbortSignal.timeout(endpointRetryMs),
@@ -399,43 +460,21 @@ async function getDateBoundary() {
 }
 
 async function duplicate(bundle) {
+  let status = false;
   try {
-    // get the resource
-    let body = {};
-    let url =
-      bundle.endpoint +
-      "/" +
-      bundle.resource +
-      "/" +
-      bundle.id +
-      "?point=" +
-      bundle.point;
-    await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: OAS.mimeJSON,
-      },
-      keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
-    })
-      .then((response) => {
-        if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
-        }
-      })
-      .then((data) => {
-        body = data;
-      });
-
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let resource = null;
     // delete all predicted variants of the specified resource
-    url =
-      bundle.endpoint + "/" + bundle.resource + "/" + bundle.id + "?predicted";
-    await fetch(url, {
+    let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+    status = await fetch(url, {
       method: "DELETE",
       keepalive: true,
-      signal: AbortSignal.timeout(bundle.abortMs),
+      headers: {
+        Authorization: serviceAuthentication,
+      },
+      signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
         if (!response.ok) {
@@ -452,33 +491,28 @@ async function duplicate(bundle) {
         });
         return false;
       });
-
-    let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat).add(
-      bundle.predicted.duration,
-      bundle.predicted.unit
-    );
-    // move the predicted point back 1 second from the predicted boundary
-    predictedPoint = predictedPoint.subtract(1, "s");
-
-    // update original
-    if (body.point != null) {
-      body.point = predictedPoint.format(OAS.dayjsFormat);
-    }
-    if (body.source != null) {
-      body.source = "predicted";
-    }
-    url = bundle.endpoint + "/" + bundle.resource + "/" + bundle.id;
-    await fetch(url, {
-      method: "PUT",
+    // get resource
+    url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+    status = await fetch(url, {
+      method: "GET",
       headers: {
-        "Content-Type": OAS.mimeJSON,
+        Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
       },
-      body: JSON.stringify(body),
       keepalive: true,
-      signal: AbortSignal.timeout(bundle.abortMs),
+      signal: AbortSignal.timeout(endpointRetryMs),
     })
       .then((response) => {
-        return response.ok;
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          resource = data;
+        }
       })
       .catch((err) => {
         LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
@@ -490,6 +524,90 @@ async function duplicate(bundle) {
         });
         return false;
       });
+    // update resource json data
+    if (resource != null) {
+      // move the predicted point back 1 second from the predicted boundary
+      let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+        .add(predictedDuration, predictedUnit)
+        .subtract(1, "s");
+      resource.point = predictedPoint.format(OAS.dayjsFormat);
+      resource.source = OAS.sourcePredicted;
+      // reset specific attributes on a per resource type basis for the predicted equivalent
+      switch (bundle.resource) {
+        case "cable":
+          break;
+        case "duct":
+          break;
+        case "pole":
+          break;
+        case "ne":
+          // reset ne port error count back to 0
+          for (let p = 0; p < resource.ports.length; p++) {
+            resource.ports[p].errorCount = 0;
+          }
+          break;
+        case "rack":
+          break;
+        case "service":
+          break;
+        case "site":
+          break;
+        case "trench":
+          break;
+      }
+      // replace (put) resource
+      url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+      status = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": OAS.mimeJSON,
+          Authorization: serviceAuthentication,
+        },
+        body: JSON.stringify(resource),
+        keepalive: true,
+        signal: AbortSignal.timeout(endpointRetryMs),
+      })
+        .then((response) => {
+          if (DEBUG) {
+            LOGGER.debug(
+              dayjs().format(OAS.dayjsFormat),
+              "debug",
+              "updateResource",
+              {
+                event: "duplicate",
+                resource: bundle.resource,
+                qId: bundle.qId,
+                id: bundle.id,
+                status: response.status,
+              }
+            );
+          }
+          if (response.ok) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch((err) => {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+            event: "updateResource",
+            qId: bundle.qId,
+            resource: bundle.resource,
+            id: bundle.id,
+            error: err,
+          });
+          return false;
+        });
+    } else {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: "empty resource",
+      });
+      return false;
+    }
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
       qId: bundle.qId,
@@ -498,6 +616,1777 @@ async function duplicate(bundle) {
       error: err,
     });
   }
+  return status;
+}
+
+async function predictCable(bundle) {
+  let resource = null;
+  let status = false;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictCable", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get resource
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        resource = data;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get historical timeline points
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  let points = [];
+  url = ENDPOINT + "/" + bundle.resource + "/timeline/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        for (let p = 0; p < data.length; p++) {
+          if (data[p].source == OAS.sourceHistorical) {
+            points.push(data[p].point);
+          }
+        }
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictCable", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get usage over all gathered timeline, need at least two points
+  let timeline = [];
+  for (let p = 0; p < points.length; p++) {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url =
+      ENDPOINT +
+      "/" +
+      bundle.resource +
+      "/" +
+      bundle.id +
+      "?point=" +
+      points[p];
+    status = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
+      },
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          switch (data.technology) {
+            case "coax":
+              timeline.push(OAS.cableState.indexOf(data.configuration.state));
+              break;
+            case "copper":
+              timeline.push(OAS.cableState.indexOf(data.configuration.state));
+              break;
+            case "ethernet":
+              timeline.push(OAS.cableState.indexOf(data.configuration.state));
+              break;
+            case "singleFiber":
+              for (let s = 0; s < data.configuration.states.length; s++) {
+                timeline.push({
+                  strand: data.configuration.states[s].strand,
+                  state: OAS.cableState.indexOf(
+                    data.configuration.states[s].state
+                  ),
+                });
+              }
+              break;
+            case "multiFiber":
+              for (let s = 0; s < data.configuration.states.length; s++) {
+                timeline.push({
+                  ribbon: data.configuration.states[s].ribbon,
+                  strand: data.configuration.states[s].strand,
+                  state: OAS.cableState.indexOf(
+                    data.configuration.states[s].state
+                  ),
+                });
+              }
+              break;
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictCable", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+  }
+  // move the predicted point back 1 second from the predicted boundary
+  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+    .add(predictedDuration, predictedUnit)
+    .subtract(1, "s");
+  resource.point = predictedPoint.format(OAS.dayjsFormat);
+  resource.source = OAS.sourcePredicted;
+  switch (resource.technology) {
+    case "coax":
+      let coaxLast = (timeline[timeline.length - 1] ||= OAS.cableState.indexOf(
+        OAS.cableStateFree
+      ));
+      let coaxMostFrequent = findMode(timeline);
+      let coaxNext = coaxLast;
+      let coaxOccFree = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFree))
+      );
+      let coaxOccFaulty = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFaulty))
+      );
+      let coaxOccReserved = toDecimal(
+        countOccurrences(
+          timeline,
+          OAS.cableState.indexOf(OAS.cableStateReserved)
+        )
+      );
+      let coaxOccUsed = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateUsed))
+      );
+      switch (coaxLast) {
+        case OAS.cableState.indexOf(OAS.cableStateFree):
+          if (
+            coaxOccUsed > coaxOccReserved &&
+            coaxOccUsed > coaxOccFaulty &&
+            coaxOccUsed > coaxOccFree
+          ) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            coaxOccReserved > coaxOccUsed &&
+            coaxOccReserved > coaxOccFaulty &&
+            coaxOccReserved > coaxOccFree
+          ) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateReserved);
+          } else if (
+            coaxOccUsed > coaxOccReserved &&
+            coaxOccUsed > coaxOccFaulty &&
+            coaxOccUsed > coaxOccFree
+          ) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else {
+            coaxNext = coaxMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateFaulty):
+          if (coaxOccUsed > coaxOccFree && coaxOccUsed > coaxOccFaulty) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (coaxOccFree > coaxOccUsed && coaxOccFree > coaxOccFaulty) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            coaxNext = coaxMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateReserved):
+          if (coaxOccUsed > coaxOccFree && coaxOccUsed > coaxOccReserved) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            coaxOccFree > coaxOccUsed &&
+            coaxOccFree > coaxOccReserved
+          ) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            coaxNext = coaxMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateUsed):
+          if (coaxOccFree > coaxOccFaulty && coaxOccFree > coaxOccUsed) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else if (
+            coaxOccFaulty > coaxOccFree &&
+            coaxOccFaulty > coaxOccUsed
+          ) {
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
+          } else {
+            coaxNext = coaxMostFrequent;
+          }
+          break;
+      }
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictCable",
+            resource: bundle.resource,
+            id: bundle.id,
+            pattern: timeline.toString(),
+            last: OAS.cableState[coaxLast],
+            next: OAS.cableState[coaxNext],
+          }
+        );
+      }
+      resource.configuration.state = OAS.cableState[coaxNext] ||=
+        OAS.cableStateFree;
+      /*
+      let coaxSma = findSMA(timeline);
+      let coaxPred = Math.trunc(coaxSma[coaxSma.length - 1]);
+      if (coaxPred != null) {
+        resource.configuration.state = OAS.cableState[coaxPred] ||=
+          OAS.cableStateFree;
+      }
+          */
+      break;
+    case "copper":
+      let copperLast = (timeline[timeline.length - 1] ||=
+        OAS.cableState.indexOf(OAS.cableStateFree));
+      let copperMostFrequent = findMode(timeline);
+      let copperNext = copperLast;
+      let copperOccFree = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFree))
+      );
+      let copperOccFaulty = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFaulty))
+      );
+      let copperOccReserved = toDecimal(
+        countOccurrences(
+          timeline,
+          OAS.cableState.indexOf(OAS.cableStateReserved)
+        )
+      );
+      let copperOccUsed = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateUsed))
+      );
+      switch (copperLast) {
+        case OAS.cableState.indexOf(OAS.cableStateFree):
+          if (
+            copperOccUsed > copperOccReserved &&
+            copperOccUsed > copperOccFaulty &&
+            copperOccUsed > copperOccFree
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            copperOccReserved > copperOccUsed &&
+            copperOccReserved > copperOccFaulty &&
+            copperOccReserved > copperOccFree
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateReserved);
+          } else if (
+            copperOccUsed > copperOccReserved &&
+            copperOccUsed > copperOccFaulty &&
+            copperOccUsed > copperOccFree
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else {
+            copperNext = copperMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateFaulty):
+          if (
+            copperOccUsed > copperOccFree &&
+            copperOccUsed > copperOccFaulty
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            copperOccFree > copperOccUsed &&
+            copperOccFree > copperOccFaulty
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            copperNext = copperMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateReserved):
+          if (
+            copperOccUsed > copperOccFree &&
+            copperOccUsed > copperOccReserved
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            copperOccFree > copperOccUsed &&
+            copperOccFree > copperOccReserved
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            copperNext = copperMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateUsed):
+          if (
+            copperOccFree > copperOccFaulty &&
+            copperOccFree > copperOccUsed
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else if (
+            copperOccFaulty > copperOccFree &&
+            copperOccFaulty > copperOccUsed
+          ) {
+            copperNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
+          } else {
+            copperNext = copperMostFrequent;
+          }
+          break;
+      }
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictCable",
+            resource: bundle.resource,
+            id: bundle.id,
+            pattern: timeline.toString(),
+            last: OAS.cableState[copperLast],
+            next: OAS.cableState[copperNext],
+          }
+        );
+      }
+      resource.configuration.state = OAS.cableState[copperNext] ||=
+        OAS.cableStateFree;
+      /*
+      let copperSma = findSMA(timeline);
+      let copperPred = Math.trunc(copperSma[copperSma.length - 1]);
+      if (copperPred != null) {
+        resource.configuration.state = OAS.cableState[copperPred] ||=
+          OAS.cableStateFree;
+      }
+          */
+      break;
+    case "ethernet":
+      let ethernetLast = (timeline[timeline.length - 1] ||=
+        OAS.cableState.indexOf(OAS.cableStateFree));
+      let ethernetMostFrequent = findMode(timeline);
+      let ethernetNext = ethernetLast;
+      let ethernetOccFree = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFree))
+      );
+      let ethernetOccFaulty = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateFaulty))
+      );
+      let ethernetOccReserved = toDecimal(
+        countOccurrences(
+          timeline,
+          OAS.cableState.indexOf(OAS.cableStateReserved)
+        )
+      );
+      let ethernetOccUsed = toDecimal(
+        countOccurrences(timeline, OAS.cableState.indexOf(OAS.cableStateUsed))
+      );
+      switch (ethernetLast) {
+        case OAS.cableState.indexOf(OAS.cableStateFree):
+          if (
+            ethernetOccUsed > ethernetOccReserved &&
+            ethernetOccUsed > ethernetOccFaulty &&
+            ethernetOccUsed > ethernetOccFree
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            ethernetOccReserved > ethernetOccUsed &&
+            ethernetOccReserved > ethernetOccFaulty &&
+            ethernetOccReserved > ethernetOccFree
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateReserved);
+          } else if (
+            ethernetOccUsed > ethernetOccReserved &&
+            ethernetOccUsed > ethernetOccFaulty &&
+            ethernetOccUsed > ethernetOccFree
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else {
+            ethernetNext = ethernetMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateFaulty):
+          if (
+            ethernetOccUsed > ethernetOccFree &&
+            ethernetOccUsed > ethernetOccFaulty
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            ethernetOccFree > ethernetOccUsed &&
+            ethernetOccFree > ethernetOccFaulty
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            ethernetNext = ethernetMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateReserved):
+          if (
+            ethernetOccUsed > ethernetOccFree &&
+            ethernetOccUsed > ethernetOccReserved
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            ethernetOccFree > ethernetOccUsed &&
+            ethernetOccFree > ethernetOccReserved
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else {
+            ethernetNext = ethernetMostFrequent;
+          }
+          break;
+        case OAS.cableState.indexOf(OAS.cableStateUsed):
+          if (
+            ethernetOccFree > ethernetOccFaulty &&
+            ethernetOccFree > ethernetOccUsed
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateFree);
+          } else if (
+            ethernetOccFaulty > ethernetOccFree &&
+            ethernetOccFaulty > ethernetOccUsed
+          ) {
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
+          } else {
+            ethernetNext = ethernetMostFrequent;
+          }
+          break;
+      }
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictCable",
+            resource: bundle.resource,
+            id: bundle.id,
+            pattern: timeline.toString(),
+            last: OAS.cableState[ethernetLast],
+            next: OAS.cableState[ethernetNext],
+          }
+        );
+      }
+      resource.configuration.state = OAS.cableState[ethernetNext] ||=
+        OAS.cableStateFree;
+      /*
+      let ethernetSma = findSMA(timeline);
+      let ethernetPred = Math.trunc(ethernetSma[ethernetSma.length - 1]);
+      if (ethernetPred != null) {
+        resource.configuration.state = OAS.cableState[ethernetPred] ||=
+          OAS.cableStateFree;
+      }
+          */
+      break;
+    case "singleFiber":
+      for (let s = 1; s <= resource.configuration.strands; s++) {
+        let strandSpecific = [];
+        for (let u = 0; u < timeline.length; u++) {
+          if (timeline[u].strand == s) {
+            strandSpecific.push(timeline[u].state);
+          }
+        }
+        if (strandSpecific.length > 0) {
+          let singleFiberLast = (strandSpecific[strandSpecific.length - 1] ||=
+            OAS.cableState.indexOf(OAS.cableStateFree));
+          let singleFiberMostFrequent = findMode(strandSpecific);
+          let singleFiberNext = singleFiberLast;
+          let singleFiberOccFree = toDecimal(
+            countOccurrences(
+              strandSpecific,
+              OAS.cableState.indexOf(OAS.cableStateFree)
+            )
+          );
+          let singleFiberOccFaulty = toDecimal(
+            countOccurrences(
+              strandSpecific,
+              OAS.cableState.indexOf(OAS.cableStateFaulty)
+            )
+          );
+          let singleFiberOccReserved = toDecimal(
+            countOccurrences(
+              strandSpecific,
+              OAS.cableState.indexOf(OAS.cableStateReserved)
+            )
+          );
+          let singleFiberOccUsed = toDecimal(
+            countOccurrences(
+              strandSpecific,
+              OAS.cableState.indexOf(OAS.cableStateUsed)
+            )
+          );
+          switch (singleFiberLast) {
+            case OAS.cableState.indexOf(OAS.cableStateFree):
+              if (
+                singleFiberOccUsed > singleFiberOccReserved &&
+                singleFiberOccUsed > singleFiberOccFaulty &&
+                singleFiberOccUsed > singleFiberOccFree
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+              } else if (
+                singleFiberOccReserved > singleFiberOccUsed &&
+                singleFiberOccReserved > singleFiberOccFaulty &&
+                singleFiberOccReserved > singleFiberOccFree
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(
+                  OAS.cableStateReserved
+                );
+              } else if (
+                singleFiberOccUsed > singleFiberOccReserved &&
+                singleFiberOccUsed > singleFiberOccFaulty &&
+                singleFiberOccUsed > singleFiberOccFree
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+              } else {
+                singleFiberNext = singleFiberMostFrequent;
+              }
+              break;
+            case OAS.cableState.indexOf(OAS.cableStateFaulty):
+              if (
+                singleFiberOccUsed > singleFiberOccFree &&
+                singleFiberOccUsed > singleFiberOccFaulty
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+              } else if (
+                singleFiberOccFree > singleFiberOccUsed &&
+                singleFiberOccFree > singleFiberOccFaulty
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+              } else {
+                singleFiberNext = singleFiberMostFrequent;
+              }
+              break;
+            case OAS.cableState.indexOf(OAS.cableStateReserved):
+              if (
+                singleFiberOccUsed > singleFiberOccFree &&
+                singleFiberOccUsed > singleFiberOccReserved
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+              } else if (
+                singleFiberOccFree > singleFiberOccUsed &&
+                singleFiberOccFree > singleFiberOccReserved
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+              } else {
+                singleFiberNext = singleFiberMostFrequent;
+              }
+              break;
+            case OAS.cableState.indexOf(OAS.cableStateUsed):
+              if (
+                singleFiberOccFree > singleFiberOccFaulty &&
+                singleFiberOccFree > singleFiberOccUsed
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+              } else if (
+                singleFiberOccFaulty > singleFiberOccFree &&
+                singleFiberOccFaulty > singleFiberOccUsed
+              ) {
+                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
+              } else {
+                singleFiberNext = singleFiberMostFrequent;
+              }
+              break;
+          }
+          if (DEBUG) {
+            LOGGER.debug(
+              dayjs().format(OAS.dayjsFormat),
+              "debug",
+              "updateResource",
+              {
+                event: "predictCable",
+                resource: bundle.resource,
+                id: bundle.id,
+                strand: s,
+                pattern: strandSpecific.toString(),
+                last: OAS.cableState[singleFiberLast],
+                next: OAS.cableState[singleFiberNext],
+              }
+            );
+          }
+          for (let r = 0; r < resource.configuration.states.length; r++) {
+            if (resource.configuration.states[r].strand == s) {
+              resource.configuration.states[r].state = OAS.cableState[
+                singleFiberNext
+              ] ||= OAS.cableStateFree;
+              break;
+            }
+          }
+        }
+      }
+      break;
+    case "multiFiber":
+      for (let r = 1; r <= resource.configuration.ribbons; r++) {
+        for (let s = 1; s <= resource.configuration.strands; s++) {
+          let strandSpecific = [];
+          for (let u = 0; u < timeline.length; u++) {
+            if (timeline[u].ribbon == r && timeline[u].strand == s) {
+              strandSpecific.push(timeline[u].state);
+            }
+          }
+          if (strandSpecific.length > 0) {
+            let multiFiberLast = (strandSpecific[strandSpecific.length - 1] ||=
+              OAS.cableState.indexOf(OAS.cableStateFree));
+            let multiFiberMostFrequent = findMode(strandSpecific);
+            let multiFiberNext = multiFiberLast;
+            let multiFiberOccFree = toDecimal(
+              countOccurrences(
+                strandSpecific,
+                OAS.cableState.indexOf(OAS.cableStateFree)
+              )
+            );
+            let multiFiberOccFaulty = toDecimal(
+              countOccurrences(
+                strandSpecific,
+                OAS.cableState.indexOf(OAS.cableStateFaulty)
+              )
+            );
+            let multiFiberOccReserved = toDecimal(
+              countOccurrences(
+                strandSpecific,
+                OAS.cableState.indexOf(OAS.cableStateReserved)
+              )
+            );
+            let multiFiberOccUsed = toDecimal(
+              countOccurrences(
+                strandSpecific,
+                OAS.cableState.indexOf(OAS.cableStateUsed)
+              )
+            );
+            switch (multiFiberLast) {
+              case OAS.cableState.indexOf(OAS.cableStateFree):
+                if (
+                  multiFiberOccUsed > multiFiberOccReserved &&
+                  multiFiberOccUsed > multiFiberOccFaulty &&
+                  multiFiberOccUsed > multiFiberOccFree
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+                } else if (
+                  multiFiberOccReserved > multiFiberOccUsed &&
+                  multiFiberOccReserved > multiFiberOccFaulty &&
+                  multiFiberOccReserved > multiFiberOccFree
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(
+                    OAS.cableStateReserved
+                  );
+                } else if (
+                  multiFiberOccUsed > multiFiberOccReserved &&
+                  multiFiberOccUsed > multiFiberOccFaulty &&
+                  multiFiberOccUsed > multiFiberOccFree
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+                } else {
+                  multiFiberNext = multiFiberMostFrequent;
+                }
+                break;
+              case OAS.cableState.indexOf(OAS.cableStateFaulty):
+                if (
+                  multiFiberOccUsed > multiFiberOccFree &&
+                  multiFiberOccUsed > multiFiberOccFaulty
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+                } else if (
+                  multiFiberOccFree > multiFiberOccUsed &&
+                  multiFiberOccFree > multiFiberOccFaulty
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+                } else {
+                  multiFiberNext = multiFiberMostFrequent;
+                }
+                break;
+              case OAS.cableState.indexOf(OAS.cableStateReserved):
+                if (
+                  multiFiberOccUsed > multiFiberOccFree &&
+                  multiFiberOccUsed > multiFiberOccReserved
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+                } else if (
+                  multiFiberOccFree > multiFiberOccUsed &&
+                  multiFiberOccFree > multiFiberOccReserved
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+                } else {
+                  multiFiberNext = multiFiberMostFrequent;
+                }
+                break;
+              case OAS.cableState.indexOf(OAS.cableStateUsed):
+                if (
+                  multiFiberOccFree > multiFiberOccFaulty &&
+                  multiFiberOccFree > multiFiberOccUsed
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateFree);
+                } else if (
+                  multiFiberOccFaulty > multiFiberOccFree &&
+                  multiFiberOccFaulty > multiFiberOccUsed
+                ) {
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
+                } else {
+                  multiFiberNext = multiFiberMostFrequent;
+                }
+                break;
+            }
+            if (DEBUG) {
+              LOGGER.debug(
+                dayjs().format(OAS.dayjsFormat),
+                "debug",
+                "updateResource",
+                {
+                  event: "predictCable",
+                  resource: bundle.resource,
+                  id: bundle.id,
+                  ribbon: r,
+                  strand: s,
+                  pattern: strandSpecific.toString(),
+                  last: OAS.cableState[multiFiberLast],
+                  next: OAS.cableState[multiFiberNext],
+                }
+              );
+            }
+            for (let u = 0; u < resource.configuration.states.length; u++) {
+              if (
+                resource.configuration.states[u].ribbon == r &&
+                resource.configuration.states[u].strand == s
+              ) {
+                resource.configuration.states[u].state = OAS.cableState[
+                  multiFiberNext
+                ] ||= OAS.cableStateFree;
+                break;
+              }
+            }
+          }
+        }
+      }
+      break;
+  }
+  // replace (PUT) it back to keep a predicted variant
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    body: JSON.stringify(resource),
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictCable",
+            resource: bundle.resource,
+            qId: bundle.qId,
+            id: bundle.id,
+            status: response.status,
+          }
+        );
+      }
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictCable", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictDuct(bundle) {
+  let resource = null;
+  let status = false;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictDuct", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get resource
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        resource = data;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get historical timeline points
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  let points = [];
+  url = ENDPOINT + "/" + bundle.resource + "/timeline/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        for (let p = 0; p < data.length; p++) {
+          if (data[p].source == OAS.sourceHistorical) {
+            points.push(data[p].point);
+          }
+        }
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictDuct", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get usage over all gathered timeline, need at least two points
+  let timeline = [];
+  for (let p = 0; p < points.length; p++) {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url =
+      ENDPOINT +
+      "/" +
+      bundle.resource +
+      "/" +
+      bundle.id +
+      "?point=" +
+      points[p];
+    status = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
+      },
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          timeline.push(OAS.ductState.indexOf(data.configuration.state));
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictDuct", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+  }
+  // move the predicted point back 1 second from the predicted boundary
+  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+    .add(predictedDuration, predictedUnit)
+    .subtract(1, "s");
+  resource.point = predictedPoint.format(OAS.dayjsFormat);
+  resource.source = OAS.sourcePredicted;
+  let ductLast = (timeline[timeline.length - 1] ||= OAS.ductState.indexOf(
+    OAS.ductStateFree
+  ));
+  let ductMostFrequent = findMode(timeline);
+  let ductNext = ductLast;
+  let ductOccFree = toDecimal(
+    countOccurrences(timeline, OAS.ductState.indexOf(OAS.ductStateFree))
+  );
+  let ductOccFaulty = toDecimal(
+    countOccurrences(timeline, OAS.ductState.indexOf(OAS.ductStateFaulty))
+  );
+  let ductOccReserved = toDecimal(
+    countOccurrences(timeline, OAS.ductState.indexOf(OAS.ductStateReserved))
+  );
+  let ductOccUsed = toDecimal(
+    countOccurrences(timeline, OAS.ductState.indexOf(OAS.ductStateUsed))
+  );
+  switch (ductLast) {
+    case OAS.ductState.indexOf(OAS.ductStateFree):
+      if (
+        ductOccUsed > ductOccReserved &&
+        ductOccUsed > ductOccFaulty &&
+        ductOccUsed > ductOccFree
+      ) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateUsed);
+      } else if (
+        ductOccReserved > ductOccUsed &&
+        ductOccReserved > ductOccFaulty &&
+        ductOccReserved > ductOccFree
+      ) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateReserved);
+      } else if (
+        ductOccUsed > ductOccReserved &&
+        ductOccUsed > ductOccFaulty &&
+        ductOccUsed > ductOccFree
+      ) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateUsed);
+      } else {
+        ductNext = ductMostFrequent;
+      }
+      break;
+    case OAS.ductState.indexOf(OAS.ductStateFaulty):
+      if (ductOccUsed > ductOccFree && ductOccUsed > ductOccFaulty) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateUsed);
+      } else if (ductOccFree > ductOccUsed && ductOccFree > ductOccFaulty) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateFree);
+      } else {
+        ductNext = ductMostFrequent;
+      }
+      break;
+    case OAS.ductState.indexOf(OAS.ductStateReserved):
+      if (ductOccUsed > ductOccFree && ductOccUsed > ductOccReserved) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateUsed);
+      } else if (ductOccFree > ductOccUsed && ductOccFree > ductOccReserved) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateFree);
+      } else {
+        ductNext = ductMostFrequent;
+      }
+      break;
+    case OAS.ductState.indexOf(OAS.ductStateUsed):
+      if (ductOccFree > ductOccFaulty && ductOccFree > ductOccUsed) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateFree);
+      } else if (ductOccFaulty > ductOccFree && ductOccFaulty > ductOccUsed) {
+        ductNext = OAS.ductState.indexOf(OAS.ductStateFaulty);
+      } else {
+        ductNext = ductMostFrequent;
+      }
+      break;
+  }
+  if (DEBUG) {
+    LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", "updateResource", {
+      event: "predictDuct",
+      resource: bundle.resource,
+      id: bundle.id,
+      pattern: timeline.toString(),
+      last: OAS.ductState[ductLast],
+      next: OAS.ductState[ductNext],
+    });
+  }
+  resource.configuration.state = OAS.ductState[ductNext] ||= OAS.ductStateFree;
+  // replace (PUT) it back to keep a predicted variant
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    body: JSON.stringify(resource),
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictDuct",
+            resource: bundle.resource,
+            qId: bundle.qId,
+            id: bundle.id,
+            status: response.status,
+          }
+        );
+      }
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictDuct", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictPole(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictPole", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictNe(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictNe", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get resource
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        resource = data;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get historical timeline points
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  let points = [];
+  url = ENDPOINT + "/" + bundle.resource + "/timeline/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        for (let p = 0; p < data.length; p++) {
+          if (data[p].source == OAS.sourceHistorical) {
+            points.push(data[p].point);
+          }
+        }
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictNe", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get port state over all gathered timeline, need at least two points
+  let timeline = [];
+  for (let p = 0; p < points.length; p++) {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url = ENDPOINT + "/ne/" + bundle.id + "?point=" + points[p];
+    status = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
+      },
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          for (let p = 0; p < data.ports.length; p++) {
+            timeline.push({
+              port: data.ports[p].name,
+              state: OAS.portState.indexOf(data.ports[p].state),
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictNe", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+  }
+  // move the predicted point back 1 second from the predicted boundary
+  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+    .add(predictedDuration, predictedUnit)
+    .subtract(1, "s");
+  resource.point = predictedPoint.format(OAS.dayjsFormat);
+  resource.source = OAS.sourcePredicted;
+  // should have [{port: "at-0/0/0", state: "free"},{port: "at-0/0/0", state: "used"},{port: "at-0/0/1", state:"free"},{port: "at-0/0/1", state:"free"}] etc.
+  if (resource.ports > 0) {
+    for (let s = 1; s <= resource.ports; s++) {
+      // reset port error count
+      resource.ports[s].errorCount = 0;
+      //
+      let portSpecific = [];
+      for (let u = 0; u < timeline.length; u++) {
+        if (timeline[u].port == s) {
+          portSpecific.push(timeline[u].state);
+        }
+      }
+      if (portSpecific.length > 0) {
+        // TODO: perhaps use a Recurrent Neural Network (RNN) here??
+        //let mode = findMode(portSpecific);
+        let sma = findSMA(portSpecific);
+        let mode = Math.trunc(sma[sma.length - 1]);
+        if (mode != null) {
+          let newState = (OAS.portState[mode] ||= OAS.portStateFree);
+          // update resource ports
+          for (let r = 0; r < resource.ports.length; r++) {
+            if (resource.ports[r].name == resource.ports[s].name) {
+              // if used then leave it as was
+              //if (resource.ports[r].state != OAS.portStateUsed) {
+              resource.ports[r].state = newState; // OAS.sourcePredicted ??
+              //}
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  // replace (PUT) it back to keep a predicted variant
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    body: JSON.stringify(resource),
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictNe",
+            resource: bundle.resource,
+            qId: bundle.qId,
+            id: bundle.id,
+            status: response.status,
+          }
+        );
+      }
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictNe", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictRack(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictRack", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get resource
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        resource = data;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get historical timeline points
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  let points = [];
+  url = ENDPOINT + "/" + bundle.resource + "/timeline/" + bundle.id;
+  status = await fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        if (toInteger(response.headers.get("Content-Length")) > 0) {
+          return response.json();
+        }
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        for (let p = 0; p < data.length; p++) {
+          if (data[p].source == OAS.sourceHistorical) {
+            points.push(data[p].point);
+          }
+        }
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictRack", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  // get slot usage over all gathered timeline, need at least two points
+  let timeline = [];
+  for (let p = 0; p < points.length; p++) {
+    while (!ENDPOINT_READY) {
+      await sleep(endpointRetryMs);
+    }
+    let url = ENDPOINT + "/rack/slots/" + bundle.id + "?point=" + points[p];
+    status = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+        Authorization: serviceAuthentication,
+      },
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    })
+      .then((response) => {
+        if (response.ok) {
+          if (toInteger(response.headers.get("Content-Length")) > 0) {
+            return response.json();
+          }
+        }
+      })
+      .then((data) => {
+        if (data != null) {
+          for (let s = 0; s < data.length; s++) {
+            timeline.push({
+              slot: data[s].slot,
+              usage: OAS.rackSlotUsage.indexOf(data[s].usage),
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictRack", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          error: err,
+        });
+        return false;
+      });
+  }
+  // move the predicted point back 1 second from the predicted boundary
+  if (bundle.point === null || bundle.point === "undefined") {
+    bundle.point = dayjs().format(OAS.dayjsFormat);
+  }
+  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+    .add(predictedDuration, predictedUnit)
+    .subtract(1, "s");
+  resource.point = predictedPoint.format(OAS.dayjsFormat);
+  resource.source = OAS.sourcePredicted;
+  // should have [{slot: 1, usage: free},{slot: 1, usage: used},{slot: 2, usage:free},{slot: 2, usage:free}] etc.
+  if (resource.slots > 0) {
+    for (let s = 1; s <= resource.slots; s++) {
+      let slotSpecific = [];
+      for (let u = 0; u < timeline.length; u++) {
+        if (timeline[u].slot == s) {
+          slotSpecific.push(timeline[u].usage);
+        }
+      }
+      if (slotSpecific.length > 0) {
+        // TODO: perhaps use a Recurrent Neural Network (RNN) here??
+        let sma = findSMA(slotSpecific);
+        let mode = Math.trunc(sma[sma.length - 1]);
+        if (mode != null) {
+          let newUsage = (OAS.rackSlotUsage[mode] ||= OAS.rackSlotUsageFree);
+          // update resource slots
+          for (let r = 0; r < resource.slotUsage.length; r++) {
+            if (resource.slotUsage[r].slot == s) {
+              // if used was in use then leave it as in use
+              // NOTE: clear the neId and host attributes if changing from used
+              //if (resource.slotUsage[r].usage != OAS.rackSlotUsageUsed) {
+              resource.slotUsage[r].usage = newUsage;
+              //}
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  // replace (PUT) it back to keep a predicted variant
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id;
+  status = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": OAS.mimeJSON,
+      Authorization: serviceAuthentication,
+    },
+    body: JSON.stringify(resource),
+    keepalive: true,
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (DEBUG) {
+        LOGGER.debug(
+          dayjs().format(OAS.dayjsFormat),
+          "debug",
+          "updateResource",
+          {
+            event: "predictRack",
+            resource: bundle.resource,
+            qId: bundle.qId,
+            id: bundle.id,
+            status: response.status,
+          }
+        );
+      }
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictRack", {
+        event: "updateResource",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictService(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictService", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictSite(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictSite", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
+}
+
+async function predictTrench(bundle) {
+  let status = false;
+  let resource = null;
+  while (!ENDPOINT_READY) {
+    await sleep(endpointRetryMs);
+  }
+  // delete all predicted variants of the specified resource
+  let url = ENDPOINT + "/" + bundle.resource + "/" + bundle.id + "?predicted";
+  status = await fetch(url, {
+    method: "DELETE",
+    keepalive: true,
+    headers: {
+      Authorization: serviceAuthentication,
+    },
+    signal: AbortSignal.timeout(endpointRetryMs),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictTrench", {
+        event: "deletePredicted",
+        qId: bundle.qId,
+        resource: bundle.resource,
+        id: bundle.id,
+        error: err,
+      });
+      return false;
+    });
+  return status;
 }
 
 async function queueDrain() {
@@ -512,6 +2401,7 @@ async function queueDrain() {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -568,6 +2458,7 @@ async function queueDrain() {
                   method: "GET",
                   headers: {
                     Accept: OAS.mimeJSON,
+                    Authorization: serviceAuthentication,
                   },
                   keepalive: true,
                   signal: AbortSignal.timeout(endpointRetryMs),
@@ -583,18 +2474,26 @@ async function queueDrain() {
                       }
                     }
                   })
-                  .then((timelineData) => {
+                  .then(async (timelineData) => {
                     if (timelineData != null) {
                       if (Array.isArray(timelineData)) {
                         if (timelineData.length > 0) {
                           let historicalTimeline = [];
                           let predictedTimeline = [];
+                          let plannedTimeline = [];
                           for (let p = 0; p < timelineData.length; p++) {
-                            // only use most recent historical resource incarnation for prediction
-                            if (timelineData[p].source == "historical") {
+                            if (
+                              timelineData[p].source == OAS.sourceHistorical
+                            ) {
                               historicalTimeline.push(timelineData[p].point);
-                            } else if (timelineData[p].source == "predicted") {
+                            } else if (
+                              timelineData[p].source == OAS.sourcePredicted
+                            ) {
                               predictedTimeline.push(timelineData[p].point);
+                            } else if (
+                              timelineData[p].source == OAS.sourcePlanned
+                            ) {
+                              plannedTimeline.push(timelineData[p].point);
                             }
                           }
                           if (historicalTimeline.length > 0) {
@@ -611,11 +2510,16 @@ async function queueDrain() {
                               .map(JSON.parse)
                               .sort();
                           }
-                          if (
-                            historicalTimeline.length > 0 &&
-                            predictedTimeline.length == 0
-                          ) {
+                          if (plannedTimeline.length > 0) {
+                            plannedTimeline = Array.from(
+                              new Set(plannedTimeline.map(JSON.stringify))
+                            )
+                              .map(JSON.parse)
+                              .sort();
+                          }
+                          if (historicalTimeline.length == 1) {
                             // if only single incarnation of resource exists then simply duplicate
+                            // as can not predict anything
                             if (DEBUG) {
                               LOGGER.debug(
                                 dayjs().format(OAS.dayjsFormat),
@@ -630,18 +2534,7 @@ async function queueDrain() {
                                 }
                               );
                             }
-
-                            let duplicateStatus = duplicate({
-                              endpoint: ENDPOINT,
-                              abortMs: endpointRetryMs,
-                              predicted: {
-                                duration: predictedDuration,
-                                unit: predictedUnit,
-                              },
-                              historical: {
-                                duration: historicalDuration,
-                                unit: historicalUnit,
-                              },
+                            let duplicateOk = await duplicate({
                               qId: q.qId,
                               resource: q.resource,
                               id: q.id,
@@ -650,66 +2543,112 @@ async function queueDrain() {
                                   historicalTimeline.length - 1
                                 ],
                             });
-                            //if (duplicateStatus) {
-                            deleteQueueItem(q.qId);
-                            //}
-                            /*
-                            } else if (
-                              historicalTimeline.length > 1 &&
-                              predictedTimeline.length > 0
-                            ) {
-                              // multiple incarnations of historical resource exists so use most recent
-                              if (DEBUG) {
-                                LOGGER.debug(
-                                  dayjs().format(OAS.dayjsFormat),
-                                  "debug",
-                                  "queueDrain",
-                                  {
-                                    resource: q.resource,
-                                    id: q.id,
-                                    state: q.state,
-                                    method: "methodOne",
-                                  }
-                                );
-                              }
-                              /*
-                              predictMethodOne
-                                .exec("runMethod", [
-                                  {
-                                    endpoint: ENDPOINT,
-                                    abortMs: endpointRetryMs,
-                                    predicted: {
-                                      duration: predictedDuration,
-                                      unit: predictedUnit,
-                                    },
-                                    historical: {
-                                      duration: historicalDuration,
-                                      unit: historicalUnit,
-                                    },
+                            if (duplicateOk) await deleteQueueItem(q.qId);
+                          } else if (historicalTimeline.length > 1) {
+                            // multiple incarnations of historical resource exists though need at least two points in the timeline
+                            // for analysis and predictions - predictX functions will request timeline points again where necessary
+                            if (DEBUG) {
+                              LOGGER.debug(
+                                dayjs().format(OAS.dayjsFormat),
+                                "debug",
+                                "queueDrain",
+                                {
+                                  resource: q.resource,
+                                  id: q.id,
+                                  state: q.state,
+                                  method: "predict",
+                                }
+                              );
+                              let predictOk = false;
+                              switch (q.resource) {
+                                case "cable":
+                                  predictOk = await predictCable({
                                     qId: q.qId,
                                     resource: q.resource,
                                     id: q.id,
-                                  },
-                                ])
-                                .then((qId) => {
-                                  deleteQueueItem(qId);
-                                })
-                                .catch((err) => {
-                                  LOGGER.error(
-                                    dayjs().format(OAS.dayjsFormat),
-                                    "error",
-                                    "resourcesDrain",
-                                    {
-                                      method: "methodOne",
-                                      qId: err.qId,
-                                    }
-                                  );
-                                });
-                              deleteQueueItem(q.qId);
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "duct":
+                                  predictOk = await predictDuct({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "pole":
+                                  predictOk = await predictPole({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "ne":
+                                  predictOk = await predictNe({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "rack":
+                                  predictOk = await predictRack({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "service":
+                                  predictOk = await predictService({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "site":
+                                  predictOk = await predictSite({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                case "trench":
+                                  predictOk = await predictTrench({
+                                    qId: q.qId,
+                                    resource: q.resource,
+                                    id: q.id,
+                                  });
+                                  if (predictOk) await deleteQueueItem(q.qId);
+                                  break;
+                                default:
+                                  // unsupported resource, so just remove queue entry
+                                  await deleteQueueItem(q.qId);
+                              }
                             }
-                            */
+                          } else if (plannedTimeline.length > 0) {
+                            if (DEBUG) {
+                              LOGGER.debug(
+                                dayjs().format(OAS.dayjsFormat),
+                                "debug",
+                                "queueDrain",
+                                {
+                                  resource: q.resource,
+                                  id: q.id,
+                                  state: q.state,
+                                  method: OAS.sourcePlanned,
+                                }
+                              );
+                            }
+                            let plannedOk = true;
+                            if (plannedOk) await deleteQueueItem(q.qId);
                           } else {
-                            deleteQueueItem(q.qId);
+                            // TODO: unsupported combination so just remove queue entry for now
+                            await deleteQueueItem(q.qId);
                           }
                         }
                       }
@@ -757,40 +2696,45 @@ async function queueDrain() {
 
 async function deleteQueueItem(qId) {
   try {
-    while (!ENDPOINT_READY) {
-      await sleep(endpointRetryMs);
-    }
-    let url = ENDPOINT + "/predict/queue/" + qId;
-    await fetch(url, {
-      method: "DELETE",
-      keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
-    })
-      .then((response) => {
-        if (!response.ok) {
+    if (qId != null) {
+      while (!ENDPOINT_READY) {
+        await sleep(endpointRetryMs);
+      }
+      let url = ENDPOINT + "/predict/queue/" + qId;
+      await fetch(url, {
+        method: "DELETE",
+        keepalive: true,
+        headers: {
+          Authorization: serviceAuthentication,
+        },
+        signal: AbortSignal.timeout(endpointRetryMs),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            LOGGER.error(
+              dayjs().format(OAS.dayjsFormat),
+              "error",
+              "deleteQueueItem",
+              {
+                url: url,
+                status: response.status,
+                response: response.statusText,
+              }
+            );
+          }
+        })
+        .catch((err) => {
           LOGGER.error(
             dayjs().format(OAS.dayjsFormat),
             "error",
             "deleteQueueItem",
             {
               url: url,
-              status: response.status,
-              response: response.statusText,
+              error: err,
             }
           );
-        }
-      })
-      .catch((err) => {
-        LOGGER.error(
-          dayjs().format(OAS.dayjsFormat),
-          "error",
-          "deleteQueueItem",
-          {
-            url: url,
-            error: err,
-          }
-        );
-      });
+        });
+    }
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "deleteQueueItem", {
       error: err,
@@ -805,6 +2749,7 @@ async function checkEndpointReadiness() {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
+          Authorization: serviceAuthentication,
         },
         keepalive: true,
         signal: AbortSignal.timeout(endpointRetryMs),
@@ -903,13 +2848,6 @@ var run = async () => {
   // discover endpoint via DNS
   await dnsSd();
 
-  // establish worker pools (not for simple duplicate)
-  predictMethodOne = workerpool.pool("./predictMethodOne.mjs", {
-    minWorkers: 1,
-    maxWorkers: threadsPredictMethodOne,
-    workerType: "thread",
-  });
-
   // banner
   process.stdout.write(String.fromCharCode.apply(null, OAS.bannerGraffti));
 
@@ -925,14 +2863,14 @@ var run = async () => {
       ready: ENDPOINT_READY,
       retryInterval: endpointRetryMs,
       keepaliveInterval: endpointKeepaliveMs,
+      credentials: {
+        username: serviceUsername.replace(allPrintableRegEx, "*"),
+        key: serviceKey.replace(allPrintableRegEx, "*"),
+      },
     },
     environment: {
       timestamp: OAS.dayjsFormat,
       ignoreTlsSsl: tlsSslVerification,
-    },
-    workerPoolsThreads: {
-      max: maxParallelism,
-      methodOne: threadsPredictMethodOne,
     },
   });
 

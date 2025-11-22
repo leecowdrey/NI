@@ -12,13 +12,6 @@ var trenchPath;
 var tPath = [];
 var tPoly = [];
 var lineSymbol;
-let fmrReady = null;
-let ftgReady = null;
-let fltReady = null;
-let ftpReady = null;
-let ftdReady = null;
-let ftppReady = null;
-let retryMs = 5000;
 let trenchId = null;
 let mapVendor = null;
 let trenchCoordinates = {};
@@ -28,11 +21,28 @@ let startMarker = [];
 let endMarker = [];
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
-function fetchTrenchPremisesPassed(id, p) {
-  if (ftppReady != null) {
-    clearTimeout(ftppReady);
-  }
+var ductPanel = null;
+var polePanel = null;
+let ductList = "";
+let poleList = "";
+var tipObj = null;
 
+function injectTooltip(event, data) {
+  if (!tipObj && event) {
+    tipObj = document.createElement("div");
+    tipObj.setAttribute("class", "mappolytooltip");
+    tipObj.innerHTML = data;
+    document.body.appendChild(tipObj);
+  }
+}
+function deleteTooltip(event) {
+  if (tipObj) {
+    //delete the tooltip if it exists in the DOM
+    document.body.removeChild(tipObj);
+    tipObj = null;
+  }
+}
+function fetchTrenchPremisesPassed(id, p) {
   fetch(
     localStorage.getItem("mni.gatewayUrl") +
       "/trench/premisesPassed/" +
@@ -64,15 +74,10 @@ function fetchTrenchPremisesPassed(id, p) {
       }
     })
     .catch((e) => {
-      notify(e);
-      //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
+      console.error(e);
     });
 }
 function fetchTrenchDistance(id, p) {
-  if (ftdReady != null) {
-    clearTimeout(ftdReady);
-  }
-
   fetch(
     localStorage.getItem("mni.gatewayUrl") +
       "/trench/distance/" +
@@ -90,9 +95,7 @@ function fetchTrenchDistance(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-      //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
-      //}
+      }
     })
     .then((data) => {
       if (data != null) {
@@ -104,20 +107,14 @@ function fetchTrenchDistance(id, p) {
       }
     })
     .catch((e) => {
-      notify(e);
-      //ftdReady = setTimeout(fetchTrenchDistance, retryMs, id, p);
+      console.error(e);
     });
 }
 function fetchListTrench() {
-  if (fltReady != null) {
-    clearTimeout(fltReady);
-  }
-  let c = document.getElementById("country");
-  let selectedCountry = c.options[c.selectedIndex].value;
   fetch(
     localStorage.getItem("mni.gatewayUrl") +
       "/trench?country=" +
-      selectedCountry,
+      mniSelectedCountry,
     {
       method: "GET",
       headers: {
@@ -129,31 +126,44 @@ function fetchListTrench() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-      //fltReady = setTimeout(fetchListTrench, retryMs);
-      //}
+      }
     })
     .then((data) => {
+      let suppliedTrenchId = window.location.pathname.replace(
+        localStorage.getItem("mni.rootUrl") + "/trenchLifetime/",
+        ""
+      );
       let trenchIds =
         "<option disabled value='-1' selected='selected'> -- select a trench -- </option>";
+      if (suppliedTrenchId != null) {
+        trenchIds =
+          "<option disabled value='-1'> -- select a trench -- </option>";
+      }
       for (var i = 0; i < data.length; i++) {
-        trenchIds +=
-          "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        if (suppliedTrenchId == data[i]) {
+          trenchIds +=
+            "<option value='" +
+            data[i] +
+            "' selected='selected'>" +
+            data[i] +
+            "</option>";
+        } else {
+          trenchIds +=
+            "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        }
       }
       document.getElementById("trenchId").innerHTML = trenchIds;
       document.getElementById("trenchDistance").setAttribute("value", "");
+      if (suppliedTrenchId != null) {
+        fetchTrenchGeometryLifetime();
+      }
     })
     .catch((e) => {
-      notify(e);
-      //fltReady = setTimeout(fetchListTrench, retryMs);
+      console.error(e);
     });
 }
 
 function fetchMapRender() {
-  if (fmrReady != null) {
-    clearTimeout(fmrReady);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/mapRender", {
     method: "GET",
     headers: {
@@ -164,9 +174,7 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-      //fmrReady = setTimeout(fetchMapRender, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -185,8 +193,7 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      notify(e);
-      //mrReady = setTimeout(fetchMapRender, retryMs);
+      console.error(e);
     });
 }
 async function wipeMapClean() {
@@ -303,12 +310,37 @@ async function drawOnMap() {
       map: map,
     });
     tPoly[tSet].setMap(map);
+    google.maps.event.addListener(tPoly[tSet], "click", function (h) {
+      ductPanel = new google.maps.InfoWindow({
+        headerContent: "Ducts",
+        position: h.latLng,
+        content: "<ul><li>none</li></ul>",
+      });
+      ductPanel.open({
+        shouldFocus: true,
+        map,
+      });
+    });
+    google.maps.event.addListener(tPoly[tSet], "mouseover", function (e) {
+      injectTooltip(e, trenchId);
+    });
+    google.maps.event.addListener(tPoly[tSet], "mouseout", function (e) {
+      deleteTooltip(e);
+    });
+    google.maps.event.addListener(tPoly[tSet], "rightclick", function (h) {
+      polePanel = new google.maps.InfoWindow({
+        headerContent: "Poles",
+        position: h.latLng,
+        content: "<ul><li>none</li></ul>",
+      });
+      polePanel.open({
+        shouldFocus: true,
+        map,
+      });
+    });
   }
 }
 async function fetchTrenchGeometryLifetime() {
-  if (ftgReady != null) {
-    clearTimeout(ftgReady);
-  }
   let t = document.getElementById("trenchId");
   trenchId = t.options[t.selectedIndex].value;
 
@@ -327,9 +359,7 @@ async function fetchTrenchGeometryLifetime() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data != null) {
@@ -355,8 +385,7 @@ async function fetchTrenchGeometryLifetime() {
       }
     })
     .catch((e) => {
-      notify(e);
-      //ftgReady = setTimeout(fetchTrenchGeometryLifetime, retryMs);
+      console.error(e);
     });
   loadScript(mapRenderUrl, function () {
     function displayMap() {
@@ -377,15 +406,8 @@ async function fetchTrenchGeometryLifetime() {
   });
 }
 try {
-  countryListPopulate();
   fetchMapRender();
+  countryListPopulate(fetchListTrench);
 } catch (e) {
-  notify(e);
-  //fmrReady = setTimeout(fetchMapRender, retryMs);
-}
-try {
-  fetchListTrench();
-} catch (e) {
-  notify(e);
-  //fltReady = setTimeout(fetchListTrench, retryMs);
+  console.error(e);
 }

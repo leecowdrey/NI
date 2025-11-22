@@ -7,10 +7,6 @@ module.exports = merge(common, {
   mode: "production",
   plugins: [
     new HtmlWebpackPlugin({
-      template: "!!raw-loader!./index.ejs",
-      filename: "index.ejs",
-    }),
-    new HtmlWebpackPlugin({
       template: "!!raw-loader!./readiness.ejs",
       filename: "readiness.ejs",
     }),
@@ -111,15 +107,23 @@ module.exports = merge(common, {
       filename: "q2c.ejs",
     }),
     new HtmlWebpackPlugin({
+      template: "!!raw-loader!./callback.ejs",
+      filename: "callback.ejs",
+    }),
+    new HtmlWebpackPlugin({
       template: "!!raw-loader!./setting.ejs",
       filename: "setting.ejs",
     }),
     new CopyPlugin({
       patterns: [
+        { from: "index.ejs", to: "index.ejs" },
         { from: "img", to: "img" },
         { from: "css", to: "css" },
         { from: "fonts", to: "fonts" },
         { from: "js/mni-alert.js", to: "js/mni-alert.js" },
+        { from: "js/mni-cable.js", to: "js/mni-cable.js" },
+        { from: "js/mni-callback.js", to: "js/mni-callback.js" },
+        { from: "js/mni-duct.js", to: "js/mni-duct.js" },
         { from: "js/mni-dashboard.js", to: "js/mni-dashboard.js" },
         { from: "js/mni-email.js", to: "js/mni-email.js" },
         { from: "js/mni-kafka.js", to: "js/mni-kafka.js" },

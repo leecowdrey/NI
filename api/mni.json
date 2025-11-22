@@ -17,7 +17,7 @@
       "url": "https://www.merkator.com/",
       "x-copyright": "© 2024-2025 Merkator nv/sa. All rights reserved."
     },
-    "version": "1.0.0.1757673362"
+    "version": "1.0.0.1763724098"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -4067,7 +4067,7 @@
                     "alerts": [
                       {
                         "alertId": "ff9bf3a0-682e-43ff-b38c-0ab962ef2fe7",
-                        "kafkaProducerId": "7e3360a0-ce0e-406c-b3a3-d04c6c5500c",
+                        "kafkaProducerId": "5b1ef698-1cf3-4f12-a671-d60ff283db41",
                         "topic": "mni-L23-classifiers"
                       }
                     ]
@@ -4759,6 +4759,10 @@
                           "country": {
                             "$ref": "#/components/schemas/countryCode"
                           },
+                          "cost": {
+                            "type": "number",
+                            "format": "currency"
+                          },
                           "poleId": {
                             "$ref": "#/components/schemas/poleId"
                           },
@@ -4790,6 +4794,13 @@
                         "properties": {
                           "cableId": {
                             "$ref": "#/components/schemas/cableId"
+                          },
+                          "country": {
+                            "$ref": "#/components/schemas/countryCode"
+                          },
+                          "cost": {
+                            "type": "number",
+                            "format": "currency"
                           },
                           "ductId": {
                             "$ref": "#/components/schemas/ductId"
@@ -4874,6 +4885,10 @@
                         "country": {
                           "$ref": "#/components/schemas/countryCode"
                         },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
+                        },
                         "poleId": {
                           "$ref": "#/components/schemas/poleId"
                         },
@@ -4913,6 +4928,13 @@
                         "cableId": {
                           "description": "optionally specify the internal cable identifier",
                           "$ref": "#/components/schemas/cableId"
+                        },
+                        "country": {
+                          "$ref": "#/components/schemas/countryCode"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
                         },
                         "ductId": {
                           "$ref": "#/components/schemas/ductId"
@@ -5070,12 +5092,18 @@
                     "required": [
                       "poleId",
                       "technology",
-                      "configuration",
-                      "state"
+                      "configuration"
                     ],
                     "properties": {
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
+                      "reference": {
+                        "type": "string"
                       },
                       "poleId": {
                         "$ref": "#/components/schemas/poleId"
@@ -5108,8 +5136,7 @@
                     "required": [
                       "ductId",
                       "technology",
-                      "configuration",
-                      "state"
+                      "configuration"
                     ],
                     "properties": {
                       "ductId": {
@@ -5118,14 +5145,18 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
+                      "reference": {
+                        "type": "string"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -5148,13 +5179,14 @@
                   "value": {
                     "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
                     "country": "BEL",
+                    "cost": 2.5,
                     "technology": "ethernet",
                     "configuration": {
                       "category": "Cat6A",
                       "rate": 10,
-                      "unit": "Gbps"
+                      "unit": "Gbps",
+                      "state": "free"
                     },
-                    "state": "free",
                     "source": "historical",
                     "probability": 1,
                     "delete": false
@@ -5164,10 +5196,21 @@
                   "value": {
                     "poleId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
                     "country": "BEL",
+                    "cost": 7.5,
                     "technology": "singleFiber",
                     "configuration": {
                       "strands": 1,
-                      "mode": "SMOF"
+                      "mode": "SMOF",
+                      "states": [
+                        {
+                          "strand": 1,
+                          "state": "used"
+                        },
+                        {
+                          "strand": 2,
+                          "state": "used"
+                        }
+                      ]
                     },
                     "state": "free",
                     "source": "historical",
@@ -5178,11 +5221,24 @@
                 "multi": {
                   "value": {
                     "poleId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
+                    "cost": 15.25,
                     "technology": "multiFiber",
                     "configuration": {
                       "ribbons": 12,
                       "strands": 24,
-                      "mode": "MMOF"
+                      "mode": "MMOF",
+                      "states": [
+                        {
+                          "ribbon": 1,
+                          "strand": 1,
+                          "state": "used"
+                        },
+                        {
+                          "ribbon": 1,
+                          "strand": 2,
+                          "state": "used"
+                        }
+                      ]
                     },
                     "state": "free",
                     "source": "historical",
@@ -5427,8 +5483,7 @@
                     "required": [
                       "ductId",
                       "technology",
-                      "configuration",
-                      "state"
+                      "configuration"
                     ],
                     "properties": {
                       "ductId": {
@@ -5437,14 +5492,18 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
+                      "reference": {
+                        "type": "string"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -5465,8 +5524,7 @@
                     "required": [
                       "poleId",
                       "technology",
-                      "configuration",
-                      "state"
+                      "configuration"
                     ],
                     "properties": {
                       "poleId": {
@@ -5475,14 +5533,15 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -5507,11 +5566,32 @@
                     "country": "BEL",
                     "technology": "multiFiber",
                     "configuration": {
-                      "ribbons": 24,
-                      "strands": 48,
-                      "mode": "MMOF"
+                      "ribbons": 2,
+                      "strands": 2,
+                      "mode": "MMOF",
+                      "states": [
+                        {
+                          "ribbon": 1,
+                          "strand": 1,
+                          "state": "free"
+                        },
+                        {
+                          "ribbon": 1,
+                          "strand": 2,
+                          "state": "free"
+                        },
+                        {
+                          "ribbon": 2,
+                          "strand": 1,
+                          "state": "used"
+                        },
+                        {
+                          "ribbon": 2,
+                          "strand": 2,
+                          "state": "used"
+                        }
+                      ]
                     },
-                    "state": "used",
                     "source": "historical",
                     "probability": 1,
                     "delete": false
@@ -5523,10 +5603,15 @@
                     "country": "BEL",
                     "technology": "singleFiber",
                     "configuration": {
-                      "strands": 18,
-                      "mode": "SMOF"
+                      "strands": 1,
+                      "mode": "SMOF",
+                      "states": [
+                        {
+                          "strand": 1,
+                          "state": "used"
+                        }
+                      ]
                     },
-                    "state": "used",
                     "source": "historical",
                     "probability": 1,
                     "delete": false
@@ -5584,6 +5669,13 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
+                      "reference": {
+                        "type": "string"
+                      },
                       "ductId": {
                         "$ref": "#/components/schemas/ductId"
                       },
@@ -5592,9 +5684,6 @@
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -5622,14 +5711,15 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
                       "technology": {
                         "$ref": "#/components/schemas/cableTechnology"
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -5657,9 +5747,15 @@
                     "configuration": {
                       "ribbons": 24,
                       "strands": 48,
-                      "mode": "MMOF"
+                      "mode": "MMOF",
+                      "states": [
+                        {
+                          "ribbon": 1,
+                          "strand": 1,
+                          "state": "free"
+                        }
+                      ]
                     },
-                    "state": "free",
                     "source": "historical",
                     "probability": 1,
                     "delete": false
@@ -5673,9 +5769,14 @@
                     "technology": "singleFiber",
                     "configuration": {
                       "strands": 18,
-                      "mode": "SMOF"
+                      "mode": "SMOF",
+                      "states": [
+                        {
+                          "strand": 1,
+                          "state": "free"
+                        }
+                      ]
                     },
-                    "state": "free",
                     "source": "historical",
                     "probability": 1,
                     "delete": false
@@ -5738,6 +5839,13 @@
                         "ductId": {
                           "$ref": "#/components/schemas/ductId"
                         },
+                        "country": {
+                          "$ref": "#/components/schemas/countryCode"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
+                        },
                         "technology": {
                           "$ref": "#/components/schemas/cableTechnology"
                         },
@@ -5770,14 +5878,18 @@
                         "poleId": {
                           "$ref": "#/components/schemas/poleId"
                         },
+                        "country": {
+                          "$ref": "#/components/schemas/countryCode"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
+                        },
                         "technology": {
                           "$ref": "#/components/schemas/cableTechnology"
                         },
                         "configuration": {
                           "$ref": "#/components/schemas/cableConfiguration"
-                        },
-                        "state": {
-                          "$ref": "#/components/schemas/cableState"
                         },
                         "point": {
                           "$ref": "#/components/schemas/dateTime"
@@ -5803,10 +5915,10 @@
                       "configuration": {
                         "category": "Cat6A",
                         "rate": 10,
-                        "unit": "Gbps"
+                        "unit": "Gbps",
+                        "state": "used"
                       },
                       "technology": "ethernet",
-                      "state": "used",
                       "source": "historical",
                       "probability": 1,
                       "delete": false
@@ -5817,11 +5929,16 @@
                       "cableId": "5520aca1-4727-431a-aa9c-23f2e54b8a41",
                       "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
                       "configuration": {
-                        "strands": 48,
-                        "mode": "SMOF"
+                        "strands": 1,
+                        "mode": "SMOF",
+                        "states": [
+                          {
+                            "strand": 1,
+                            "state": "free"
+                          }
+                        ]
                       },
                       "technology": "singleFiber",
-                      "state": "free",
                       "source": "historical",
                       "probability": 1,
                       "delete": false
@@ -5832,12 +5949,33 @@
                       "cableId": "5520aca1-4727-431a-aa9c-23f2e54b8a41",
                       "ductId": "4f61c862-cbd6-4455-9cf2-3d478406c693",
                       "configuration": {
-                        "ribbons": 24,
-                        "strands": 48,
-                        "mode": "MMOF"
+                        "ribbons": 2,
+                        "strands": 2,
+                        "mode": "MMOF",
+                        "states": [
+                          {
+                            "ribbon": 1,
+                            "strand": 1,
+                            "state": "free"
+                          },
+                          {
+                            "ribbon": 1,
+                            "strand": 2,
+                            "state": "free"
+                          },
+                          {
+                            "ribbon": 2,
+                            "strand": 1,
+                            "state": "used"
+                          },
+                          {
+                            "ribbon": 2,
+                            "strand": 2,
+                            "state": "used"
+                          }
+                        ]
                       },
                       "technology": "multiFiber",
-                      "state": "free",
                       "source": "historical",
                       "probability": 1,
                       "delete": false
@@ -6415,6 +6553,10 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
                       "trenchId": {
                         "$ref": "#/components/schemas/trenchId"
                       },
@@ -6504,6 +6646,10 @@
                     },
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "trenchId": {
                       "$ref": "#/components/schemas/trenchId"
@@ -6679,6 +6825,13 @@
                   },
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
+                  },
+                  "reference": {
+                    "type": "string"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
                   },
                   "category": {
                     "$ref": "#/components/schemas/ductSizeCategory"
@@ -7050,6 +7203,13 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "reference": {
+                    "type": "string"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/ductPurpose"
                   },
@@ -7152,6 +7312,13 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "reference": {
+                    "type": "string"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "purpose": {
                     "$ref": "#/components/schemas/ductPurpose"
                   },
@@ -7243,6 +7410,16 @@
                     "ductId": {
                       "$ref": "#/components/schemas/ductId"
                     },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
+                    "reference": {
+                      "type": "string"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
+                    },
                     "trenchId": {
                       "$ref": "#/components/schemas/trenchId"
                     },
@@ -7312,6 +7489,112 @@
         }
       }
     },
+    "/duct/cable/{ductId}": {
+      "get": {
+        "summary": "Get list of cables within specified duct",
+        "security": [
+          {
+            "openId": [
+              "read:mni_duct",
+              "read:mni_ui"
+            ]
+          }
+        ],
+        "operationId": "getSingleDuctCables",
+        "tags": [
+          "Ducts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ductId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/cableId"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      "5520aca1-4727-431a-aa9c-23f2e54b8a41"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/duct/subduct/{ductId}": {
+      "get": {
+        "summary": "Get list of subducts within specified duct",
+        "security": [
+          {
+            "openId": [
+              "read:mni_duct",
+              "read:mni_ui"
+            ]
+          }
+        ],
+        "operationId": "getSingleDuctSubDucts",
+        "tags": [
+          "Ducts"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ductId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ductId"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      "5520aca1-4727-431a-aa9c-23f2e54b8a41"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/services": {
       "get": {
         "summary": "Export services in bulk",
@@ -7351,6 +7634,10 @@
                       },
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -7517,6 +7804,10 @@
                     },
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "reference": {
                       "type": "string"
@@ -8018,6 +8309,10 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -8279,6 +8574,10 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -8476,6 +8775,10 @@
                 "properties": {
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
                   },
                   "reference": {
                     "type": "string"
@@ -8770,6 +9073,10 @@
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
                     },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
+                    },
                     "customer": {
                       "type": "object",
                       "required": [
@@ -9015,6 +9322,10 @@
                         "$ref": "#/components/schemas/siteType",
                         "default": "unclassified"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
                       "location": {
                         "type": "object",
                         "properties": {
@@ -9123,6 +9434,10 @@
                     "type": {
                       "$ref": "#/components/schemas/siteType",
                       "default": "unclassified"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "location": {
                       "type": "object",
@@ -9470,6 +9785,10 @@
                     "$ref": "#/components/schemas/siteType",
                     "default": "unclassified"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "location": {
                     "type": "object",
                     "required": [
@@ -9800,6 +10119,10 @@
                   "type": {
                     "$ref": "#/components/schemas/siteType"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "location": {
                     "type": "object",
                     "properties": {
@@ -9949,6 +10272,10 @@
                   },
                   "type": {
                     "$ref": "#/components/schemas/siteType"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
                   },
                   "location": {
                     "type": "object",
@@ -10136,6 +10463,13 @@
                     },
                     "type": {
                       "$ref": "#/components/schemas/siteType"
+                    },
+                    "country": {
+                      "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "location": {
                       "type": "object",
@@ -10345,6 +10679,10 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
                       "reference": {
                         "type": "string"
                       },
@@ -10448,6 +10786,10 @@
                     },
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "reference": {
                       "type": "string"
@@ -10697,6 +11039,10 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -10873,6 +11219,10 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
                   "reference": {
                     "type": "string"
                   },
@@ -11005,6 +11355,10 @@
                 "properties": {
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
                   },
                   "reference": {
                     "type": "string"
@@ -11214,6 +11568,10 @@
                     },
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
                     },
                     "commissioned": {
                       "$ref": "#/components/schemas/date"
@@ -11755,6 +12113,13 @@
                       "country": {
                         "$ref": "#/components/schemas/countryCode"
                       },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
+                      },
+                      "reference": {
+                        "type": "string"
+                      },
                       "host": {
                         "type": "string",
                         "format": "hostname"
@@ -12086,6 +12451,13 @@
                     },
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
+                    },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
+                    },
+                    "reference": {
+                      "type": "string"
                     },
                     "host": {
                       "type": "string",
@@ -12647,6 +13019,13 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
+                  "reference": {
+                    "type": "string"
+                  },
                   "host": {
                     "type": "string",
                     "format": "hostname"
@@ -13071,6 +13450,13 @@
                     "country": {
                       "$ref": "#/components/schemas/countryCode"
                     },
+                    "cost": {
+                      "type": "number",
+                      "format": "currency"
+                    },
+                    "reference": {
+                      "type": "string"
+                    },
                     "host": {
                       "type": "string",
                       "format": "hostname"
@@ -13426,6 +13812,13 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
+                  "reference": {
+                    "type": "string"
+                  },
                   "commissioned": {
                     "$ref": "#/components/schemas/date"
                   },
@@ -13760,6 +14153,13 @@
                   "country": {
                     "$ref": "#/components/schemas/countryCode"
                   },
+                  "cost": {
+                    "type": "number",
+                    "format": "currency"
+                  },
+                  "reference": {
+                    "type": "string"
+                  },
                   "commissioned": {
                     "$ref": "#/components/schemas/date"
                   },
@@ -14010,6 +14410,10 @@
                           },
                           "unit": {
                             "$ref": "#/components/schemas/sizeUnit"
+                          },
+                          "cost": {
+                            "type": "number",
+                            "format": "currency"
                           }
                         }
                       },
@@ -14191,6 +14595,10 @@
                         },
                         "unit": {
                           "$ref": "#/components/schemas/sizeUnit"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
                         }
                       }
                     },
@@ -14625,6 +15033,10 @@
                       },
                       "unit": {
                         "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -14999,6 +15411,10 @@
                       },
                       "unit": {
                         "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -15236,6 +15652,10 @@
                       },
                       "unit": {
                         "$ref": "#/components/schemas/sizeUnit"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -15419,6 +15839,10 @@
                         },
                         "unit": {
                           "$ref": "#/components/schemas/sizeUnit"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
                         }
                       }
                     },
@@ -15576,6 +16000,59 @@
         }
       }
     },
+    "/pole/cable/{poleId}": {
+      "get": {
+        "summary": "Get list of cables on specified pole",
+        "security": [
+          {
+            "openId": [
+              "read:mni_pole",
+              "read:mni_ui"
+            ]
+          }
+        ],
+        "operationId": "getSinglePoleCables",
+        "tags": [
+          "Poles"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/poleId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/cableId"
+                  }
+                },
+                "examples": {
+                  "sample": {
+                    "value": [
+                      "5520aca1-4727-431a-aa9c-23f2e54b8a41"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/pole/timeline/{poleId}": {
       "get": {
         "summary": "timeline points for specified pole",
@@ -15715,6 +16192,10 @@
                           },
                           "type": {
                             "$ref": "#/components/schemas/constructionType"
+                          },
+                          "cost": {
+                            "type": "number",
+                            "format": "currency"
                           }
                         }
                       },
@@ -15907,6 +16388,10 @@
                         },
                         "type": {
                           "$ref": "#/components/schemas/constructionType"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
                         }
                       }
                     },
@@ -16183,6 +16668,10 @@
                       },
                       "type": {
                         "$ref": "#/components/schemas/constructionType"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -16326,7 +16815,8 @@
                       "depth": 0.5,
                       "classifier": "low",
                       "unit": "m",
-                      "type": "micro"
+                      "type": "micro",
+                      "cost": 2000
                     },
                     "demographics": {
                       "premises": {
@@ -16587,6 +17077,10 @@
                       },
                       "type": {
                         "$ref": "#/components/schemas/constructionType"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -16730,7 +17224,8 @@
                       "depth": 0.5,
                       "classifier": "low",
                       "unit": "m",
-                      "type": "micro"
+                      "type": "micro",
+                      "cost": 2500
                     },
                     "demographics": {
                       "premises": {
@@ -16852,6 +17347,10 @@
                       },
                       "type": {
                         "$ref": "#/components/schemas/constructionType"
+                      },
+                      "cost": {
+                        "type": "number",
+                        "format": "currency"
                       }
                     }
                   },
@@ -17061,6 +17560,10 @@
                         },
                         "type": {
                           "$ref": "#/components/schemas/constructionType"
+                        },
+                        "cost": {
+                          "type": "number",
+                          "format": "currency"
                         }
                       }
                     },
@@ -17180,7 +17683,8 @@
                         "depth": 0.5,
                         "depthClassifier": "low",
                         "unit": "m",
-                        "type": "micro"
+                        "type": "micro",
+                        "cost": 2500
                       },
                       "demographics": {
                         "premises": {
@@ -19029,7 +19533,7 @@
                   "sample": {
                     "value": [
                       {
-                        "kafkaProducerId": "7e3360a0-ce0e-406c-b3a3-d04c6c5500c",
+                        "kafkaProducerId": "5b1ef698-1cf3-4f12-a671-d60ff283db41",
                         "name": "west",
                         "clientId": "mni",
                         "producer": {
@@ -19121,7 +19625,7 @@
                 "sample": {
                   "value": [
                     {
-                      "kafkaProducerId": "7e3360a0-ce0e-406c-b3a3-d04c6c5500c",
+                      "kafkaProducerId": "5b1ef698-1cf3-4f12-a671-d60ff283db41",
                       "name": "west",
                       "clientId": "mni",
                       "producer": {
@@ -19161,7 +19665,7 @@
                 "examples": {
                   "sample": {
                     "value": [
-                      "7e3360a0-ce0e-406c-b3a3-d04c6c5500"
+                      "f3fd73b2-f08b-43f5-ad36-54299bf7dfab"
                     ]
                   }
                 }
@@ -19218,7 +19722,7 @@
                 "examples": {
                   "sample": {
                     "value": [
-                      "7e3360a0-ce0e-406c-b3a3-d04c6c5500c"
+                      "5b1ef698-1cf3-4f12-a671-d60ff283db41"
                     ]
                   }
                 }
@@ -19313,7 +19817,7 @@
                   }
                 },
                 "example": {
-                  "kafkaProducerId": "7e3360a0-ce0e-406c-b3a3-d04c6c5500c"
+                  "kafkaProducerId": "5b1ef698-1cf3-4f12-a671-d60ff283db41"
                 }
               }
             }
@@ -19410,7 +19914,7 @@
                 "examples": {
                   "sample": {
                     "value": {
-                      "kafkaProducerId": "7e3360a0-ce0e-406c-b3a3-d04c6c5500c",
+                      "kafkaProducerId": "5b1ef698-1cf3-4f12-a671-d60ff283db41",
                       "name": "west",
                       "clientId": "mni",
                       "producer": {
@@ -22401,7 +22905,7 @@
           }
         ],
         "tags": [
-          "Cables"
+          "Documents"
         ],
         "responses": {
           "200": {
@@ -26366,15 +26870,6 @@
               "SMOF",
               "MMOF"
             ]
-          },
-          "channels": {
-            "$ref": "#/components/schemas/channels"
-          },
-          "width": {
-            "description": "channel bandwith width",
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 1000
           }
         }
       },
@@ -26918,9 +27413,8 @@
         "description": "copper cable properties",
         "type": "object",
         "required": [
-          "category",
-          "rate",
-          "unit"
+          "twistedPairs",
+          "state"
         ],
         "properties": {
           "twistedPairs": {
@@ -26929,6 +27423,9 @@
             "minimum": 1,
             "maximum": 48,
             "default": 7
+          },
+          "state": {
+            "$ref": "#/components/schemas/cableState"
           }
         }
       },
@@ -26938,7 +27435,8 @@
         "required": [
           "category",
           "rate",
-          "unit"
+          "unit",
+          "state"
         ],
         "properties": {
           "category": {
@@ -26971,6 +27469,9 @@
               "Tbps"
             ],
             "default": "Gbps"
+          },
+          "state": {
+            "$ref": "#/components/schemas/cableState"
           }
         }
       },
@@ -26981,7 +27482,8 @@
           "frequencyRange",
           "channels",
           "width",
-          "unit"
+          "unit",
+          "state"
         ],
         "properties": {
           "frequencyRange": {
@@ -27021,6 +27523,9 @@
               "MHz",
               "GHz"
             ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/cableState"
           }
         }
       },
@@ -27044,14 +27549,12 @@
               "MMOF"
             ]
           },
-          "channels": {
-            "$ref": "#/components/schemas/channels"
-          },
-          "width": {
-            "description": "channel bandwith width",
+          "rate": {
+            "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 1000
+            "maximum": 768,
+            "default": 10
           },
           "unit": {
             "description": "bandwidth unit",
@@ -27061,6 +27564,20 @@
               "Tbps"
             ],
             "default": "Gbps"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "strand": {
+                  "$ref": "#/components/schemas/strand"
+                },
+                "state": {
+                  "$ref": "#/components/schemas/cableState"
+                }
+              }
+            }
           }
         }
       },
@@ -27089,14 +27606,12 @@
               "MMOF"
             ]
           },
-          "channels": {
-            "$ref": "#/components/schemas/channels"
-          },
-          "width": {
-            "description": "channel bandwith width",
+          "rate": {
+            "description": "maximum transmission rate",
             "type": "integer",
             "minimum": 1,
-            "maximum": 1000
+            "maximum": 768,
+            "default": 10
           },
           "unit": {
             "description": "bandwidth unit",
@@ -27106,6 +27621,23 @@
               "Tbps"
             ],
             "default": "Gbps"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ribbon": {
+                  "$ref": "#/components/schemas/ribbon"
+                },
+                "strand": {
+                  "$ref": "#/components/schemas/strand"
+                },
+                "state": {
+                  "$ref": "#/components/schemas/cableState"
+                }
+              }
+            }
           }
         }
       },
@@ -27333,7 +27865,6 @@
         "type": "string",
         "enum": [
           "duct",
-          "microduct",
           "subduct"
         ]
       },
@@ -27697,8 +28228,7 @@
           "free",
           "used",
           "reserved",
-          "faulty",
-          "predicted"
+          "faulty"
         ]
       },
       "alertId": {
@@ -27960,7 +28490,8 @@
         "enum": [
           "free",
           "used",
-          "reserved"
+          "reserved",
+          "faulty"
         ]
       },
       "rackId": {
@@ -28092,7 +28623,8 @@
         "enum": [
           "free",
           "used",
-          "reserved"
+          "reserved",
+          "faulty"
         ]
       },
       "workflowEngine": {
@@ -28996,7 +29528,6 @@
         "read:mni_admin",
         "read:mni_alert",
         "read:mni_cable",
-        "read:mni_duct",
         "read:mni_duct",
         "read:mni_fetch",
         "read:mni_ne",

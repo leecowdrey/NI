@@ -11,11 +11,6 @@
 var map;
 var polePath;
 var lineSymbol;
-let fmrReady = null;
-let ftgReady = null;
-let fltReady = null;
-let fppReady = null;
-let retryMs = 5000;
 let poleId = null;
 let point = null;
 let mapVendor = null;
@@ -25,48 +20,96 @@ let marker = null;
 let endMarker = null;
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
-function fetchListPoles() {
-  if (fltReady != null) {
-    clearTimeout(fltReady);
-  }
+var trenchPanel = null;
+var sitePanel = null;
+let trenchList = "";
+let siteList = "";
+var tipObj = null;
 
+function injectTooltip(event, data) {
+  if (!tipObj && event) {
+    tipObj = document.createElement("div");
+    tipObj.setAttribute("class", "mappolytooltip");
+    tipObj.innerHTML = data;
+    document.body.appendChild(tipObj);
+  }
+}
+function deleteTooltip(event) {
+  if (tipObj) {
+    //delete the tooltip if it exists in the DOM
+    document.body.removeChild(tipObj);
+    tipObj = null;
+  }
+}
+
+function injectTooltip(event, data) {
+  if (!tipObj && event) {
+    tipObj = document.createElement("div");
+    tipObj.setAttribute("class", "mappolytooltip");
+    tipObj.innerHTML = data;
+    document.body.appendChild(tipObj);
+  }
+}
+function deleteTooltip(event) {
+  if (tipObj) {
+    //delete the tooltip if it exists in the DOM
+    document.body.removeChild(tipObj);
+    tipObj = null;
+  }
+}
+function fetchListPoles() {
   let c = document.getElementById("country");
   let selectedCountry = c.options[c.selectedIndex].value;
-  fetch(localStorage.getItem("mni.gatewayUrl") + "/pole?country=" +
-      selectedCountry, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  fetch(
+    localStorage.getItem("mni.gatewayUrl") + "/pole?country=" + selectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fltReady = setTimeout(fetchMapRender, retryMs);
-      //}
+      }
     })
     .then((data) => {
+      let suppliedPoleId = window.location.pathname.replace(
+        localStorage.getItem("mni.rootUrl") + "/pole/",
+        ""
+      );
       let poleIds =
         "<option disabled value='-1' selected='selected'> -- select a pole -- </option>";
+      if (suppliedPoleId != null) {
+        poleIds = "<option disabled value='-1'> -- select a pole -- </option>";
+      }
       for (var i = 0; i < data.length; i++) {
-        poleIds += "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        if (suppliedPoleId == data[i]) {
+          poleIds +=
+            "<option value='" +
+            data[i] +
+            "' selected='selected'>" +
+            data[i] +
+            "</option>";
+        } else {
+          poleIds +=
+            "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        }
       }
       document.getElementById("poleId").innerHTML = poleIds;
       document.getElementById("poleHeight").setAttribute("value", "");
       document.getElementById("poleClassifier").setAttribute("value", "");
+      if (suppliedPoleId != null) {
+        fetchPolePoints();
+      }
     })
     .catch((e) => {
-      notify(e);
-      //fltReady = setTimeout(fetchMapRender, retryMs);
+      console.error(e);
     });
 }
 function fetchPolePoints() {
-  if (fppReady != null) {
-    clearTimeout(fppReady);
-  }
-
   let t = document.getElementById("poleId");
   poleId = t.options[t.selectedIndex].value;
   if (poleId != "-1") {
@@ -80,34 +123,37 @@ function fetchPolePoints() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //fppReady = setTimeout(fetchMapRender, retryMs);
-        //}
+        }
       })
       .then((data) => {
         let polePoints =
-          "<option disabled value='-1' selected='selected'> -- select a date/time point -- </option>";
+          "<option disabled value='-1'> -- select a date/time point -- </option>";
         for (var i = 0; i < data.length; i++) {
+          if (i==0) {
+          polePoints +=
+            "<option selected='selected' value='" +
+            data[i].point +
+            "' >" +
+            data[i].point +
+            "</option>";
+          } else {
           polePoints +=
             "<option value='" +
             data[i].point +
             "' >" +
             data[i].point +
             "</option>";
+          }
         }
         document.getElementById("polePoint").innerHTML = polePoints;
+        fetchPole();
       })
       .catch((e) => {
-        notify(e);
-        //fppReady = setTimeout(fetchMapRender, retryMs);
+        console.error(e);
       });
   }
 }
 function fetchMapRender() {
-  if (fmrReady != null) {
-    clearTimeout(fmrReady);
-  }
-
   fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/mapRender", {
     method: "GET",
     headers: {
@@ -118,9 +164,7 @@ function fetchMapRender() {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-        //fmrReady = setTimeout(fetchMapRender, retryMs);
-      //}
+      }
     })
     .then((data) => {
       if (data.vendor != null) {
@@ -139,14 +183,10 @@ function fetchMapRender() {
       }
     })
     .catch((e) => {
-      notify(e);
-      //fmrReady = setTimeout(fetchMapRender, retryMs);
+      console.error(e);
     });
 }
 function fetchPole() {
-  if (ftgReady != null) {
-    clearTimeout(ftgReady);
-  }
   let t = document.getElementById("poleId");
   poleId = t.options[t.selectedIndex].value;
   let p = document.getElementById("polePoint");
@@ -171,14 +211,40 @@ function fetchPole() {
       .then((response) => {
         if (response.ok) {
           return response.json();
-        } //else {
-          //ftgReady = setTimeout(fetchPole, retryMs);
-        //}
+        }
       })
       .then((data) => {
         if (data != null) {
           poleX = data.coordinate.x;
           poleY = data.coordinate.y;
+          if (data.connectsTo?.trenchId != null) {
+            trenchList =
+              '<li><a href="' +
+              localStorage.getItem("mni.rootUrl") +
+              "/trench/" +
+              data.connectsTo?.trenchId +
+              "?country=" +
+              mniSelectedCountry +
+              '">' +
+              data.connectsTo?.trenchId +
+              "</a></li>";
+          } else {
+            trenchList = "<ul><li>none</li></ul>";
+          }
+          if (data.connectsTo?.siteId != null) {
+            siteList =
+              '<li><a href="' +
+              localStorage.getItem("mni.rootUrl") +
+              "/site/" +
+              data.connectsTo?.siteId +
+              "?country=" +
+              mniSelectedCountry +
+              '">' +
+              data.connectsTo?.siteId +
+              "</a></li>";
+          } else {
+            siteList = "<ul><li>none</li></ul>";
+          }
           if (
             document.getElementById("mapRender") !== undefined &&
             document.getElementById("mapRender") != null
@@ -189,6 +255,34 @@ function fetchPole() {
             }
             marker.setPosition({ lat: poleY, lng: poleX });
             marker.setMap(map);
+            google.maps.event.addListener(marker, "click", function (h) {
+              trenchPanel = new google.maps.InfoWindow({
+                headerContent: "Trench",
+                position: marker,
+                content: trenchList,
+              });
+              trenchPanel.open({
+                shouldFocus: true,
+                map,
+              });
+            });
+            google.maps.event.addListener(marker, "mouseover", function (e) {
+              injectTooltip(e, poleId);
+            });
+            google.maps.event.addListener(marker, "mouseout", function (e) {
+              deleteTooltip(e);
+            });
+            google.maps.event.addListener(marker, "rightclick", function (h) {
+              sitePanel = new google.maps.InfoWindow({
+                headerContent: "Site",
+                position: marker,
+                content: siteList,
+              });
+              sitePanel.open({
+                shouldFocus: true,
+                map,
+              });
+            });
           }
           if (
             data.construction?.height != null &&
@@ -209,29 +303,53 @@ function fetchPole() {
         }
       })
       .catch((e) => {
-        notify(e);
-        //ftgReady = setTimeout(fetchPole, retryMs);
+        console.error(e);
       });
     loadScript(mapRenderUrl, function () {
       function displayMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 30,
+          zoom: 17,
           center: { lat: poleY, lng: poleX },
           mapTypeId: "hybrid",
           disableDefaultUI: true,
         });
         marker = new google.maps.Marker({
           position: { lat: poleY, lng: poleX },
-          icon: {
-            path: "M 0,0 V15 M -4,4 H4",
-            strokeOpacity: 1,
-            fillColor: "#8B0000",
-            fillOpacity: 1,
-            strokeColor: "#8B0000",
-            strokeWeight: 6,
-            scale: 4,
+          label: {
+            text: "\ue7ee", // codepoint from https://fonts.google.com/icons
+            fontFamily: "Material Symbols Outlined",
+            color: "#ffffff",
+            fontSize: "18px",
           },
           map: map,
+        });
+        google.maps.event.addListener(marker, "click", function (h) {
+          trenchPanel = new google.maps.InfoWindow({
+            headerContent: "Trench",
+            position: { lat: poleY, lng: poleX },
+            content: trenchList,
+          });
+          trenchPanel.open({
+            shouldFocus: true,
+            map,
+          });
+        });
+        google.maps.event.addListener(marker, "mouseover", function (e) {
+          injectTooltip(e, poleId);
+        });
+        google.maps.event.addListener(marker, "mouseout", function (e) {
+          deleteTooltip(e);
+        });
+        google.maps.event.addListener(marker, "rightclick", function (h) {
+          sitePanel = new google.maps.InfoWindow({
+            headerContent: "Site",
+            position: { lat: poleY, lng: poleX },
+            content: siteList,
+          });
+          sitePanel.open({
+            shouldFocus: true,
+            map,
+          });
         });
       }
       window.displayMap = displayMap;
@@ -239,15 +357,8 @@ function fetchPole() {
   }
 }
 try {
-  countryListPopulate();
   fetchMapRender();
+  countryListPopulate(fetchListPoles);
 } catch (e) {
-  notify(e);
-  //fmrReady = setTimeout(fetchMapRender, retryMs);
-}
-try {
-  fetchListPoles();
-} catch (e) {
-  notify(e);
-  //fltReady = setTimeout(fetchListPoles, retryMs);
+  console.error(e);
 }

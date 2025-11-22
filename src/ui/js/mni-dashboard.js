@@ -1,3 +1,13 @@
+//=====================================================================
+// MarlinDT Network Intelligence (MNI) - JavaScript: Dashboard
+//
+// Corporate Headquarters:
+// Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
+// https://www.merkator.com/
+//
+// © 2024-2025 Merkator nv/sa. All rights reserved.
+//=====================================================================
+//
 let ready = null;
 let retryMs = 5000;
 let refreshMs = 300000;
@@ -29,6 +39,15 @@ let dbmReady = null;
 let totalPremisesPassed = 0;
 let totalTrenchDistance = 0;
 let totalTrenchDistanceUnit = "";
+let costCable = 0;
+let costDuct = 0;
+let costPole = 0;
+let costNe = 0;
+let costRack = 0;
+let costService = 0;
+let costSite = 0;
+let costTrench = 0;
+let costTotal = 0;
 function toPercent(n, t) {
   let r = 0;
   try {
@@ -56,7 +75,7 @@ function fetchStats() {
   if (ready != null) {
     clearTimeout(ready);
   }
-  fetch(localStorage.getItem("mni.gatewayUrl")+"/ui/statistic", {
+  fetch(localStorage.getItem("mni.gatewayUrl") + "/ui/statistic", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -170,6 +189,71 @@ function fetchStats() {
               data.metrics.cable.distance +
               data.metrics.cable.unit +
               "</center>";
+          }
+          if (data.metrics.cost != null) {
+            let name = "Euro"; //localStorage.getItem("mni.currencyName");
+            let isoCode = "EUR"; //localStorage.getItem("mni.currencyIsoCode");
+            let symbol = "€"; //localStorage.getItem("mni.currencySymbol");
+            document.getElementById("businessCostsPanel").innerHTML =
+              "Costs: (" +
+              name +
+              ") " +
+              "&emsp;Cables " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.cable) +
+              "&emsp;|&emsp;Ducts " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.duct) +
+              "&emsp;|&emsp;Poles " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.pole) +
+              "&emsp;|&emsp;NE " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.ne) +
+              "&emsp;|&emsp;Racks " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.rack) +
+              "&emsp;|&emsp;Services " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.service) +
+              "&emsp;|&emsp;Sites " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.site) +
+              "&emsp;|&emsp;Trenches " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.trench);
           }
         }
       }
@@ -295,13 +379,11 @@ function fetchStats() {
       ready = setTimeout(fetchStats, refreshMs);
     })
     .catch((e) => {
-      notify(e);
-      //ready = setTimeout(fetchStats, refreshMs);
+      console.error(e);
     });
 }
 try {
   fetchStats();
 } catch (e) {
-  notify(e);
-  //ready = setTimeout(fetchStats, refreshMs);
+  console.error(e);
 }

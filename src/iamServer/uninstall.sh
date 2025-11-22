@@ -1,6 +1,6 @@
 #!/bin/bash
 #=====================================================================
-# MarlinDT Network Intelligence (MNI) - IAM Uninstaller
+# MarlinDT Network Intelligence (MNI) - IAM Uninstaller (keycloak)
 #
 # Corporate Headquarters:
 # Merkator · Vliegwezenlaan 48 · 1731 Zellik · Belgium · T:+3223092112
@@ -18,16 +18,22 @@ alert "Identity and Access Management (IAM) Server"
 
 [[ $(id -u) -ne 0 ]] && exit 1
 [[ -f "${ENV}" ]] || exit 1
-which docker-compose &> /dev/null || exit 1
 
+ADDRESS=$(grep -E "^IAM_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 CONFIG_DIRECTORY=$(grep -E "^CONFIG_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-GROUP=$(grep -E "^HOST_SERVICE_GROUP=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-HOST_SERVICE=$(grep -E "^IAM_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-LOG_FILE=$(grep -E "^IAM_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-USERNAME=$(grep -E "^IAM_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d'"' -f2)
-WORKING_DIRECTORY=$(grep -E "^IAM_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+GROUP=$(grep -E "^HOST_SERVICE_GROUP=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+HOST_SERVICE=$(grep -E "^IAM_HOST_SERVICE_SYSTEMD=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+LOG_FILE=$(grep -E "^IAM_HOST_SERVICE_LOG_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+PORT_HTTPS=$(grep -E "^IAM_PORT_HTTPS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_CERT=$(grep -E "^IAM_SSL_CERT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SSL_CSR=$(grep -E "^IAM_SSL_CSR=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SSL_DAYS=$(grep -E "^IAM_SSL_DAYS.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_KEY=$(grep -E "^IAM_SSL_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SSL_SIZE=$(grep -E "^IAM_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+USERNAME=$(grep -E "^IAM_HOST_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+WORKING_DIRECTORY=$(grep -E "^IAM_WORKING_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+
+#UNINSTALL_TMP=$(mktemp -q -p /tmp mni.XXXXXXXX)
 
 doing "Removing systemD service"
 systemctl stop ${HOST_SERVICE} &>/dev/null && \
@@ -35,22 +41,6 @@ systemctl disable ${HOST_SERVICE} &>/dev/null && \
 rm -f /etc/systemd/system/${HOST_SERVICE} && \
 systemctl daemon-reload &>/dev/null && \
 [[ -f "${LOG_FILE}" ]] && rm -f ${LOG_FILE} &>/dev/null
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
-
-doing "Removimg Authentik Docker images"
-su --shell /bin/bash - -c "cd ${WORKING_DIRECTORY} && docker-compose rm -fsv" ${USERNAME}
-RETVAL=$?
-[[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
-
-#doing "Pruning Docker images"
-#docker system prune --all --force --volumes &>/dev/null
-#RETVAL=$?
-#[[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
-
-doing "Unlinking Self-Signed SSL certificate from deployment"
-[[ -f "${WORKING_DIRECTORY}/cert/${SSL_KEY}" ]] && unlink ${WORKING_DIRECTORY}/cert/${SSL_KEY} &>/dev/null
-[[ -f "${WORKING_DIRECTORY}/cert/${SSL_CERT}" ]] && unlink ${WORKING_DIRECTORY}/cert/${SSL_CERT} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
 
