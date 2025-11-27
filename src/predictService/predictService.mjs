@@ -23,9 +23,6 @@ stateDiagram-v2
 ```
 */
 //
-import SegfaultHandler from "segfault-handler";
-SegfaultHandler.registerHandler("crash.log");
-
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";

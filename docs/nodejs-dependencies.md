@@ -4,14 +4,14 @@ url: https://www.merkator.com/
 footer: © 2024-2025 Merkator nv/sa. All rights reserved.
 title: MarlinDT Network Intelligence (MNI)
 paginate: false
-version: 1.0.0.1763724098
+version: 1.0.0.1764279709
 ---
 
 # MarlinDT Network Intelligence
 
 
 
->Version: 1.0.0.1763724098
+>Version: 1.0.0.1764279709
 
 
 
@@ -39,7 +39,6 @@ version: 1.0.0.1763724098
 | `morgan` | ^1.10.1 | MIT |
 | `nocache` | ^4.0.0 | MIT |
 | `node-cron` | ^4.2.1 | ISC |
-| `segfault-handler` | ^1.3.0 | BSD-3-Clause |
 | `serve-favicon` | ^2.5.1 | MIT |
 | `software-license-key` | ^1.0.2 | MIT |
 | `uuid` | ^13.0.0 | MIT |
@@ -256,7 +255,7 @@ dist-tags:
 latest-4: 4.21.2
 latest: 5.1.0
 
-published 7 months ago by wesleytodd <wes@wesleytodd.com>
+published 8 months ago by wesleytodd <wes@wesleytodd.com>
 
 ```
 
@@ -321,7 +320,7 @@ maintainers:
 dist-tags:
 latest: 7.3.1
 
-published 2 days ago by gustavohenke <guhenke@gmail.com>
+published a week ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -442,37 +441,6 @@ published 4 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
-#### `segfault-handler`
-
-
-```npm
-
-segfault-handler@1.3.0 | BSD-3-Clause | deps: 2 | versions: 10
-catches SIGSEGV and prints diagnostic information
-https://github.com/ddopson/node-segfault-handler#readme
-
-dist
-.tarball: https://registry.npmjs.org/segfault-handler/-/segfault-handler-1.3.0.tgz
-.shasum: 054bc847832fa14f218ba6a79e42877501c8870e
-.integrity: sha512-p7kVHo+4uoYkr0jmIiTBthwV5L2qmWtben/KDunDZ834mbos+tY+iO0//HpAJpOFSQZZ+wxKWuRo4DxV02B7Lg==
-.unpackedSize: 69.7 kB
-
-dependencies:
-bindings: ^1.2.1
-nan: ^2.14.0
-
-maintainers:
-- ddopson <ddopson@gmail.com>
-- no9 <anton@venshare.com>
-- rfeng <enjoyjava@gmail.com>
-
-dist-tags:
-latest: 1.3.0
-
-published over a year ago by kneth <geisshirt@gmail.com>
-
-```
-
 #### `serve-favicon`
 
 
@@ -580,7 +548,6 @@ published 2 months ago by broofa <robert@broofa.com>
 | `express` | ^5.1.0 | MIT |
 | `express-cache-controller` | ^1.1.0 | MIT |
 | `morgan` | ^1.10.1 | MIT |
-| `segfault-handler` | ^1.3.0 | BSD-3-Clause |
 | `serve-favicon` | ^2.5.1 | MIT |
 | `uuid` | ^13.0.0 | MIT |
 
@@ -763,7 +730,7 @@ dist-tags:
 latest-4: 4.21.2
 latest: 5.1.0
 
-published 7 months ago by wesleytodd <wes@wesleytodd.com>
+published 8 months ago by wesleytodd <wes@wesleytodd.com>
 
 ```
 
@@ -829,37 +796,6 @@ dist-tags:
 latest: 1.10.1
 
 published 4 months ago by ulisesgascon <ulisesgascondev@gmail.com>
-
-```
-
-#### `segfault-handler`
-
-
-```npm
-
-segfault-handler@1.3.0 | BSD-3-Clause | deps: 2 | versions: 10
-catches SIGSEGV and prints diagnostic information
-https://github.com/ddopson/node-segfault-handler#readme
-
-dist
-.tarball: https://registry.npmjs.org/segfault-handler/-/segfault-handler-1.3.0.tgz
-.shasum: 054bc847832fa14f218ba6a79e42877501c8870e
-.integrity: sha512-p7kVHo+4uoYkr0jmIiTBthwV5L2qmWtben/KDunDZ834mbos+tY+iO0//HpAJpOFSQZZ+wxKWuRo4DxV02B7Lg==
-.unpackedSize: 69.7 kB
-
-dependencies:
-bindings: ^1.2.1
-nan: ^2.14.0
-
-maintainers:
-- ddopson <ddopson@gmail.com>
-- no9 <anton@venshare.com>
-- rfeng <enjoyjava@gmail.com>
-
-dist-tags:
-latest: 1.3.0
-
-published over a year ago by kneth <geisshirt@gmail.com>
 
 ```
 
@@ -933,7 +869,6 @@ published 2 months ago by broofa <robert@broofa.com>
 | Third-Party Package | Used Version | License |
 | ------------------- | ------------ | ------- |
 | `dotenv` | ^17.2.3 | BSD-2-Clause |
-| `segfault-handler` | ^1.3.0 | BSD-3-Clause |
 | `uuid` | ^13.0.0 | MIT |
 
 #### `dotenv`
@@ -964,37 +899,6 @@ latest: 17.2.3
 next: 16.1.0-rc2
 
 published a month ago by motdotla <mot@mot.la>
-
-```
-
-#### `segfault-handler`
-
-
-```npm
-
-segfault-handler@1.3.0 | BSD-3-Clause | deps: 2 | versions: 10
-catches SIGSEGV and prints diagnostic information
-https://github.com/ddopson/node-segfault-handler#readme
-
-dist
-.tarball: https://registry.npmjs.org/segfault-handler/-/segfault-handler-1.3.0.tgz
-.shasum: 054bc847832fa14f218ba6a79e42877501c8870e
-.integrity: sha512-p7kVHo+4uoYkr0jmIiTBthwV5L2qmWtben/KDunDZ834mbos+tY+iO0//HpAJpOFSQZZ+wxKWuRo4DxV02B7Lg==
-.unpackedSize: 69.7 kB
-
-dependencies:
-bindings: ^1.2.1
-nan: ^2.14.0
-
-maintainers:
-- ddopson <ddopson@gmail.com>
-- no9 <anton@venshare.com>
-- rfeng <enjoyjava@gmail.com>
-
-dist-tags:
-latest: 1.3.0
-
-published over a year ago by kneth <geisshirt@gmail.com>
 
 ```
 
@@ -1036,7 +940,6 @@ published 2 months ago by broofa <robert@broofa.com>
 | `kafkajs` | ^2.2.4 | MIT |
 | `node-cron` | ^4.2.1 | ISC |
 | `nodemailer` | ^7.0.9 | MIT-0 |
-| `segfault-handler` | ^1.3.0 | BSD-3-Clause |
 | `uuid` | ^11.0.5 | MIT |
 
 #### `dotenv`
@@ -1132,57 +1035,26 @@ published 4 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@7.0.10 | MIT-0 | deps: none | versions: 284
+nodemailer@7.0.11 | MIT-0 | deps: none | versions: 285
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.10.tgz
-.shasum: 540062dbbe574220b42e79d2d949956d3eac5a46
-.integrity: sha512-Us/Se1WtT0ylXgNFfyFSx4LElllVLJXQjWi2Xz17xWw7amDKO2MLtFnVp1WACy7GkVGs+oBlRopVNUzlrGSw1w==
-.unpackedSize: 528.8 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.11.tgz
+.shasum: 5f7b06afaec20073cff36bea92d1c7395cc3e512
+.integrity: sha512-gnXhNRE0FNhD7wPSCGhdNh46Hs6nm+uTyg+Kq0cZukNQiYdnCsoQjodNP9BQVG9XrcK/v6/MgpAPBUFyzh9pvw==
+.unpackedSize: 529.8 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
 beta: 2.4.0-beta.0
-latest: 7.0.10
+latest: 7.0.11
 
-published 4 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
-
-```
-
-#### `segfault-handler`
-
-
-```npm
-
-segfault-handler@1.3.0 | BSD-3-Clause | deps: 2 | versions: 10
-catches SIGSEGV and prints diagnostic information
-https://github.com/ddopson/node-segfault-handler#readme
-
-dist
-.tarball: https://registry.npmjs.org/segfault-handler/-/segfault-handler-1.3.0.tgz
-.shasum: 054bc847832fa14f218ba6a79e42877501c8870e
-.integrity: sha512-p7kVHo+4uoYkr0jmIiTBthwV5L2qmWtben/KDunDZ834mbos+tY+iO0//HpAJpOFSQZZ+wxKWuRo4DxV02B7Lg==
-.unpackedSize: 69.7 kB
-
-dependencies:
-bindings: ^1.2.1
-nan: ^2.14.0
-
-maintainers:
-- ddopson <ddopson@gmail.com>
-- no9 <anton@venshare.com>
-- rfeng <enjoyjava@gmail.com>
-
-dist-tags:
-latest: 1.3.0
-
-published over a year ago by kneth <geisshirt@gmail.com>
+published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1225,7 +1097,6 @@ published 2 months ago by broofa <robert@broofa.com>
 | `mysql2` | ^3.15.3 | MIT |
 | `node-cron` | ^4.2.1 | ISC |
 | `oracledb` | ^6.10.0 | (Apache-2.0 OR UPL-1.0) |
-| `segfault-handler` | ^1.3.0 | BSD-3-Clause |
 | `uuid` | ^13.0.0 | MIT |
 
 #### `dotenv`
@@ -1285,10 +1156,11 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 legacy-v10: 10.5.0
+legacy-v9: 9.3.5
 legacy: 4.5.3
 v7-legacy: 7.2.0
 
-published 2 days ago by isaacs <i@izs.me>
+published a week ago by isaacs <i@izs.me>
 
 ```
 
@@ -1389,37 +1261,6 @@ dist-tags:
 latest: 6.10.0
 
 published a month ago by sharadchan87 <sharad.raju@oracle.com>
-
-```
-
-#### `segfault-handler`
-
-
-```npm
-
-segfault-handler@1.3.0 | BSD-3-Clause | deps: 2 | versions: 10
-catches SIGSEGV and prints diagnostic information
-https://github.com/ddopson/node-segfault-handler#readme
-
-dist
-.tarball: https://registry.npmjs.org/segfault-handler/-/segfault-handler-1.3.0.tgz
-.shasum: 054bc847832fa14f218ba6a79e42877501c8870e
-.integrity: sha512-p7kVHo+4uoYkr0jmIiTBthwV5L2qmWtben/KDunDZ834mbos+tY+iO0//HpAJpOFSQZZ+wxKWuRo4DxV02B7Lg==
-.unpackedSize: 69.7 kB
-
-dependencies:
-bindings: ^1.2.1
-nan: ^2.14.0
-
-maintainers:
-- ddopson <ddopson@gmail.com>
-- no9 <anton@venshare.com>
-- rfeng <enjoyjava@gmail.com>
-
-dist-tags:
-latest: 1.3.0
-
-published over a year ago by kneth <geisshirt@gmail.com>
 
 ```
 
@@ -1591,6 +1432,6 @@ next-14: 14.2.1
 next-15: 15.5.0-candidate.0
 next: 18.0.0-candidate.7
 
-published 5 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 6 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```

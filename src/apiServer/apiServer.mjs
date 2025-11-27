@@ -13,9 +13,6 @@
 //    https://github.com/duckdb/duckdb-spatial/issues/416
 //    LAT,LNG needs to be swapped, should be ST_Point2D(x,y) but needs ST_Point(y,x)
 //
-import SegfaultHandler from "segfault-handler";
-SegfaultHandler.registerHandler("crash.log");
-
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import { Base64 } from "js-base64";
@@ -3204,14 +3201,12 @@ var run = async () => {
     // database
     if (fs.existsSync(duckDbFile)) {
       try {
-        /*
-      DDI = await DuckDBInstance.create(duckDbFile, {
-        max_memory: duckDbMaxMemory,
-        threads: duckDbThreads,
-      });
-      */
+        DDI = await DuckDBInstance.create(duckDbFile, {
+          max_memory: duckDbMaxMemory,
+          threads: duckDbThreads,
+        });
         // use by default 80% available RAM, and total cores for threads
-        DDI = await DuckDBInstance.create(duckDbFile);
+        // DDI = await DuckDBInstance.create(duckDbFile);
         DDC = await DDI.connect();
         await DDC.run("PRAGMA enable_checkpoint_on_shutdown");
       } catch (e) {

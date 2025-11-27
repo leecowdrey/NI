@@ -8,9 +8,6 @@
 // © 2024-2025 Merkator nv/sa. All rights reserved.
 //=====================================================================
 //
-import SegfaultHandler from "segfault-handler";
-SegfaultHandler.registerHandler("crash.log");
-
 import * as OAS from "./oasConstants.mjs";
 import "dotenv/config";
 import dns from "dns";
