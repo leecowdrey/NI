@@ -1,0 +1,12 @@
+[
+	{
+		"workflowEngineId": "efac48be-cdee-4022-8d8c-bd170079f5e4",
+		"name": "camunda8",
+		"engine": {
+			"url": "https://127.0.0.1:443/camunda",
+			"username": "internal",
+			"password": "service",
+			"type": "bpmn"
+		}
+	}
+]

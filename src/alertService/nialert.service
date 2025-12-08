@@ -1,0 +1,19 @@
+[Unit]
+Description=NI Alert Server
+After=multi-user.target
+
+[Service]
+UMask=007
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=ni
+LimitNOFILE=infinity
+Restart=on-failure
+StandardError=append:/var/log/ni/alert.log
+StandardOutput=append:/var/log/ni/alert.log
+Type=simple
+User=nialert
+WorkingDirectory=/usr/local/ni/alert
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+{
+  "bugs": {
+    "url": "https://help.cowdrey.net/",
+    "email": "support@cowdrey.net"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "latest",
+    "basic-auth-connect": "^1.1.0",
+    "compare-versions": "^6.1.1",
+    "compression": "^1.8.1",
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-fileupload": "^1.5.2",
+    "express-validator": "^7.2.1",
+    "js-base64": "^3.7.8",
+    "morgan": "^1.10.1",
+    "node-cron": "^4.2.1",
+    "nocache": "^4.0.0",
+    "serve-favicon": "^2.5.1",
+    "software-license-key": "^1.0.2",
+    "uuid": "^13.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node --max-old-space-size=4096 --max-semi-space-size=256 -r dotenv/config /usr/local/ni/api/apiServer.mjs dotenv_config_path=/etc/ni/ni.ini",
+    "dev": "DEBUG=* node --max-old-space-size=4096 --max-semi-space-size=256 -r dotenv/config /usr/local/ni/api/apiServer.mjs dotenv_config_path=/etc/ni/ni.ini"
+  },
+  "description": "Network Insight (NI) provides analytical and prediction insights for telecommunications infrastructure and services.",
+  "homepage": "https://www.cowdrey.net/",
+  "license": "Proprietary License",
+  "main": "apiServer.mjs",
+  "name": "ni-api-server",
+  "private": true,
+  "version": "1.0.0"
+}

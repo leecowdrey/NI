@@ -1,0 +1,160 @@
+<!doctype html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>NI</title><link rel="stylesheet" href="/ni/css/style.css"><link rel="stylesheet" href="/ni/css/font-awesome.min.css"><link rel="icon" href="<%=payload.icon%>" sizes="any"><link rel="apple-touch-icon" href="NI/img/icon.png"><style>.panel {
+            width: 85%;
+            height: 40%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #000000;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        .metadata-panel {
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffffff;
+            text-align: left;
+            font-size: 1em;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        a:link {
+            color: white;
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        a:visited {
+            color: white;
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        a:hover {
+            color: white;
+            text-decoration: underline;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        a:active {
+            color: white;
+            text-decoration: underline;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .ne-panel {
+            width: 45%;
+            height: calc(40vh - 10px);
+            margin-top: 20px;
+            margin-left: 20px;
+            display: grid;
+        }
+
+        .grid {
+            --max-ne-rows=8;
+            --max-ne-columns=1;
+            display: grid;
+            grid-template-rows: 40px repeat(var(--max-ne-rows), 40px) 40px;
+            grid-template-columns: repeat(var(--max-ne-columns), 40fr);
+            width: 300px;
+            height: 120px;
+        }
+
+        .portFree {
+            border: 1px solid white;
+            background-color: green;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .portUsed {
+            border: 1px solid white;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .portReserved {
+            border: 1px solid white;
+            background-color: #808080;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .portFaulty {
+            border: 1px solid white;
+            background-color: red;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .portPredicted {
+            border: 1px solid white;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
+            background-size: 1.25em 1.25em;
+            opacity: 1;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .predictedPortFree {
+            border: 1px solid #ffff00;
+            background-color: green;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .predictedPortUsed {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .predictedPortReserved {
+            border: 1px solid #ffff00;
+            background-color: #808080;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .predictedPortFaulty {
+            border: 1px solid #ffff00;
+            background-color: red;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }
+
+        .predictedPortPredicted {
+            border: 1px solid #ffff00;
+            background-color: black;
+            font-family: 'Courier New', Courier, monospace;
+            background: repeating-linear-gradient(135deg, #ffff00 0, #ffff00 10%, transparent 0, transparent 50%);
+            background-size: 1.25em 1.25em;
+            opacity: 1;
+            text-align: center;
+            font-size: 0.7em;
+            color: white;
+        }</style><script src="/ni/js/ni.js"></script></head><body><div class="icon-bar" id="icon-bar"><a nohref="nohref" onmouseover="" style="cursor: pointer;" title="Network Insight"><img src="/favicon.ico" width="25%" height="25%"></a><a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('dashboard');" title="Dashboard"><i class="fa fa-thermometer-half"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('cable');" title="Cables"><i class="fa fa-plug"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('duct');" title="Ducts"><i class="fa fa-superpowers"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('pole');" title="Poles"><i class="fa fa-arrows-v"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" nohref="nohref" class="active" title="Network Equipment"><i class="fa fa-server"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('rack');" title="Racks"><i class="fa fa-list-ol"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('site');" title="Sites"><i class="fa fa-building-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('service');" title="Services"><i class="fa fa-tty"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('trench');" title="Trenches"><i class="fa fa-arrows-h"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('trenchLifetime');" title="Trenches (lifetime)"><i class="fa fa-vine"></i></a> <a onmouseover="" style="cursor: pointer" nohref="nohref" onclick="return menuJump('trenchCountry');" title="Trenches (country)"><i class="fa fa-globe"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('provider');" title="Providers"><i class="fa fa-handshake-o"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('alert');" title="Alerts"><i class="fa fa-bullhorn"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('setting');" title="Settings"><i class="fa fa-cog"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('openapi');" title="OpenAPI"><i class="fa fa-info-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return menuJump('help');" title="Help"><i class="fa fa-question-circle"></i></a> <a onmouseover="" style="cursor: pointer;" nohref="nohref" onclick="return logout();" title="Quit"><i class="fa fa-window-close"></i></a> <select id="country" onchange="if(this.selectedIndex !== undefined) {updateSelectedCountry();fetchListNe();}"></select></div><div class="panel" id="resourcePanel"><div class="ne-select" id="neList"><label for="neId">NE</label> <select id="neId" onchange="if(this.selectedIndex !== undefined) fetchCveNe(); fetchNePoints();"></select> <a accesskey="@" nohref="nohref" onclick="fetchListNe();" onmouseover="" title="refresh" style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a> <label for="nePoint">Point</label> <select id="nePoint" onchange="if(this.selectedIndex !== undefined) fetchNe();"></select></div></div><div id="view-panel" style="width: 80%;"><div id="left-ne-display" style="float:left; width: 55%"><div class="ne-panel" id="nePanel"><div class="grid" id="neGrid"></div></div></div><div id="right-ne-metadata" style="float:right; width: 35%"><div class="metadata-panel" id="metadataPanel" style="float:right;"></div></div></div><div class="footer"><p>© 2026 Cowdrey Consulting. All rights reserved.</p></div><script defer="defer" src="/ni/js/ni-ne.js"></script></body></html>

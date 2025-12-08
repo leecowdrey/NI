@@ -1,0 +1,19 @@
+[Unit]
+Description=NI Predict Service
+After=multi-user.target
+
+[Service]
+UMask=007
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=ni
+LimitNOFILE=infinity
+Restart=on-failure
+StandardError=append:/var/log/ni/predict.log
+StandardOutput=append:/var/log/ni/predict.log
+Type=simple
+User=NIpredict
+WorkingDirectory=/usr/local/ni/predict
+
+[Install]
+WantedBy=multi-user.target

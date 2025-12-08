@@ -1,0 +1,1 @@
+window.onload=function(){const e=SwaggerUIBundle({url:localStorage.getItem("ni.gatewayUrl")+"/api",dom_id:"#swagger-ui",deepLinking:!0,presets:[SwaggerUIBundle.presets.apis,SwaggerUIBundle.SwaggerUIStandalonePreset],plugins:[SwaggerUIBundle.plugins.DownloadUrl]});window.ui=e};

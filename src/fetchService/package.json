@@ -1,0 +1,27 @@
+{
+  "bugs": {
+    "url": "https://help.cowdrey.net/",
+    "email": "support@cowdrey.net"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "glob": "^11.0.3",
+    "mysql2": "^3.15.3",
+    "node-cron": "^4.2.1",
+    "oracledb": "^6.10.0",
+    "uuid": "^13.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node -r dotenv/config /usr/local/ni/fetch/fetchService.mjs dotenv_config_path=/etc/ni/ni.ini",
+    "dev": "DEBUG=* node -r dotenv/config /usr/local/ni/fetch/fetchService.mjs dotenv_config_path=/etc/ni/ni.ini"
+  },
+  "description": "Network Insight (NI) provides analytical and prediction insights for telecommunications infrastructure and services.",
+  "homepage": "https://www.cowdrey.net/",
+  "license": "Proprietary License",
+  "main": "fetchService.mjs",
+  "name": "ni-fetch-server",
+  "private": true,
+  "version": "1.0.0"
+}

@@ -1,0 +1,18 @@
+[Unit]
+Description=NI DNS Server
+After=multi-user.target
+
+[Service]
+UMask=007
+Type=simple
+User=nidns
+Group=ni
+Restart=always
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+WorkingDirectory=/usr/local/ni/dns
+StandardOutput=append:/var/log/ni/dns.log
+StandardError=append:/var/log/ni/dns.log
+ExecStart=/usr/local/ni/dns/bin/dnsserv --keep-in-foreground --conf-file=/usr/local/ni/dns/config/dnsServer.conf
+
+[Install]
+WantedBy=multi-user.target

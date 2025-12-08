@@ -1,0 +1,1 @@
+try{window.location.replace(localStorage.getItem("ni.rootUrl")+"/readiness")}catch(o){console.error(o)}

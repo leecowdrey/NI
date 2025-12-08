@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>NI</title>
+    <meta name="description" content="Network Insight provides analytical and prediction insights for telecommunications infrastructure and services"/>
+    <meta property="og:title" content="Network Insight"/>
+    <meta property="og:type" content=""/>
+    <meta property="og:url" content="https://cowdrey.net/"/>
+    <meta property="og:image" content=""/>
+    <meta property="og:image:alt" content=""/>
+    <link rel="icon" href="<%=payload.icon%>" sizes="any"/>
+    <link rel="apple-touch-icon" href="/ni/img/icon.png"/>
+    <link rel="stylesheet" href="/ni/css/style.css"/>
+    <meta name="theme-color" content="#fafafa"/>
+    <script src="/ni/js/ni.js"></script>
+  </head>
+  <body">
+    <div class="icon-bar" id="icon-bar">
+      <a class="active" nohref onmouseover="" style="cursor: pointer" title="Network Insight">
+        <img src="<%=payload.icon%>" width="25%" height="25%"/>
+      </a>
+    </div>
+    <div class="outer">
+      <div class="middle">
+        <div class="login" id="loginPanel">
+          <center><%=payload.name%> <%=payload.version%></center>
+          <form id="loginForm" method="post">
+            <br/>
+            <label for="username">Username</label>
+            <input type="text" placeholder="Enter Username" id="username" name="username" required minlength="5" size="30"/>
+            <br/>
+            <label for="password">Password</label>
+            <input type="password" placeholder="Enter Password" id="password" name="password" required minlength="5" size="30"/>
+            <label><input type="checkbox" checked="checked" onclick="togglePassword()" name="togglePwd"/>
+              <font size="1">hide</font>
+            </label>
+            <br/>
+            <hr>
+            <center><button type="submit">login</button>&emsp;<img id="oidcLogo" src="/ni/img/oidc.png" alt="OpenID Connect" width="15%" height="15%"/></button></center>
+          </form>
+          <script>
+            let lf = document.getElementById("loginForm");
+            let oauth = toBoolean("<%=payload.oauth%>");
+            let oLogo = document.getElementById("oidcLogo");
+            if (oauth) {
+              oLogo.style.visibility = "visible";
+              lf.onsubmit = () => {
+                  lf.action = 'javascript:login("'+document.getElementById("username").value+'","'+document.getElementById("password").value+'",true);';
+              }
+            } else {
+              oLogo.style.visibility = "hidden";
+              lf.onsubmit = () => {
+                lf.action = "<%=payload.rootUrl%>";
+              }
+            }
+          </script>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2026 Cowdrey Consulting. All rights reserved.</p>
+    </div>
+  </body>
+</html>

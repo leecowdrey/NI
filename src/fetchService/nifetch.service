@@ -1,0 +1,19 @@
+[Unit]
+Description=NI Fetch Service
+After=multi-user.target
+
+[Service]
+UMask=007
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --run start
+Group=ni
+LimitNOFILE=infinity
+Restart=on-failure
+StandardError=append:/var/log/ni/fetch.log
+StandardOutput=append:/var/log/ni/fetch.log
+Type=simple
+User=NIalert
+WorkingDirectory=/usr/local/ni/fetch
+
+[Install]
+WantedBy=multi-user.target

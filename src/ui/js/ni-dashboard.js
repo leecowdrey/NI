@@ -1,0 +1,389 @@
+//=====================================================================
+// Network Insight (NI) - JavaScript: Dashboard
+//
+// Corporate Headquarters:
+// Cowdrey Consulting · United Kingdom · T:+447442104556
+// https://www.cowdrey.net/
+//
+// © 2026 Cowdrey Consulting. All rights reserved.
+//=====================================================================
+//
+let ready = null;
+let retryMs = 5000;
+let refreshMs = 300000;
+let chartResource = null;
+let totalCable = 0;
+let activeCable = 0;
+let inactiveCable = 0;
+let totalDuct = 0;
+let activeDuct = 0;
+let inactiveDuct = 0;
+let totalPole = 0;
+let activePole = 0;
+let inactivePole = 0;
+let totalNE = 0;
+let activeNE = 0;
+let inactiveNE = 0;
+let totalSite = 0;
+let activeSite = 0;
+let inactiveSite = 0;
+let totalService = 0;
+let activeService = 0;
+let inactiveService = 0;
+let totalTrench = 0;
+let activeTrench = 0;
+let inactiveTrench = 0;
+let activeRack = 0;
+let inactiveRack = 0;
+let dbmReady = null;
+let totalPremisesPassed = 0;
+let totalTrenchDistance = 0;
+let totalTrenchDistanceUnit = "";
+let costCable = 0;
+let costDuct = 0;
+let costPole = 0;
+let costNe = 0;
+let costRack = 0;
+let costService = 0;
+let costSite = 0;
+let costTrench = 0;
+let costTotal = 0;
+function toPercent(n, t) {
+  let r = 0;
+  try {
+    if (t > 0) {
+      r = Number.parseFloat((n / t) * 100).toFixed(0);
+    }
+    return r;
+  } catch (e) {
+    return 0;
+  }
+}
+function toInteger(s) {
+  if (Number.isNaN(Number.parseInt(s, 10))) {
+    return 0;
+  }
+  return Number.parseInt(s, 10);
+}
+function toDecimal(n, p = 2) {
+  if (Number.isNaN(Number.parseFloat(n))) {
+    return Number(0);
+  }
+  return Number(parseFloat(n).toFixed(p));
+}
+function fetchStats() {
+  if (ready != null) {
+    clearTimeout(ready);
+  }
+  fetch(localStorage.getItem("ni.gatewayUrl") + "/ui/statistic", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    keepalive: true,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        ready = setTimeout(fetchStats, refreshMs, response.status);
+      }
+    })
+    .then((data) => {
+      if (data.resources != null) {
+        if (data.resources?.cables != null) {
+          if (data.resources?.cables?.total != null) {
+            totalCable = toInteger(data.resources.cables.total);
+          }
+          if (data.resources?.cables?.active != null) {
+            activeCable = toInteger(data.resources.cables.active);
+          }
+          if (data.resources?.cables?.inactive != null) {
+            inactiveCable = toInteger(data.resources.cables.inactive);
+          }
+        }
+        if (data.resources?.ducts != null) {
+          if (data.resources?.ducts?.total != null) {
+            totalDuct = toInteger(data.resources.ducts.total);
+          }
+          if (data.resources?.ducts?.active != null) {
+            activeDuct = toInteger(data.resources.ducts.active);
+          }
+          if (data.resources?.ducts?.inactive != null) {
+            inactiveDuct = toInteger(data.resources.ducts.inactive);
+          }
+        }
+        if (data.resources?.poles != null) {
+          if (data.resources?.poles?.total != null) {
+            totalPole = toInteger(data.resources.poles.total);
+          }
+          if (data.resources?.poles?.active != null) {
+            activePole = toInteger(data.resources.poles.active);
+          }
+          if (data.resources?.poles?.inactive != null) {
+            inactivePole = toInteger(data.resources.poles.inactive);
+          }
+        }
+        if (data.resources?.nes != null) {
+          if (data.resources?.nes?.total != null) {
+            totalNE = toInteger(data.resources.nes.total);
+          }
+          if (data.resources?.nes?.active != null) {
+            activeNE = toInteger(data.resources.nes.active);
+          }
+          if (data.resources?.nes?.inactive != null) {
+            inactiveNE = toInteger(data.resources.nes.inactive);
+          }
+        }
+        if (data.resources?.racks != null) {
+          if (data.resources?.racks?.total != null) {
+            totalRack = toInteger(data.resources.racks.total);
+          }
+          if (data.resources?.racks?.active != null) {
+            activeRack = toInteger(data.resources.racks.active);
+          }
+          if (data.resources?.racks?.inactive != null) {
+            inactiveRack = toInteger(data.resources.racks.inactive);
+          }
+        }
+        if (data.resources?.services != null) {
+          if (data.resources?.services?.total != null) {
+            totalService = toInteger(data.resources.services.total);
+          }
+          if (data.resources?.services?.active != null) {
+            activeService = toInteger(data.resources.services.active);
+          }
+          if (data.resources?.services?.inactive != null) {
+            inactiveService = toInteger(data.resources.services.inactive);
+          }
+        }
+        if (data.resources?.sites != null) {
+          if (data.resources?.sites?.total != null) {
+            totalSite = toInteger(data.resources.sites.total);
+          }
+          if (data.resources?.sites?.active != null) {
+            activeSite = toInteger(data.resources.sites.active);
+          }
+          if (data.resources?.sites?.inactive != null) {
+            inactiveSite = toInteger(data.resources.sites.inactive);
+          }
+        }
+        if (data.resources?.trenches != null) {
+          if (data.resources?.trenches?.total != null) {
+            totalTrench = toInteger(data.resources.trenches.total);
+          }
+          if (data.resources?.trenches?.active != null) {
+            activeTrench = toInteger(data.resources.trenches.active);
+          }
+          if (data.resources?.trenches?.inactive != null) {
+            inactiveTrench = toInteger(data.resources.trenches.inactive);
+          }
+          if (data.metrics != null) {
+            document.getElementById("businessMetricsPanel").innerHTML =
+              "<center>Premises Passed: " +
+              data.metrics.premises.passed +
+              "&emsp;|&emsp;Trench Coverage: " +
+              data.metrics.trench.distance +
+              data.metrics.trench.unit +
+              "&emsp;|&emsp;Cable Coverage: " +
+              data.metrics.cable.distance +
+              data.metrics.cable.unit +
+              "</center>";
+          }
+          if (data.metrics.cost != null) {
+            let name = localStorage.getItem("ni.currencyName");
+            let isoCode = localStorage.getItem("ni.currencyIsoCode");
+            let symbol = localStorage.getItem("ni.currencySymbol");
+            document.getElementById("businessCostsPanel").innerHTML =
+              "Costs: (" +
+              name +
+              ") " +
+              "&emsp;Cables " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.cable) +
+              "&emsp;|&emsp;Ducts " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.duct) +
+              "&emsp;|&emsp;Poles " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.pole) +
+              "&emsp;|&emsp;NE " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.ne) +
+              "&emsp;|&emsp;Racks " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.rack) +
+              "&emsp;|&emsp;Services " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.service) +
+              "&emsp;|&emsp;Sites " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.site) +
+              "&emsp;|&emsp;Trenches " +
+              symbol +
+              new Intl.NumberFormat({
+                style: "currency",
+                currency: isoCode,
+                symbol: symbol,
+              }).format(data.metrics.cost.trench);
+          }
+        }
+      }
+      activeCable = toPercent(activeCable, totalCable);
+      inactiveCable = toPercent(inactiveCable, totalCable);
+      activeDuct = toPercent(activeDuct, totalDuct);
+      inactiveDuct = toPercent(inactiveDuct, totalDuct);
+      activePole = toPercent(activePole, totalPole);
+      inactivePole = toPercent(inactivePole, totalPole);
+      activeNE = toPercent(activeNE, totalNE);
+      inactiveNE = toPercent(inactiveNE, totalNE);
+      activeService = toPercent(activeService, totalService);
+      inactiveService = toPercent(inactiveService, totalService);
+      activeSite = toPercent(activeSite, totalSite);
+      inactiveSite = toPercent(inactiveSite, totalSite);
+      activeTrench = toPercent(activeTrench, totalTrench);
+      inactiveTrench = toPercent(inactiveTrench, totalTrench);
+      activeRack = toPercent(activeRack, totalRack);
+      inactiveRack = toPercent(inactiveRack, totalRack);
+      Chart.defaults.font.family = "Lato";
+      if (chartResource != null) {
+        chartResource.data.labels[0] = "Cables: " + totalCable.toString();
+        chartResource.data.labels[1] = "Ducts: " + totalDuct.toString();
+        chartResource.data.labels[2] = "NE: " + totalNE.toString();
+        chartResource.data.labels[3] = "Poles: " + totalPole.toString();
+        chartResource.data.labels[4] = "Racks: " + totalSite.toString();
+        chartResource.data.labels[5] = "Sites: " + totalSite.toString();
+        chartResource.data.labels[6] = "Services: " + totalService.toString();
+        chartResource.data.labels[7] = "Trenches: " + totalTrench.toString();
+        chartResource.data.datasets[0].data[0] = activeCable;
+        chartResource.data.datasets[0].data[1] = activeDuct;
+        chartResource.data.datasets[0].data[2] = activeNE;
+        chartResource.data.datasets[0].data[3] = activePole;
+        chartResource.data.datasets[0].data[4] = activeRack;
+        chartResource.data.datasets[0].data[5] = activeSite;
+        chartResource.data.datasets[0].data[6] = activeService;
+        chartResource.data.datasets[0].data[7] = activeTrench;
+        chartResource.data.datasets[1].data[0] = inactiveCable;
+        chartResource.data.datasets[1].data[1] = inactiveDuct;
+        chartResource.data.datasets[1].data[2] = inactiveNE;
+        chartResource.data.datasets[1].data[3] = inactivePole;
+        chartResource.data.datasets[1].data[4] = inactiveRack;
+        chartResource.data.datasets[1].data[5] = inactiveSite;
+        chartResource.data.datasets[1].data[6] = inactiveService;
+        chartResource.data.datasets[1].data[7] = inactiveTrench;
+        chartResource.update();
+      } else {
+        chartResource = new Chart("resourceSummary", {
+          type: "bar",
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            scales: {
+              x: {
+                display: false,
+                stacked: true,
+                grid: {
+                  display: false,
+                },
+                scales: {
+                  x: {
+                    display: false,
+                  },
+                },
+              },
+              y: {
+                stacked: true,
+                grid: {
+                  display: false,
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+          data: {
+            labels: [
+              "Cables: " + totalCable.toString(),
+              "Ducts: " + totalDuct.toString(),
+              "NE: " + totalNE.toString(),
+              "Racks: " + totalRack.toString(),
+              "Poles: " + totalPole.toString(),
+              "Sites: " + totalSite.toString(),
+              "Services: " + totalService.toString(),
+              "Trenches: " + totalTrench.toString(),
+            ],
+            datasets: [
+              {
+                data: [
+                  activeCable,
+                  activeDuct,
+                  activeNE,
+                  activePole,
+                  activeRack,
+                  activeSite,
+                  activeService,
+                  activeTrench,
+                ],
+                backgroundColor: "rgba(0,128,0,1)",
+                hoverBackgroundColor: "rgba(10,99,10,1)",
+              },
+              {
+                data: [
+                  inactiveCable,
+                  inactiveDuct,
+                  inactiveNE,
+                  inactivePole,
+                  inactiveRack,
+                  inactiveSite,
+                  inactiveService,
+                  inactiveTrench,
+                ],
+                backgroundColor: "rgba(255,165,0,1)",
+                hoverBackgroundColor: "rgba(255,106,0,1)",
+              },
+            ],
+          },
+        });
+      }
+      ready = setTimeout(fetchStats, refreshMs);
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}
+try {
+  fetchStats();
+} catch (e) {
+  console.error(e);
+}

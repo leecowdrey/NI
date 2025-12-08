@@ -1,0 +1,61 @@
+[
+  {
+    "ductId": "f9d6b60a-d1cf-4bb6-99b9-eea0d2d2d87e",
+    "point": "20250509T113205",
+    "country": "GBR",
+    "probability": 1,
+    "reference": "gbr-eea0d2d2d87e",
+    "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+    "purpose": "cable",
+    "category": "duct",
+    "configuration": 2,
+    "state": "used",
+    "placement": {
+      "horizontal": 1579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "78fc92ef-ebff-46f3-a90c-86dddd23244b",
+    "point": "20250509T113205",
+    "country": "GBR",
+    "probability": 1,
+    "reference": "gbr-eea0d2d2d87e-1",
+    "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+    "purpose": "cable",
+    "category": "subduct",
+    "configuration": 1,
+    "within": "f9d6b60a-d1cf-4bb6-99b9-eea0d2d2d87e",
+    "state": "free",
+    "placement": {
+      "horizontal": 1079,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
+    "point": "20250509T113205",
+    "country": "GBR",
+    "probability": 1,
+    "reference": "gbr-eea0d2d2d87e-2",
+    "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+    "purpose": "cable",
+    "category": "subduct",
+    "configuration": 1,
+    "within": "f9d6b60a-d1cf-4bb6-99b9-eea0d2d2d87e",
+    "state": "used",
+    "placement": {
+      "horizontal": 579,
+      "vertical": 350,
+      "unit": "mm"
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

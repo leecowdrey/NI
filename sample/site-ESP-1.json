@@ -1,0 +1,701 @@
+[
+  {
+    "siteId": "73593f75-005d-40bf-8291-1a02c7f4bffa",
+    "point": "20250731T180000",
+    "reference": "esp-SMB Informatica HE",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Carrer del Doctor Trueta",
+      "premisesNameNumber": "100",
+      "postalCode": "08005",
+      "coordinate": {
+        "y": 41.39499999988968,
+        "x": 2.198299999902494,
+        "z": 12
+      },
+      "district": "Sant Martí"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "a139e131-9f6b-437a-8f5b-8f088ba40f26",
+    "point": "20250731T180000",
+    "reference": "esp-Banco de Espana",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Pl. de Catalunya",
+      "premisesNameNumber": "17",
+      "postalCode": "08002",
+      "coordinate": {
+        "y": 41.38659912277294,
+        "x": 2.1714165864169126,
+        "z": 12
+      },
+      "district": "Ciutat Vella"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "7d8d75e4-bdb3-473c-b140-21061af673d9",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Oviedo",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Autovía Ruta de la Plata",
+      "premisesNameNumber": "A-66",
+      "postalCode": "33429",
+      "coordinate": {
+        "y": 43.38789292634062,
+        "x": -5.805670018740791,
+        "z": 12
+      },
+      "district": "Centro Comercial Parque Principado"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "357b9f0b-6ddd-4961-aab4-0112c22b741d",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Sevilla",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Sevilla",
+      "street": "Salida 2",
+      "premisesNameNumber": "A-49",
+      "postalCode": "41950",
+      "coordinate": {
+        "y": 37.38362908200068,
+        "x": -6.047217650771667,
+        "z": 7
+      },
+      "district": "Castilleja de la Cuesta"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "c34420d3-886b-4e77-86de-839043581ae3",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Barcelona",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Avinguda de la Granvia de l’Hospitalet",
+      "premisesNameNumber": "115-133",
+      "postalCode": "08908",
+      "coordinate": {
+        "y": 41.354700000228085,
+        "x": 2.123900000037417,
+        "z": 12
+      },
+      "district": "Districte Econòmic"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "407c023b-13b3-4587-8eb9-3f42fd88f110",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Valencia",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Valencia",
+      "town": "Valencia",
+      "street": "Carrer Alqueria Nova",
+      "premisesNameNumber": "12",
+      "postalCode": "08908",
+      "coordinate": {
+        "y": 39.414688508800744,
+        "x": -0.3877640042403874,
+        "z": 15
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "9537f962-6d86-44b5-b2e9-9caeae21f352",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Madrid",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Madrid",
+      "town": "Madrid",
+      "street": "Calle de Goya",
+      "premisesNameNumber": "47",
+      "postalCode": "28001",
+      "coordinate": {
+        "y": 40.42525610454415,
+        "x": -3.682364678602637,
+        "z": 657
+      },
+      "district": "Salamanca"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "d0244ba4-70ee-497c-9838-5b9138d7edeb",
+    "point": "20250731T180000",
+    "reference": "esp-IKEA Málaga",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Málaga",
+      "street": "Av. de Velázquez",
+      "premisesNameNumber": "389",
+      "postalCode": "29004",
+      "coordinate": {
+        "y": 36.65781576840068,
+        "x": -4.482190367961593,
+        "z": 6
+      },
+      "district": "Parque Comercial Bahía Azul"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "8adc6caa-014f-42f6-a702-ce89285b9d42",
+    "point": "20250731T180000",
+    "reference": "esp-Farmacia A.Torres",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Carrer d'Aribau",
+      "premisesNameNumber": "62",
+      "postalCode": "08011",
+      "coordinate": {
+        "y": 41.38870000017462,
+        "x": 2.1591999998128335,
+        "z": 12
+      },
+      "district": "L'Eixample"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "8a1c2974-8b16-446e-8258-0b92e7a9f71e",
+    "point": "20250731T180000",
+    "reference": "esp-Pedrosa Industrial Area",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Av. Joan Carles I",
+      "premisesNameNumber": "30",
+      "postalCode": "08908",
+      "coordinate": {
+        "y": 41.38870000017462,
+        "x": 2.1591999998128335,
+        "z": 12
+      },
+      "district": "L'Hospitalet de Llobregat"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "d8071764-6529-45e2-bce6-35a18118997b",
+    "point": "20250731T180000",
+    "reference": "esp-Universty of Barcelona",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "utility",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Gran Via de les Corts Catalanes",
+      "premisesNameNumber": "585",
+      "postalCode": "08007",
+      "coordinate": {
+        "y": 41.38669999992767,
+        "x": 2.1638000001932696,
+        "z": 12
+      },
+      "district": "L'Eixample"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "f224d277-2a83-4783-8e69-4119146fa0e1",
+    "point": "20250731T180000",
+    "reference": "esp-bitNAP Datacenter HE",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "dc",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Carrer de Pablo Iglesias",
+      "premisesNameNumber": "56",
+      "postalCode": "08908",
+      "coordinate": {
+        "y": 41.34860000021006,
+        "x": 2.1296999996188024,
+        "z": 12
+      },
+      "district": "L'Hospitalet de Llobregat"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "f0d7e9d0-2155-4487-9990-a6afc6958c6f",
+    "point": "20250731T180000",
+    "reference": "esp-Camp Nou",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "utility",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "C. d'Arístides Maillol",
+      "premisesNameNumber": "12",
+      "postalCode": "08028",
+      "coordinate": {
+        "y": 41.380814622574526,
+        "x": 2.1228633980984872,
+        "z": 12
+      },
+      "district": "Les Corts"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "e136dec7-2ad2-44a7-937d-ebc9238bb847",
+    "point": "20250731T180000",
+    "reference": "esp-OAC Barcelona",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "utility",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Carrer de les Ramelleres",
+      "premisesNameNumber": "17",
+      "postalCode": "08001",
+      "coordinate": {
+        "y": 41.409800000016254,
+        "x": 2.1691999997415543,
+        "z": 12
+      },
+      "district": "Ciutat Vella"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "7305f042-cd65-4269-a082-fb40ff30e71c",
+    "point": "20250731T180000",
+    "reference": "esp-CaixaBank Malaga",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Málaga",
+      "street": "P.º de la Farola",
+      "premisesNameNumber": "1",
+      "postalCode": "29016",
+      "coordinate": {
+        "y": 36.71937022454368,
+        "x": -4.411936517137559,
+        "z": 6
+      },
+      "district": "Málaga-Este"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "baa3664b-0639-4d97-8655-79c18f919a66",
+    "point": "20250731T180000",
+    "reference": "esp-CaixaBank Ovideo",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "utility",
+    "location": {
+      "country": "ESP",
+      "region": "Asturias",
+      "town": "Oviedo",
+      "street": "Pepa Ojanguren",
+      "premisesNameNumber": "4",
+      "postalCode": "33002",
+      "coordinate": {
+        "y": 43.36334592393353,
+        "x": -5.848246691219474,
+        "z": 12
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "7305f042-cd65-4269-a082-fb40ff30e71c",
+    "point": "20250731T180000",
+    "reference": "esp-CaixaBank Empresa",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Madrid",
+      "town": "Madrid",
+      "street": "C. de Fernández Caro",
+      "premisesNameNumber": "9",
+      "postalCode": "28027",
+      "coordinate": {
+        "y": 40.442788417280155,
+        "x": -3.647116411572133,
+        "z": 12
+      },
+      "district": "Lineal"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "21d55227-62b0-4a38-af16-005b7f283794",
+    "point": "20250731T180000",
+    "reference": "esp-CaixaBank Centro",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Madrid",
+      "town": "Madrid",
+      "street": "Pl. de Colón",
+      "premisesNameNumber": "1",
+      "postalCode": "28001",
+      "coordinate": {
+        "y": 40.424993646452236,
+        "x": -3.6913785157632857,
+        "z": 12
+      },
+      "district": "Centro"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "77348968-7e6e-459f-9a8f-c2e5f4279722",
+    "point": "20250731T180000",
+    "reference": "esp-CaixaBank Chamberí",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Madrid",
+      "town": "Madrid",
+      "street": "Gta. de Quevedo",
+      "premisesNameNumber": "1",
+      "postalCode": "28015",
+      "coordinate": {
+        "y": 40.43359047240811,
+        "x": -3.705012687903172,
+        "z": 12
+      },
+      "district": "Chamberí"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "03f897c1-e4a1-4f30-8746-fedef33dbd8d",
+    "point": "20250731T180000",
+    "reference": "esp-NIXVAL",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Valencia",
+      "town": "Valencia",
+      "street": "Calle Villa de Madrid",
+      "premisesNameNumber": "44",
+      "postalCode": "46988",
+      "coordinate": {
+        "y": 39.51944133536713,
+        "x": -0.46706961673546665,
+        "z": 12
+      },
+      "district": "Paterna"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "eb132fdb-05e9-4e3e-a43c-9d517197ad2c",
+    "point": "20250731T180000",
+    "reference": "esp-DataRush IT Services",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "industrial",
+    "type": "dc",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Málaga",
+      "street": "C. Ciro Alegría",
+      "premisesNameNumber": "83",
+      "postalCode": "29004",
+      "coordinate": {
+        "y": 36.69760000007704,
+        "x": -4.482199999698069,
+        "z": 6
+      },
+      "district": "Churriana"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "09c7da7e-58e5-4f29-b43b-ed81701b7dd0",
+    "point": "20250731T180000",
+    "reference": "esp-Hotel Ilunion Barcelonas",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "urban",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Carrer de Ramon Turró",
+      "premisesNameNumber": "196-198",
+      "postalCode": "08005",
+      "coordinate": {
+        "y": 41.41019999974389,
+        "x": 2.1695999997746545,
+        "z": 12
+      },
+      "district": "Sant Martí"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "2ed630e7-8191-4eb9-bb56-5fb10162c192",
+    "point": "20250731T180000",
+    "reference": "esp-Sevilla Datacentre",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "industrial",
+    "type": "dc",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Sevilla",
+      "street": "C. Nicolás Copérnico",
+      "premisesNameNumber": "A-49",
+      "postalCode": "41300",
+      "coordinate": {
+        "y": 37.48466679568361,
+        "x": -5.930328077281215,
+        "z": 7
+      },
+      "district": "San José de la Rinconada"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "f36f3506-2101-4591-b969-02120a5c8505",
+    "point": "20250731T180000",
+    "reference": "esp-Hospital de Barcelona",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "psz",
+    "type": "utility",
+    "location": {
+      "country": "ESP",
+      "region": "Catalonia",
+      "town": "Barcelona",
+      "street": "Avinguda Diagonal",
+      "premisesNameNumber": "660",
+      "postalCode": "08034",
+      "coordinate": {
+        "y": 41.38980501823892,
+        "x": 2.129940590909763,
+        "z": 12
+      },
+      "district": "Les Corts"
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "21491d83-8619-4736-9824-ea62f5c072a5",
+    "point": "20250731T180000",
+    "reference": "esp-ASAC Comunicaciones S.L.",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "industrial",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Asturias",
+      "town": "Oviedo",
+      "street": "Parque Tecnológico de Asturias Edificio ASAC. Parcela ",
+      "premisesNameNumber": "29",
+      "postalCode": "33428",
+      "coordinate": {
+        "y": 43.42204373605674,
+        "x": -5.819840438392902,
+        "z": 12
+      }
+    },
+    "source": "historical",
+    "delete": false
+  },
+  {
+    "siteId": "814ea677-2fb4-4016-9058-ce4556004d1a",
+    "point": "20250731T180000",
+    "reference": "esp-Quantec Datacentre S.L",
+    "probability": 1,
+    "country": "ESP",
+    "commissioned": "20250731",
+    "onNet": true,
+    "area": "industrial",
+    "type": "commercial",
+    "location": {
+      "country": "ESP",
+      "region": "Andalusia",
+      "town": "Sevilla",
+      "street": "Av. Eduardo Dato",
+      "premisesNameNumber": "69",
+      "postalCode": "41005",
+      "coordinate": {
+        "y": 37.38294224668018,
+        "x": -5.972129781477701,
+        "z": 7
+      },
+      "district": "Galia Business Center"
+    },
+    "source": "historical",
+    "delete": false
+  }
+]

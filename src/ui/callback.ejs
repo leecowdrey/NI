@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>NI</title>
+    <link rel="stylesheet" href="/ni/css/style.css" />
+    <link rel="stylesheet" href="/ni/css/font-awesome.min.css" />
+    <link rel="icon" href="<%=payload.icon%>" sizes="any" />
+    <link rel="apple-touch-icon" href="NI/img/icon.png" />
+    <style>
+      .panel {
+        background-color: #555;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 100vh;
+        color: #ffffff;
+      }
+    </style>
+    <script src="/ni/js/ni.js"></script>
+  </head>
+
+  <body>
+    <div class="icon-bar" id="icon-bar">
+      <a
+        class="active"
+        nohref
+        onmouseover=""
+        style="cursor: pointer"
+        title="Network Insight"
+        ><img src="/favicon.ico" width="25%" height="25%"
+      /></a>
+    </div>
+    <div class="panel" id="callbackPanel">
+      <div id="callback">Callback</div>
+    </div>
+    <div class="footer">
+      <p>© 2026 Cowdrey Consulting. All rights reserved.</p>
+    </div>
+    <script defer="defer" src="/ni/js/ni-callback.js"></script>
+  </body>
+</html>

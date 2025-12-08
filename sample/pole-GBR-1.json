@@ -1,0 +1,43 @@
+[
+  {
+    "poleId": "360236fb-15b1-48be-babf-6c433c387ed8",
+    "purpose": "service/drop",
+    "reference": "gbr-worc-cg-elmley",
+    "country": "GBR",
+    "probability": 1,
+    "construction": {
+      "height": 20,
+      "unit": "m",
+      "classifier": "urban"
+    },
+    "demographics": {
+      "premises": {
+        "passed": 1,
+        "area": "rural"
+      }
+    },
+    "build": {
+      "planned": {
+        "duration": 0,
+        "unit": "day"
+      },
+      "actual": {
+        "duration": 0,
+        "unit": "day"
+      }
+    },
+    "state": "used",
+    "coordinate": {
+      "y": 52.31504,
+      "x": -2.17728,
+      "z": 61
+    },
+    "connectsTo": {
+      "trenchId": "dbd487fb-b187-4af2-87e4-76ea53482d7f",
+      "siteId": "0a3e6803-8d14-4f97-bc0e-947eb1cbfe74"
+    },
+    "point": "20250508T174124",
+    "source": "historical",
+    "delete": false
+  }
+]

@@ -1,0 +1,10 @@
+{
+	"historical": {
+		"duration": 1,
+		"unit": "year"
+	},
+	"predicted": {
+		"duration": 6,
+		"unit": "month"
+	}
+}

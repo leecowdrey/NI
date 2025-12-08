@@ -1,0 +1,128 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>NI</title>
+    <link rel="stylesheet" href="/ni/css/style.css">
+    <link rel="stylesheet" href="/ni/css/font-awesome.min.css">
+    <link rel="icon" href="<%=payload.icon%>" sizes="any">
+    <link rel="apple-touch-icon" href="NI/img/icon.png">
+    <style>
+        .panel {
+            width: 30%;
+            height: 40%;
+            border-radius: 10px;
+            background-color: #b3b3b3;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        .map {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-top: 5px;
+            min-height: 86vh;
+        }
+
+        .mappolytooltip {
+          background-color: #555;
+          position: fixed;
+          left: 5%;
+          top: 25%;
+          display: inline-block;
+          padding: 5px;
+          text-align: center;
+          color: white;
+          font-size: 1em;
+          font-family: 'Courier New', Courier, monospace;
+        }
+        /* positioning of infowindow */
+        .gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+        .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+        .gm-style .gm-style-iw-c,
+        .gm-style .gm-style-iw-t::after {
+          background: #808080;
+          color: #000000;
+          font-family: 'Courier New', Courier, monospace;
+        }
+   </style>
+    <script src="/ni/js/ni.js"></script>
+</head>
+
+<body>
+    <div class="icon-bar" id="icon-bar">
+        <a nohref onmouseover="" style="cursor: pointer;" title="Network Insight"><img src="/favicon.ico"
+                width="25%" height="25%"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('dashboard');"
+            title="Dashboard"><i class="fa fa-thermometer-half"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('cable');"
+            title="Cables"><i class="fa fa-plug"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('duct');"
+            title="Ducts"><i class="fa fa-superpowers"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('pole');"
+            title="Poles"><i class="fa fa-arrows-v"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('ne');"
+            title="Network Equipment"><i class="fa fa-server"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('rack');"
+            title="Racks"><i class="fa fa-list-ol"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('site');"
+            title="Sites"><i class="fa fa-building-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('service');"
+            title="Services"><i class="fa fa-tty"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref class="active" title="Trenches"><i
+                class="fa fa-arrows-h"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('trenchLifetime');"
+            title="Trenches (lifetime)"><i class="fa fa-vine"></i></a>
+         <a onmouseover="" style="cursor: pointer" nohref onclick="return menuJump('trenchCountry');" title="Trenches (country)" ><i class="fa fa-globe"></i ></a>
+          <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('q2c');" title="Quote-to-Cash"><i class="fa fa-shopping-basket"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('provider');"
+            title="Providers"><i class="fa fa-handshake-o"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('alert');"
+            title="Alerts"><i class="fa fa-bullhorn"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('setting');"
+            title="Settings"><i class="fa fa-cog"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('openapi');"
+            title="OpenAPI"><i class="fa fa-info-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return menuJump('help');"
+            title="Help"><i class="fa fa-question-circle"></i></a>
+        <a onmouseover="" style="cursor: pointer;" nohref onclick="return logout();" title="Quit"><i
+                class="fa fa-window-close"></i></a>
+        <select id="country" onchange="if(this.selectedIndex !== undefined) {updateSelectedCountry();fetchListTrench();}"></select>
+    </div>
+    <div class="wrapper">
+        <div class="mapVendor-select" id="mapVendorList">
+            <label for="mapVendor">Map Vendor</label>
+            <select id="mapVendor"></select>
+        </div>
+        <div class="trench-select" id="trenchList">
+            <label for="trenchId">Trench</label>
+            <select id="trenchId" onchange="if(this.selectedIndex !== undefined) fetchTrenchPoints();"></select>
+            <a accesskey="@" nohref onclick="fetchListTrench();" onmouseover="" title="refresh"
+                style="cursor: pointer;"><i style="color:white;" class="fa fa-refresh"></i></a>
+            <label for="trenchPoint">Point</label>
+            <select id="trenchPoint" onchange="if(this.selectedIndex !== undefined) fetchTrenchGeometry();"></select>
+            <label for="trenchDistance">Length</label>
+            <input type="text" id="trenchDistance" disabled></select>
+            <label for="trenchPremisesPassed">Premises Passed</label>
+            <input type="text" id="trenchPremisesPassed" disabled></select>
+            <div id="notePanel" style="float:right; color: white;"><i class="fa fa-superpowers"></i> <i class="fa fa-caret-left"></i>&#x1F5B1;<i class="fa fa-caret-right"></i> <i class="fa fa-arrows-v"></i></div>
+        </div>
+    </div>
+    <div class="map" id="map"></div>
+    <div class="footer">
+        <p>© 2026 Cowdrey Consulting. All rights reserved.</p>
+    </div>
+    <script defer="defer" src="/ni/js/ni-trench.js"></script>
+</body>
+
+</html>

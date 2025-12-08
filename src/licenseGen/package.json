@@ -1,0 +1,21 @@
+{
+  "bugs": {
+    "url": "https://help.cowdrey.net/",
+    "email": "support@cowdrey.net"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "js-base64": "^3.7.8",
+    "software-license-key": "^1.0.2",
+    "yargs": "^18.0.0"
+  },
+  "type": "module",
+  "description": "Network Insight (NI) License Key Generator",
+  "homepage": "https://www.cowdrey.net/",
+  "license": "Proprietary License",
+  "main": "licenseGen.mjs",
+  "name": "ni-license-generator",
+  "private": true,
+  "version": "1.0.0"
+}

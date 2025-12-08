@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>NI</title>
+    <link rel="stylesheet" href="/ni/css/style.css" />
+    <link rel="stylesheet" href="/ni/css/font-awesome.min.css" />
+    <link rel="icon" href="<%=payload.icon%>" sizes="any" />
+    <link rel="apple-touch-icon" href="NI/img/icon.png" />
+    <style>
+      .panel {
+        width: 60%;
+        height: 40%;
+        border-radius: 10px;
+        background-color: #b3b3b3;
+        color: #000000;
+        text-align: center;
+        margin: 10px auto 0 auto;
+        font-size: 1em;
+      }
+
+      .metrics-panel {
+        width: 100%;
+        height: 30%;
+        border-radius: 10px;
+        background-color: #b3b3b3;
+        color: #000000;
+        text-align: center;
+        margin: 10px auto 0 auto;
+        display: inline-block;
+        font-size: 1em;
+      }
+
+      .costs-panel {
+        width: 100%;
+        height: 30%;
+        border-radius: 10px;
+        background-color: #b3b3b3;
+        color: #000000;
+        text-align: center;
+        margin: 10px auto 10px auto;
+        display: inline-block;
+        font-size: 0.8em;
+      }
+
+      .graph_container {
+        display: inline-block;
+        margin-left: 10px;
+        width: 90%;
+      }
+    </style>
+    <script src="js/chart.umd.min.js"></script>
+    <script src="/ni/js/ni.js"></script>
+  </head>
+
+  <body>
+    <div class="icon-bar" id="icon-bar">
+      <a
+        nohref
+        onmouseover=""
+        style="cursor: pointer"
+        title="Network Insight"
+        ><img src="/favicon.ico" width="25%" height="25%"
+      /></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        class="active"
+        title="Dashboard"
+        ><i class="fa fa-thermometer-half"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('cable');"
+        title="Cables"
+        ><i class="fa fa-plug"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('duct');"
+        title="Ducts"
+        ><i class="fa fa-superpowers"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('pole');"
+        title="Poles"
+        ><i class="fa fa-arrows-v"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('ne');"
+        title="Network Equipment"
+        ><i class="fa fa-server"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('rack');"
+        title="Racks"
+        ><i class="fa fa-list-ol"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('site');"
+        title="Sites"
+        ><i class="fa fa-building-o"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('service');"
+        title="Services"
+        ><i class="fa fa-tty"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('trench');"
+        title="Trenches"
+        ><i class="fa fa-arrows-h"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('trenchLifetime');"
+        title="Trenches (lifetime)"
+        ><i class="fa fa-vine"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('trenchCountry');"
+        title="Trenches (country)"
+        ><i class="fa fa-globe"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('q2c');"
+        title="Quote-to-Cash"
+        ><i class="fa fa-shopping-basket"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('provider');"
+        title="Providers"
+        ><i class="fa fa-handshake-o"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('alert');"
+        title="Alerts"
+        ><i class="fa fa-bullhorn"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('setting');"
+        title="Settings"
+        ><i class="fa fa-cog"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('openapi');"
+        title="OpenAPI"
+        ><i class="fa fa-info-circle"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return menuJump('help');"
+        title="Help"
+        ><i class="fa fa-question-circle"></i
+      ></a>
+      <a
+        onmouseover=""
+        style="cursor: pointer"
+        nohref
+        onclick="return logout();"
+        title="Quit"
+        ><i class="fa fa-window-close"></i
+      ></a>
+    </div>
+    <div class="panel" id="resourcePanel">
+      <a
+        accesskey="@"
+        nohref
+        onclick="fetchStats();"
+        onmouseover=""
+        title="refresh"
+        style="cursor: pointer"
+        ><i style="color: white" class="fa fa-refresh"></i
+      ></a>
+      <div class="graph_container" id="resourceGraph">
+        Resources
+        <font size="1"
+          >(% <font color="#0a630a">active</font> vs.
+          <font color="#ff6a00">inactive</font>)</font
+        >
+        <canvas id="resourceSummary"></canvas>
+      </div>
+      <div class="metrics-panel" id="businessMetricsPanel">...</div>
+      <div class="costs-panel" id="businessCostsPanel">...</div>
+    </div>
+    <div class="footer">
+      <p>© 2026 Cowdrey Consulting. All rights reserved.</p>
+    </div>
+    <script defer="defer" src="/ni/js/ni-dashboard.js"></script>
+  </body>
+</html>

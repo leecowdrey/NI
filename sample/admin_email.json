@@ -1,0 +1,20 @@
+[
+	{
+		"emailProviderId": "c154c1b3-c0a6-47c3-856d-fed40e9acf19",
+		"vendor": "FastMail",
+		"address": "support@cowdrey.net",
+		"name": "Network Insight",
+		"send": {
+			"username": "support@cowdrey.net",
+			"password": "2p4j4h9v7n5b2t86",
+			"host": "smtp.fastmail.com",
+			"port": 465,
+			"protocol": "smtp",
+			"authentication": "PLAIN",
+			"encryption": {
+				"enabled": true,
+				"starttls": false
+			}
+		}
+	}
+]

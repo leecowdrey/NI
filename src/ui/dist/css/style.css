@@ -1,0 +1,576 @@
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+@font-face {
+  font-family: "Lato";
+  src: url("/ni/fonts/Lato-Regular.ttf") format("truetype");
+}
+
+* {
+  font-family: "Lato";
+}
+
+html {
+  color: #ffffff;
+  background: #151e36;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================================================
+   NI styles
+   ========================================================================== */
+.icon-bar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  text-align: center;
+  width: 5%;
+  padding: 2px 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 14px;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #25b09b;
+}
+
+.footer {
+  overflow: auto;
+  background-color: #555;
+  color: #ffffff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border: 0px;
+  padding: 0px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.outer {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.login {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  border-radius: 10px;
+  background-color: #b3b3b3;
+  color: #000000;
+  align-items: center;
+  text-align: left;
+  justify-content: center;
+  display: grid;
+}
+
+.inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  border-radius: 10px;
+  background-color: #b3b3b3;
+  color: #000000;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  display: grid;
+}
+
+.inner label {
+  width: auto;
+  font-size: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #000000;
+}
+
+.inner-grid {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  background-color: #b3b3b3;
+  color: #000000;
+  align-items: center;
+  text-align: left;
+  justify-content: center;
+  display: table;
+}
+.inner-grid label {
+  width: auto;
+  font-size: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #000000;
+}
+.inner-grid input[type=text],input[type=password] {
+  width: 300px;
+}
+.inner-grid input[type=password] {
+  width: 300px;
+}
+.inner-grid input[type=url] {
+  width: 500px;
+}
+.wrapper {
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.trench-select {
+  overflow: hidden;
+  color: #000000;
+  padding: 2px;
+  min-width: 20%;
+}
+
+.trench-select label {
+  color:#ffffff;
+}
+
+.trench-select select {
+  min-width: 20%;
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.input-select {
+  float: left;
+  color: #000;
+  padding: 2px;
+  font-size: 10px;
+}
+
+.input-select select {
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.wrapper-controls {
+  float: left;
+  text-align: center;
+  padding: 2px 0;
+  margin-left: 10px;
+  width: auto;
+  color: #ffffff;
+  padding: 2px;
+  font-size: 16px;
+}
+.provider-select {
+  float: left;
+  color: #000000;
+  padding: 2px;
+}
+.provider-select label {
+  color: #ffffff;
+}
+
+.provider-select select {
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.alert-select {
+  float: left;
+  color: #000000;
+  padding: 2px;
+}
+.alert-select label {
+  color: #ffffff;
+}
+
+.alert-select select {
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.mapVendor-select {
+  float: left;
+  color: #000000;
+  padding: 2px;
+}
+.mapVendor-select label {
+  color: #ffffff;
+}
+.mapVendor-select select {
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.site-select {
+  overflow: hidden;
+  color: #000000;
+  padding: 2px;
+  min-width: 20%;
+}
+
+.site-select select {
+  min-width: 20%;
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.site-select label {
+  color: #ffffff;
+}
+
+.pole-select {
+  overflow: hidden;
+  color: #000000;
+  padding: 2px;
+  min-width: 20%;
+}
+
+.pole-select select {
+  min-width: 20%;
+  appearance: none;
+  font-size: 10px;
+  padding: 2px;
+  border: 1px solid #caced1;
+  color: #000;
+  cursor: pointer;
+}
+.pole-select label {
+  color: #ffffff;
+}
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: auto;
+}
+#stateusage-faulty
+{
+    background: #ff0000;
+}
+#stateusage-reserved
+{
+    background: #808080;
+}
+#stateusage-used
+{
+    background: #000000;
+}
+#stateusage-free
+{
+    background: #008000;
+}
+#stateusage-error
+{
+    background: yellow;
+    color: black;
+}
+
+.stateusage
+{
+    float: left;
+    height: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 0.85em;
+    border: 0;
+    padding: 5px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+label {
+  width: 180px;
+  font-size: 10px;
+  margin-right: 10px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+input:disabled {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Hide visually and from screen readers
+ */
+
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers:
+ * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ *
+ * 1. For long content, line feeds are not interpreted as spaces and small width
+ *    causes content to wrap 1 word per line:
+ *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+ */
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  /* 1 */
+}
+
+/*
+ * Extends the .visually-hidden class to allow the element
+ * to be focusable when navigated to via the keyboard:
+ * https://www.drupal.org/node/897638
+ */
+
+.visually-hidden.focusable:active,
+.visually-hidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  white-space: inherit;
+  width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * The use of `table` rather than `block` is only necessary if using
+ * `::before` to contain the top-margins of child elements.
+ */
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+  (-webkit-min-device-pixel-ratio: 1.25),
+  (min-resolution: 1.25dppx),
+  (min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request:
+   https://www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: #fff !important;
+    color: #000 !important;
+    /* Black prints faster */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+   * Don't show links that are fragment identifiers,
+   * or use the `javascript:` pseudo protocol
+   */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+
+  .footer {
+    color: black;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+    font-size: 8px;
+    text-align: center;
+  }
+}

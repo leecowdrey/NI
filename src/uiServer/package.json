@@ -1,0 +1,30 @@
+{
+  "bugs": {
+    "url": "https://help.cowdrey.net/",
+    "email": "support@cowdrey.net"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-cache-controller": "^1.1.0",
+    "morgan": "^1.10.1",
+    "serve-favicon": "^2.5.1",
+    "uuid": "^13.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node -r dotenv/config /usr/local/ni/ui/uiServer.mjs dotenv_config_path=/etc/ni/ni.ini",
+    "dev": "DEBUG=* node -r dotenv/config /usr/local/ni/ui/uiServer.mjs dotenv_config_path=/etc/ni/ni.ini"
+  },
+  "description": "Network Insight (NI) provides analytical and prediction insights for telecommunications infrastructure and services.",
+  "homepage": "https://www.cowdrey.net/",
+  "license": "Proprietary License",
+  "main": "uiServer.mjs",
+  "name": "ni-ui-server",
+  "private": true,
+  "version": "1.0.0"
+}

@@ -1,0 +1,24 @@
+[
+	{
+		"mapProviderId": "7993cdd4-395b-456c-9005-4cc7a62715b2",
+		"vendor": "Google Maps",
+		"default": true,
+		"renderUrl": "https://maps.googleapis.com/maps/api/js",
+		"credentials": {
+			"identity": "NI",
+			"key": "AIzaSyD4TcrXO9v4qSNYtQD3AQqdDyhecJ_j9lw"
+		}
+	},
+	{
+		"mapProviderId": "4b26fb00-8b79-45f2-8acf-7fc7f691ca9e",
+		"vendor": "OpenStreet Map",
+		"default": false,
+		"renderUrl": "https://www.openstreetmap.org/render",
+		"identityProvider": {
+			"base": "https://www.openstreetmap.org",
+			"authorization": "/oauth2/authorize",
+			"token": "/oauth2/token",
+			"wellKnown": "/.well-known/oauth-authorization-server"
+		}
+	}
+]
