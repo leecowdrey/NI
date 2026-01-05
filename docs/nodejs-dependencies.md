@@ -4,14 +4,14 @@ url: https://www.cowdrey.net/
 footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1764953153
+version: 1.0.0.1767633398
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1764953153
+>Version: 1.0.0.1767633398
 
 
 
@@ -137,7 +137,7 @@ maintainers:
 dist-tags:
 latest: 1.8.1
 
-published 4 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -162,10 +162,10 @@ maintainers:
 - iamkun <kunhello@outlook.com>
 
 dist-tags:
-alpha: 2.0.0-alpha.4
 latest: 1.11.19
+alpha: 2.0.0-alpha.4
 
-published a month ago by iamkun <kunhello@outlook.com>
+published 2 months ago by iamkun <kunhello@outlook.com>
 
 ```
 
@@ -196,7 +196,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -252,10 +252,10 @@ maintainers:
 - sheplu <jean.burellier@gmail.com>
 
 dist-tags:
-latest-4: 4.22.1
 latest: 5.2.1
+latest-4: 4.22.1
 
-published 4 days ago by jonchurch <npm@jonchurch.com>
+published a month ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -286,7 +286,7 @@ maintainers:
 dist-tags:
 latest: 1.5.2
 
-published 5 months ago by romon2002 <romon2002@gmail.com>
+published 6 months ago by romon2002 <romon2002@gmail.com>
 
 ```
 
@@ -320,7 +320,7 @@ maintainers:
 dist-tags:
 latest: 7.3.1
 
-published 2 weeks ago by gustavohenke <guhenke@gmail.com>
+published a month ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -347,7 +347,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 3 months ago by dankogai <dankogai+github@gmail.com>
+published 4 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -382,7 +382,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 4 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -434,10 +434,10 @@ maintainers:
 - merencia <lucas.merencia@gmail.com>
 
 dist-tags:
-beta: 4.0.0-beta.6
 latest: 4.2.1
+beta: 4.0.0-beta.6
 
-published 4 months ago by merencia <lucas.merencia@gmail.com>
+published 5 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -472,7 +472,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -533,7 +533,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 2 months ago by broofa <robert@broofa.com>
+published 3 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -605,10 +605,10 @@ maintainers:
 - iamkun <kunhello@outlook.com>
 
 dist-tags:
-alpha: 2.0.0-alpha.4
 latest: 1.11.19
+alpha: 2.0.0-alpha.4
 
-published a month ago by iamkun <kunhello@outlook.com>
+published 2 months ago by iamkun <kunhello@outlook.com>
 
 ```
 
@@ -639,7 +639,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -727,10 +727,10 @@ maintainers:
 - sheplu <jean.burellier@gmail.com>
 
 dist-tags:
-latest-4: 4.22.1
 latest: 5.2.1
+latest-4: 4.22.1
 
-published 4 days ago by jonchurch <npm@jonchurch.com>
+published a month ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -795,7 +795,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 4 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -830,7 +830,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -860,7 +860,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 2 months ago by broofa <robert@broofa.com>
+published 3 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -898,7 +898,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -928,7 +928,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 2 months ago by broofa <robert@broofa.com>
+published 3 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -969,7 +969,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -995,8 +995,8 @@ maintainers:
 - tulios <ornelas.tulio@gmail.com>
 
 dist-tags:
-beta: 2.3.0-beta.3
 latest: 2.2.4
+beta: 2.3.0-beta.3
 
 published over a year ago by tulios <ornelas.tulio@gmail.com>
 
@@ -1023,10 +1023,10 @@ maintainers:
 - merencia <lucas.merencia@gmail.com>
 
 dist-tags:
-beta: 4.0.0-beta.6
 latest: 4.2.1
+beta: 4.0.0-beta.6
 
-published 4 months ago by merencia <lucas.merencia@gmail.com>
+published 5 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1035,26 +1035,26 @@ published 4 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@7.0.11 | MIT-0 | deps: none | versions: 285
+nodemailer@7.0.12 | MIT-0 | deps: none | versions: 286
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.11.tgz
-.shasum: 5f7b06afaec20073cff36bea92d1c7395cc3e512
-.integrity: sha512-gnXhNRE0FNhD7wPSCGhdNh46Hs6nm+uTyg+Kq0cZukNQiYdnCsoQjodNP9BQVG9XrcK/v6/MgpAPBUFyzh9pvw==
-.unpackedSize: 529.8 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.12.tgz
+.shasum: b6b7bb05566c6c8458ee360aa30a407a478d35b7
+.integrity: sha512-H+rnK5bX2Pi/6ms3sN4/jRQvYSMltV6vqup/0SFOrxYYY/qoNvhXPlYq3e+Pm9RFJRwrMGbMIwi81M4dxpomhA==
+.unpackedSize: 531.9 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
+latest: 7.0.12
 beta: 2.4.0-beta.0
-latest: 7.0.11
 
-published a week ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1084,7 +1084,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 2 months ago by broofa <robert@broofa.com>
+published 3 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1126,7 +1126,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1157,10 +1157,10 @@ dist-tags:
 latest: 13.0.0
 legacy-v10: 10.5.0
 legacy-v9: 9.3.5
-legacy: 4.5.3
 v7-legacy: 7.2.0
+legacy: 4.5.3
 
-published 2 weeks ago by isaacs <i@izs.me>
+published a month ago by isaacs <i@izs.me>
 
 ```
 
@@ -1169,17 +1169,17 @@ published 2 weeks ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.15.3 | MIT | deps: 9 | versions: 223
+mysql2@3.16.0 | MIT | deps: 9 | versions: 225
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.15.3.tgz
-.shasum: f0348d9c7401bb98cb1f45ffc5a773b109f70808
-.integrity: sha512-FBrGau0IXmuqg4haEZRBfHNWB5mUARw6hNwPDXXGg0XzVJ50mr/9hb267lvpVMnhZ1FON3qNd4Xfcez1rbFwSg==
-.unpackedSize: 528.0 kB
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.0.tgz
+.shasum: f296336b3ddba00fe061c7ca7ada2ddf8689c17e
+.integrity: sha512-AEGW7QLLSuSnjCS4pk3EIqOmogegmze9h8EyrndavUQnIUcfkVal/sK7QznE+a3bc6rzPbAiui9Jcb+96tPwYA==
+.unpackedSize: 529.0 kB
 
 dependencies:
 aws-ssl-profiles: ^1.1.1
@@ -1198,12 +1198,12 @@ maintainers:
 - sushantdhiman <sushantdhiman@outlook.com>
 
 dist-tags:
-beta: 2.0.0-alpha1
-canary: 3.15.3-canary.6000eb2f
-latest: 3.15.3
+latest: 3.16.0
+canary: 3.15.4-canary.a3944878
 next: 3.0.0-rc.1
+beta: 2.0.0-alpha1
 
-published a month ago by sidorares <andrey.sidorov@gmail.com>
+published 2 weeks ago by sidorares <andrey.sidorov@gmail.com>
 
 ```
 
@@ -1228,10 +1228,10 @@ maintainers:
 - merencia <lucas.merencia@gmail.com>
 
 dist-tags:
-beta: 4.0.0-beta.6
 latest: 4.2.1
+beta: 4.0.0-beta.6
 
-published 4 months ago by merencia <lucas.merencia@gmail.com>
+published 5 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1260,7 +1260,7 @@ maintainers:
 dist-tags:
 latest: 6.10.0
 
-published a month ago by sharadchan87 <sharad.raju@oracle.com>
+published 2 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```
 
@@ -1290,7 +1290,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 2 months ago by broofa <robert@broofa.com>
+published 3 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1330,7 +1330,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 2 months ago by motdotla <mot@mot.la>
+published 3 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1357,7 +1357,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 3 months ago by dankogai <dankogai+github@gmail.com>
+published 4 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -1422,16 +1422,16 @@ maintainers:
 - oss-bot <bencoe+oss-bot@gmail.com>
 
 dist-tags:
+latest: 18.0.0
+next: 18.0.0-candidate.7
 browser: 18.0.0-browser.2
-latest-11: 11.1.1
+latest-7: 7.1.2
+next-15: 15.5.0-candidate.0
 latest-13: 13.3.2
 latest-14: 14.2.3
-latest-7: 7.1.2
-latest: 18.0.0
 next-14: 14.2.1
-next-15: 15.5.0-candidate.0
-next: 18.0.0-candidate.7
+latest-11: 11.1.1
 
-published 6 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 7 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```
