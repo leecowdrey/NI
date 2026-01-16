@@ -4,14 +4,14 @@ url: https://www.cowdrey.net/
 footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1767633398
+version: 1.0.0.1768563038
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1767633398
+>Version: 1.0.0.1768563038
 
 
 
@@ -137,7 +137,7 @@ maintainers:
 dist-tags:
 latest: 1.8.1
 
-published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -347,7 +347,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 4 months ago by dankogai <dankogai+github@gmail.com>
+published 5 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -382,7 +382,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -437,7 +437,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 5 months ago by merencia <lucas.merencia@gmail.com>
+published 6 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -472,7 +472,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -533,7 +533,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 3 months ago by broofa <robert@broofa.com>
+published 4 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -648,30 +648,30 @@ published 3 months ago by motdotla <mot@mot.la>
 
 ```npm
 
-ejs@3.1.10 | Apache-2.0 | deps: 1 | versions: 75
+ejs@4.0.1 | Apache-2.0 | deps: 1 | versions: 76
 Embedded JavaScript templates
 https://github.com/mde/ejs
 
-keywords: template, engine, ejs
+keywords: template, templating, engine, ejs
 
 bin: ejs
 
 dist
-.tarball: https://registry.npmjs.org/ejs/-/ejs-3.1.10.tgz
-.shasum: 69ab8358b14e896f80cc39e62087b88500c3ac3b
-.integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==
-.unpackedSize: 142.8 kB
+.tarball: https://registry.npmjs.org/ejs/-/ejs-4.0.1.tgz
+.shasum: 689227c9f034c06ac75cd64f98b08b85f8922bc1
+.integrity: sha512-krvQtxc0btwSm/nvnt1UpnaFDFVJpJ0fdckmALpCgShsr/iGYHTnJiUliZTgmzq/UxTX33TtOQVKaNigMQp/6Q==
+.unpackedSize: 183.3 kB
 
 dependencies:
-jake: ^10.8.5
+jake: ^10.9.1
 
 maintainers:
 - mde <mde@fleegix.org>
 
 dist-tags:
-latest: 3.1.10
+latest: 4.0.1
 
-published a year ago by mde <mde@fleegix.org>
+published 2 days ago by mde <mde@fleegix.org>
 
 ```
 
@@ -795,7 +795,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 5 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -830,7 +830,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -860,7 +860,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 3 months ago by broofa <robert@broofa.com>
+published 4 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -928,7 +928,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 3 months ago by broofa <robert@broofa.com>
+published 4 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1026,7 +1026,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 5 months ago by merencia <lucas.merencia@gmail.com>
+published 6 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1054,7 +1054,7 @@ dist-tags:
 latest: 7.0.12
 beta: 2.4.0-beta.0
 
-published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 3 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1084,7 +1084,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 3 months ago by broofa <robert@broofa.com>
+published 4 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1169,16 +1169,16 @@ published a month ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.16.0 | MIT | deps: 9 | versions: 225
+mysql2@3.16.1 | MIT | deps: 9 | versions: 227
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.0.tgz
-.shasum: f296336b3ddba00fe061c7ca7ada2ddf8689c17e
-.integrity: sha512-AEGW7QLLSuSnjCS4pk3EIqOmogegmze9h8EyrndavUQnIUcfkVal/sK7QznE+a3bc6rzPbAiui9Jcb+96tPwYA==
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.1.tgz
+.shasum: cbe294573792fe4f059000f23d38e16011c83c61
+.integrity: sha512-b75qsDB3ieYEzMsT1uRGsztM/sy6vWPY40uPZlVVl8eefAotFCoS7jaDB5DxDNtlW5kdVGd9jptSpkvujNxI2A==
 .unpackedSize: 529.0 kB
 
 dependencies:
@@ -1188,7 +1188,7 @@ generate-function: ^2.3.1
 iconv-lite: ^0.7.0
 long: ^5.2.1
 lru.min: ^1.0.0
-named-placeholders: ^1.1.3
+named-placeholders: ^1.1.6
 seq-queue: ^0.0.5
 sqlstring: ^2.3.2
 
@@ -1198,12 +1198,12 @@ maintainers:
 - sushantdhiman <sushantdhiman@outlook.com>
 
 dist-tags:
-latest: 3.16.0
-canary: 3.15.4-canary.a3944878
+latest: 3.16.1
+canary: 3.16.1-canary.3e00cd75
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
-published 2 weeks ago by sidorares <andrey.sidorov@gmail.com>
+published 6 hours ago by sidorares <andrey.sidorov@gmail.com>
 
 ```
 
@@ -1231,7 +1231,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 5 months ago by merencia <lucas.merencia@gmail.com>
+published 6 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1260,7 +1260,7 @@ maintainers:
 dist-tags:
 latest: 6.10.0
 
-published 2 months ago by sharadchan87 <sharad.raju@oracle.com>
+published 3 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```
 
@@ -1290,7 +1290,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 3 months ago by broofa <robert@broofa.com>
+published 4 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1357,7 +1357,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 4 months ago by dankogai <dankogai+github@gmail.com>
+published 5 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 

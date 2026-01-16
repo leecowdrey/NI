@@ -19,225 +19,177 @@ draft: true
 ![](docs/insight-logo.png)
 <h1>Network Insight</h1>
 
-- [1. Legal Statements](#1-legal-statements)
-  - [1.1. Export restrictions](#11-export-restrictions)
-  - [1.2. Disclaimer](#12-disclaimer)
-  - [1.3. Limitation of liability](#13-limitation-of-liability)
-  - [1.4. Trademarks](#14-trademarks)
-  - [1.5. Patent marking notice](#15-patent-marking-notice)
-- [2. Target Audience](#2-target-audience)
-- [3. Introduction](#3-introduction)
-  - [3.1. What is the problem?](#31-what-is-the-problem)
-  - [3.2. How is Network Insight (NI) different?](#32-how-is-network-insight-ni-different)
-  - [3.3. Why should your business care?](#33-why-should-your-business-care)
-- [4. API-First](#4-api-first)
-- [5. Predictions](#5-predictions)
-    - [5.0.1. Simple](#501-simple)
-    - [5.0.2. Complex](#502-complex)
-  - [5.1. What does “prediction” mean in this context?](#51-what-does-prediction-mean-in-this-context)
-- [6. Alerts](#6-alerts)
-- [7. Resources](#7-resources)
-- [8. Time-Series](#8-time-series)
-  - [8.1. Concept](#81-concept)
-  - [8.2. Behind the Scenes](#82-behind-the-scenes)
-  - [8.3. Shadow Time-Series Tables](#83-shadow-time-series-tables)
-    - [8.3.1. Bulk Create (Import)](#831-bulk-create-import)
-  - [8.4. Bulk Read (Export)](#84-bulk-read-export)
-    - [8.4.1. Create](#841-create)
-    - [8.4.2. Read](#842-read)
-    - [8.4.3. Update](#843-update)
-    - [8.4.4. Delete](#844-delete)
-- [9. Resource Related Dependencies](#9-resource-related-dependencies)
-  - [9.1. Data Relationships](#91-data-relationships)
-- [10. Database Schema](#10-database-schema)
-- [11. Architectures](#11-architectures)
-    - [11.0.1. Application](#1101-application)
-    - [11.0.2. DevOps CI/CD Pipeline](#1102-devops-cicd-pipeline)
-    - [11.0.3. Functional](#1103-functional)
-    - [11.0.4. Integration](#1104-integration)
-    - [11.0.5. Logical (Cloud)](#1105-logical-cloud)
-    - [11.0.6. Logical (On-Premise)](#1106-logical-on-premise)
-    - [11.0.7. Cluster Replication](#1107-cluster-replication)
-    - [11.0.8. Security](#1108-security)
-      - [11.0.8.1. Through the API Gateway](#11081-through-the-api-gateway)
-    - [11.0.9. Internally](#1109-internally)
-      - [11.0.9.1. API Server Encrypted Storage](#11091-api-server-encrypted-storage)
-      - [11.0.9.2. Role-Based Access Control (RBAC)](#11092-role-based-access-control-rbac)
-    - [11.0.10. Deployment](#11010-deployment)
-- [12. DNS Resolution](#12-dns-resolution)
-- [13. NI Host Configuration](#13-ni-host-configuration)
-  - [13.1. NI Wildcard SSL Certificates](#131-ni-wildcard-ssl-certificates)
-  - [13.2. NI Environment File](#132-ni-environment-file)
-    - [13.2.1. Common](#1321-common)
-    - [13.2.2. OAuth2.0 / OpenID Connect](#1322-oauth20--openid-connect)
-    - [13.2.3. Alert Service](#1323-alert-service)
-    - [13.2.4. API Gateway](#1324-api-gateway)
-    - [13.2.5. API Server](#1325-api-server)
-    - [13.2.6. Fetch Service](#1326-fetch-service)
-    - [13.2.7. User Interface (UI) Server](#1327-user-interface-ui-server)
-    - [13.2.8. Identity and Access Management (IAM) Server](#1328-identity-and-access-management-iam-server)
-    - [13.2.9. Predict Service](#1329-predict-service)
-    - [13.2.10. DNS Server](#13210-dns-server)
-    - [13.2.11. Non-Unique per Component](#13211-non-unique-per-component)
-    - [13.2.12. SSL Certificates](#13212-ssl-certificates)
-    - [13.2.13. Example](#13213-example)
-- [14. Hosting Specifications](#14-hosting-specifications)
-  - [14.1. Standalone](#141-standalone)
-    - [14.1.1. Combined Single Host](#1411-combined-single-host)
-    - [14.1.2. Individual Hosts](#1412-individual-hosts)
-  - [14.2. Cluster](#142-cluster)
-    - [14.2.1. Per API Server Host](#1421-per-api-server-host)
-    - [14.2.2. Other](#1422-other)
-  - [14.3. Operating Systems](#143-operating-systems)
-  - [14.4. Host Firewalls](#144-host-firewalls)
-- [15. License Generator](#15-license-generator)
-- [16. Building the release](#16-building-the-release)
-  - [16.1. JavaScript Code Scanning](#161-javascript-code-scanning)
-  - [16.2. Individual Build Scripts](#162-individual-build-scripts)
-  - [16.3. Release artifacts](#163-release-artifacts)
-- [17. Deploying the release](#17-deploying-the-release)
-  - [17.1. Example Component Installation](#171-example-component-installation)
-  - [17.2. Example Component Update](#172-example-component-update)
-  - [17.3. Example Component Upgrade](#173-example-component-upgrade)
-  - [17.4. Example Component Removal](#174-example-component-removal)
-- [18. Integration Lab](#18-integration-lab)
-  - [18.1. Host](#181-host)
-    - [18.1.1. DNS Records](#1811-dns-records)
-  - [18.2. User Interface](#182-user-interface)
-  - [18.3. API Server](#183-api-server)
-  - [18.4. API Gateway](#184-api-gateway)
-  - [18.5. Alert Service](#185-alert-service)
-  - [18.6. Fetch Service](#186-fetch-service)
-  - [18.7. Predict Service](#187-predict-service)
-- [19. Architecture / Technology Choices / Third-Party](#19-architecture--technology-choices--third-party)
-  - [19.1. Map Rendering](#191-map-rendering)
-  - [19.2. Foreign Exchange Rates](#192-foreign-exchange-rates)
-  - [19.3. Common Vulnerabilities and Exposures (CVE) Repository](#193-common-vulnerabilities-and-exposures-cve-repository)
-  - [19.4. Sample Data](#194-sample-data)
-  - [19.5. World Boundaries](#195-world-boundaries)
-  - [19.6. Third-Party Elements \& Libraries](#196-third-party-elements--libraries)
-    - [19.6.1. API Gateway](#1961-api-gateway)
-    - [19.6.2. API Server](#1962-api-server)
-    - [19.6.3. DNS Server](#1963-dns-server)
-    - [19.6.4. UI Server](#1964-ui-server)
-    - [19.6.5. Predict Service](#1965-predict-service)
-    - [19.6.6. Alert Service](#1966-alert-service)
-    - [19.6.7. Fetch Service](#1967-fetch-service)
-    - [19.6.8. License Generator](#1968-license-generator)
-  - [19.7. Development Tooling - EchoAPI](#197-development-tooling---echoapi)
-- [20. NI OpenAPIs](#20-ni-openapis)
-- [21. NI User Interface (UI)](#21-ni-user-interface-ui)
-  - [21.1. Login](#211-login)
-  - [21.2. Readiness](#212-readiness)
-  - [21.3. Country Selector](#213-country-selector)
-  - [21.4. Dashboard](#214-dashboard)
-  - [21.5. Cables](#215-cables)
-    - [21.5.1. Common](#2151-common)
-    - [21.5.2. Coax](#2152-coax)
-    - [21.5.3. Copper](#2153-copper)
-    - [21.5.4. Ethernet](#2154-ethernet)
-    - [21.5.5. Fiber](#2155-fiber)
-      - [21.5.5.1. Single-Fiber](#21551-single-fiber)
-      - [21.5.5.2. Multi-Fiber](#21552-multi-fiber)
-  - [21.6. Ducts](#216-ducts)
-  - [21.7. Poles](#217-poles)
-  - [21.8. Network Eqiupment](#218-network-eqiupment)
-  - [21.9. Racks](#219-racks)
-  - [21.10. Sites](#2110-sites)
-  - [21.11. Services](#2111-services)
-  - [21.12. Trenches](#2112-trenches)
-    - [21.12.1. Detail](#21121-detail)
-    - [21.12.2. Lifetime](#21122-lifetime)
-    - [21.12.3. Per Country](#21123-per-country)
-  - [21.13. Quote-to-Cash (Q2C)](#2113-quote-to-cash-q2c)
-  - [21.14. Providers](#2114-providers)
-    - [21.14.1. Email](#21141-email)
-    - [21.14.2. Map](#21142-map)
-    - [21.14.3. Kafka](#21143-kafka)
-    - [21.14.4. Workflow Engines](#21144-workflow-engines)
-  - [21.15. Alerts](#2115-alerts)
-  - [21.16. Settings](#2116-settings)
-  - [21.17. OpenAPIs](#2117-openapis)
-  - [21.18. Help/About](#2118-helpabout)
-  - [21.19. Quit (Logout)](#2119-quit-logout)
-- [22. NI API Server Internals](#22-ni-api-server-internals)
-  - [22.1. Database](#221-database)
-  - [22.2. Geometry](#222-geometry)
-  - [22.3. Data Longevity](#223-data-longevity)
-  - [22.4. Database Backup](#224-database-backup)
-  - [22.5. Tracking Changes](#225-tracking-changes)
-  - [22.6. NI Fetch](#226-ni-fetch)
-  - [22.7. Alert Service](#227-alert-service)
-- [23. NI Alert Internals](#23-ni-alert-internals)
-- [24. NI Fetch Internals](#24-ni-fetch-internals)
-- [25. NI Predict Internals](#25-ni-predict-internals)
-  - [25.1. Duplication](#251-duplication)
-  - [25.2. Simple Prediction](#252-simple-prediction)
-  - [25.3. Complex Prediction](#253-complex-prediction)
-    - [25.3.1. Advantages for Time Series Prediction](#2531-advantages-for-time-series-prediction)
-- [26. NI User Interface Internals](#26-ni-user-interface-internals)
-  - [26.1. Distribution Directories](#261-distribution-directories)
-  - [26.2. Metadata](#262-metadata)
-- [27. CCUK Technical Services](#27-ccuk-technical-services)
-  - [27.1. By email](#271-by-email)
-  - [27.2. On the web](#272-on-the-web)
-  - [27.3. Technical documentation](#273-technical-documentation)
-- [28. Corporate Headquarters](#28-corporate-headquarters)
+- [1. Introduction](#1-introduction)
+  - [1.1. What is the problem?](#11-what-is-the-problem)
+  - [1.2. How is Network Insight (NI) different?](#12-how-is-network-insight-ni-different)
+  - [1.3. Why should your business care?](#13-why-should-your-business-care)
+- [2. API-First](#2-api-first)
+- [3. Predictions](#3-predictions)
+    - [3.0.1. Simple](#301-simple)
+    - [3.0.2. Complex](#302-complex)
+  - [3.1. What does “prediction” mean in this context?](#31-what-does-prediction-mean-in-this-context)
+- [4. Alerts](#4-alerts)
+- [5. Resources](#5-resources)
+- [6. Time-Series](#6-time-series)
+  - [6.1. Concept](#61-concept)
+  - [6.2. Behind the Scenes](#62-behind-the-scenes)
+  - [6.3. Shadow Time-Series Tables](#63-shadow-time-series-tables)
+    - [6.3.1. Bulk Create (Import)](#631-bulk-create-import)
+  - [6.4. Bulk Read (Export)](#64-bulk-read-export)
+    - [6.4.1. Create](#641-create)
+    - [6.4.2. Read](#642-read)
+    - [6.4.3. Update](#643-update)
+    - [6.4.4. Delete](#644-delete)
+- [7. Resource Related Dependencies](#7-resource-related-dependencies)
+  - [7.1. Data Relationships](#71-data-relationships)
+- [8. Database Schema](#8-database-schema)
+- [9. Architectures](#9-architectures)
+    - [9.0.1. Application](#901-application)
+    - [9.0.2. DevOps CI/CD Pipeline](#902-devops-cicd-pipeline)
+    - [9.0.3. Functional](#903-functional)
+    - [9.0.4. Integration](#904-integration)
+    - [9.0.5. Logical (Cloud)](#905-logical-cloud)
+    - [9.0.6. Logical (On-Premise)](#906-logical-on-premise)
+    - [9.0.7. Cluster Replication](#907-cluster-replication)
+    - [9.0.8. Security](#908-security)
+      - [9.0.8.1. Through the API Gateway](#9081-through-the-api-gateway)
+    - [9.0.9. Internally](#909-internally)
+      - [9.0.9.1. API Server Encrypted Storage](#9091-api-server-encrypted-storage)
+      - [9.0.9.2. Role-Based Access Control (RBAC)](#9092-role-based-access-control-rbac)
+    - [9.0.10. Deployment](#9010-deployment)
+- [10. DNS Resolution](#10-dns-resolution)
+- [11. NI Host Configuration](#11-ni-host-configuration)
+  - [11.1. NI Wildcard SSL Certificates](#111-ni-wildcard-ssl-certificates)
+  - [11.2. NI Environment File](#112-ni-environment-file)
+    - [11.2.1. Common](#1121-common)
+    - [11.2.2. OAuth2.0 / OpenID Connect](#1122-oauth20--openid-connect)
+    - [11.2.3. Alert Service](#1123-alert-service)
+    - [11.2.4. API Gateway](#1124-api-gateway)
+    - [11.2.5. API Server](#1125-api-server)
+    - [11.2.6. Fetch Service](#1126-fetch-service)
+    - [11.2.7. User Interface (UI) Server](#1127-user-interface-ui-server)
+    - [11.2.8. Identity and Access Management (IAM) Server](#1128-identity-and-access-management-iam-server)
+    - [11.2.9. Predict Service](#1129-predict-service)
+    - [11.2.10. DNS Server](#11210-dns-server)
+    - [11.2.11. Non-Unique per Component](#11211-non-unique-per-component)
+    - [11.2.12. SSL Certificates](#11212-ssl-certificates)
+    - [11.2.13. Example](#11213-example)
+- [12. Hosting Specifications](#12-hosting-specifications)
+  - [12.1. Standalone](#121-standalone)
+    - [12.1.1. Combined Single Host](#1211-combined-single-host)
+    - [12.1.2. Individual Hosts](#1212-individual-hosts)
+  - [12.2. Cluster](#122-cluster)
+    - [12.2.1. Per API Server Host](#1221-per-api-server-host)
+    - [12.2.2. Other](#1222-other)
+  - [12.3. Operating Systems](#123-operating-systems)
+  - [12.4. Host Firewalls](#124-host-firewalls)
+- [13. License Generator](#13-license-generator)
+- [14. Building the release](#14-building-the-release)
+  - [14.1. JavaScript Code Scanning](#141-javascript-code-scanning)
+  - [14.2. Individual Build Scripts](#142-individual-build-scripts)
+  - [14.3. Release artifacts](#143-release-artifacts)
+- [15. Deploying the release](#15-deploying-the-release)
+  - [15.1. Example Component Installation](#151-example-component-installation)
+  - [15.2. Example Component Update](#152-example-component-update)
+  - [15.3. Example Component Upgrade](#153-example-component-upgrade)
+  - [15.4. Example Component Removal](#154-example-component-removal)
+- [16. Integration Lab](#16-integration-lab)
+  - [16.1. Host](#161-host)
+    - [16.1.1. DNS Records](#1611-dns-records)
+  - [16.2. User Interface](#162-user-interface)
+  - [16.3. API Server](#163-api-server)
+  - [16.4. API Gateway](#164-api-gateway)
+  - [16.5. Alert Service](#165-alert-service)
+  - [16.6. Fetch Service](#166-fetch-service)
+  - [16.7. Predict Service](#167-predict-service)
+- [17. Architecture / Technology Choices / Third-Party](#17-architecture--technology-choices--third-party)
+  - [17.1. Map Rendering](#171-map-rendering)
+  - [17.2. Foreign Exchange Rates](#172-foreign-exchange-rates)
+  - [17.3. Common Vulnerabilities and Exposures (CVE) Repository](#173-common-vulnerabilities-and-exposures-cve-repository)
+  - [17.4. Sample Data](#174-sample-data)
+  - [17.5. World Boundaries](#175-world-boundaries)
+  - [17.6. Third-Party Elements \& Libraries](#176-third-party-elements--libraries)
+    - [17.6.1. API Gateway](#1761-api-gateway)
+    - [17.6.2. API Server](#1762-api-server)
+    - [17.6.3. DNS Server](#1763-dns-server)
+    - [17.6.4. UI Server](#1764-ui-server)
+    - [17.6.5. Predict Service](#1765-predict-service)
+    - [17.6.6. Alert Service](#1766-alert-service)
+    - [17.6.7. Fetch Service](#1767-fetch-service)
+    - [17.6.8. License Generator](#1768-license-generator)
+  - [17.7. Development Tooling - EchoAPI](#177-development-tooling---echoapi)
+- [18. NI OpenAPIs](#18-ni-openapis)
+- [19. NI User Interface (UI)](#19-ni-user-interface-ui)
+  - [19.1. Login](#191-login)
+  - [19.2. Readiness](#192-readiness)
+  - [19.3. Country Selector](#193-country-selector)
+  - [19.4. Dashboard](#194-dashboard)
+  - [19.5. Cables](#195-cables)
+    - [19.5.1. Common](#1951-common)
+    - [19.5.2. Coax](#1952-coax)
+    - [19.5.3. Copper](#1953-copper)
+    - [19.5.4. Ethernet](#1954-ethernet)
+    - [19.5.5. Fiber](#1955-fiber)
+      - [19.5.5.1. Single-Fiber](#19551-single-fiber)
+      - [19.5.5.2. Multi-Fiber](#19552-multi-fiber)
+  - [19.6. Ducts](#196-ducts)
+  - [19.7. Poles](#197-poles)
+  - [19.8. Network Eqiupment](#198-network-eqiupment)
+  - [19.9. Racks](#199-racks)
+  - [19.10. Sites](#1910-sites)
+  - [19.11. Services](#1911-services)
+  - [19.12. Trenches](#1912-trenches)
+    - [19.12.1. Detail](#19121-detail)
+    - [19.12.2. Lifetime](#19122-lifetime)
+    - [19.12.3. Per Country](#19123-per-country)
+  - [19.13. Quote-to-Cash (Q2C)](#1913-quote-to-cash-q2c)
+  - [19.14. Providers](#1914-providers)
+    - [19.14.1. Email](#19141-email)
+    - [19.14.2. Map](#19142-map)
+    - [19.14.3. Kafka](#19143-kafka)
+    - [19.14.4. Workflow Engines](#19144-workflow-engines)
+  - [19.15. Alerts](#1915-alerts)
+  - [19.16. Settings](#1916-settings)
+  - [19.17. OpenAPIs](#1917-openapis)
+  - [19.18. Help/About](#1918-helpabout)
+  - [19.19. Quit (Logout)](#1919-quit-logout)
+- [20. NI API Server Internals](#20-ni-api-server-internals)
+  - [20.1. Database](#201-database)
+  - [20.2. Geometry](#202-geometry)
+  - [20.3. Data Longevity](#203-data-longevity)
+  - [20.4. Database Backup](#204-database-backup)
+  - [20.5. Tracking Changes](#205-tracking-changes)
+  - [20.6. NI Fetch](#206-ni-fetch)
+  - [20.7. Alert Service](#207-alert-service)
+- [21. NI Alert Internals](#21-ni-alert-internals)
+- [22. NI Fetch Internals](#22-ni-fetch-internals)
+- [23. NI Predict Internals](#23-ni-predict-internals)
+  - [23.1. Duplication](#231-duplication)
+  - [23.2. Simple Prediction](#232-simple-prediction)
+  - [23.3. Complex Prediction](#233-complex-prediction)
+    - [23.3.1. Advantages for Time Series Prediction](#2331-advantages-for-time-series-prediction)
+- [24. NI User Interface Internals](#24-ni-user-interface-internals)
+  - [24.1. Distribution Directories](#241-distribution-directories)
+  - [24.2. Metadata](#242-metadata)
+- [25. CCUK Technical Services](#25-ccuk-technical-services)
+  - [25.1. By email](#251-by-email)
+  - [25.2. On the web](#252-on-the-web)
+  - [25.3. Technical documentation](#253-technical-documentation)
+- [26. Corporate Headquarters](#26-corporate-headquarters)
 
 ---
 
-# 1. Legal Statements
+# 1. Introduction
 
-Network Insight (NI) © 2026 Cowdrey Consulting. All rights reserved.
-
-No part of this content may be reproduced in any form or by any means or used to make any derivative work (such as translation, transformation, or adaptation) without written permission from Cowdrey Consulting ("CCUK") and/or its affiliates. CCUK reserves the right to revise or change this content from time to time without obligation on the part of CCUK to provide notification of such revision or change.
-
-## 1.1. Export restrictions
-
-These products and associated technical data (in print or electronic form) may be subject to export control laws of the United States of America. It is your responsibility to determine the applicable regulations and to comply with them. The following notice is applicable for all products or technology subject to export control.
-These items are controlled by the U.S. government and authorized for export only to the country of ultimate destination for use by the ultimate consignee or end-user(s) herein identified. They may not be resold, transferred, or otherwise disposed of, to any other country or to any person other than the authorized ultimate consignee or end-user(s), either in their original form or after being incorporated into other items, without first obtaining approval from the U.S. government or as otherwise authorized by U.S. law and regulations.
-
-## 1.2. Disclaimer
-
-THIS CONTENT AND ASSOCIATED PRODUCTS OR SERVICES (“MATERIALS”), ARE PROVIDED “AS IS” AND WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, CCUK DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON- INFRINGEMENT, FREEDOM FROM COMPUTER VIRUS, AND WARRANTIES ARISING FROM COURSE OF DEALING OR COURSE OF PERFORMANCE. CCUK does not represent or warrant that the functions described or contained in the Materials will be uninterrupted or error-free, that defects will be corrected, or are free of viruses or other harmful components. CCUK does not make any warranties or representations regarding the use of the Materials in terms of their completeness, correctness, accuracy, adequacy, usefulness, timeliness, reliability, or otherwise. As a condition of your use of the Materials, you warrant to CCUK that you will not make use thereof for any purpose that is unlawful or prohibited by their associated terms of use.
-
-## 1.3. Limitation of liability
-
-IN NO EVENT SHALL CCUK, CCUK AFFILIATES, OR THEIR OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, SUPPLIES, LICENSORS, AND THIRD-PARTY PARTNERS, BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER, EVEN IF CCUK HAS BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, WHETHER IN AN ACTION UNDER CONTRACT,TORT, OR ANY OTHER THEORY ARISING FROM YOUR ACCESS TO, OR USE OF, THE MATERIALS. Because some jurisdictions do not allow limitations on how long an implied warranty lasts, or the exclusion or limitation of liability for consequential or incidental damages, some of the above limitations may not apply to you.
-
-## 1.4. Trademarks
-
-All trademarks identified by ™ or ® are trademarks or registered trademarks in the US and may be registered in other countries. All product names, trademarks, and registered trademarks are property of their respective owners.
-
-## 1.5. Patent marking notice
-
-For applicable patents, see [www.cs-pat.com](https://www.cs-pat.com). That website is intended to give notice under 35 U.S.C. § 287(a) of articles that are patented or for use under the identified patents. That website identifies the patents associated with each of the patented articles.
-
----
-
-# 2. Target Audience
-
-It is expected Network Engineering IT/Developer resources will undertake any integrations and such resources are proficient in the following areas:
-
-- RESTful HTTP
-- Data Engineering
-
-> **Note:**
-> - *Professional Services* are available from CCUK to provide knowledge transfer and/or undertake any such integration.
-
----
-
-# 3. Introduction
-
-## 3.1. What is the problem?
+## 1.1. What is the problem?
 
 Every business is constantly faced with finding current accurate information but also attempting to plan, coping with the ever changing “What if ?” questions from their own employees in addition to shareholders, customers and external market influences
 
-## 3.2. How is Network Insight (NI) different?
+## 1.2. How is Network Insight (NI) different?
 
 NI takes historical and actual data and applies Machine Learning predictions providing insight from the past and foresight for the future by envisioning possibilities, from Network Insight delivering business intelligence
 
-## 3.3. Why should your business care?
+## 1.3. Why should your business care?
 
 NI serves to help you make decisions or, at the very least, streamline a company's decision-making processes by collecting, visualising, and communicating data associated with the telecommunications infrastructure and the services it offers
 
@@ -271,7 +223,7 @@ The published APIs include the exposed features, the UI itself just attempts to 
 
 ---
 
-# 4. API-First
+# 2. API-First
 
 NI does not replace the fine-grain capabilities of any physical (PNI) or logical (LNI) network inventory, but serves to help you make decisions or, at the very least, streamline a company's decision-making processes by collecting, visualising, and communicating data associated with the telecommunications infrastructure and services it offers API-first Business Support System (BSS)
 
@@ -285,19 +237,19 @@ Refer to section NI [NI OpenAPIs](#19-ni-openapis) for further details.
 
 ---
 
-# 5. Predictions
+# 3. Predictions
 
 Due to the NI Time-Series architecture, predictions are treated as updates to historical resource data with calculated/determined values being applied as modifictions with a future date/time associated. 
 
-### 5.0.1. Simple
+### 3.0.1. Simple
 
 Inspecting the historical changes of a single resource, example a rack, and calculating the likelihood of the rack slot usage change and what slot usage would change to, i.e. free to used
 
-### 5.0.2. Complex
+### 3.0.2. Complex
 
 Involve combining historical changes of multiple resources and potentially updated external data, example post address, and calculating the need for a resource to change to meet the external data conditions, or the need to extend an existing trench to cover new premises, or provide bandwidth to a new cell tower, data center etc. 
 
-## 5.1. What does “prediction” mean in this context?
+## 3.1. What does “prediction” mean in this context?
 
 Where NI holds the lifetime of a resource (past and current), it also attempts to guess (given a predict is literally an educated guess) what it will be at some point in the future.
 
@@ -327,7 +279,7 @@ NI Alert needs further development to complete this but is simply taking a colle
 
 ---
 
-# 6. Alerts
+# 4. Alerts
 
 NI aims to provide notification alerts via numerous mechanisms:
 
@@ -361,7 +313,7 @@ Providers can be defined via the NI UI and API Server for:
 
 ---
 
-# 7. Resources
+# 5. Resources
 
 NI resources include:
 
@@ -384,9 +336,9 @@ For full details of what is possible to hold against a specific resource, refer 
 
 ---
 
-# 8. Time-Series
+# 6. Time-Series
 
-## 8.1. Concept
+## 6.1. Concept
 
 Every NI resource has possibility of multiple diverging states including deleted but remains as the same originally defined resource Historical & predicted relationships remain between resources, for example a duct in a trench, such scenarios include:
  - Trench is extended
@@ -410,7 +362,7 @@ Entire record from external source can be supplied again without external proces
 As time passes (now), older predicted data that is earlier than the last historical data is removed
 and new predictions performed. Boundaries for earliest preserved historical data and latest predicted data are configurable ensuring quantifiable storage requirements (days, months, quarters or years)
 
-## 8.2. Behind the Scenes
+## 6.2. Behind the Scenes
 
 The data required for NI must be expanded overtime during normal operations as NI requires a historical dataset in order to predict the future changes, this requires certain adjustments to normal Create-Read-Update-Delete (CRUD) concepts in addition to all non-administrative datasets including metadata fields:
 
@@ -420,7 +372,7 @@ The data required for NI must be expanded overtime during normal operations as N
 
 All records, regardless of type, are subject to the administrative data pruning mechanisms when the historical retention period ( HTTP GET `/ni/v1/admin/data/historical/duration`) of the record has been exceeded 
 
-## 8.3. Shadow Time-Series Tables
+## 6.3. Shadow Time-Series Tables
 
 Each data (parent) table has a corresponding shadow (child) table prefixed by _, for example Alerts are held in the database table alert and its shadow table is _alert.
 
@@ -450,7 +402,7 @@ Any other table that requires to have referential integrity will include the nec
 > Primary and Foreign Relationships
 
 
-### 8.3.1. Bulk Create (Import)
+### 6.3.1. Bulk Create (Import)
 
 - dataset presented via API will include point values
 - dataset presented via API will optionally include internal identifiers (`UUIDv4`)
@@ -474,7 +426,7 @@ Any other table that requires to have referential integrity will include the nec
 > **Note:** 
 > - during bulk imports NI Alert, Fetch and Predict services are effectively suspended until the API Server queues are empty
 
-## 8.4. Bulk Read (Export)
+## 6.4. Bulk Read (Export)
 
 - if no such record(s) exists, HTTP status code 404 will be returned
 - If the request is invalid, HTTP status code 400 will be returned
@@ -484,7 +436,7 @@ Any other table that requires to have referential integrity will include the nec
   - delete field value (boolean)
 - HTTP status code 200 will be returned
 
-### 8.4.1. Create
+### 6.4.1. Create
 
 - record presented via API will NOT include point value
 - If the request is invalid, HTTP status code 400 will be returned
@@ -494,14 +446,14 @@ Any other table that requires to have referential integrity will include the nec
   - `delete` = false
 - the internal identifier (`UUIDv4`) will be returned along with HTTP status code 200
 
-### 8.4.2. Read
+### 6.4.2. Read
 
 - if no such record(s) exists, HTTP status code 404 will be returned
 - If the request is invalid, HTTP status code 400 will be returned
 - if no point value or range is requested via API query parameters then the latest historical record(s) (i.e. state = historical) will be returned with HTTP status code 200
 - If point value or is requested via API query parameter that extends into the future, record(s) with either a source of historical or predicted and not marked for deletion (i.e.delete = false) will be returned with HTTP status code 200
 
-### 8.4.3. Update
+### 6.4.3. Update
 
 - If specified record does not exist then HTTP status code 404 will be returned
 - If specified record exists but is marked for deletion (delete = true) then HTTP status code 404 will be returned
@@ -520,7 +472,7 @@ Any other table that requires to have referential integrity will include the nec
     - `delete` = false
   - HTTP status code 204 will be returned
 
-### 8.4.4. Delete
+### 6.4.4. Delete
 
 - If specified record does not exist then HTTP status code 404 will be returned
 - If the request is invalid, HTTP status code 400 will be returned
@@ -532,7 +484,7 @@ Any other table that requires to have referential integrity will include the nec
 
 ---
 
-# 9. Resource Related Dependencies
+# 7. Resource Related Dependencies
 
 ```text
 +------+   +--------+   +------+   +-------+
@@ -550,7 +502,7 @@ Any other table that requires to have referential integrity will include the nec
 +------+   +------+              +----+              +---------+
 ```
 
-## 9.1. Data Relationships
+## 7.1. Data Relationships
 
 > How does NI store relationships such as: 
 
@@ -569,7 +521,7 @@ So every NI resource can have association for/to another resource but it is not 
 
 ---
 
-# 10. Database Schema
+# 8. Database Schema
 
 As part of the CI/CD process, the NI database schema is automatically documented as a Entity Relationship Diagram (ERD) and the latest version is shown below
 
@@ -579,49 +531,49 @@ As part of the CI/CD process, the NI database schema is automatically documented
 
 ---
 
-# 11. Architectures
+# 9. Architectures
 
 ![](docs/architecture/ni-architectures-Simple.svg)
 
 > Simplified
 
-### 11.0.1. Application
+### 9.0.1. Application
 
 ![](docs/architecture/ni-architectures-Application.svg)
 
 > Application
 
-### 11.0.2. DevOps CI/CD Pipeline
+### 9.0.2. DevOps CI/CD Pipeline
 
 ![](docs/architecture/ni-architectures-DevOps.svg)
 
 > DevOps
 
-### 11.0.3. Functional
+### 9.0.3. Functional
 
 ![](docs/architecture/ni-architectures-Functional.svg)
 
 > Functional
 
-### 11.0.4. Integration
+### 9.0.4. Integration
 
 ![](docs/architecture/ni-architectures-Integration.svg)
 
 > Integration
 
-### 11.0.5. Logical (Cloud)
+### 9.0.5. Logical (Cloud)
 
 ![](docs/architecture/ni-architectures-Logical-Cloud.svg)
 
 > Logical Cloud
 
-### 11.0.6. Logical (On-Premise)
+### 9.0.6. Logical (On-Premise)
 
 ![](docs/architecture/ni-architectures-Logical-OnPrem.svg)
 
 > Logical On-Premise/Self Hosted
 
-### 11.0.7. Cluster Replication
+### 9.0.7. Cluster Replication
 
 ![](docs/architecture/ni-architectures-Replication.svg)
 
@@ -634,13 +586,13 @@ As part of the CI/CD process, the NI database schema is automatically documented
 - Replication communication via the encrypted multicast stream **does not** occur through the API Gateway
 - UI Server, API Gateway, Predictive Service, Fetch Service and Alerting Service are already fully capable of horizontal and verticaal scaling
 
-### 11.0.8. Security
+### 9.0.8. Security
 
 ![](docs/architecture/ni-architectures-Security.svg)
 
 > Authentication and Authorization 
 
-#### 11.0.8.1. Through the API Gateway
+#### 9.0.8.1. Through the API Gateway
 
 Browser clients and machine-to-machine (M2M) clients operate through the API Gateway and are required to use OAuth2.0/OpenID Connect authentication, between the API Gateway and the API Server a different authentication scheme is used.
 
@@ -657,7 +609,7 @@ The API Gateway has the responsibility of undertaking both authentication and au
 > - To ignore authorization change `APIGW_IGNORE_AUTH_VALIDATOR` to `true` prior to installation of the API Gateway.
 > - Authorization can be re-enabled by changing `APIGW_IGNORE_AUTH_VALIDATOR` to `false` and performing an update or upgrade of the API Gateway
 
-### 11.0.9. Internally
+### 9.0.9. Internally
 
 NI Alert Service, Fetch Service and Predict Service, as well as the API Gateway use service authentication.
 
@@ -672,7 +624,7 @@ NI Alert Service, Fetch Service and Predict Service, as well as the API Gateway 
 > - The service authentication credentials are generated during installation of the API Server and are specific to that installation.
 > - When deploying API Server for cluster operations, the service authentication credentials **MUST** match across all environment configuration files (`/etc/ni/ni.ini`), specifically `NI_SERVICE_USERNAME` and `NI_SERVICE_KEY`.
 
-#### 11.0.9.1. API Server Encrypted Storage
+#### 9.0.9.1. API Server Encrypted Storage
 
 NI API Server makes use of AES encryption, key size 256 bits for storing credentials within its secret store.
 
@@ -680,7 +632,7 @@ NI API Server makes use of AES encryption, key size 256 bits for storing credent
 > - The AES encryptions credentials are generated during installation of the API Server and are specific to that installation.
 > - When deploying API Server for cluster operations, the AES encryptions credentials **DO NOT NEED** to match across all environment configuration files (`/etc/ni/ni.ini`), specifically `APISERV_ENCRYPTION_KEY` and `APISERV_ENCRYPTION_IV`.
 
-#### 11.0.9.2. Role-Based Access Control (RBAC)
+#### 9.0.9.2. Role-Based Access Control (RBAC)
 
 The NI OpenAPIs already includes the fine-grain RBAC markers against each and every API, they are:
 
@@ -723,7 +675,7 @@ The following roles are reserved for internal use by NI Alert Service, Fetch Ser
 > **Note:** 
 > - `ni_alert`, `ni_fetch`, `ni_predict` roles are for NI itself and **MUST NOT** be assigned to any external clients
 
-### 11.0.10. Deployment
+### 9.0.10. Deployment
 
 ![](docs/install/ni-architectures-Deployment.svg)
 
@@ -734,7 +686,7 @@ The following roles are reserved for internal use by NI Alert Service, Fetch Ser
 
 ---
 
-# 12. DNS Resolution
+# 10. DNS Resolution
 
 NI makes use of service discovery via DNS server (`SRV`) records to locate NI components, this is more commonly referred to as `SD-DNS`. This is used for both horizontal and vertical scaling and by the API Gateway for backend routing.
 
@@ -800,14 +752,14 @@ t310 IN A 192.168.111.6
 
 ---
 
-# 13. NI Host Configuration
+# 11. NI Host Configuration
 
 Each host environment hosting NI components must contain a NI configuration environment file. This file can be found at `/etc/ni/ni.ini` and is automatically created if not found during installation.
 
 > **Note:**
 > - The contents of the configuration environment file should be manually updated and synchronised between all hosts that form NI as NI internal components will read some of the configuration of the other components.
 
-## 13.1. NI Wildcard SSL Certificates
+## 11.1. NI Wildcard SSL Certificates
 
 NI requires either a wildcard SSL certificate, or suitable SSL certificate per host as below:
 
@@ -816,7 +768,7 @@ NI requires either a wildcard SSL certificate, or suitable SSL certificate per h
  - UI Server (`UISERV_*`)
  - Identity and Access Management (`IAM_*`)
 
-## 13.2. NI Environment File
+## 11.2. NI Environment File
 
 The file `/etc/ni/ni.ini` deployment environment file supports the following NI functional components:
 
@@ -833,7 +785,7 @@ The file `/etc/ni/ni.ini` deployment environment file supports the following NI 
 > - Some items are automaticaly set during the CI/CD build process
 > - This deployment environment file must be manually synchronised if using more than one host
 
-### 13.2.1. Common
+### 11.2.1. Common
 
 ```bash
 #
@@ -865,7 +817,7 @@ NI_SERVICE_KEY=""
  - `NI_SERVICE_USERNAME` is automatically set during the installation of the API Server - other components do require this
  - `NI_SERVICE_KEY` is automatically set during the installation of the API Server - other components do require this
 
-### 13.2.2. OAuth2.0 / OpenID Connect
+### 11.2.2. OAuth2.0 / OpenID Connect
 
 ```bash
 #
@@ -894,7 +846,7 @@ OAUTH_DISCOVERY_URL="https://login.microsoftonline.com/a17ec843-b999-4lee-cowd-r
 > **Note:** 
 > - You would need to change the Microsoft tenant id `a17ec843-b999-4lee-cowd-rey03a903e14` and potentially Discovery URL to match your Azure account.
 
-### 13.2.3. Alert Service
+### 11.2.3. Alert Service
 
 ```bash
 #
@@ -915,7 +867,7 @@ ALERTSRV_WORKING_DIRECTORY="/usr/local/ni/alert"
  - `ALERTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS` can be changed if required
  - `ALERTSRV_ENDPOINT_RETRY_INTERVAL_MS` can be changed if required
 
-### 13.2.4. API Gateway 
+### 11.2.4. API Gateway 
 
 ```bash
 #
@@ -948,7 +900,7 @@ APIGW_WORKING_DIRECTORY="/usr/local/ni/apigw"
  - `APIGW_PROXY_RATE_LIMIT_EVERY` for large installations, adjust accordingly - refert to KrakenD documentation
  - `APIGW_KRAKEND_VERSION` which version of KrakenD to download and use - this should not be changed
 
-### 13.2.5. API Server
+### 11.2.5. API Server
 
 ```bash
 #
@@ -1020,7 +972,7 @@ APISERV_WORKING_DIRECTORY="/usr/local/ni/api"
  - `APISERV_URL_VERSION` the API server endpoint URL path version prefix - this should not be changed
  - `APISERV_USE_DNS_SD` toggle API Server using DNS Service Discovery to determine which host/port to expose its endpoint against - this should not be changed unless DNS `SRV`records have been previously verified (i.e. from API Gateway)
 
-### 13.2.6. Fetch Service
+### 11.2.6. Fetch Service
 
 ```bash
 #
@@ -1043,7 +995,7 @@ FETCHSRV_WORKING_DIRECTORY="/usr/local/ni/fetch"
  - `FETCHSRV_CVE_DIRECTORY` if used, where to cache the CVE repository - this can be an external network share or another filesystem as dependant on expected storage requirements
  - `FETCHSRV_FX_UPDATE` toggle updating foreign currency exchange rates from the Internet - if disabled FX rates can be updated through API Server APIs
 
-### 13.2.7. User Interface (UI) Server
+### 11.2.7. User Interface (UI) Server
 
 ```bash
 #
@@ -1078,7 +1030,7 @@ UISERV_WORKING_DIRECTORY="/usr/local/ni/ui"
  - `UISERV_URL_PREFIX` this should match the API Server endpoint URL path prefix - this should not be changed
  - `UISERV_USE_DNS_SD` toggle UI Server using DNS Service Discovery to determine which host/port to expose its endpoint against and this should not be changed unless DNS `SRV`records have been previously verified
 
-### 13.2.8. Identity and Access Management (IAM) Server
+### 11.2.8. Identity and Access Management (IAM) Server
 
 ```bash
 #
@@ -1106,7 +1058,7 @@ IAM_WORKING_DIRECTORY="/usr/local/ni/iam"
  - `IAM_KEYCLOAK_VERSION` version of KeyCloak to use - this should not be changed
  - `IAM_PORT_HTTPS` if changed, ensure DNS records match
 
-### 13.2.9. Predict Service
+### 11.2.9. Predict Service
 
 ```bash
 #
@@ -1125,7 +1077,7 @@ PREDICTSRV_WORKING_DIRECTORY="/usr/local/ni/predict"
 
  - `PREDICTSRV_CRONTIME` can be changed, adhere to rules of Linux CronTab for specifying the execution time
 
-### 13.2.10. DNS Server
+### 11.2.10. DNS Server
 
 > **Note:**
 > - while some deployments will NOT include the embedded DNS Server (dnsmasq), this configuration is still required for the `HOST` and `DOMAIN NAME` configuration
@@ -1156,7 +1108,7 @@ DNSSERV_RESOLVCONF=1
   - `DNSSERV_SYSTEMD_RESOLVE` records if systemD Resolve was deployed - this should not be changed and is set during installation
   - `DNSSERV_RESOLVCONF` records if resolve-conf was deployed - his should not be changed and is set during installation
 
-### 13.2.11. Non-Unique per Component
+### 11.2.11. Non-Unique per Component
 
 The following are defined per component and are treated in the same manner:
 
@@ -1169,7 +1121,7 @@ The following are defined per component and are treated in the same manner:
  - `{NI_COMPONENT}_ENDPOINT_RETRY_INTERVAL_MS` used by service components and can be changed
  - `{NI_COMPONENT}_ENDPOINT_KEEPALIVE_INTERVAL_MS` used by service components and can be changed
 
-### 13.2.12. SSL Certificates
+### 11.2.12. SSL Certificates
 
 NI will unless configured otherwise generate and use Self-Signed SSL certificates, if using signed certificates then the number of days and key size values can be ignored. If using same wildcard domain SSL certificate all components can use the same certificate chain, otherwise one certificate per Server component is suitable.
 
@@ -1179,7 +1131,7 @@ NI will unless configured otherwise generate and use Self-Signed SSL certificate
  - `{NI_COMPONENT}_SSL_KEY` - `PEM` formatted key certificate filename
  - `{NI_COMPONENT}_SSL_SIZE` - Self-Signed certificate key size
 
-### 13.2.13. Example
+### 11.2.13. Example
 
 > **Note:**
 > - It is recommended that the deployment environment file be configured for the deployment before installation is started.
@@ -1191,7 +1143,7 @@ A fully populated deployment environment file would be similar to:
 # Network Insight (NI) - Deployment Environment File
 #
 # Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
+# Cowdrey Consulting · United Kingdom · T:+447773281821 
 # https://www.cowdrey.net/
 #
 # © 2026 Cowdrey Consulting. All rights reserved.
@@ -1379,23 +1331,11 @@ DNSSERV_RESOLVCONF=1
 
 ---
 
-# 14. Hosting Specifications
+# 12. Hosting Specifications
 
-## 14.1. Standalone
+## 12.1. Standalone
 
-### 14.1.1. Combined Single Host
-
-| Component       | CPU | RAM  | Disk |
-| --------------- | --- | ---- | ---- |
-| All Combined    | 4   | 16GB | 64GB |
-| API Server      | 2   | 10GB | 8GB  |
-| Alert Service   | 1   | 1GB  | 1GB  |
-| API Gateway     | 1   | 1GB  | 1GB  |
-| Fetch Service   | 1   | 1GB  | 4GB  |
-| Predict Service | 1   | 1GB  | 1GB  |
-| UI Server       | 1   | 1GB  | 1GB  |
-
-### 14.1.2. Individual Hosts
+### 12.1.1. Combined Single Host
 
 | Component       | CPU | RAM  | Disk |
 | --------------- | --- | ---- | ---- |
@@ -1407,15 +1347,27 @@ DNSSERV_RESOLVCONF=1
 | Predict Service | 1   | 1GB  | 1GB  |
 | UI Server       | 1   | 1GB  | 1GB  |
 
-## 14.2. Cluster
+### 12.1.2. Individual Hosts
 
-### 14.2.1. Per API Server Host
+| Component       | CPU | RAM  | Disk |
+| --------------- | --- | ---- | ---- |
+| All Combined    | 4   | 16GB | 64GB |
+| API Server      | 2   | 10GB | 8GB  |
+| Alert Service   | 1   | 1GB  | 1GB  |
+| API Gateway     | 1   | 1GB  | 1GB  |
+| Fetch Service   | 1   | 1GB  | 4GB  |
+| Predict Service | 1   | 1GB  | 1GB  |
+| UI Server       | 1   | 1GB  | 1GB  |
+
+## 12.2. Cluster
+
+### 12.2.1. Per API Server Host
 
 | Component  | CPU | RAM  | Disk |
 | ---------- | --- | ---- | ---- |
 | API Server | 2   | 10GB | 8GB  |
 
-### 14.2.2. Other
+### 12.2.2. Other
 
 | Component       | CPU | RAM | Disk |
 | --------------- | --- | --- | ---- |
@@ -1428,14 +1380,14 @@ DNSSERV_RESOLVCONF=1
 > **Note:** 
 > - Both the API Gateway and UI Server can be deployed on to multiple hosts without additional configuration. The DNS A records used by NI will need to be modified to support multiple resolved hosts/IP addresses (DNS Round-Robin)
 
-## 14.3. Operating Systems
+## 12.3. Operating Systems
 
 NI is developed and supported on Debian based operating systems, this includes Ubuntu and other similar variants. The minimum supported version of Debian is version 12.
 
 > **Note:**
 > - RedHat Enterprise Linux (RHEL) and its variants are not supported but compatible and installation scripts will require adjustment to support the RHEL package manager. For demonstration systems any host supporting DuckDB, NodeJS 22.x can be used.
 
-## 14.4. Host Firewalls
+## 12.4. Host Firewalls
 
 A generic example for an IPv4 `iptables`/`netfilter` host based firewall with NI deployed on a single host supporting IPv4 is shown below:
 
@@ -1472,7 +1424,7 @@ COMMIT
 
 ---
 
-# 15. License Generator
+# 13. License Generator
 
 NI requires a valid license to be included within the environment deployment file and this license must be generated specifically for the host or hosts operating the NI API Server.
 
@@ -1552,7 +1504,7 @@ NI_LICENSE_PRIVATE_KEY="PT09PUJFR0lOIExJQ0VOU0UgS0VZPT09PQpBUEx4Vk5hQ2Y2OGd3ZEpm
 
 --
 
-# 16. Building the release
+# 14. Building the release
 
 The NI CI/CD pipeline can be kickstarted manually by executing the pipeline script. This will perform the required steps to produce a version release archive and commit any changes back to the [NI repository](https://github.com/leecowdrey/NI) hosted within GitHub.
 
@@ -1645,7 +1597,7 @@ The build steps contained within the pipeline script are executed sequently in t
 7. `release.sh`
 
 
-## 16.1. JavaScript Code Scanning
+## 14.1. JavaScript Code Scanning
 
 As part of the CI/CD process, NI is scanned for vulnerabilities that may exist in the NI source code. This is undertaken via.
 
@@ -1656,7 +1608,7 @@ As part of the CI/CD process, NI is scanned for vulnerabilities that may exist i
 > **Note:**
 > - Please refer to [auditjs](https://github.com/sonatype-nexus-community/auditjs) for further details.
 
-## 16.2. Individual Build Scripts
+## 14.2. Individual Build Scripts
 If required, the individual build scripts can be executed in isolation - examine contents of [build](build/) directory for further details but these include:
  - `builddepjs.sh` generate `nodejs-dependencies.md` in the documentation directory
  - `buildtag.sh` update the NI version specific details in OpenAPI definitions and other areas
@@ -1667,7 +1619,7 @@ If required, the individual build scripts can be executed in isolation - examine
  - `pipeline.sh` wrapper script to run all build steps
  - `release.sh` wrapper script to produce bundle of compressed TAR files containing each NI component and MD5 verification file
 
-## 16.3. Release artifacts
+## 14.3. Release artifacts
 
 Within the `release` directory two files will be generated:
 
@@ -1731,7 +1683,7 @@ ni_1.0.0.tar.gz: OK
 
 ---
 
-# 17. Deploying the release
+# 15. Deploying the release
 
 Each NI component archive can be unpacked for installation purposes.
 
@@ -1769,7 +1721,7 @@ Each component contains the following scripts:
 - `upgrade.sh` this script is used for updating an existing installation, both any third-party and NI itself will be upgrading but is specific to the component
 
 
-## 17.1. Example Component Installation
+## 15.1. Example Component Installation
 
 ```bash
 # ./install.sh 
@@ -1867,7 +1819,7 @@ Each component contains the following scripts:
 > **Note:**
 > - this will use any existing deployed `/etc/ni/ni.ini` environment configuration file, otherwise the existing copy within the component release will be deployed
 
-## 17.2. Example Component Update
+## 15.2. Example Component Update
 
 ```bash
 # ./update.sh 
@@ -1884,7 +1836,7 @@ Each component contains the following scripts:
 > **Note:**
 > - this expects to use the existing deployed `/etc/ni/ni.ini` environment configuration file
 
-## 17.3. Example Component Upgrade
+## 15.3. Example Component Upgrade
 
 ```bash
 # ./upgrade.sh 
@@ -1913,7 +1865,7 @@ APISERV_DUCKDB_VERSION="v1.4.2"
 IAM_KEYCLOAK_VERSION="26.4.4"
 ```
 
-## 17.4. Example Component Removal
+## 15.4. Example Component Removal
 
 ```bash
 # ./uninstall.sh 
@@ -1941,7 +1893,7 @@ The following directories should be manually removed if NI is no longer to exist
 
 ---
 
-# 18. Integration Lab
+# 16. Integration Lab
 
 ![](docs/architecture/ni-architectures-Integration%20Lab.svg)
 
@@ -1951,7 +1903,7 @@ Integration Lab
 > **Note:** 
 > - all NI created host accounts are automatically created, secured and by default have shell access disabled, use `systemctl` to control the running service from a privileged, i.e. `root`, account
 
-## 18.1. Host
+## 16.1. Host
 
 - IP: `192.168.111.6`
 - Host name: `t310`
@@ -1961,7 +1913,7 @@ Integration Lab
 - root username: `root`
 - root password: available from IT Support
 
-### 18.1.1. DNS Records
+### 16.1.1. DNS Records
 
 | Component   | DNS Type | DNS Record Name                               | DNS Record Value                                                  |
 | ----------- | -------- | --------------------------------------------- | ----------------------------------------------------------------- |
@@ -1982,7 +1934,7 @@ The following are neither defined and/or not used within this environment:
 > **Note:** 
 > - DNS records for this host are hosted externally from the lab environment, please contact IT Support for further details
 
-## 18.2. User Interface
+## 16.2. User Interface
 
 - Browser URL: [[URL](https://t310.cowdrey.net:4443/)](https://t310.cowdrey.net:4443/)
 - username: `ni@cowdrey.net`
@@ -1992,7 +1944,7 @@ The following are neither defined and/or not used within this environment:
 - OS deployed location: `/usr/local/ni/ui`
 - OS log location: `/var/log/ni/ui.log`
 
-## 18.3. API Server
+## 16.3. API Server
 
 - Endpoint Prefix: [https://t310.cowdrey.net:7443/ni/v1](https://t310.cowdrey.net:7443/ni/v1)
 - service username: `af06f2fe515b91efb5f9a6ceddcb937343cdb54849c148c2`
@@ -2002,7 +1954,7 @@ The following are neither defined and/or not used within this environment:
 - OS deployed location: `/usr/local/ni/api`
 - OS log location: `/var/log/ni/api.log`
 
-## 18.4. API Gateway
+## 16.4. API Gateway
 
 - Endpoint Prefix: [https://t310.cowdrey.net:8443/ni/v1](https://t310.cowdrey.net:8443/ni/v1)
 - OS username: `niapigw`
@@ -2010,21 +1962,21 @@ The following are neither defined and/or not used within this environment:
 - OS deployed location: `/usr/local/ni/apigw`
 - OS log location: `/var/log/ni/apigw.log`
 
-## 18.5. Alert Service
+## 16.5. Alert Service
 
 - OS username: `nialert`
 - OS group: `ni`
 - OS deployed location: `/usr/local/ni/alert`
 - OS log location: `/var/log/ni/alert.log`
 
-## 18.6. Fetch Service
+## 16.6. Fetch Service
 
 - OS username: `nifetch`
 - OS group: `ni`
 - OS deployed location: `/usr/local/ni/fetch`
 - OS log location: `/var/log/ni/api.log`
 
-## 18.7. Predict Service
+## 16.7. Predict Service
 
 - OS username: `nipredict`
 - OS group: `ni`
@@ -2033,7 +1985,7 @@ The following are neither defined and/or not used within this environment:
 
 ---
 
-# 19. Architecture / Technology Choices / Third-Party 
+# 17. Architecture / Technology Choices / Third-Party 
 
 NI is based on open source software and does not included any embedded commercial components that require separate commercial agreements.
 
@@ -2048,11 +2000,11 @@ NI data changes when the provider makes a change, extends or adds a trench, runs
 
 If your data was changing frequently, for example weather conditions, you can take a sample every second, or minute or hour or day and this is where a TSDB comes in to play - conversely NI data is not constantly changing. This is where you hear the phrase *Data Lake*, vast amount data which very quickly turns in to a *Data Swamp* as the data value degrades due to the cost/time of processing it and more importantly its meaning in a relationship.
 
-## 19.1. Map Rendering
+## 17.1. Map Rendering
 
 By default NI User Interface makes use of Google Maps and as such requires a Google Maps API key - the credentials can be configured via the NI Secrets API or the default changed in the API Server database schema definition prior to installation. Without this key the NI User Interface will **NOT** visualise poles, sites or trenches over topological terrain - cables, ducts, network equipment are not impacted by this.
 
-## 19.2. Foreign Exchange Rates
+## 17.2. Foreign Exchange Rates
 
 If enabled, in NI Fetch makes use of a free service from [exchangeratesapi.io](https://exchangeratesapi.io/) which is limited to 100 requests per calendar month. The credentials can be configured via the NI Secrets API or the default changed in the API Server database schema definition prior to installation.
 
@@ -2061,14 +2013,14 @@ If enabled, in NI Fetch makes use of a free service from [exchangeratesapi.io](h
 > - NI uses the same free credentials, therefore multiple installations may cause limits imposed by [exchangeratesapi.io](https://exchangeratesapi.io/) to be reached
 > - For each deployment, it is recommended that the customer obtains their own free credentials from [exchangeratesapi.io](https://manage.exchangeratesapi.io/signup/free) to avoid hitting any limits.
 
-## 19.3. Common Vulnerabilities and Exposures (CVE) Repository
+## 17.3. Common Vulnerabilities and Exposures (CVE) Repository
 
 If enabled, there are no commercial restrictions for caching the CVE repository. Any further questions or concerns should be directed to [cve.org](https://www.cve.org/).
 
 > **Note:**
 > - Refer to the environment configuration file variable `FETCHSRV_CVE_DIRECTORY` for the cache location.
 
-## 19.4. Sample Data
+## 17.4. Sample Data
 
 The API Server includes sample data covering cables, ducts, utility poles, network equipment, racks, sites, services and trenches for the mutiple countries.
 
@@ -2144,13 +2096,13 @@ This data can be added by executing the `sample.sh` script from **within** the A
 >   - `secret-fx.json`
 
 
-## 19.5. World Boundaries
+## 17.5. World Boundaries
 
 The API Server includes the world geometry boundaries of 230 countries, allowing longitude (`X`) and latitude (`Y`) coordinates to be matched to a single geographic country - this data is loaded during installation, summarised within the API Server and the raw data subsequently removed.
 
 This data is sourced from [geoBoundaries - an open database of political administrative boundaries](https://www.geoboundaries.org).
 
-## 19.6. Third-Party Elements & Libraries
+## 17.6. Third-Party Elements & Libraries
 
 NI makes use of third-party JavaScript libraries, all referenced libraries and elements are currently open source.
 
@@ -2158,13 +2110,13 @@ NI makes use of third-party JavaScript libraries, all referenced libraries and e
 
 A highly detailed list is automatically generated through the CI/CD process and is available at [dependencies](docs/nodejs-dependencies.md), a summary shown below for reference.
 
-### 19.6.1. API Gateway 
+### 17.6.1. API Gateway 
 
 | Third-Party Package | Used Version | License    |
 | ------------------- | ------------ | ---------- |
 | `krakenD`           | 2.12.0       | Apache 2.0 |
 
-### 19.6.2. API Server 
+### 17.6.2. API Server 
 
 | Third-Party Package    | Used Version | License      |
 | ---------------------- | ------------ | ------------ |
@@ -2185,13 +2137,13 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `software-license-key` | 1.0.2        | MIT          |
 | `uuid`                 | 13.0.0       | MIT          |
 
-### 19.6.3. DNS Server 
+### 17.6.3. DNS Server 
 
 | Third-Party Package | Used Version | License |
 | ------------------- | ------------ | ------- |
 | `dnsmasq`           | 2.7.0        | GPL     |
 
-### 19.6.4. UI Server
+### 17.6.4. UI Server
 
 | Third-Party Package        | Used Version | License      |
 | -------------------------- | ------------ | ------------ |
@@ -2205,7 +2157,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `uuid`                     | 13.0.0       | MIT          |
 
 
-### 19.6.5. Predict Service
+### 17.6.5. Predict Service
 
 | Third-Party Package | Used Version | License      |
 | ------------------- | ------------ | ------------ |
@@ -2213,7 +2165,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `uuid`              | 13.0.0       | MIT          |
 
 
-### 19.6.6. Alert Service
+### 17.6.6. Alert Service
 
 | Third-Party Package | Used Version | License      |
 | ------------------- | ------------ | ------------ |
@@ -2223,7 +2175,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `nodemailer`        | 7.0.9        | MIT-0        |
 | `uuid`              | 11.0.5       | MIT          |
 
-### 19.6.7. Fetch Service
+### 17.6.7. Fetch Service
 
 | Third-Party Package | Used Version | License                 |
 | ------------------- | ------------ | ----------------------- |
@@ -2235,7 +2187,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `uuid`              | 13.0.0       | MIT                     |
 
 
-### 19.6.8. License Generator
+### 17.6.8. License Generator
 
 | Third-Party Package    | Used Version | License      |
 | ---------------------- | ------------ | ------------ |
@@ -2244,7 +2196,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 | `software-license-key` | 1.0.2        | MIT          |
 | `yargs`                | 18.0.0       | MIT          |
 
-## 19.7. Development Tooling - EchoAPI
+## 17.7. Development Tooling - EchoAPI
 
 EchoAPI, much like PostMan and others, is a suite of API development tools with features for API design, debugging, testing, and documentation generation, available as a standalone application and extensions for platforms like VS Code, IntelliJ IDEA, and a Chrome extension.
 
@@ -2255,7 +2207,7 @@ NI itself does not require nor use EchoAPI, but a collection of NI OpenAPIs has 
 
 ---
 
-# 20. NI OpenAPIs
+# 18. NI OpenAPIs
 
 Are automatically included into the API Server release and made available both via API (`/ni/v1/api`) and also the NI User Interface (`https://{host}.{domain}:4443/ni/openapi`).
 
@@ -2268,11 +2220,11 @@ The NI OpenAPIs are available in multple formats including:
 
 ---
 
-# 21. NI User Interface (UI)
+# 19. NI User Interface (UI)
 
 The NI UI is loosely based on a tab design and includes:
 
-## 21.1. Login
+## 19.1. Login
 
 A typical login page is shown.
 
@@ -2284,14 +2236,14 @@ The NI API Server makes uses of the included Identity and Access Management (IAM
 - KeyCloak can be swapped for any other OAuth2.0/OpenID Connect platform and NI configured through the environment configuration file, specifically `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET` and `OAUTH_DISCOVERY_URL`.
 - If the Login page displays the OpenID Connect logo, then NI has been configured for OAuth2.0/OpenID Connect; if not then authentication for users has been effectively **disabled**
 
-## 21.2. Readiness
+## 19.2. Readiness
 
 The readiness page is a transition page, where by the client itself performs a NI API Readiness check through the API Gateway before automatically moving to the Dashboard
 
 > **Note**:
 > - if after 10 attempts, the client is not able to verify readiness, the client is redirected back to the login page.
 
-## 21.3. Country Selector
+## 19.3. Country Selector
 
 Most pages contain the ability to filter resources by a specificed country.
 
@@ -2300,7 +2252,7 @@ Most pages contain the ability to filter resources by a specificed country.
 > - the displayed list of country codes depends on what resources exist, for example if a resource existed in `ESP` then both `GBR`, the default, and `ESP` would be in the drop down list
 
 
-## 21.4. Dashboard
+## 19.4. Dashboard
 
 The resource dashboard reflects the quantity of data available within NI. The shown stacked chart represents the total number of a specific resource but split into active (green) and inactive (orange) as a percentage. It also provides business summary of the resource assets presented in the default country/locale, for example:
 
@@ -2319,7 +2271,7 @@ Premises Passed: 13 | Trench Coverage: 742.55m | Cable Coverage: 0m
 > **Note:**
 > - the dashboard when displayed within the browser, automatically refreshes every 5 minutes
 
-## 21.5. Cables
+## 19.5. Cables
 
 Attempts to provide a graphical representation of any selected cable incarnation. Supported cable types include:
 
@@ -2330,7 +2282,7 @@ Attempts to provide a graphical representation of any selected cable incarnation
   - Single (multiple strands)
   - Multi (multiple ribbons, each containing multiple strands)
 
-### 21.5.1. Common
+### 19.5.1. Common
 
 - Reference and identifier
 - Source:
@@ -2347,15 +2299,15 @@ Attempts to provide a graphical representation of any selected cable incarnation
 > - in the case of fiber, each ribbon and strand is visualised with its usage shown
 > - when the incarnation of the resource is `predicted`, the outer border of the resource will be `yellow` in color
 
-### 21.5.2. Coax
+### 19.5.2. Coax
 
 - Includes the frequency range of the coax cable and the number of channels that may be operated over it
 
-### 21.5.3. Copper
+### 19.5.3. Copper
 
 - Includes the number of twisted pairs that make up the copper cable
 
-### 21.5.4. Ethernet
+### 19.5.4. Ethernet
 
 `ethernet`, while actually a copper cable, is treated as its own cable type due to have fixed use and fixed number of twisted pairs within
 
@@ -2370,20 +2322,20 @@ Attempts to provide a graphical representation of any selected cable incarnation
   - `Cat8`
 - If originally supplied, includes the maximum supported transmission speed of the cable
 
-### 21.5.5. Fiber
+### 19.5.5. Fiber
 
 - Includes the supported optical mode of the cable, either single-mode `SMOF` or multi-mode `MMOF`
 
-#### 21.5.5.1. Single-Fiber
+#### 19.5.5.1. Single-Fiber
 
 - Includes the number strands
 
-#### 21.5.5.2. Multi-Fiber
+#### 19.5.5.2. Multi-Fiber
 
 - Includes the number of ribbons
 - Includes the number of strands *per* ribbon
 
-## 21.6. Ducts
+## 19.6. Ducts
 
 Attempts to provide a graphical representation of any selected cable incarnation. Supported duct types include:
 
@@ -2412,7 +2364,7 @@ Attempts to provide a graphical representation of any selected cable incarnation
 > - in the case of fiber, each strand is visualised with its own usage shown
 > - when the incarnation of the resource is `predicted`, the outer border of the resource will be `yellow` in color
 
-## 21.7. Poles
+## 19.7. Poles
 
 Attempts to provide a graphical representation of selected utility pole over a geographic terrain.
 
@@ -2433,7 +2385,7 @@ If supplied or derieved, the height and area type classifier of the pole will be
 > - Right-clicking on the shown pole icon would display list of any connected trenches (navigatable)
 > - Left-clicking on the shown pole icon would display list of any connected sites (navigatabe)
 
-## 21.8. Network Eqiupment
+## 19.8. Network Eqiupment
 
 Attempts to provide a graphical representation of any selected network equipment in a friendly vendor-agnostic fashion.
 
@@ -2485,7 +2437,7 @@ Attempts to provide a graphical representation of any selected network equipment
 > - when the incarnation of the resource is `predicted`, the outer border of the resource will be `yellow` in color
 > - Like a Configuration Management Database (CMDB), NI includes the ability and hold and store the network equipment configuration (any textual format) for the specific incarnation of the network equipment 
 
-## 21.9. Racks
+## 19.9. Racks
 
 Attempts to provide a graphical representation of any selected role in a agnostic fashion.
 
@@ -2517,7 +2469,7 @@ Attempts to provide a graphical representation of any selected role in a agnosti
 > **Note:**
 > - when the incarnation of the resource is `predicted`, the outer border of the resource will be `yellow` in color
 
-## 21.10. Sites
+## 19.10. Sites
 
 Attempts to provide a graphical representation of selected site over a geographic terrain.
 
@@ -2555,16 +2507,16 @@ The site type classifier would be one of:
 > - Additional `off-net` sites can be loading during installation, added via NI OpenAPIs or NI Fetch used to retrieve from a third-party
 >   - Using additional site data allows further complex predictions to occur
 
-## 21.11. Services
+## 19.11. Services
 
 Attempts to provide a graphical representation of selected service, including ingress/egress ports on which network equipment.
 
 > **Note:** incomplete
 
-## 21.12. Trenches
+## 19.12. Trenches
 
 
-### 21.12.1. Detail
+### 19.12.1. Detail
 
 Attempts to provide a graphical representation of selected trench over a geographic terrain.
 
@@ -2576,7 +2528,7 @@ If supplied or derieved, the total length, number of premises passed (calculated
 > - Right-clicking on the shown pole icon would display list of any connected ducts (navigatable)
 > - Left-clicking on the shown pole icon would display list of any connected poles (navigatabe)
 
-### 21.12.2. Lifetime
+### 19.12.2. Lifetime
 
 Attempts to provide a graphical representation of selected trench over a geographic terrain for its entire lifetime
 
@@ -2589,7 +2541,7 @@ If supplied or derieved, the total length, number of premises passed (calculated
 > - Not implemented: Right-clicking on the shown pole icon would display list of any connected ducts (navigatable)
 > - Not fully implemented: Left-clicking on the shown pole icon would display list of any connected poles (navigatabe)
 
-### 21.12.3. Per Country
+### 19.12.3. Per Country
 
 Attempts to provide a graphical representation of all trenches defined against a specific country over a geographic terrain.
 
@@ -2601,7 +2553,7 @@ If supplied or derieved, the total length, number of premises passed (calculated
 > - Right-clicking on the shown pole icon would display list of any connected ducts (navigatable)
 > - Left-clicking on the shown pole icon would display list of any connected poles (navigatabe)
 
-## 21.13. Quote-to-Cash (Q2C)
+## 19.13. Quote-to-Cash (Q2C)
 
 Attempts to provide a graphical canvas that allows a new trench path to drawn. Select existing trench to navigate to intended build area.
 
@@ -2631,7 +2583,7 @@ Costs exist to provide high level cost quotes for different trenches uses, these
 > - Left-clicking will add each the selected point as the trench path
 > - Zoom In/Out via mouse-wheel, scroll by dragging terrain map
 
-## 21.14. Providers
+## 19.14. Providers
 
 The provider dashboard reflects the number and type of providers available within NI.
 
@@ -2641,23 +2593,23 @@ The provider dashboard sub icon bar will now make available further detailed pro
 - Publish (Kafka)
 - Workflow Engines
 
-### 21.14.1. Email
+### 19.14.1. Email
 
 Allows providers to be added, modified and deleted and only supports SMTP gateways.
 
-### 21.14.2. Map
+### 19.14.2. Map
 
 Allows providers to be added, modified and deleted.
 
-### 21.14.3. Kafka
+### 19.14.3. Kafka
 
 Allows Kafka buses to be added, modified and deleted.
 
-### 21.14.4. Workflow Engines
+### 19.14.4. Workflow Engines
 
 Allows workflow engines to be added, modified and deleted and only suppots Camunda (BPMN) and ELSA endpoints.
 
-## 21.15. Alerts
+## 19.15. Alerts
 
 The alerts dashboard reflects the number and type of defined alert capabilities available within NI.
 
@@ -2669,11 +2621,11 @@ The alerts dashboard sub icon bar will now make available further detailed pages
 
 > **Note:** UI aspects have not been implemented
 
-## 21.16. Settings
+## 19.16. Settings
 
 The settings page allows the `historical` and `predicted` durations to be managed, refer to [21.2. Data Longevity](#212-data-longevity) for further details.
 
-## 21.17. OpenAPIs
+## 19.17. OpenAPIs
 
 The embedded Swagger Editor, from the vendor [Smartbear](https://swagger.io/tools/swagger-editor/) allows users and developers to interactively make use of the included NI Open APIs. The Open API definition is loaded from the NI API Server and once any authenication has occured makes all APIs available.
 
@@ -2685,11 +2637,11 @@ The embedded Swagger Editor, from the vendor [Smartbear](https://swagger.io/tool
 > {"point":"20251121T152211"}
 > ```
 
-## 21.18. Help/About
+## 19.18. Help/About
 
 Currently lists the included third-party JavaScript libraries.
 
-## 21.19. Quit (Logout)
+## 19.19. Quit (Logout)
 
 While there is not an actual page for this, the client performs a logout through the NI API Server (`/ni/v1/logout`) and any cached authentication data is removed.
 
@@ -2697,9 +2649,9 @@ The client is then redirected to the login page.
 
 ---
 
-# 22. NI API Server Internals
+# 20. NI API Server Internals
 
-## 22.1. Database
+## 20.1. Database
 
 NI API Server does not include a traditional time-series database (`TSDB`) and instead implements a time-series layer over an generic high performance analytical database engine, **DuckDB**.
 
@@ -2733,7 +2685,7 @@ The design rationale behind this was to allow the used database technology to be
 > - NI API Server also makes use of the following DuckDB extensions:
 >   - [Spatial Extension](https://github.com/duckdb/duckdb-spatial/blob/main/docs/example.md)
 
-## 22.2. Geometry
+## 20.2. Geometry
 
 NI API Server geometries are represented using geometric constructs defined as lists of one or more two-dimensional `XY`, or three-dimensional `XYZ` points, rather than other GIS Well-Known Text (`WKT`) geometric point systems. Support for two or three dimensional geometries is dependant on the specific need of each of the NI OpenAPIs:
 
@@ -2752,7 +2704,7 @@ Some of the NI OpenAPIs include the option to supply `WKT` geometries instead, i
 > - Supports EPSG4326 (PNI) to EPSG3857
 > - GIS WKT support should be considered experimental, see `ESP` sample trench data
 
-## 22.3. Data Longevity 
+## 20.3. Data Longevity 
 
 NI API Server automatically prunes data outside of a defined rolling window. This window range can be defined through the NI UI and APIs.
 
@@ -2780,7 +2732,7 @@ By default the rolling window is constructed from the current date and time with
 > - data removal occurs on a configurable but frequent basis
 > - a sensible unit of duration should be applied, nothing smaller a week is advised
 
-## 22.4. Database Backup
+## 20.4. Database Backup
 
 Scheduled via the NI environment configuration file, the API Server will export the internal database to the local filesystem hosting the NI API Server. Any encrypted data, in the secret store or elsewhere is maintained as encrypted even in the export.
 
@@ -2790,7 +2742,7 @@ Scheduled via the NI environment configuration file, the API Server will export 
 > - see `APISERV_DUCKDB_BACKUP` for toggling backup operations
 > - Above the manual import procedures provided by DuckDB itself, NI does not itself include the ability to recover from a previously generated backup
 
-## 22.5. Tracking Changes
+## 20.5. Tracking Changes
 NI components make use of queues maintained and/or provided through the API Server. This allows for distribution of activities as well as coordination.
 
 All write-related data operations handled by NI API Server are tracked through two queues:
@@ -2806,7 +2758,7 @@ If cluster replication is enabled, any slave NI API Servers will subscribe to an
 
 > **Note:** while the multicast streams and role handling (`master` vs. `slave`) are implemented, the additional logic to request the change has not yet been implemented.
 
-## 22.6. NI Fetch
+## 20.6. NI Fetch
 
 In a similar fashion to tracking changes, NI Fetch Service jobs are also maintained by the API Server. The NI Fetch Service requests the list of jobs on startup and executes them on a scheduled basis. See `schema.sql` `INSERT INTO fetchJob...` for details.
 
@@ -2822,7 +2774,7 @@ The fetch job definitions include:
 > - the fetch job definition can includes dynamic parameters which allows reusability.
 > - any required secrets/credentials from the NI API Server secret store
 
-## 22.7. Alert Service
+## 20.7. Alert Service
 
 In a similar fashion to tracking changes, NI Alert Service jobs are also maintained by the API Server. The NI Alert Service requests the list of jobs on startup and executes them on a scheduled basis. See `schema.sql` `INSERT INTO alert...` for details.
 
@@ -2836,27 +2788,27 @@ The purpose of NI Alert Service is to perform analysis on resources and if actio
 
 ---
 
-# 23. NI Alert Internals
+# 21. NI Alert Internals
 
 NI Alert retrieves its list of jobs from the NI API Server using the `/alert` APIs.
 
 > **Note:** 
 > - NI Alert is therefore data driven
 
-# 24. NI Fetch Internals
+# 22. NI Fetch Internals
 
 NI Fetch retrieves its list of jobs from the NI API Server using the `/fetch` APIs.
 
 > **Note:** 
 > - NI Fetch is therefore data driven
 
-# 25. NI Predict Internals
+# 23. NI Predict Internals
 
-## 25.1. Duplication
+## 23.1. Duplication
 
 Where resources only exist with a single incarnation, NI simply produces a duplicate of the resource with the predicted marker and passes it back to NI API Server for storage, as NI can not predict any changes without external influence.
 
-## 25.2. Simple Prediction
+## 23.2. Simple Prediction
 
 Where resources exist with multiple incarnations, such as rack slots, cables, network equipment ports, ducts, the resource is treated with simple prediction with regards to usage.
 
@@ -2880,7 +2832,7 @@ For example, the probability a `faulty` state would transition to `reserved` wit
 
 For the mathematical prediction to occur, the state/usage is converted to a numeric value between 0 and 1 to allow for Machine Learning (ML) practices to be followed and once the predicted value has been determined, transformed back to the original format representing the state/usage.
 
-## 25.3. Complex Prediction
+## 23.3. Complex Prediction
 
 It expected to build upon the simple prediction by means of utilising Long Short-Term Memory (LSTM) networks.
 
@@ -2894,20 +2846,20 @@ An LSTM network's core is the memory cell, which acts as a long-term storage uni
 
 ![](docs/concept/LSTM_Cell.svg)
 
-### 25.3.1. Advantages for Time Series Prediction
+### 23.3.1. Advantages for Time Series Prediction
 
 - Captures Long-Term Dependencies: LSTMs are effective in scenarios where events in the distant past influence future outcomes, a key challenge for traditional models like ARIMA.
 - Handles Non-Linearity: They can model complex, non-linear relationships and patterns often found in real-world time series data (e.g., financial markets, weather data).
 - Learns from Raw Data: LSTMs automatically extract relevant features from raw sequential data, reducing the need for manual feature engineering and data stationarity requirements (as is needed with ARIMA models).
 - Robustness: They are relatively robust to noise and irregularities in data due to their gating mechanisms which help filter out irrelevant information. 
 
-# 26. NI User Interface Internals
+# 24. NI User Interface Internals
 
-## 26.1. Distribution Directories
+## 24.1. Distribution Directories
 
 NI UI will dynamically detect and expose contained directories within the UI content
 
-## 26.2. Metadata
+## 24.2. Metadata
 
 Via the UI Server `/metadata` URL, additional metadata is passed to the client for caching. This includes:
 
@@ -2932,19 +2884,19 @@ Via the UI Server `/metadata` URL, additional metadata is passed to the client f
 
 ---
 
-# 27. CCUK Technical Services
+# 25. CCUK Technical Services
 
 For technical support, you can contact CCUK by email, or on the web.
 
-## 27.1. By email
+## 25.1. By email
 
 Customer Service Management may be reached at: [support@cowdrey.net](mailto:support@cowdrey.net).
 
-## 27.2. On the web
+## 25.2. On the web
 
 Please visit [support.cowdrey.net](https://support.cowdrey.net/). To obtain access, you must provide your support contracted email address.
 
-## 27.3. Technical documentation
+## 25.3. Technical documentation
 
 The latest technical documentation for products is now available on the [Customer Service Management](https://support.cowdrey.net/).
 Make sure you have an account to access the content. 
@@ -2952,10 +2904,10 @@ Make sure you have an account to access the content.
 
 ---
 
-# 28. Corporate Headquarters
+# 26. Corporate Headquarters
 
 Cowdrey Consulting · United Kingdom<br>
-[+447442104556 ](tel:+447442104556 )<br>
+[+447773281821 ](tel:+447773281821 )<br>
 [www.cowdrey.net](https://www.cowdrey.net)<br>
 **Network Insight (NI) © 2026 Cowdrey Consulting**
 
