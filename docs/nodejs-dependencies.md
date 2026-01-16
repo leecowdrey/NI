@@ -4,14 +4,14 @@ url: https://www.cowdrey.net/
 footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1768563038
+version: 1.0.0.1768563823
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1768563038
+>Version: 1.0.0.1768563823
 
 
 

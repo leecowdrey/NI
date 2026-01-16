@@ -171,11 +171,6 @@ draft: true
 - [24. NI User Interface Internals](#24-ni-user-interface-internals)
   - [24.1. Distribution Directories](#241-distribution-directories)
   - [24.2. Metadata](#242-metadata)
-- [25. CCUK Technical Services](#25-ccuk-technical-services)
-  - [25.1. By email](#251-by-email)
-  - [25.2. On the web](#252-on-the-web)
-  - [25.3. Technical documentation](#253-technical-documentation)
-- [26. Corporate Headquarters](#26-corporate-headquarters)
 
 ---
 
@@ -233,7 +228,7 @@ NI is API-first meaning it’s built from the ground up to support integration w
  - All NI components use the same APIs – there are no hidden routes (microservices)
  - 230 APIs are defined, documented and adhere to same security mechanisms
 
-Refer to section NI [NI OpenAPIs](#19-ni-openapis) for further details.
+Refer to section NI [NI OpenAPIs](#18-ni-openapis) for further details.
 
 ---
 
@@ -2881,41 +2876,3 @@ Via the UI Server `/metadata` URL, additional metadata is passed to the client f
 
 > **Note:** 
 > - the above allows for dynamic rebranding of the NI UI to happen if required
-
----
-
-# 25. CCUK Technical Services
-
-For technical support, you can contact CCUK by email, or on the web.
-
-## 25.1. By email
-
-Customer Service Management may be reached at: [support@cowdrey.net](mailto:support@cowdrey.net).
-
-## 25.2. On the web
-
-Please visit [support.cowdrey.net](https://support.cowdrey.net/). To obtain access, you must provide your support contracted email address.
-
-## 25.3. Technical documentation
-
-The latest technical documentation for products is now available on the [Customer Service Management](https://support.cowdrey.net/).
-Make sure you have an account to access the content. 
-
-
----
-
-# 26. Corporate Headquarters
-
-Cowdrey Consulting · United Kingdom<br>
-[+447773281821 ](tel:+447773281821 )<br>
-[www.cowdrey.net](https://www.cowdrey.net)<br>
-**Network Insight (NI) © 2026 Cowdrey Consulting**
-
-```text
-    _   __     __                      __      ____           _       __    __ 
-   / | / /__  / /__      ______  _____/ /__   /  _/___  _____(_)___ _/ /_  / /_
-  /  |/ / _ \/ __/ | /| / / __ \/ ___/ //_/   / // __ \/ ___/ / __ `/ __ \/ __/
- / /|  /  __/ /_ | |/ |/ / /_/ / /  / ,<    _/ // / / (__  ) / /_/ / / / / /_  
-/_/ |_/\___/\__/ |__/|__/\____/_/  /_/|_|  /___/_/ /_/____/_/\__, /_/ /_/\__/  
-                                                            /____/             
-```
