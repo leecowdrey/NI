@@ -4,14 +4,14 @@ url: https://www.cowdrey.net/
 footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1768563823
+version: 1.0.0.1769606917
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1768563823
+>Version: 1.0.0.1769606917
 
 
 
@@ -196,7 +196,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -320,7 +320,7 @@ maintainers:
 dist-tags:
 latest: 7.3.1
 
-published a month ago by gustavohenke <guhenke@gmail.com>
+published 2 months ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -556,16 +556,16 @@ published 4 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-cors@2.8.5 | MIT | deps: 2 | versions: 34
+cors@2.8.6 | MIT | deps: 2 | versions: 35
 Node.js CORS middleware
 https://github.com/expressjs/cors#readme
 
 keywords: cors, express, connect, middleware
 
 dist
-.tarball: https://registry.npmjs.org/cors/-/cors-2.8.5.tgz
-.shasum: eac11da51592dd86b9f06f6e7ac293b3df875d29
-.integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
+.tarball: https://registry.npmjs.org/cors/-/cors-2.8.6.tgz
+.shasum: ff5dd69bd95e547503820d29aba4f8faf8dfec96
+.integrity: sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==
 .unpackedSize: 20.0 kB
 
 dependencies:
@@ -573,14 +573,14 @@ object-assign: ^4
 vary: ^1
 
 maintainers:
-- ulisesgascon <ulisesgascondev@gmail.com>
 - dougwilson <doug@somethingdoug.com>
+- ulisesgascon <ulisesgascondev@gmail.com>
 - troygoode <troygoode@gmail.com>
 
 dist-tags:
-latest: 2.8.5
+latest: 2.8.6
 
-published over a year ago by dougwilson <doug@somethingdoug.com>
+published 6 days ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -639,7 +639,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -671,7 +671,7 @@ maintainers:
 dist-tags:
 latest: 4.0.1
 
-published 2 days ago by mde <mde@fleegix.org>
+published a week ago by mde <mde@fleegix.org>
 
 ```
 
@@ -898,7 +898,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -969,7 +969,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1035,26 +1035,26 @@ published 6 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@7.0.12 | MIT-0 | deps: none | versions: 286
+nodemailer@7.0.13 | MIT-0 | deps: none | versions: 287
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.12.tgz
-.shasum: b6b7bb05566c6c8458ee360aa30a407a478d35b7
-.integrity: sha512-H+rnK5bX2Pi/6ms3sN4/jRQvYSMltV6vqup/0SFOrxYYY/qoNvhXPlYq3e+Pm9RFJRwrMGbMIwi81M4dxpomhA==
-.unpackedSize: 531.9 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.13.tgz
+.shasum: 74acaa55f0c6f9476384c29f27f53e467e8483cd
+.integrity: sha512-PNDFSJdP+KFgdsG3ZzMXCgquO7I6McjY2vlqILjtJd0hy8wEvtugS9xKRF2NWlPNGxvLCXlTNIae4serI7dinw==
+.unpackedSize: 532.3 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
-latest: 7.0.12
+latest: 7.0.13
 beta: 2.4.0-beta.0
 
-published 3 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 23 hours ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1126,7 +1126,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1160,7 +1160,7 @@ legacy-v9: 9.3.5
 v7-legacy: 7.2.0
 legacy: 4.5.3
 
-published a month ago by isaacs <i@izs.me>
+published 2 months ago by isaacs <i@izs.me>
 
 ```
 
@@ -1169,28 +1169,28 @@ published a month ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.16.1 | MIT | deps: 9 | versions: 227
+mysql2@3.16.2 | MIT | deps: 9 | versions: 230
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.1.tgz
-.shasum: cbe294573792fe4f059000f23d38e16011c83c61
-.integrity: sha512-b75qsDB3ieYEzMsT1uRGsztM/sy6vWPY40uPZlVVl8eefAotFCoS7jaDB5DxDNtlW5kdVGd9jptSpkvujNxI2A==
-.unpackedSize: 529.0 kB
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.2.tgz
+.shasum: b56d8917bfbc01af02f9c301029c019868b6ab6d
+.integrity: sha512-JsqBpYNy7pH20lGfPuSyRSIcCxSeAIwxWADpV64nP9KeyN3ZKpHZgjKXuBKsh7dH6FbOvf1bOgoVKjSUPXRMTw==
+.unpackedSize: 528.9 kB
 
 dependencies:
-aws-ssl-profiles: ^1.1.1
+aws-ssl-profiles: ^1.1.2
 denque: ^2.1.0
 generate-function: ^2.3.1
-iconv-lite: ^0.7.0
-long: ^5.2.1
-lru.min: ^1.0.0
+iconv-lite: ^0.7.2
+long: ^5.3.2
+lru.min: ^1.1.3
 named-placeholders: ^1.1.6
 seq-queue: ^0.0.5
-sqlstring: ^2.3.2
+sqlstring: ^2.3.3
 
 maintainers:
 - sidorares <andrey.sidorov@gmail.com>
@@ -1198,12 +1198,12 @@ maintainers:
 - sushantdhiman <sushantdhiman@outlook.com>
 
 dist-tags:
-latest: 3.16.1
-canary: 3.16.1-canary.3e00cd75
+latest: 3.16.2
+canary: 3.16.2-canary.2927949d
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
-published 6 hours ago by sidorares <andrey.sidorov@gmail.com>
+published 2 days ago by sidorares <andrey.sidorov@gmail.com>
 
 ```
 
@@ -1330,7 +1330,7 @@ dist-tags:
 latest: 17.2.3
 next: 16.1.0-rc2
 
-published 3 months ago by motdotla <mot@mot.la>
+published 4 months ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1432,6 +1432,6 @@ latest-14: 14.2.3
 next-14: 14.2.1
 latest-11: 11.1.1
 
-published 7 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 8 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```

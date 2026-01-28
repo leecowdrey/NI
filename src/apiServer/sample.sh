@@ -97,6 +97,7 @@ while [[ ${READY_ATTEMPT} -lt ${READY_ATTEMPTS} ]] ; do
 done
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
+if compgen -G "sample/scret-*.json" > /dev/null; then
 for SECRET in sample/secret-*.json ; do
   SECRET=${SECRET#"sample/secret-"}
   SECRET=${SECRET%".json"}
@@ -116,7 +117,9 @@ for SECRET in sample/secret-*.json ; do
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 done
+fi
 
+if [ -f "sample/admin_email.json" ] ; then
 doing "Adding bulk email providers"
   POST=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/email" \
@@ -132,7 +135,9 @@ doing "Adding bulk email providers"
           fi
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
+if [ -f "sample/admin_kafka.json" ] ; then
 doing "Adding bulk kafka providers"
   POST=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/kafka" \
@@ -148,7 +153,9 @@ doing "Adding bulk kafka providers"
           fi
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
+if [ -f "sample/admin_map.json" ] ; then
 doing "Adding bulk map providers"
   POST=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/map" \
@@ -164,7 +171,9 @@ doing "Adding bulk map providers"
           fi
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
+if [ -f "sample/admin_workflow.json" ] ; then
 doing "Adding bulk workflow engines"
   POST=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure \
      -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/admin/workflow" \
@@ -180,7 +189,9 @@ doing "Adding bulk workflow engines"
           fi
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
+if compgen -G "sample/CVE-*.json" > /dev/null ; then
 doing "Adding CVEs"
 for CVE in sample/CVE-*.json ; do
   CVE=${CVE#"sample/CVE-"}
@@ -201,7 +212,9 @@ for CVE in sample/CVE-*.json ; do
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 done
+fi
 
+if compgen -G "sample/site-*.json" > /dev/null ; then
 doing "Adding bulk sites"
   for GEO_SITE in sample/site-*.json ; do
     GEO_SITE=${GEO_SITE#"sample/site-"}
@@ -231,7 +244,9 @@ doing "Adding bulk sites"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/rack-*.json" > /dev/null ; then
 doing "Adding bulk racks"
   for GEO_RACK in sample/rack-*.json ; do
     GEO_RACK=${GEO_RACK#"sample/rack-"}
@@ -261,7 +276,9 @@ doing "Adding bulk racks"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/trench-*.json" > /dev/null ; then
 doing "Adding bulk trenches"
   for GEO_TRENCH in sample/trench-*.json ; do
     GEO_TRENCH=${GEO_TRENCH#"sample/trench-"}
@@ -291,7 +308,9 @@ doing "Adding bulk trenches"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/pole-*.json" > /dev/null ; then
 doing "Adding bulk poles"
   for GEO_POLE in sample/pole-*.json ; do
     GEO_POLE=${GEO_POLE#"sample/pole-"}
@@ -321,7 +340,9 @@ doing "Adding bulk poles"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/duct-*.json" > /dev/null ; then
 doing "Adding bulk ducts"
   for GEO_DUCT in sample/duct-*.json ; do
     GEO_DUCT=${GEO_DUCT#"sample/duct-"}
@@ -351,7 +372,9 @@ doing "Adding bulk ducts"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/cable-*.json" > /dev/null ; then
 doing "Adding bulk cables"
   for GEO_CABLE in sample/cable-*.json ; do
     GEO_CABLE=${GEO_CABLE#"sample/cable-"}
@@ -381,7 +404,9 @@ doing "Adding bulk cables"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/ne-*.json" > /dev/null ; then
 doing "Adding bulk network equipment"
   for GEO_NE in sample/ne-*.json ; do
     GEO_NE=${GEO_NE#"sample/ne-"}
@@ -411,7 +436,9 @@ doing "Adding bulk network equipment"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if compgen -G "sample/service-*.json" > /dev/null ; then
 doing "Adding bulk services"
   for GEO_SERVICE in sample/service-*.json ; do
     GEO_SERVICE=${GEO_SERVICE#"sample/service-"}
@@ -441,7 +468,9 @@ doing "Adding bulk services"
      done
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
   done
+fi
 
+if [ -f "sample/favicon.ico" ] ; then
 doing "Adding document - favicon.ico"
      POST=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure \
           -X POST "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/document" \
@@ -457,6 +486,7 @@ doing "Adding document - favicon.ico"
           fi
      fi
      [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
+fi
 
 # tidy
 clean_tmp_files

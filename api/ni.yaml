@@ -15,7 +15,7 @@ info:
     name: Proprietary License
     url: https://www.cowdrey.net/
     x-copyright: © 2026 Cowdrey Consulting. All rights reserved.
-  version: 1.0.0.1768563823
+  version: 1.0.0.1769606917
 externalDocs:
   description: Application User Manual
   url: /ni/v1/doc/html/user-guide/index.html
