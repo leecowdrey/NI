@@ -4,14 +4,14 @@ url: https://www.cowdrey.net/
 footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1769606917
+version: 1.0.0.1769612118
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1769606917
+>Version: 1.0.0.1769612118
 
 
 
@@ -1054,7 +1054,7 @@ dist-tags:
 latest: 7.0.13
 beta: 2.4.0-beta.0
 
-published 23 hours ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
