@@ -1,12 +1,6 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - API Server Installer
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
 #=====================================================================
 set +H
 shopt -s expand_aliases
@@ -37,6 +31,7 @@ API_DIRECTORY=$(grep -E "^APISERV_API_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -
 BACKUP_DIRECTORY=$(grep -E "^APISERV_BACKUP_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 CONFIG_DIRECTORY=$(grep -E "^CONFIG_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 DUCKDB_VERSION=$(grep -E "^APISERV_DUCKDB_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+DUCKDB_STORAGE_VERSION=$(grep -E "^APISERV_DUCKDB_STORAGE_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 DB_FILE=$(grep -E "^APISERV_DUCKDB_FILE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 HOST=$(grep -E "^DNSSERV_HOST=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 DOMAIN=$(grep -E "^DNSSERV_DOMAIN=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -233,7 +228,7 @@ doing "Adding DuckDB database"
 [[ $(dirname ${DB_FILE}) == "." ]] && DB_FILE="${WORKING_DIRECTORY}/${DB_FILE}"
 if [[ ! -f "${DB_FILE}" ]] ; then
   [[ -f "schema.log" ]] && rm -f schema.log &>/dev/null
-  duckdb ${DB_FILE} < schema.sql > schema.log 2>&1
+  duckdb -storage-version ${DUCKDB_STORAGE_FILE} ${DB_FILE} < schema.sql > schema.log 2>&1
   RETVAL=$?
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"

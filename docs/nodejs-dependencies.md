@@ -1,17 +1,14 @@
 ---
-author: Cowdrey Consulting <support@cowdrey.net>
-url: https://www.cowdrey.net/
-footer: © 2026 Cowdrey Consulting. All rights reserved.
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1769612118
+version: 1.0.0.1773224264
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1769612118
+>Version: 1.0.0.1773224264
 
 
 
@@ -137,7 +134,7 @@ maintainers:
 dist-tags:
 latest: 1.8.1
 
-published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -165,7 +162,7 @@ dist-tags:
 latest: 1.11.19
 alpha: 2.0.0-alpha.4
 
-published 2 months ago by iamkun <kunhello@outlook.com>
+published 4 months ago by iamkun <kunhello@outlook.com>
 
 ```
 
@@ -174,17 +171,17 @@ published 2 months ago by iamkun <kunhello@outlook.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -193,10 +190,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -255,7 +252,7 @@ dist-tags:
 latest: 5.2.1
 latest-4: 4.22.1
 
-published a month ago by jonchurch <npm@jonchurch.com>
+published 3 months ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -286,7 +283,7 @@ maintainers:
 dist-tags:
 latest: 1.5.2
 
-published 6 months ago by romon2002 <romon2002@gmail.com>
+published 8 months ago by romon2002 <romon2002@gmail.com>
 
 ```
 
@@ -320,7 +317,7 @@ maintainers:
 dist-tags:
 latest: 7.3.1
 
-published 2 months ago by gustavohenke <guhenke@gmail.com>
+published 3 months ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -347,7 +344,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 5 months ago by dankogai <dankogai+github@gmail.com>
+published 7 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -382,7 +379,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -437,7 +434,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 6 months ago by merencia <lucas.merencia@gmail.com>
+published 8 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -472,7 +469,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -481,17 +478,17 @@ published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```npm
 
-software-license-key@1.0.2 | MIT | deps: 2 | versions: 3
+software-license-key@1.1.0 | MIT | deps: 2 | versions: 4
 Library for generating and validating software license keys with data embedded in the key.
 https://github.com/timtutt/software-license-key#readme
 
 keywords: software, license, key, generator, validator
 
 dist
-.tarball: https://registry.npmjs.org/software-license-key/-/software-license-key-1.0.2.tgz
-.shasum: d42603a35e472fd4f755ea5b6d21d816216425cf
-.integrity: sha512-fuSrkc6MfcIoveeX+ONLmrZn57AzZSeobgh13XNcKh387IMLae/kkikqUlwvFcurWRnLTdDhBmKg+yKXhZCXDQ==
-.unpackedSize: 13.0 kB
+.tarball: https://registry.npmjs.org/software-license-key/-/software-license-key-1.1.0.tgz
+.shasum: 85a7ac03fe9095a5f8c275d06db4ef4d9ff9f172
+.integrity: sha512-tjkRPjAvfwQ4Jtm7t3k1vYcHLZ1Hqa1Lt851J3EeiZVAIbfhTaaGE7KaAILyisHla+MEutrcEe3RD9mwZhmd5g==
+.unpackedSize: 19.6 kB
 
 dependencies:
 crypto-js: 4.2.0
@@ -501,9 +498,9 @@ maintainers:
 - tim.tutt <tim.tutt@gmail.com>
 
 dist-tags:
-latest: 1.0.2
+latest: 1.1.0
 
-published a year ago by tim.tutt <tim.tutt@gmail.com>
+published 2 weeks ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -533,7 +530,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 4 months ago by broofa <robert@broofa.com>
+published 6 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -580,7 +577,7 @@ maintainers:
 dist-tags:
 latest: 2.8.6
 
-published 6 days ago by ulisesgascon <ulisesgascondev@gmail.com>
+published a month ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -608,7 +605,7 @@ dist-tags:
 latest: 1.11.19
 alpha: 2.0.0-alpha.4
 
-published 2 months ago by iamkun <kunhello@outlook.com>
+published 4 months ago by iamkun <kunhello@outlook.com>
 
 ```
 
@@ -617,17 +614,17 @@ published 2 months ago by iamkun <kunhello@outlook.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -636,10 +633,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -648,7 +645,7 @@ published 4 months ago by motdotla <mot@mot.la>
 
 ```npm
 
-ejs@4.0.1 | Apache-2.0 | deps: 1 | versions: 76
+ejs@5.0.1 | Apache-2.0 | deps: none | versions: 77
 Embedded JavaScript templates
 https://github.com/mde/ejs
 
@@ -657,21 +654,18 @@ keywords: template, templating, engine, ejs
 bin: ejs
 
 dist
-.tarball: https://registry.npmjs.org/ejs/-/ejs-4.0.1.tgz
-.shasum: 689227c9f034c06ac75cd64f98b08b85f8922bc1
-.integrity: sha512-krvQtxc0btwSm/nvnt1UpnaFDFVJpJ0fdckmALpCgShsr/iGYHTnJiUliZTgmzq/UxTX33TtOQVKaNigMQp/6Q==
-.unpackedSize: 183.3 kB
-
-dependencies:
-jake: ^10.9.1
+.tarball: https://registry.npmjs.org/ejs/-/ejs-5.0.1.tgz
+.shasum: 179523a437ed448543ad1b76ca4fb4c2e8950304
+.integrity: sha512-COqBPFMxuPTPspXl2DkVYaDS3HtrD1GpzOGkNTJ1IYkifq/r9h8SVEFrjA3D9/VJGOEoMQcrlhpntcSUrM8k6A==
+.unpackedSize: 204.9 kB
 
 maintainers:
 - mde <mde@fleegix.org>
 
 dist-tags:
-latest: 4.0.1
+latest: 5.0.1
 
-published a week ago by mde <mde@fleegix.org>
+published 6 days ago by mde <mde@fleegix.org>
 
 ```
 
@@ -730,7 +724,7 @@ dist-tags:
 latest: 5.2.1
 latest-4: 4.22.1
 
-published a month ago by jonchurch <npm@jonchurch.com>
+published 3 months ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -795,7 +789,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 6 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -830,7 +824,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -860,7 +854,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 4 months ago by broofa <robert@broofa.com>
+published 6 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -876,17 +870,17 @@ published 4 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -895,10 +889,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -928,7 +922,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 4 months ago by broofa <robert@broofa.com>
+published 6 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -947,17 +941,17 @@ published 4 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -966,10 +960,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1026,7 +1020,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 6 months ago by merencia <lucas.merencia@gmail.com>
+published 8 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1035,26 +1029,26 @@ published 6 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@7.0.13 | MIT-0 | deps: none | versions: 287
+nodemailer@8.0.2 | MIT-0 | deps: none | versions: 290
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-7.0.13.tgz
-.shasum: 74acaa55f0c6f9476384c29f27f53e467e8483cd
-.integrity: sha512-PNDFSJdP+KFgdsG3ZzMXCgquO7I6McjY2vlqILjtJd0hy8wEvtugS9xKRF2NWlPNGxvLCXlTNIae4serI7dinw==
-.unpackedSize: 532.3 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.2.tgz
+.shasum: 70a6f031314a33bac7147eb9c378cdaa35fb619b
+.integrity: sha512-zbj002pZAIkWQFxyAaqoxvn+zoIwRnS40hgjqTXudKOOJkiFFgBeNqjgD3/YCR12sZnrghWYBY+yP1ZucdDRpw==
+.unpackedSize: 542.2 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
-latest: 7.0.13
+latest: 8.0.2
 beta: 2.4.0-beta.0
 
-published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1084,7 +1078,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 4 months ago by broofa <robert@broofa.com>
+published 6 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1104,17 +1098,17 @@ published 4 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -1123,10 +1117,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1135,32 +1129,32 @@ published 4 months ago by motdotla <mot@mot.la>
 
 ```npm
 
-glob@13.0.0 | BlueOak-1.0.0 | deps: 3 | versions: 162
+glob@13.0.6 | BlueOak-1.0.0 | deps: 3 | versions: 168
 the most correct and second fastest glob implementation in JavaScript
 https://github.com/isaacs/node-glob#readme
 
 dist
-.tarball: https://registry.npmjs.org/glob/-/glob-13.0.0.tgz
-.shasum: 9d9233a4a274fc28ef7adce5508b7ef6237a1be3
-.integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==
-.unpackedSize: 446.4 kB
+.tarball: https://registry.npmjs.org/glob/-/glob-13.0.6.tgz
+.shasum: 078666566a425147ccacfbd2e332deb66a2be71d
+.integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==
+.unpackedSize: 1.6 MB
 
 dependencies:
-minimatch: ^10.1.1
-minipass: ^7.1.2
-path-scurry: ^2.0.0
+minimatch: ^10.2.2
+minipass: ^7.1.3
+path-scurry: ^2.0.2
 
 maintainers:
 - isaacs <i@izs.me>
 
 dist-tags:
-latest: 13.0.0
+latest: 13.0.6
 legacy-v10: 10.5.0
 legacy-v9: 9.3.5
 v7-legacy: 7.2.0
 legacy: 4.5.3
 
-published 2 months ago by isaacs <i@izs.me>
+published 2 weeks ago by isaacs <i@izs.me>
 
 ```
 
@@ -1169,17 +1163,17 @@ published 2 months ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.16.2 | MIT | deps: 9 | versions: 230
+mysql2@3.19.1 | MIT | deps: 8 | versions: 259
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.16.2.tgz
-.shasum: b56d8917bfbc01af02f9c301029c019868b6ab6d
-.integrity: sha512-JsqBpYNy7pH20lGfPuSyRSIcCxSeAIwxWADpV64nP9KeyN3ZKpHZgjKXuBKsh7dH6FbOvf1bOgoVKjSUPXRMTw==
-.unpackedSize: 528.9 kB
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.19.1.tgz
+.shasum: 1e9c88646cb2f0cb3d8df6ce56b8f4d6cbf6b013
+.integrity: sha512-yn4zh+Uxu5J3Zvi6Ao96lJ7BSBRkspHflWQAmOPND+htbpIKDQw99TTvPzgihKO/QyMickZopO4OsnixnpcUwA==
+.unpackedSize: 542.4 kB
 
 dependencies:
 aws-ssl-profiles: ^1.1.2
@@ -1187,19 +1181,16 @@ denque: ^2.1.0
 generate-function: ^2.3.1
 iconv-lite: ^0.7.2
 long: ^5.3.2
-lru.min: ^1.1.3
+lru.min: ^1.1.4
 named-placeholders: ^1.1.6
-seq-queue: ^0.0.5
-sqlstring: ^2.3.3
+sql-escaper: ^1.3.3
 
 maintainers:
 - sidorares <andrey.sidorov@gmail.com>
-- iarna <me@re-becca.org>
-- sushantdhiman <sushantdhiman@outlook.com>
 
 dist-tags:
-latest: 3.16.2
-canary: 3.16.2-canary.2927949d
+latest: 3.19.1
+canary: 3.19.1-canary.18692157
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
@@ -1231,7 +1222,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 6 months ago by merencia <lucas.merencia@gmail.com>
+published 8 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1260,7 +1251,7 @@ maintainers:
 dist-tags:
 latest: 6.10.0
 
-published 3 months ago by sharadchan87 <sharad.raju@oracle.com>
+published 4 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```
 
@@ -1290,7 +1281,7 @@ maintainers:
 dist-tags:
 latest: 13.0.0
 
-published 4 months ago by broofa <robert@broofa.com>
+published 6 months ago by broofa <robert@broofa.com>
 
 ```
 
@@ -1308,17 +1299,17 @@ published 4 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.2.3 | BSD-2-Clause | deps: none | versions: 98
+dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz
-.shasum: ad995d6997f639b11065f419a22fabf567cdb9a2
-.integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
-.unpackedSize: 82.4 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
+.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
+.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
+.unpackedSize: 93.3 kB
 
 maintainers:
 - ~jcblw <jacoblowe2.0@gmail.com>
@@ -1327,10 +1318,10 @@ maintainers:
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.2.3
+latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 months ago by motdotla <mot@mot.la>
+published 3 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1357,7 +1348,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 5 months ago by dankogai <dankogai+github@gmail.com>
+published 7 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -1366,17 +1357,17 @@ published 5 months ago by dankogai <dankogai+github@gmail.com>
 
 ```npm
 
-software-license-key@1.0.2 | MIT | deps: 2 | versions: 3
+software-license-key@1.1.0 | MIT | deps: 2 | versions: 4
 Library for generating and validating software license keys with data embedded in the key.
 https://github.com/timtutt/software-license-key#readme
 
 keywords: software, license, key, generator, validator
 
 dist
-.tarball: https://registry.npmjs.org/software-license-key/-/software-license-key-1.0.2.tgz
-.shasum: d42603a35e472fd4f755ea5b6d21d816216425cf
-.integrity: sha512-fuSrkc6MfcIoveeX+ONLmrZn57AzZSeobgh13XNcKh387IMLae/kkikqUlwvFcurWRnLTdDhBmKg+yKXhZCXDQ==
-.unpackedSize: 13.0 kB
+.tarball: https://registry.npmjs.org/software-license-key/-/software-license-key-1.1.0.tgz
+.shasum: 85a7ac03fe9095a5f8c275d06db4ef4d9ff9f172
+.integrity: sha512-tjkRPjAvfwQ4Jtm7t3k1vYcHLZ1Hqa1Lt851J3EeiZVAIbfhTaaGE7KaAILyisHla+MEutrcEe3RD9mwZhmd5g==
+.unpackedSize: 19.6 kB
 
 dependencies:
 crypto-js: 4.2.0
@@ -1386,9 +1377,9 @@ maintainers:
 - tim.tutt <tim.tutt@gmail.com>
 
 dist-tags:
-latest: 1.0.2
+latest: 1.1.0
 
-published a year ago by tim.tutt <tim.tutt@gmail.com>
+published 2 weeks ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -1432,6 +1423,6 @@ latest-14: 14.2.3
 next-14: 14.2.1
 latest-11: 11.1.1
 
-published 8 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 9 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```

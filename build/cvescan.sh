@@ -1,12 +1,7 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - CVE Scanner-Sonatype OSS Index 
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
+
 #=====================================================================
 RETVAL=0
 CVE_FOUND=0

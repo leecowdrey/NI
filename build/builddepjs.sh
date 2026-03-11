@@ -1,12 +1,7 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - Dependency README Generator
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
+
 #=====================================================================
 RETVAL=0
 DN=$(dirname -- "$( readlink -f -- "$0"; )";)
@@ -221,9 +216,6 @@ RETVAL=$?
 
 ## Add YAML Front Matter to markdown document
 echo "---" > docs/nodejs-dependencies.md
-echo "author: Cowdrey Consulting <support@cowdrey.net>" >> docs/nodejs-dependencies.md
-echo "url: https://www.cowdrey.net/" >> docs/nodejs-dependencies.md
-echo "footer: © 2026 Cowdrey Consulting. All rights reserved." >> docs/nodejs-dependencies.md
 echo "title: Network Insight (NI)" >> docs/nodejs-dependencies.md
 echo "paginate: false" >> docs/nodejs-dependencies.md
 echo "version: ${NI_VERSION}.${NI_BUILD}" >> docs/nodejs-dependencies.md

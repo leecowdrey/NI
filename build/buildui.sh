@@ -1,12 +1,7 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - Build UI
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
+
 #=====================================================================
 RETVAL=0
 DN=$(dirname -- "$( readlink -f -- "$0"; )";)

@@ -3,19 +3,7 @@ info:
   title: Network Insight APIs
   description: |
     **Network Insight** provides analytical and prediction insights for telecommunications infrastructure and services.
-  contact:
-    name: CCUK
-    x-name-full: Cowdrey Consulting
-    x-name-location: United Kingdom
-    x-name-telephone: "+447442104556"
-    x-combined-contact: https://cowdrey.net/
-    url: https://www.cowdrey.net/
-    email: support@cowdrey.net
-  license:
-    name: Proprietary License
-    url: https://www.cowdrey.net/
-    x-copyright: © 2026 Cowdrey Consulting. All rights reserved.
-  version: 1.0.0.1769612118
+  version: 1.0.0.1773224264
 externalDocs:
   description: Application User Manual
   url: /ni/v1/doc/html/user-guide/index.html

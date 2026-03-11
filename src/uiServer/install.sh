@@ -1,12 +1,7 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - UI Server Installer
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
+
 #=====================================================================
 set +H
 shopt -s expand_aliases

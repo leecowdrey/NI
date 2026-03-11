@@ -1,12 +1,7 @@
 #!/bin/bash
 #=====================================================================
 # Network Insight (NI) - Alert Server Uninstaller
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447442104556 
-# https://www.cowdrey.net/
-#
-# © 2026 Cowdrey Consulting. All rights reserved.
+
 #=====================================================================
 RETVAL=0
 CLI_PATH=$(dirname -- "$( readlink -f -- "$0"; )";)
