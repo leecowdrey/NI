@@ -2,7 +2,7 @@
 title: Network Insight (NI) Guide/FAQ/How-To
 category: how-to
 contacts:
-  - support@cowdrey.net
+  - lee@cowdrey.net
 paginate: false
 lang: en-GB
 date: 2026-01-01

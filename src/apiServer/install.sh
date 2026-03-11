@@ -228,7 +228,7 @@ doing "Adding DuckDB database"
 [[ $(dirname ${DB_FILE}) == "." ]] && DB_FILE="${WORKING_DIRECTORY}/${DB_FILE}"
 if [[ ! -f "${DB_FILE}" ]] ; then
   [[ -f "schema.log" ]] && rm -f schema.log &>/dev/null
-  duckdb -storage-version ${DUCKDB_STORAGE_FILE} ${DB_FILE} < schema.sql > schema.log 2>&1
+  duckdb -storage-version ${DUCKDB_STORAGE_VERSION} ${DB_FILE} < schema.sql > schema.log 2>&1
   RETVAL=$?
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
