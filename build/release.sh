@@ -306,10 +306,10 @@ RETVAL=$?
 doing "Updating license public key"
 if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
   ni_LICENSE_PUBLIC_KEY=$(base64 -w 0 ../src/licenseGen/niMasterKey.pub)
-  sed -i -e "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" NI.ini
+  sed -i -e "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" ni.ini
 elif [[ "${OSTYPE}" == "darwin"* ]] ; then
   ni_LICENSE_PUBLIC_KEY=$(base64 -i ../src/licenseGen/niMasterKey.pub)
-  sed -i '' "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" NI.ini
+  sed -i '' "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" ni.ini
 fi
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -378,9 +378,9 @@ RETVAL=$?
 [[ -d "predictService" ]] && rm -R -f predictService &>/dev/null
 [[ -d "ui" ]] && rm -R -f ui &>/dev/null
 [[ -d "uiServer" ]] && rm -R -f uiServer &>/dev/null
-[[ -f "oasConstants.mjs" ]] && rm -f oasConstants.mjs && \
-[[ -f "common.sh" ]] && rm -f common.sh && \
-[[ -f "NI.ini" ]] && rm -f NI.ini && \
+[[ -f "oasConstants.mjs" ]] && rm -f oasConstants.mjs
+[[ -f "common.sh" ]] && rm -f common.sh
+[[ -f "ni.ini" ]] && rm -f ni.ini
 
 popd &>/dev/null
 exit ${RETVAL}

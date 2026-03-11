@@ -1,13 +1,7 @@
 //=====================================================================
 // Network Insight (NI) - OpenAPI Specification Constants
-//
-// Corporate Headquarters:
-// Cowdrey Consulting · United Kingdom · T:+447442104556
-// https://www.cowdrey.net/
-//
-// © 2026 Cowdrey Consulting. All rights reserved.
+
 //=====================================================================
-//
 // OpenAPI types, enums and sizes
 export const roleStandalone = "standalone";
 export const roleMaster = "master";

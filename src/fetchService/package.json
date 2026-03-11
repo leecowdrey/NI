@@ -1,8 +1,4 @@
 {
-  "bugs": {
-    "url": "https://help.cowdrey.net/",
-    "email": "support@cowdrey.net"
-  },
   "dependencies": {
     "dayjs": "^1.11.18",
     "dotenv": "^17.2.3",

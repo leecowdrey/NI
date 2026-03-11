@@ -1,8 +1,4 @@
 {
-  "bugs": {
-    "url": "https://help.cowdrey.net/",
-    "email": "support@cowdrey.net"
-  },
   "dependencies": {
     "@duckdb/node-api": "latest",
     "basic-auth-connect": "^1.1.0",

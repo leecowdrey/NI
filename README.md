@@ -3,13 +3,10 @@ title: Network Insight (NI) Guide/FAQ/How-To
 category: how-to
 contacts:
   - support@cowdrey.net
-creator: Cowdrey Consulting
-url: https://www.cowdrey.net/
 paginate: false
 lang: en-GB
 date: 2026-01-01
 keywords:
-  - ccuk
   - ni
   - pni
   - lni
@@ -883,7 +880,7 @@ APIGW_SSL_CSR="apigw.csr"
 APIGW_SSL_DAYS=90
 APIGW_SSL_KEY="apigw.key"
 APIGW_SSL_SIZE=4096
-APIGW_KRAKEND_VERSION="2.12.0"
+APIGW_KRAKEND_VERSION="2.13.2"
 APIGW_WORKING_DIRECTORY="/usr/local/ni/apigw"
 ```
 
@@ -905,7 +902,8 @@ APISERV_ADDRESS="0.0.0.0"
 APISERV_API_DIRECTORY="/usr/local/ni/api/openapi"
 APISERV_BACKUP_DIRECTORY="/usr/local/ni/api/backup"
 APISERV_DEBUG=true
-APISERV_DUCKDB_VERSION="v1.4.1"
+APISERV_DUCKDB_VERSION="v1.5.0"
+APISERV_DUCKDB_STORAGE_VERSION="v1.5.0"
 APISERV_DUCKDB_BACKUP_CRONTIME="0 2 * * *"
 APISERV_DUCKDB_BACKUP=true
 APISERV_DUCKDB_FILE="/usr/local/ni/api/ni.duckdb"
@@ -941,7 +939,8 @@ APISERV_WORKING_DIRECTORY="/usr/local/ni/api"
  - `APISERV_ADDRESS` if using single host, this should be loopback address `127.0.0.1`, otherwise use the IP address which is reachable from the API Gateway and other NI components
  - `APISERV_API_DIRECTORY` the directory on the host to hold the OpenAPI definition
  - `APISERV_BACKUP_DIRECTORY` the directory to hold the database backup files
- - `APISERV_DUCKDB_VERSION` which of DuckDB to download and use - this should not be changed
+ - `APISERV_DUCKDB_VERSION` which version of DuckDB to download and use - this should not be changed
+ - `APISERV_DUCKDB_STORAGE_VERSION` which storage version DuckDB should use - this needs to support Spatial extension and be at least `v1.5.0`
  - `APISERV_DUCKDB_BACKUP_CRONTIME` can be changed, adhere to rules of Linux CronTab for specifying the execution time
  - `APISERV_DUCKDB_BACKUP` toggle performing backups
  - `APISERV_DUCKDB_FILE` database file representing the DuckDB database
@@ -1136,11 +1135,6 @@ A fully populated deployment environment file would be similar to:
 ```bash
 #=====================================================================
 # Network Insight (NI) - Deployment Environment File
-#
-# Corporate Headquarters:
-# Cowdrey Consulting · United Kingdom · T:+447773281821 
-# https://www.cowdrey.net/
-#
 # © 2026 Cowdrey Consulting. All rights reserved.
 #=====================================================================
 #
@@ -1201,7 +1195,7 @@ APIGW_SSL_CSR="apigw.csr"
 APIGW_SSL_DAYS=90
 APIGW_SSL_KEY="apigw.key"
 APIGW_SSL_SIZE=4096
-APIGW_KRAKEND_VERSION="2.12.0"
+APIGW_KRAKEND_VERSION="2.13.2"
 APIGW_WORKING_DIRECTORY="/usr/local/ni/apigw"
 #
 # apiServer
@@ -1210,7 +1204,8 @@ APISERV_ADDRESS="0.0.0.0"
 APISERV_API_DIRECTORY="/usr/local/ni/api/openapi"
 APISERV_BACKUP_DIRECTORY="/usr/local/ni/api/backup"
 APISERV_DEBUG=true
-APISERV_DUCKDB_VERSION="v1.4.1"
+APISERV_DUCKDB_VERSION="v1.5.0"
+APISERV_DUCKDB_STORAGE_VERSION="v1.5.0"
 APISERV_DUCKDB_BACKUP_CRONTIME="0 2 * * *"
 APISERV_DUCKDB_BACKUP=true
 APISERV_DUCKDB_FILE="/usr/local/ni/api/ni.duckdb"
@@ -1855,7 +1850,7 @@ Each component contains the following scripts:
 To upgrade third-party component adjust the respective `APIGW_KRAKEND_VERSION`, `APISERV_DUCKDB_VERSION`, `IAM_KEYCLOAK_VERSION` variable with the required version number within the deployed environment configuration file (`/etc/ni/ni.ini`) prior to executing the upgrade script:
 
 ```bash
-APIGW_KRAKEND_VERSION="2.12.0"
+APIGW_KRAKEND_VERSION="2.13.2"
 APISERV_DUCKDB_VERSION="v1.4.2"
 IAM_KEYCLOAK_VERSION="26.4.4"
 ```
@@ -2109,7 +2104,7 @@ A highly detailed list is automatically generated through the CI/CD process and 
 
 | Third-Party Package | Used Version | License    |
 | ------------------- | ------------ | ---------- |
-| `krakenD`           | 2.12.0       | Apache 2.0 |
+| `krakenD`           | 2.13.2       | Apache 2.0 |
 
 ### 17.6.2. API Server 
 
