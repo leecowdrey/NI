@@ -1,14 +1,14 @@
 ---
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1773245710
+version: 1.0.0.1773421634
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1773245710
+>Version: 1.0.0.1773421634
 
 
 
@@ -143,26 +143,26 @@ published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```npm
 
-dayjs@1.11.19 | MIT | deps: none | versions: 132
+dayjs@1.11.20 | MIT | deps: none | versions: 133
 2KB immutable date time library alternative to Moment.js with the same modern API 
 https://day.js.org
 
 keywords: dayjs, date, time, immutable, moment
 
 dist
-.tarball: https://registry.npmjs.org/dayjs/-/dayjs-1.11.19.tgz
-.shasum: 15dc98e854bb43917f12021806af897c58ae2938
-.integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==
-.unpackedSize: 679.0 kB
+.tarball: https://registry.npmjs.org/dayjs/-/dayjs-1.11.20.tgz
+.shasum: 88d919fd639dc991415da5f4cb6f1b6650811938
+.integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==
+.unpackedSize: 680.1 kB
 
 maintainers:
 - iamkun <kunhello@outlook.com>
 
 dist-tags:
-latest: 1.11.19
+latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published 4 months ago by iamkun <kunhello@outlook.com>
+published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -193,7 +193,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -586,26 +586,26 @@ published a month ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```npm
 
-dayjs@1.11.19 | MIT | deps: none | versions: 132
+dayjs@1.11.20 | MIT | deps: none | versions: 133
 2KB immutable date time library alternative to Moment.js with the same modern API 
 https://day.js.org
 
 keywords: dayjs, date, time, immutable, moment
 
 dist
-.tarball: https://registry.npmjs.org/dayjs/-/dayjs-1.11.19.tgz
-.shasum: 15dc98e854bb43917f12021806af897c58ae2938
-.integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==
-.unpackedSize: 679.0 kB
+.tarball: https://registry.npmjs.org/dayjs/-/dayjs-1.11.20.tgz
+.shasum: 88d919fd639dc991415da5f4cb6f1b6650811938
+.integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==
+.unpackedSize: 680.1 kB
 
 maintainers:
 - iamkun <kunhello@outlook.com>
 
 dist-tags:
-latest: 1.11.19
+latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published 4 months ago by iamkun <kunhello@outlook.com>
+published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -636,7 +636,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -665,7 +665,7 @@ maintainers:
 dist-tags:
 latest: 5.0.1
 
-published 6 days ago by mde <mde@fleegix.org>
+published a week ago by mde <mde@fleegix.org>
 
 ```
 
@@ -892,7 +892,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -963,7 +963,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1048,7 +1048,7 @@ dist-tags:
 latest: 8.0.2
 beta: 2.4.0-beta.0
 
-published 2 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 4 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1120,7 +1120,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1154,7 +1154,7 @@ legacy-v9: 9.3.5
 v7-legacy: 7.2.0
 legacy: 4.5.3
 
-published 2 weeks ago by isaacs <i@izs.me>
+published 3 weeks ago by isaacs <i@izs.me>
 
 ```
 
@@ -1194,7 +1194,7 @@ canary: 3.19.1-canary.18692157
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
-published 2 days ago by sidorares <andrey.sidorov@gmail.com>
+published 4 days ago by sidorares <andrey.sidorov@gmail.com>
 
 ```
 
@@ -1321,7 +1321,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 3 weeks ago by motdotla <mot@mot.la>
+published 4 weeks ago by motdotla <mot@mot.la>
 
 ```
 

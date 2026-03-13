@@ -3,7 +3,7 @@ info:
   title: Network Insight APIs
   description: |
     **Network Insight** provides analytical and prediction insights for telecommunications infrastructure and services.
-  version: 1.0.0.1773245710
+  version: 1.0.0.1773421634
 externalDocs:
   description: Application User Manual
   url: /ni/v1/doc/html/user-guide/index.html
