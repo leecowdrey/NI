@@ -1,14 +1,14 @@
 ---
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1773421634
+version: 1.0.0.1774603083
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1773421634
+>Version: 1.0.0.1774603083
 
 
 
@@ -134,7 +134,7 @@ maintainers:
 dist-tags:
 latest: 1.8.1
 
-published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -162,7 +162,7 @@ dist-tags:
 latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -193,7 +193,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -317,7 +317,7 @@ maintainers:
 dist-tags:
 latest: 7.3.1
 
-published 3 months ago by gustavohenke <guhenke@gmail.com>
+published 4 months ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -379,7 +379,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -500,7 +500,7 @@ maintainers:
 dist-tags:
 latest: 1.1.0
 
-published 2 weeks ago by tim.tutt <tim.tutt@gmail.com>
+published a month ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -577,7 +577,7 @@ maintainers:
 dist-tags:
 latest: 2.8.6
 
-published a month ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 2 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -605,7 +605,7 @@ dist-tags:
 latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published yesterday by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -636,7 +636,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -665,7 +665,7 @@ maintainers:
 dist-tags:
 latest: 5.0.1
 
-published a week ago by mde <mde@fleegix.org>
+published 3 weeks ago by mde <mde@fleegix.org>
 
 ```
 
@@ -789,7 +789,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 7 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -892,7 +892,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -963,7 +963,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1029,26 +1029,26 @@ published 8 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@8.0.2 | MIT-0 | deps: none | versions: 290
+nodemailer@8.0.4 | MIT-0 | deps: none | versions: 292
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.2.tgz
-.shasum: 70a6f031314a33bac7147eb9c378cdaa35fb619b
-.integrity: sha512-zbj002pZAIkWQFxyAaqoxvn+zoIwRnS40hgjqTXudKOOJkiFFgBeNqjgD3/YCR12sZnrghWYBY+yP1ZucdDRpw==
-.unpackedSize: 542.2 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.4.tgz
+.shasum: b63626585693f37a390ddaecde273da991c76010
+.integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==
+.unpackedSize: 535.2 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
-latest: 8.0.2
+latest: 8.0.4
 beta: 2.4.0-beta.0
 
-published 4 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1120,7 +1120,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1154,7 +1154,7 @@ legacy-v9: 9.3.5
 v7-legacy: 7.2.0
 legacy: 4.5.3
 
-published 3 weeks ago by isaacs <i@izs.me>
+published a month ago by isaacs <i@izs.me>
 
 ```
 
@@ -1163,17 +1163,17 @@ published 3 weeks ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.19.1 | MIT | deps: 8 | versions: 259
+mysql2@3.20.0 | MIT | deps: 8 | versions: 266
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.19.1.tgz
-.shasum: 1e9c88646cb2f0cb3d8df6ce56b8f4d6cbf6b013
-.integrity: sha512-yn4zh+Uxu5J3Zvi6Ao96lJ7BSBRkspHflWQAmOPND+htbpIKDQw99TTvPzgihKO/QyMickZopO4OsnixnpcUwA==
-.unpackedSize: 542.4 kB
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.20.0.tgz
+.shasum: 3e9af093cd6930046b0eba02a0533088b6f39ad4
+.integrity: sha512-eCLUs7BNbgA6nf/MZXsaBO1SfGs0LtLVrJD3WeWq+jPLDWkSufTD+aGMwykfUVPdZnblaUK1a8G/P63cl9FkKg==
+.unpackedSize: 550.8 kB
 
 dependencies:
 aws-ssl-profiles: ^1.1.2
@@ -1189,12 +1189,12 @@ maintainers:
 - sidorares <andrey.sidorov@gmail.com>
 
 dist-tags:
-latest: 3.19.1
-canary: 3.19.1-canary.18692157
+latest: 3.20.0
+canary: 3.19.2-canary.5ac5563c
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
-published 4 days ago by sidorares <andrey.sidorov@gmail.com>
+published a week ago by sidorares <andrey.sidorov@gmail.com>
 
 ```
 
@@ -1251,7 +1251,7 @@ maintainers:
 dist-tags:
 latest: 6.10.0
 
-published 4 months ago by sharadchan87 <sharad.raju@oracle.com>
+published 5 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```
 
@@ -1321,7 +1321,7 @@ dist-tags:
 latest: 17.3.1
 next: 16.1.0-rc2
 
-published 4 weeks ago by motdotla <mot@mot.la>
+published a month ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1379,7 +1379,7 @@ maintainers:
 dist-tags:
 latest: 1.1.0
 
-published 2 weeks ago by tim.tutt <tim.tutt@gmail.com>
+published a month ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -1423,6 +1423,6 @@ latest-14: 14.2.3
 next-14: 14.2.1
 latest-11: 11.1.1
 
-published 9 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 10 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```
