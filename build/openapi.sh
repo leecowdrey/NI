@@ -151,7 +151,7 @@ set +x
 }
 
 doing "Checking for YQ"
-which yq &>/dev/null || pip install yq &>/dev/null
+which yq &>/dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

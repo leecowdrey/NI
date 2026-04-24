@@ -1,4 +1,4 @@
-[91m[2026-04-24T09:42:40.818] [ERROR] auditjs - [39mFailed project directory validation.  Are you in a (built) node, yarn, or bower project directory?
+[91m[2026-04-24T10:01:48.827] [ERROR] auditjs - [39mFailed project directory validation.  Are you in a (built) node, yarn, or bower project directory?
 Error: Could not instantiate muncher
     at new Application (/home/lee/.npm/_npx/db34456ff7bcaff8/node_modules/auditjs/bin/Application/Application.js:68:19)
     at Object.<anonymous> (/home/lee/.npm/_npx/db34456ff7bcaff8/node_modules/auditjs/bin/index.js:212:23)

@@ -198,12 +198,12 @@ function nodejs_dep_scan() {
 
 ## check for external dependencies
 doing "Checking for JSON Query (jq)"
-which jq &> /dev/null || sudo apt install -y jq &>/dev/null
+which jq &> /dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Checking for NodeJS"
-which node &> /dev/null || (curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && sudo bash nodesource_setup.sh && apt update && apt install -y nodejs)
+which node &> /dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 which npm &> /dev/null || exit 1

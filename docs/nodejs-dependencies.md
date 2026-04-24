@@ -1,14 +1,14 @@
 ---
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1777020151
+version: 1.0.0.1777021299
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1777020151
+>Version: 1.0.0.1777021299
 
 
 

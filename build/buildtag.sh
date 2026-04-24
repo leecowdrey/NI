@@ -156,7 +156,7 @@ set +x
 
 ## check for external dependencies
 doing "Checking for YAML Query (yq)"
-which yq &>/dev/null || sudo pip install yq &>/dev/null
+which yq &>/dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
