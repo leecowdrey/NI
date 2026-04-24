@@ -183,11 +183,11 @@ function nodejs_scan() {
 
 ## ensure root and have initial tools and config
 # check on linux environments but not darwin, cygwin, msys, win32 nor freebsd
-[[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
+# [[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
 
 ## check for external dependencies
 doing "Checking for JSON Query (jq)"
-which jq &> /dev/null || apt install -y jq &>/dev/null
+which jq &> /dev/null || sudo apt install -y jq &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

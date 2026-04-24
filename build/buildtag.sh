@@ -152,11 +152,11 @@ set +x
 
 ## ensure root and have initial tools and config
 # check on linux environments but not darwin, cygwin, msys, win32 nor freebsd
-[[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
+# [[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
 
 ## check for external dependencies
 doing "Checking for YAML Query (yq)"
-which yq &>/dev/null || pip install yq &>/dev/null
+which yq &>/dev/null || sudo pip install yq &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

@@ -194,16 +194,16 @@ function nodejs_dep_scan() {
 
 ## ensure root and have initial tools and config
 # check on linux environments but not darwin, cygwin, msys, win32 nor freebsd
-[[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
+# [[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
 
 ## check for external dependencies
 doing "Checking for JSON Query (jq)"
-which jq &> /dev/null || apt install -y jq &>/dev/null
+which jq &> /dev/null || sudo apt install -y jq &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Checking for NodeJS"
-which node &> /dev/null || (curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && bash nodesource_setup.sh && apt update && apt install -y nodejs)
+which node &> /dev/null || (curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && sudo bash nodesource_setup.sh && apt update && apt install -y nodejs)
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 which npm &> /dev/null || exit 1
