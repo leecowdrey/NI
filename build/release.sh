@@ -171,7 +171,7 @@ function js_obfuscate() {
   local JS_TMP=$(mktemp -q -p ./ NIXXXXXXXX)
   [[ -f "${JS_TMP}" ]] && mv -f ${JS_TMP} ${JS_TMP}.js &>/dev/null
   JS_TMP="${JS_TMP}.js"
-  for JS in $(find ../src/${1} -type f -maxdepth 1 -name "${2}") ; do
+  for JS in $(find ../src/${1} -maxdepth 1 -type f -name "${2}") ; do
       local JS_SRC="../src/"
       local JS_REL="${JS/$JS_SRC/}"
       if [[ "${JS}" != *"oasConstants.mjs"* ]] ; then
