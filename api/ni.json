@@ -3,7 +3,7 @@
   "info": {
     "title": "Network Insight APIs",
     "description": "**Network Insight** provides analytical and prediction insights for telecommunications infrastructure and services.\n",
-    "version": "1.0.0.1774603083"
+    "version": "1.0.0.1777020151"
   },
   "externalDocs": {
     "description": "Application User Manual",
@@ -1689,7 +1689,7 @@
                       {
                         "vendor": "Juniper Networks",
                         "model": "MX240",
-                        "costPerUnit": 27250.0
+                        "costPerUnit": 27250
                       }
                     ]
                   }
@@ -1751,7 +1751,7 @@
                   "value": {
                     "vendor": "Juniper Networks",
                     "model": "MX250",
-                    "costPerUnit": 32768.0
+                    "costPerUnit": 32768
                   }
                 }
               }
@@ -1816,7 +1816,7 @@
                   "value": {
                     "vendor": "Juniper Networks",
                     "model": "MX240",
-                    "costPerUnit": 26250.0
+                    "costPerUnit": 26250
                   }
                 }
               }
@@ -2507,7 +2507,7 @@
                         "type": "unclassified",
                         "rate": 1,
                         "unit": "Gbps",
-                        "costPerUnit": 100.0
+                        "costPerUnit": 100
                       }
                     ]
                   }
@@ -27332,7 +27332,7 @@
         "type": "number",
         "format": "float",
         "minimum": 0,
-        "maximum": 1.0,
+        "maximum": 1,
         "default": 0
       },
       "searchResourceType": {

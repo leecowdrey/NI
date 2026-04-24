@@ -1,14 +1,14 @@
 ---
 title: Network Insight (NI)
 paginate: false
-version: 1.0.0.1774603083
+version: 1.0.0.1777020151
 ---
 
 # Network Insight
 
 
 
->Version: 1.0.0.1774603083
+>Version: 1.0.0.1777020151
 
 
 
@@ -118,13 +118,7 @@ dist
 .unpackedSize: 27.7 kB
 
 dependencies:
-bytes: 3.1.2
-compressible: ~2.0.18
-debug: 2.6.9
-negotiator: ~0.6.4
-on-headers: ~1.1.0
-safe-buffer: 5.2.1
-vary: ~1.1.2
+vary: ~1.1.2, bytes: 3.1.2, debug: 2.6.9, negotiator: ~0.6.4, on-headers: ~1.1.0, safe-buffer: 5.2.1, compressible: ~2.0.18
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -134,7 +128,7 @@ maintainers:
 dist-tags:
 latest: 1.8.1
 
-published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -162,7 +156,7 @@ dist-tags:
 latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published a month ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -171,29 +165,27 @@ published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -215,30 +207,7 @@ dist
 .unpackedSize: 75.4 kB
 
 dependencies:
-accepts: ^2.0.0
-body-parser: ^2.2.1
-content-type: ^1.0.5
-cookie: ^0.7.1
-debug: ^4.4.0
-depd: ^2.0.0
-encodeurl: ^2.0.0
-escape-html: ^1.0.3
-etag: ^1.8.1
-finalhandler: ^2.1.0
-fresh: ^2.0.0
-http-errors: ^2.0.0
-mime-types: ^3.0.0
-on-finished: ^2.4.1
-once: ^1.4.0
-parseurl: ^1.3.3
-proxy-addr: ^2.0.7
-qs: ^6.14.0
-range-parser: ^1.2.1
-router: ^2.2.0
-send: ^1.1.0
-statuses: ^2.0.1
-type-is: ^2.0.1
-vary: ^1.1.2
+qs: ^6.14.0, depd: ^2.0.0, etag: ^1.8.1, once: ^1.4.0, send: ^1.1.0, vary: ^1.1.2, debug: ^4.4.0, fresh: ^2.0.0, cookie: ^0.7.1, router: ^2.2.0, accepts: ^2.0.0, type-is: ^2.0.1, parseurl: ^1.3.3, statuses: ^2.0.1, encodeurl: ^2.0.0, mime-types: ^3.0.0, proxy-addr: ^2.0.7, body-parser: ^2.2.1, escape-html: ^1.0.3, http-errors: ^2.0.0, on-finished: ^2.4.1, content-type: ^1.0.5, finalhandler: ^2.1.0, range-parser: ^1.2.1
 (...and 4 more.)
 
 maintainers:
@@ -252,7 +221,7 @@ dist-tags:
 latest: 5.2.1
 latest-4: 4.22.1
 
-published 3 months ago by jonchurch <npm@jonchurch.com>
+published 4 months ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -283,7 +252,7 @@ maintainers:
 dist-tags:
 latest: 1.5.2
 
-published 8 months ago by romon2002 <romon2002@gmail.com>
+published 9 months ago by romon2002 <romon2002@gmail.com>
 
 ```
 
@@ -292,21 +261,20 @@ published 8 months ago by romon2002 <romon2002@gmail.com>
 
 ```npm
 
-express-validator@7.3.1 | MIT | deps: 2 | versions: 124
+express-validator@7.3.2 | MIT | deps: 2 | versions: 125
 Express middleware for the validator module.
 https://express-validator.github.io
 
 keywords: express, validator, validation, validate, sanitize, sanitization, xss
 
 dist
-.tarball: https://registry.npmjs.org/express-validator/-/express-validator-7.3.1.tgz
-.shasum: 7884e452b2318ae9faabc8b28fd41ffa21d00d28
-.integrity: sha512-IGenaSf+DnWc69lKuqlRE9/i/2t5/16VpH5bXoqdxWz1aCpRvEdrBuu1y95i/iL5QP8ZYVATiwLFhwk3EDl5vg==
+.tarball: https://registry.npmjs.org/express-validator/-/express-validator-7.3.2.tgz
+.shasum: 7b322847efc81f9cf76f9a42c10de29b80536e9b
+.integrity: sha512-ctLw1Vl6dXVH62dIQMDdTAQkrh480mkFuG6/SGXOaVlwPNukhRAe7EgJIMJ2TSAni8iwHBRp530zAZE5ZPF2IA==
 .unpackedSize: 145.8 kB
 
 dependencies:
-lodash: ^4.17.21
-validator: ~13.15.23
+lodash: ^4.18.1, validator: ~13.15.23
 
 maintainers:
 - ctavan <dev@tavan.de>
@@ -315,9 +283,9 @@ maintainers:
 - fedeci <fed.ciardi@gmail.com>
 
 dist-tags:
-latest: 7.3.1
+latest: 7.3.2
 
-published 4 months ago by gustavohenke <guhenke@gmail.com>
+published 3 weeks ago by gustavohenke <guhenke@gmail.com>
 
 ```
 
@@ -344,7 +312,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 7 months ago by dankogai <dankogai+github@gmail.com>
+published 8 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -366,11 +334,7 @@ dist
 .unpackedSize: 30.6 kB
 
 dependencies:
-basic-auth: ~2.0.1
-debug: 2.6.9
-depd: ~2.0.0
-on-finished: ~2.3.0
-on-headers: ~1.1.0
+basic-auth: ~2.0.1, debug: 2.6.9, depd: ~2.0.0, on-finished: ~2.3.0, on-headers: ~1.1.0
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -379,7 +343,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -434,7 +398,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 8 months ago by merencia <lucas.merencia@gmail.com>
+published 9 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -456,11 +420,7 @@ dist
 .unpackedSize: 15.0 kB
 
 dependencies:
-etag: ~1.8.1
-fresh: ~0.5.2
-ms: ~2.1.3
-parseurl: ~1.3.2
-safe-buffer: ~5.2.1
+etag: ~1.8.1, fresh: ~0.5.2, ms: ~2.1.3, parseurl: ~1.3.2, safe-buffer: ~5.2.1
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -469,7 +429,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 10 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -491,8 +451,7 @@ dist
 .unpackedSize: 19.6 kB
 
 dependencies:
-crypto-js: 4.2.0
-node-rsa: ^0.4.2
+crypto-js: 4.2.0, node-rsa: ^0.4.2
 
 maintainers:
 - tim.tutt <tim.tutt@gmail.com>
@@ -500,7 +459,7 @@ maintainers:
 dist-tags:
 latest: 1.1.0
 
-published a month ago by tim.tutt <tim.tutt@gmail.com>
+published 2 months ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -509,7 +468,7 @@ published a month ago by tim.tutt <tim.tutt@gmail.com>
 
 ```npm
 
-uuid@13.0.0 | MIT | deps: none | versions: 48
+uuid@14.0.0 | MIT | deps: none | versions: 49
 RFC9562 UUIDs
 https://github.com/uuidjs/uuid#readme
 
@@ -518,19 +477,19 @@ keywords: uuid, guid, rfc4122, rfc9562
 bin: uuid
 
 dist
-.tarball: https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz
-.shasum: 263dc341b19b4d755eb8fe36b78d95a6b65707e8
-.integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
-.unpackedSize: 66.7 kB
+.tarball: https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz
+.shasum: 0af883220163d264ffe0c084f6b8a89b9666966d
+.integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
+.unpackedSize: 70.3 kB
 
 maintainers:
 - broofa <robert@broofa.com>
 - ctavan <dev@tavan.de>
 
 dist-tags:
-latest: 13.0.0
+latest: 14.0.0
 
-published 6 months ago by broofa <robert@broofa.com>
+published 5 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -566,8 +525,7 @@ dist
 .unpackedSize: 20.0 kB
 
 dependencies:
-object-assign: ^4
-vary: ^1
+object-assign: ^4, vary: ^1
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -577,7 +535,7 @@ maintainers:
 dist-tags:
 latest: 2.8.6
 
-published 2 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 3 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -605,7 +563,7 @@ dist-tags:
 latest: 1.11.20
 alpha: 2.0.0-alpha.4
 
-published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published a month ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -614,29 +572,27 @@ published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -645,7 +601,7 @@ published a month ago by motdotla <mot@mot.la>
 
 ```npm
 
-ejs@5.0.1 | Apache-2.0 | deps: none | versions: 77
+ejs@5.0.2 | Apache-2.0 | deps: none | versions: 78
 Embedded JavaScript templates
 https://github.com/mde/ejs
 
@@ -654,18 +610,18 @@ keywords: template, templating, engine, ejs
 bin: ejs
 
 dist
-.tarball: https://registry.npmjs.org/ejs/-/ejs-5.0.1.tgz
-.shasum: 179523a437ed448543ad1b76ca4fb4c2e8950304
-.integrity: sha512-COqBPFMxuPTPspXl2DkVYaDS3HtrD1GpzOGkNTJ1IYkifq/r9h8SVEFrjA3D9/VJGOEoMQcrlhpntcSUrM8k6A==
-.unpackedSize: 204.9 kB
+.tarball: https://registry.npmjs.org/ejs/-/ejs-5.0.2.tgz
+.shasum: cb8a7922ec1e71193b2507942250e230e200de79
+.integrity: sha512-IpbUaI/CAW86l3f+T8zN0iggSc0LmMZLcIW5eRVStLVNCoTXkE0YlncbbH50fp8Cl6zHIky0sW2uUbhBqGw0Jw==
+.unpackedSize: 205.2 kB
 
 maintainers:
 - mde <mde@fleegix.org>
 
 dist-tags:
-latest: 5.0.1
+latest: 5.0.2
 
-published 3 weeks ago by mde <mde@fleegix.org>
+published a week ago by mde <mde@fleegix.org>
 
 ```
 
@@ -687,30 +643,7 @@ dist
 .unpackedSize: 75.4 kB
 
 dependencies:
-accepts: ^2.0.0
-body-parser: ^2.2.1
-content-type: ^1.0.5
-cookie: ^0.7.1
-debug: ^4.4.0
-depd: ^2.0.0
-encodeurl: ^2.0.0
-escape-html: ^1.0.3
-etag: ^1.8.1
-finalhandler: ^2.1.0
-fresh: ^2.0.0
-http-errors: ^2.0.0
-mime-types: ^3.0.0
-on-finished: ^2.4.1
-once: ^1.4.0
-parseurl: ^1.3.3
-proxy-addr: ^2.0.7
-qs: ^6.14.0
-range-parser: ^1.2.1
-router: ^2.2.0
-send: ^1.1.0
-statuses: ^2.0.1
-type-is: ^2.0.1
-vary: ^1.1.2
+qs: ^6.14.0, depd: ^2.0.0, etag: ^1.8.1, once: ^1.4.0, send: ^1.1.0, vary: ^1.1.2, debug: ^4.4.0, fresh: ^2.0.0, cookie: ^0.7.1, router: ^2.2.0, accepts: ^2.0.0, type-is: ^2.0.1, parseurl: ^1.3.3, statuses: ^2.0.1, encodeurl: ^2.0.0, mime-types: ^3.0.0, proxy-addr: ^2.0.7, body-parser: ^2.2.1, escape-html: ^1.0.3, http-errors: ^2.0.0, on-finished: ^2.4.1, content-type: ^1.0.5, finalhandler: ^2.1.0, range-parser: ^1.2.1
 (...and 4 more.)
 
 maintainers:
@@ -724,7 +657,7 @@ dist-tags:
 latest: 5.2.1
 latest-4: 4.22.1
 
-published 3 months ago by jonchurch <npm@jonchurch.com>
+published 4 months ago by jonchurch <npm@jonchurch.com>
 
 ```
 
@@ -745,8 +678,7 @@ dist
 .integrity: sha512-aRGah9AdVUqyChcFjbL03SVW0c6siE871wzMRuXxCONzYiBDmUtGFEnzZP1ABM6nCo3ovnKPntFRFzAxGqmWtw==
 
 dependencies:
-lodash.isnumber: ^3.0.3
-on-headers: ^1.0.1
+lodash.isnumber: ^3.0.3, on-headers: ^1.0.1
 
 maintainers:
 - damouse404 <chris.sidebottom@bbc.co.uk>
@@ -776,11 +708,7 @@ dist
 .unpackedSize: 30.6 kB
 
 dependencies:
-basic-auth: ~2.0.1
-debug: 2.6.9
-depd: ~2.0.0
-on-finished: ~2.3.0
-on-headers: ~1.1.0
+basic-auth: ~2.0.1, debug: 2.6.9, depd: ~2.0.0, on-finished: ~2.3.0, on-headers: ~1.1.0
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -789,7 +717,7 @@ maintainers:
 dist-tags:
 latest: 1.10.1
 
-published 8 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -811,11 +739,7 @@ dist
 .unpackedSize: 15.0 kB
 
 dependencies:
-etag: ~1.8.1
-fresh: ~0.5.2
-ms: ~2.1.3
-parseurl: ~1.3.2
-safe-buffer: ~5.2.1
+etag: ~1.8.1, fresh: ~0.5.2, ms: ~2.1.3, parseurl: ~1.3.2, safe-buffer: ~5.2.1
 
 maintainers:
 - dougwilson <doug@somethingdoug.com>
@@ -824,7 +748,7 @@ maintainers:
 dist-tags:
 latest: 2.5.1
 
-published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
+published 10 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```
 
@@ -833,7 +757,7 @@ published 9 months ago by ulisesgascon <ulisesgascondev@gmail.com>
 
 ```npm
 
-uuid@13.0.0 | MIT | deps: none | versions: 48
+uuid@14.0.0 | MIT | deps: none | versions: 49
 RFC9562 UUIDs
 https://github.com/uuidjs/uuid#readme
 
@@ -842,19 +766,19 @@ keywords: uuid, guid, rfc4122, rfc9562
 bin: uuid
 
 dist
-.tarball: https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz
-.shasum: 263dc341b19b4d755eb8fe36b78d95a6b65707e8
-.integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
-.unpackedSize: 66.7 kB
+.tarball: https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz
+.shasum: 0af883220163d264ffe0c084f6b8a89b9666966d
+.integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
+.unpackedSize: 70.3 kB
 
 maintainers:
 - broofa <robert@broofa.com>
 - ctavan <dev@tavan.de>
 
 dist-tags:
-latest: 13.0.0
+latest: 14.0.0
 
-published 6 months ago by broofa <robert@broofa.com>
+published 5 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -870,29 +794,27 @@ published 6 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -901,7 +823,7 @@ published a month ago by motdotla <mot@mot.la>
 
 ```npm
 
-uuid@13.0.0 | MIT | deps: none | versions: 48
+uuid@14.0.0 | MIT | deps: none | versions: 49
 RFC9562 UUIDs
 https://github.com/uuidjs/uuid#readme
 
@@ -910,19 +832,19 @@ keywords: uuid, guid, rfc4122, rfc9562
 bin: uuid
 
 dist
-.tarball: https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz
-.shasum: 263dc341b19b4d755eb8fe36b78d95a6b65707e8
-.integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
-.unpackedSize: 66.7 kB
+.tarball: https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz
+.shasum: 0af883220163d264ffe0c084f6b8a89b9666966d
+.integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
+.unpackedSize: 70.3 kB
 
 maintainers:
 - broofa <robert@broofa.com>
 - ctavan <dev@tavan.de>
 
 dist-tags:
-latest: 13.0.0
+latest: 14.0.0
 
-published 6 months ago by broofa <robert@broofa.com>
+published 5 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -941,29 +863,27 @@ published 6 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1020,7 +940,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 8 months ago by merencia <lucas.merencia@gmail.com>
+published 9 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1029,26 +949,26 @@ published 8 months ago by merencia <lucas.merencia@gmail.com>
 
 ```npm
 
-nodemailer@8.0.4 | MIT-0 | deps: none | versions: 292
+nodemailer@8.0.5 | MIT-0 | deps: none | versions: 293
 Easy as cake e-mail sending from your Node.js applications
 https://nodemailer.com/
 
 keywords: Nodemailer
 
 dist
-.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.4.tgz
-.shasum: b63626585693f37a390ddaecde273da991c76010
-.integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==
-.unpackedSize: 535.2 kB
+.tarball: https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.5.tgz
+.shasum: 2076fb2b5c1ccfe1c88f6e1aa47c0229ea642e0c
+.integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==
+.unpackedSize: 541.9 kB
 
 maintainers:
 - andris <andris@kreata.ee>
 
 dist-tags:
-latest: 8.0.4
+latest: 8.0.5
 beta: 2.4.0-beta.0
 
-published 2 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
+published 2 weeks ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1057,7 +977,7 @@ published 2 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```npm
 
-uuid@13.0.0 | MIT | deps: none | versions: 48
+uuid@14.0.0 | MIT | deps: none | versions: 49
 RFC9562 UUIDs
 https://github.com/uuidjs/uuid#readme
 
@@ -1066,19 +986,19 @@ keywords: uuid, guid, rfc4122, rfc9562
 bin: uuid
 
 dist
-.tarball: https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz
-.shasum: 263dc341b19b4d755eb8fe36b78d95a6b65707e8
-.integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
-.unpackedSize: 66.7 kB
+.tarball: https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz
+.shasum: 0af883220163d264ffe0c084f6b8a89b9666966d
+.integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
+.unpackedSize: 70.3 kB
 
 maintainers:
 - broofa <robert@broofa.com>
 - ctavan <dev@tavan.de>
 
 dist-tags:
-latest: 13.0.0
+latest: 14.0.0
 
-published 6 months ago by broofa <robert@broofa.com>
+published 5 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1098,29 +1018,27 @@ published 6 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1140,9 +1058,7 @@ dist
 .unpackedSize: 1.6 MB
 
 dependencies:
-minimatch: ^10.2.2
-minipass: ^7.1.3
-path-scurry: ^2.0.2
+minimatch: ^10.2.2, minipass: ^7.1.3, path-scurry: ^2.0.2
 
 maintainers:
 - isaacs <i@izs.me>
@@ -1154,7 +1070,7 @@ legacy-v9: 9.3.5
 v7-legacy: 7.2.0
 legacy: 4.5.3
 
-published a month ago by isaacs <i@izs.me>
+published 2 months ago by isaacs <i@izs.me>
 
 ```
 
@@ -1163,38 +1079,31 @@ published a month ago by isaacs <i@izs.me>
 
 ```npm
 
-mysql2@3.20.0 | MIT | deps: 8 | versions: 266
+mysql2@3.22.2 | MIT | deps: 8 | versions: 283
 fast mysql driver. Implements core protocol, prepared statements, ssl and compression in native JS
 https://sidorares.github.io/node-mysql2/docs
 
 keywords: mysql, client, server
 
 dist
-.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.20.0.tgz
-.shasum: 3e9af093cd6930046b0eba02a0533088b6f39ad4
-.integrity: sha512-eCLUs7BNbgA6nf/MZXsaBO1SfGs0LtLVrJD3WeWq+jPLDWkSufTD+aGMwykfUVPdZnblaUK1a8G/P63cl9FkKg==
-.unpackedSize: 550.8 kB
+.tarball: https://registry.npmjs.org/mysql2/-/mysql2-3.22.2.tgz
+.shasum: 9735f707980e107d55d40a4eb91fbfb06d8bdb1c
+.integrity: sha512-snC/L6YoCJPFpozZo3p3hiOlt9ItQ7sCnLSziFLlIttEzsPhrdcPT8g21BiQ7Oqif25W4Xq1IFuBzBvoFYDf0Q==
+.unpackedSize: 560.0 kB
 
 dependencies:
-aws-ssl-profiles: ^1.1.2
-denque: ^2.1.0
-generate-function: ^2.3.1
-iconv-lite: ^0.7.2
-long: ^5.3.2
-lru.min: ^1.1.4
-named-placeholders: ^1.1.6
-sql-escaper: ^1.3.3
+long: ^5.3.2, denque: ^2.1.0, lru.min: ^1.1.4, iconv-lite: ^0.7.2, sql-escaper: ^1.3.3, aws-ssl-profiles: ^1.1.2, generate-function: ^2.3.1, named-placeholders: ^1.1.6
 
 maintainers:
 - sidorares <andrey.sidorov@gmail.com>
 
 dist-tags:
-latest: 3.20.0
-canary: 3.19.2-canary.5ac5563c
+latest: 3.22.2
+canary: 3.22.3-canary.e72f923d
 next: 3.0.0-rc.1
 beta: 2.0.0-alpha1
 
-published a week ago by sidorares <andrey.sidorov@gmail.com>
+published 3 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1222,7 +1131,7 @@ dist-tags:
 latest: 4.2.1
 beta: 4.0.0-beta.6
 
-published 8 months ago by merencia <lucas.merencia@gmail.com>
+published 9 months ago by merencia <lucas.merencia@gmail.com>
 
 ```
 
@@ -1251,7 +1160,7 @@ maintainers:
 dist-tags:
 latest: 6.10.0
 
-published 5 months ago by sharadchan87 <sharad.raju@oracle.com>
+published 6 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```
 
@@ -1260,7 +1169,7 @@ published 5 months ago by sharadchan87 <sharad.raju@oracle.com>
 
 ```npm
 
-uuid@13.0.0 | MIT | deps: none | versions: 48
+uuid@14.0.0 | MIT | deps: none | versions: 49
 RFC9562 UUIDs
 https://github.com/uuidjs/uuid#readme
 
@@ -1269,19 +1178,19 @@ keywords: uuid, guid, rfc4122, rfc9562
 bin: uuid
 
 dist
-.tarball: https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz
-.shasum: 263dc341b19b4d755eb8fe36b78d95a6b65707e8
-.integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
-.unpackedSize: 66.7 kB
+.tarball: https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz
+.shasum: 0af883220163d264ffe0c084f6b8a89b9666966d
+.integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==
+.unpackedSize: 70.3 kB
 
 maintainers:
 - broofa <robert@broofa.com>
 - ctavan <dev@tavan.de>
 
 dist-tags:
-latest: 13.0.0
+latest: 14.0.0
 
-published 6 months ago by broofa <robert@broofa.com>
+published 5 days ago by GitHub Actions <npm-oidc-no-reply@github.com>
 
 ```
 
@@ -1299,29 +1208,27 @@ published 6 months ago by broofa <robert@broofa.com>
 
 ```npm
 
-dotenv@17.3.1 | BSD-2-Clause | deps: none | versions: 101
+dotenv@17.4.2 | BSD-2-Clause | deps: none | versions: 104
 Loads environment variables from .env file
 https://github.com/motdotla/dotenv#readme
 
 keywords: dotenv, env, .env, environment, variables, config, settings
 
 dist
-.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.3.1.tgz
-.shasum: 2706f5b0165e45a1503348187b8468f87fe6aae2
-.integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==
-.unpackedSize: 93.3 kB
+.tarball: https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz
+.shasum: c07e54a746e11eba021dd9e1047ced5afdc1c034
+.integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
+.unpackedSize: 103.5 kB
 
 maintainers:
-- ~jcblw <jacoblowe2.0@gmail.com>
 - scottmotte <scott@scottmotte.com>
 - motdotla <mot@mot.la>
 - motdotenv <mot@dotenv.org>
 
 dist-tags:
-latest: 17.3.1
-next: 16.1.0-rc2
+latest: 17.4.2
 
-published a month ago by motdotla <mot@mot.la>
+published a week ago by motdotla <mot@mot.la>
 
 ```
 
@@ -1348,7 +1255,7 @@ maintainers:
 dist-tags:
 latest: 3.7.8
 
-published 7 months ago by dankogai <dankogai+github@gmail.com>
+published 8 months ago by dankogai <dankogai+github@gmail.com>
 
 ```
 
@@ -1370,8 +1277,7 @@ dist
 .unpackedSize: 19.6 kB
 
 dependencies:
-crypto-js: 4.2.0
-node-rsa: ^0.4.2
+crypto-js: 4.2.0, node-rsa: ^0.4.2
 
 maintainers:
 - tim.tutt <tim.tutt@gmail.com>
@@ -1379,7 +1285,7 @@ maintainers:
 dist-tags:
 latest: 1.1.0
 
-published a month ago by tim.tutt <tim.tutt@gmail.com>
+published 2 months ago by tim.tutt <tim.tutt@gmail.com>
 
 ```
 
@@ -1401,12 +1307,7 @@ dist
 .unpackedSize: 231.4 kB
 
 dependencies:
-cliui: ^9.0.1
-escalade: ^3.1.1
-get-caller-file: ^2.0.5
-string-width: ^7.2.0
-y18n: ^5.0.5
-yargs-parser: ^22.0.0
+cliui: ^9.0.1, escalade: ^3.1.1, get-caller-file: ^2.0.5, string-width: ^7.2.0, y18n: ^5.0.5, yargs-parser: ^22.0.0
 
 maintainers:
 - bcoe <bencoe@gmail.com>
@@ -1418,11 +1319,8 @@ next: 18.0.0-candidate.7
 browser: 18.0.0-browser.2
 latest-7: 7.1.2
 next-15: 15.5.0-candidate.0
-latest-13: 13.3.2
-latest-14: 14.2.3
-next-14: 14.2.1
-latest-11: 11.1.1
+(...and 4 more.)
 
-published 10 months ago by oss-bot <bencoe+oss-bot@gmail.com>
+published 11 months ago by oss-bot <bencoe+oss-bot@gmail.com>
 
 ```
