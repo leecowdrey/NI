@@ -3044,6 +3044,8 @@ paths:
                       properties:
                         cableId:
                           $ref: "#/components/schemas/cableId"
+                        reference:
+                          type: string
                         country:
                           $ref: "#/components/schemas/countryCode"
                         cost:
@@ -3057,8 +3059,6 @@ paths:
                           $ref: "#/components/schemas/cableTechnology"
                         configuration:
                           $ref: "#/components/schemas/cableConfiguration"
-                        state:
-                          $ref: "#/components/schemas/cableState"
                         source:
                           $ref: "#/components/schemas/source"
                         probability:
@@ -3069,6 +3069,8 @@ paths:
                       properties:
                         cableId:
                           $ref: "#/components/schemas/cableId"
+                        reference:
+                          type: string
                         country:
                           $ref: "#/components/schemas/countryCode"
                         cost:
@@ -3082,8 +3084,6 @@ paths:
                           $ref: "#/components/schemas/cableTechnology"
                         configuration:
                           $ref: "#/components/schemas/cableConfiguration"
-                        state:
-                          $ref: "#/components/schemas/cableState"
                         source:
                           $ref: "#/components/schemas/source"
                         probability:
@@ -3122,11 +3122,12 @@ paths:
                       - point
                       - technology
                       - configuration
-                      - state
                     properties:
                       cableId:
                         description: optionally specify the internal cable identifier
                         $ref: "#/components/schemas/cableId"
+                      reference:
+                        type: string
                       country:
                         $ref: "#/components/schemas/countryCode"
                       cost:
@@ -3140,8 +3141,6 @@ paths:
                         $ref: "#/components/schemas/cableTechnology"
                       configuration:
                         $ref: "#/components/schemas/cableConfiguration"
-                      state:
-                        $ref: "#/components/schemas/cableState"
                       source:
                         $ref: "#/components/schemas/source"
                       probability:
@@ -3154,11 +3153,12 @@ paths:
                       - point
                       - technology
                       - configuration
-                      - state
                     properties:
                       cableId:
                         description: optionally specify the internal cable identifier
                         $ref: "#/components/schemas/cableId"
+                      reference:
+                        type: string
                       country:
                         $ref: "#/components/schemas/countryCode"
                       cost:
@@ -3172,8 +3172,6 @@ paths:
                         $ref: "#/components/schemas/cableTechnology"
                       configuration:
                         $ref: "#/components/schemas/cableConfiguration"
-                      state:
-                        $ref: "#/components/schemas/cableState"
                       source:
                         $ref: "#/components/schemas/source"
                       probability:
@@ -3274,8 +3272,6 @@ paths:
                       $ref: "#/components/schemas/cableTechnology"
                     configuration:
                       $ref: "#/components/schemas/cableConfiguration"
-                    state:
-                      $ref: "#/components/schemas/cableState"
                     point:
                       $ref: "#/components/schemas/dateTime"
                     source:
@@ -19236,6 +19232,7 @@ components:
     cableCopperConfiguration:
       description: copper cable properties
       type: object
+      additionalProperties: false
       required:
         - twistedPairs
         - state
@@ -19251,6 +19248,7 @@ components:
     cableEthernetConfiguration:
       description: ethernet cable properties
       type: object
+      additionalProperties: false
       required:
         - category
         - rate
@@ -19288,6 +19286,7 @@ components:
     cableCoaxConfiguration:
       description: coaxial cable properties
       type: object
+      additionalProperties: false
       required:
         - frequencyRange
         - channels
@@ -19305,19 +19304,19 @@ components:
               description: minimum frequency range of the coaxial cable
               type: number
               minimum: 0.1
-              maximum: 100000
+              maximum: 128000
             high:
               description: maximum frequency range of the coaxial cable
               type: number
               minimum: 0.1
-              maximum: 100000
+              maximum: 128000
         channels:
           $ref: "#/components/schemas/channels"
         width:
           description: channel frequency width
           type: number
           minimum: 0.1
-          maximum: 100000
+          maximum: 128000
         unit:
           description: frequency unit
           type: string
@@ -19329,6 +19328,7 @@ components:
     cableSingleFiberConfiguration:
       description: single fiber optic cable properties
       type: object
+      additionalProperties: false
       required:
         - strands
         - mode
@@ -19370,6 +19370,7 @@ components:
     cableMultiFiberConfiguration:
       description: multi-fiber optic cable properties
       type: object
+      additionalProperties: false
       required:
         - ribbons
         - strands

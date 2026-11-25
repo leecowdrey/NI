@@ -19,7 +19,7 @@
   {
     "cableId": "1fe8adc2-54d0-4766-a808-fac5613464fb",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-fac5613464fb",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "singleFiber",
@@ -86,7 +86,7 @@
   {
     "cableId": "1fe8adc2-54d0-4766-a808-fac5613464fb",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-fac5613464fb",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "singleFiber",
@@ -153,7 +153,7 @@
   {
     "cableId": "1fe8adc2-54d0-4766-a808-fac5613464fb",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-fac5613464fb",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "singleFiber",
@@ -220,7 +220,7 @@
   {
     "cableId": "9556c417-be18-43f7-9bca-684209557fec",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-684209557fec",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "multiFiber",
@@ -528,7 +528,7 @@
   {
     "cableId": "9556c417-be18-43f7-9bca-684209557fec",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-684209557fec",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "multiFiber",
@@ -836,7 +836,7 @@
   {
     "cableId": "9556c417-be18-43f7-9bca-684209557fec",
     "country": "GBR",
-    "reference": "gbr-eea0d2d2d87e",
+    "reference": "gbr-684209557fec",
     "ductId": "ef1ad580-9b36-4c04-ba2c-0eece49b631c",
     "probability": 1,
     "technology": "multiFiber",
@@ -1161,7 +1161,7 @@
     "technology": "coax",
     "delete": false,
     "configuration": {
-      "frequencyRange": { "low": 1, "high": 128000 },
+      "frequencyRange": { "low": 1, "high": 100000 },
       "channels": 256,
       "width": 500,
       "unit": "MHz",

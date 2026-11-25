@@ -25885,92 +25885,176 @@ var run = async () => {
       body("*.country").default(niCountryCode).isIn(OAS.countryCode),
       body("*.cost").optional().isFloat(OAS.cost),
       body("*.configuration").isObject(),
-      oneOf(
-        [
-        [
-          // single fiber cable
-          body("*.configuration.strands")
-            .default(1)
-            .isInt(OAS.cableConfiguration_single_fiber_strands),
-          body("*.configuration.mode").isIn(OAS.cableFiberConfigurationMode),
-          body("*.configuration.unit")
-            .default("Gbps")
-            .isIn(OAS.cableFiberConfigurationRate),
-          body("*.configuration.rate")
-            .default(1)
-            .isInt(OAS.cableConfiguration_fiber_rate),
-          body("*.configuration.states").isArray({ min: 1 }),
-          body("*.configuration.states.*.strand").isInt(
-            OAS.cableConfiguration_single_fiber_strands
-          ),
-          body("*.configuration.states.*.state").isIn(OAS.cableState),
-        ],
-        [
-          // multi-fiber cable
-          body("*.configuration.ribbons").default(1).isInt(OAS.ribbons),
-          body("*.configuration.strands")
-            .default(1)
-            .isInt(OAS.cableConfiguration_single_fiber_strands),
-          body("*.configuration.mode").isIn(OAS.cableFiberConfigurationMode),
-          body("*.configuration.unit")
-            .default("Gbps")
-            .isIn(OAS.cableFiberConfigurationRate),
-          body("*.configuration.rate")
-            .default(1)
-            .isInt(OAS.cableConfiguration_fiber_rate),
-          body("*.configuration.states").isArray({ min: 1 }),
-          body("*.configuration.states.*.ribbon").isInt(OAS.ribbons),
-          body("*.configuration.states.*.strand").isInt(
-            OAS.cableConfiguration_single_fiber_strands
-          ),
-          body("*.configuration.states.*.state").isIn(OAS.cableState),
-        ],
-        [
-          // coax
-          body("*.configuration.frequencyRange").isObject(),
-          body("*.configuration.frequencyRange.low")
-            .default(0.1)
-            .isFloat(OAS.cableConfiguration_coax_frequency),
-          body("*.configuration.frequencyRange.high")
-            .default(100000)
-            .isFloat(OAS.cableConfiguration_coax_frequency),
-          body("*.configuration.channels")
-            .default(1)
-            .isInt(OAS.cableConfiguration_coax_channels),
-          body("*.configuration.width")
-            .default(1)
-            .isInt(OAS.cableConfiguration_coax_width),
-          body("*.configuration.unit")
-            .default("GHz")
-            .isIn(OAS.cableCoaxConfigurationFrequency),
-          body("*.configuration.state").isIn(OAS.cableState),
-        ],
-        [
-          // copper
-          body("*.configuration.twistedPairs")
-            .default(4)
-            .isInt(OAS.cableConfiguration_copper_twistedPairs),
-          body("*.configuration.state").isIn(OAS.cableState),
-        ],
-        [
-          // ethernet
-          body("*.configuration.category")
-            .default("Cat6A")
-            .isIn(OAS.cableEthernetConfiguration),
-          body("*.configuration.rate")
-            .default(10)
-            .isInt(OAS.cableConfiguration_ethernet_rate),
-          body("*.configuration.unit")
-            .default("Gbps")
-            .isIn(OAS.cableEthernetConfigurationRate),
-          body("*.configuration.state").isIn(OAS.cableState),
-        ]
-        ],
-        {
-          message:
-            "configuration for single fiber, multi-fiber, coax, copper or ethernet cable must be supplied",
+      body("*").custom((item) => {
+        if (item == null || typeof item !== "object") {
+          throw new Error("cable record must be an object");
         }
-      ),
+        const cfg = item.configuration;
+        if (cfg == null || typeof cfg !== "object" || Array.isArray(cfg)) {
+          throw new Error("cable configuration must be an object");
+        }
+        const inIntRange = (v, range) =>
+          Number.isInteger(v) && v >= range.min && v <= range.max;
+        const inNumRange = (v, range) =>
+          typeof v === "number" &&
+          Number.isFinite(v) &&
+          v >= range.min &&
+          v <= range.max;
+
+        switch (item.technology) {
+          case "singleFiber":
+            cfg.strands = cfg.strands ?? 1;
+            cfg.unit = cfg.unit ?? "Gbps";
+            cfg.rate = cfg.rate ?? 1;
+            if (
+              !inIntRange(
+                cfg.strands,
+                OAS.cableConfiguration_single_fiber_strands
+              )
+            ) {
+              throw new Error("invalid singleFiber strands");
+            }
+            if (!OAS.cableFiberConfigurationMode.includes(cfg.mode)) {
+              throw new Error("invalid singleFiber mode");
+            }
+            if (!OAS.cableFiberConfigurationRate.includes(cfg.unit)) {
+              throw new Error("invalid singleFiber unit");
+            }
+            if (!inIntRange(cfg.rate, OAS.cableConfiguration_fiber_rate)) {
+              throw new Error("invalid singleFiber rate");
+            }
+            if (!Array.isArray(cfg.states) || cfg.states.length < 1) {
+              throw new Error("singleFiber states must be a non-empty array");
+            }
+            for (let s = 0; s < cfg.states.length; s++) {
+              if (
+                !inIntRange(
+                  cfg.states[s]?.strand,
+                  OAS.cableConfiguration_single_fiber_strands
+                ) ||
+                !OAS.cableState.includes(cfg.states[s]?.state)
+              ) {
+                throw new Error("invalid singleFiber state entry");
+              }
+            }
+            return true;
+          case "multiFiber":
+            cfg.ribbons = cfg.ribbons ?? 1;
+            cfg.strands = cfg.strands ?? 1;
+            cfg.unit = cfg.unit ?? "Gbps";
+            cfg.rate = cfg.rate ?? 1;
+            if (!inIntRange(cfg.ribbons, OAS.ribbons)) {
+              throw new Error("invalid multiFiber ribbons");
+            }
+            if (
+              !inIntRange(
+                cfg.strands,
+                OAS.cableConfiguration_single_fiber_strands
+              )
+            ) {
+              throw new Error("invalid multiFiber strands");
+            }
+            if (!OAS.cableFiberConfigurationMode.includes(cfg.mode)) {
+              throw new Error("invalid multiFiber mode");
+            }
+            if (!OAS.cableFiberConfigurationRate.includes(cfg.unit)) {
+              throw new Error("invalid multiFiber unit");
+            }
+            if (!inIntRange(cfg.rate, OAS.cableConfiguration_fiber_rate)) {
+              throw new Error("invalid multiFiber rate");
+            }
+            if (!Array.isArray(cfg.states) || cfg.states.length < 1) {
+              throw new Error("multiFiber states must be a non-empty array");
+            }
+            for (let s = 0; s < cfg.states.length; s++) {
+              if (
+                !inIntRange(cfg.states[s]?.ribbon, OAS.ribbons) ||
+                !inIntRange(
+                  cfg.states[s]?.strand,
+                  OAS.cableConfiguration_single_fiber_strands
+                ) ||
+                !OAS.cableState.includes(cfg.states[s]?.state)
+              ) {
+                throw new Error("invalid multiFiber state entry");
+              }
+            }
+            return true;
+          case "coax":
+            if (
+              cfg.frequencyRange == null ||
+              typeof cfg.frequencyRange !== "object"
+            ) {
+              throw new Error("coax frequencyRange must be an object");
+            }
+            cfg.frequencyRange.low = cfg.frequencyRange.low ?? 0.1;
+            cfg.frequencyRange.high = cfg.frequencyRange.high ?? 100000;
+            cfg.channels = cfg.channels ?? 1;
+            cfg.width = cfg.width ?? 1;
+            cfg.unit = cfg.unit ?? "GHz";
+            if (
+              !inNumRange(
+                cfg.frequencyRange.low,
+                OAS.cableConfiguration_coax_frequency
+              ) ||
+              !inNumRange(
+                cfg.frequencyRange.high,
+                OAS.cableConfiguration_coax_frequency
+              )
+            ) {
+              throw new Error("invalid coax frequencyRange");
+            }
+            if (
+              !inIntRange(cfg.channels, OAS.cableConfiguration_coax_channels)
+            ) {
+              throw new Error("invalid coax channels");
+            }
+            if (!inNumRange(cfg.width, OAS.cableConfiguration_coax_width)) {
+              throw new Error("invalid coax width");
+            }
+            if (!OAS.cableCoaxConfigurationFrequency.includes(cfg.unit)) {
+              throw new Error("invalid coax unit");
+            }
+            if (!OAS.cableState.includes(cfg.state)) {
+              throw new Error("invalid coax state");
+            }
+            return true;
+          case "copper":
+            cfg.twistedPairs = cfg.twistedPairs ?? 4;
+            if (
+              !inIntRange(
+                cfg.twistedPairs,
+                OAS.cableConfiguration_copper_twistedPairs
+              )
+            ) {
+              throw new Error("invalid copper twistedPairs");
+            }
+            if (!OAS.cableState.includes(cfg.state)) {
+              throw new Error("invalid copper state");
+            }
+            return true;
+          case "ethernet":
+            cfg.category = cfg.category ?? "Cat6A";
+            cfg.rate = cfg.rate ?? 10;
+            cfg.unit = cfg.unit ?? "Gbps";
+            if (!OAS.cableEthernetConfiguration.includes(cfg.category)) {
+              throw new Error("invalid ethernet category");
+            }
+            if (!inIntRange(cfg.rate, OAS.cableConfiguration_ethernet_rate)) {
+              throw new Error("invalid ethernet rate");
+            }
+            if (!OAS.cableEthernetConfigurationRate.includes(cfg.unit)) {
+              throw new Error("invalid ethernet unit");
+            }
+            if (!OAS.cableState.includes(cfg.state)) {
+              throw new Error("invalid ethernet state");
+            }
+            return true;
+          default:
+            throw new Error(
+              "configuration for single fiber, multi-fiber, coax, copper or ethernet cable must be supplied"
+            );
+        }
+      }),
       body("*.point")
         .default(dayjs().format(OAS.dayjsFormat))
         .matches(OAS.dateTime),

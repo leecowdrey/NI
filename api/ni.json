@@ -1689,7 +1689,7 @@
                       {
                         "vendor": "Juniper Networks",
                         "model": "MX240",
-                        "costPerUnit": 27250
+                        "costPerUnit": 27250.0
                       }
                     ]
                   }
@@ -1751,7 +1751,7 @@
                   "value": {
                     "vendor": "Juniper Networks",
                     "model": "MX250",
-                    "costPerUnit": 32768
+                    "costPerUnit": 32768.0
                   }
                 }
               }
@@ -1816,7 +1816,7 @@
                   "value": {
                     "vendor": "Juniper Networks",
                     "model": "MX240",
-                    "costPerUnit": 26250
+                    "costPerUnit": 26250.0
                   }
                 }
               }
@@ -2507,7 +2507,7 @@
                         "type": "unclassified",
                         "rate": 1,
                         "unit": "Gbps",
-                        "costPerUnit": 100
+                        "costPerUnit": 100.0
                       }
                     ]
                   }
@@ -4742,6 +4742,9 @@
                           "cableId": {
                             "$ref": "#/components/schemas/cableId"
                           },
+                          "reference": {
+                            "type": "string"
+                          },
                           "country": {
                             "$ref": "#/components/schemas/countryCode"
                           },
@@ -4761,9 +4764,6 @@
                           "configuration": {
                             "$ref": "#/components/schemas/cableConfiguration"
                           },
-                          "state": {
-                            "$ref": "#/components/schemas/cableState"
-                          },
                           "source": {
                             "$ref": "#/components/schemas/source"
                           },
@@ -4780,6 +4780,9 @@
                         "properties": {
                           "cableId": {
                             "$ref": "#/components/schemas/cableId"
+                          },
+                          "reference": {
+                            "type": "string"
                           },
                           "country": {
                             "$ref": "#/components/schemas/countryCode"
@@ -4799,9 +4802,6 @@
                           },
                           "configuration": {
                             "$ref": "#/components/schemas/cableConfiguration"
-                          },
-                          "state": {
-                            "$ref": "#/components/schemas/cableState"
                           },
                           "source": {
                             "$ref": "#/components/schemas/source"
@@ -4860,13 +4860,15 @@
                         "poleId",
                         "point",
                         "technology",
-                        "configuration",
-                        "state"
+                        "configuration"
                       ],
                       "properties": {
                         "cableId": {
                           "description": "optionally specify the internal cable identifier",
                           "$ref": "#/components/schemas/cableId"
+                        },
+                        "reference": {
+                          "type": "string"
                         },
                         "country": {
                           "$ref": "#/components/schemas/countryCode"
@@ -4887,9 +4889,6 @@
                         "configuration": {
                           "$ref": "#/components/schemas/cableConfiguration"
                         },
-                        "state": {
-                          "$ref": "#/components/schemas/cableState"
-                        },
                         "source": {
                           "$ref": "#/components/schemas/source"
                         },
@@ -4907,13 +4906,15 @@
                         "ductId",
                         "point",
                         "technology",
-                        "configuration",
-                        "state"
+                        "configuration"
                       ],
                       "properties": {
                         "cableId": {
                           "description": "optionally specify the internal cable identifier",
                           "$ref": "#/components/schemas/cableId"
+                        },
+                        "reference": {
+                          "type": "string"
                         },
                         "country": {
                           "$ref": "#/components/schemas/countryCode"
@@ -4933,9 +4934,6 @@
                         },
                         "configuration": {
                           "$ref": "#/components/schemas/cableConfiguration"
-                        },
-                        "state": {
-                          "$ref": "#/components/schemas/cableState"
                         },
                         "source": {
                           "$ref": "#/components/schemas/source"
@@ -5099,9 +5097,6 @@
                       },
                       "configuration": {
                         "$ref": "#/components/schemas/cableConfiguration"
-                      },
-                      "state": {
-                        "$ref": "#/components/schemas/cableState"
                       },
                       "point": {
                         "$ref": "#/components/schemas/dateTime"
@@ -6409,7 +6404,7 @@
         }
       }
     },
-    "/currency{currencyId}": {
+    "/currency/{currencyId}": {
       "patch": {
         "summary": "update currency conversion rate",
         "security": [
@@ -27332,7 +27327,7 @@
         "type": "number",
         "format": "float",
         "minimum": 0,
-        "maximum": 1,
+        "maximum": 1.0,
         "default": 0
       },
       "searchResourceType": {
@@ -27398,6 +27393,7 @@
       "cableCopperConfiguration": {
         "description": "copper cable properties",
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "twistedPairs",
           "state"
@@ -27418,6 +27414,7 @@
       "cableEthernetConfiguration": {
         "description": "ethernet cable properties",
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "category",
           "rate",
@@ -27464,6 +27461,7 @@
       "cableCoaxConfiguration": {
         "description": "coaxial cable properties",
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "frequencyRange",
           "channels",
@@ -27483,13 +27481,13 @@
                 "description": "minimum frequency range of the coaxial cable",
                 "type": "number",
                 "minimum": 0.1,
-                "maximum": 100000
+                "maximum": 128000
               },
               "high": {
                 "description": "maximum frequency range of the coaxial cable",
                 "type": "number",
                 "minimum": 0.1,
-                "maximum": 100000
+                "maximum": 128000
               }
             }
           },
@@ -27500,7 +27498,7 @@
             "description": "channel frequency width",
             "type": "number",
             "minimum": 0.1,
-            "maximum": 100000
+            "maximum": 128000
           },
           "unit": {
             "description": "frequency unit",
@@ -27518,6 +27516,7 @@
       "cableSingleFiberConfiguration": {
         "description": "single fiber optic cable properties",
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "strands",
           "mode"
@@ -27570,6 +27569,7 @@
       "cableMultiFiberConfiguration": {
         "description": "multi-fiber optic cable properties",
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "ribbons",
           "strands",
