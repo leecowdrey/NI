@@ -7,20 +7,27 @@
 //
 // © 2026 Cowdrey Consulting. All rights reserved.
 //=====================================================================
-//var map;
+//
+var map = null;
 var trenchPath;
-var tPath = [];
-var tPoly = [];
+var tPath = {};
+var tPoly = {};
 var lineSymbol;
 let trenchId = null;
 let mapVendor = null;
+let mapId = "DEMO_MAP_ID";
 let trenchCoordinates = {};
 let trenchColor = "#8B0000";
 let trenchOpacity = 1.0;
-let startMarker = [];
-let endMarker = [];
+let startMarker = {};
+let endMarker = {};
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
+let mapRenderReady = null;
+let MapCtor = null;
+let PolylineCtor = null;
+let InfoWindowCtor = null;
+let AdvancedMarkerElementCtor = null;
 var ductPanel = null;
 var polePanel = null;
 let ductList = "";
@@ -60,9 +67,7 @@ function fetchTrenchPremisesPassed(id, p) {
     .then((response) => {
       if (response.ok) {
         return response.json();
-      } //else {
-      //ftppReady = setTimeout(fetchTrenchPremisesPassed, retryMs, id, p);
-      //}
+      }
     })
     .then((data) => {
       if (data != null) {
@@ -129,6 +134,9 @@ function fetchListTrench() {
       }
     })
     .then((data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
       let suppliedTrenchId = window.location.pathname.replace(
         localStorage.getItem("ni.rootUrl") + "/trenchLifetime/",
         ""
@@ -164,78 +172,97 @@ function fetchListTrench() {
 }
 
 function fetchMapRender() {
-  fetch(localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  mapRenderReady = fetch(
+    localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender",
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
+      console.error("Failed to fetch /ui/mapRender:", response.status);
     })
     .then((data) => {
-      if (data.vendor != null) {
-        document.getElementById("mapVendor").innerHTML =
-          "<option value='" +
-          data.vendor +
-          "' selected='selected'>" +
-          data.vendor +
-          "</option>";
-        // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
-        // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
-        // <option disabled value='ERSI'>ERSI</option>
+      let validated = validateMapRenderResponse(data);
+      if (validated == null) {
+        return;
       }
-      if (data.url != null) {
-        mapRenderUrl = data.url + "&loading=async&callback=displayMap&v=weekly";
-      }
+      mapVendor = validated.vendor;
+      mapId = validated.mapId;
+      document.getElementById("mapVendor").innerHTML =
+        "<option value='" +
+        validated.vendor +
+        "' selected='selected'>" +
+        validated.vendor +
+        "</option>";
+      // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
+      // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
+      // <option disabled value='ERSI'>ERSI</option>
+      mapRenderUrl = buildGoogleMapsScriptUrl(validated.url, "displayMap");
     })
     .catch((e) => {
       console.error(e);
     });
+  return mapRenderReady;
 }
 async function wipeMapClean() {
-  if (startMarker != null) {
-    for (let i = 0; i < startMarker.length; i++) {
-      startMarker[i].setMap(null);
-      startMarker[i] = null;
+  for (let key in startMarker) {
+    if (startMarker[key] != null) {
+      startMarker[key].map = null;
+      startMarker[key] = null;
     }
-    startMarker.splice(0, startMarker.length);
   }
-  if (endMarker != null) {
-    for (let i = 0; i < endMarker.length; i++) {
-      endMarker[i].setMap(null);
-      endMarker[i] = null;
+  startMarker = {};
+  for (let key in endMarker) {
+    if (endMarker[key] != null) {
+      endMarker[key].map = null;
+      endMarker[key] = null;
     }
-    endMarker.splice(0, endMarker.length);
   }
-  if (Object.keys(tPoly).length > 0) {
-    for (let trenchId in tPoly) {
-      tPoly[trenchId].setMap(null);
-      tPoly[trenchId] = null;
+  endMarker = {};
+  for (let key in tPoly) {
+    if (tPoly[key] != null) {
+      tPoly[key].setMap(null);
+      tPoly[key] = null;
     }
-    tPoly = [];
   }
-  if (tPath != null) {
-    tPath.splice(0, tPath.length);
-  }
+  tPoly = {};
+  tPath = {};
 }
 async function drawOnMap() {
+  if (
+    map == null ||
+    PolylineCtor == null ||
+    AdvancedMarkerElementCtor == null ||
+    !Array.isArray(trenchCoordinates?.sets)
+  ) {
+    return;
+  }
   if (trenchCoordinates.sets.length > 0) {
-    fetchTrenchPremisesPassed(
-      trenchId,
-      trenchCoordinates.sets[trenchCoordinates.sets.length - 1].point
-    );
-    fetchTrenchDistance(
-      trenchId,
-      trenchCoordinates.sets[trenchCoordinates.sets.length - 1].point
-    );
+    let lastPoint =
+      trenchCoordinates.sets[trenchCoordinates.sets.length - 1]?.point;
+    if (lastPoint != null) {
+      fetchTrenchPremisesPassed(trenchId, lastPoint);
+      fetchTrenchDistance(trenchId, lastPoint);
+    }
   }
   for (let s = 0; s < trenchCoordinates.sets.length; s++) {
-    let tSet = trenchCoordinates.sets[s].point;
-    if (trenchCoordinates.sets[s].source == "predicted") {
+    let setInfo = trenchCoordinates.sets[s];
+    if (setInfo == null || setInfo.point == null) {
+      continue;
+    }
+    let tSet = setInfo.point;
+    let rawCoords = trenchCoordinates[tSet];
+    if (!Array.isArray(rawCoords) || rawCoords.length === 0) {
+      continue;
+    }
+    if (setInfo.source == "predicted") {
       trenchOpacity = 0;
       if (s % 2 == 0) {
         trenchColor = "#FFFF00";
@@ -251,51 +278,30 @@ async function drawOnMap() {
       }
     }
     tPath[tSet] = [];
-    for (let c = 0; c < trenchCoordinates[tSet].length; c++) {
-      if (c == 0) {
-        startMarker[tSet] = new google.maps.Marker({
-          position: {
-            lat: trenchCoordinates[tSet][c].y,
-            lng: trenchCoordinates[tSet][c].x,
-          },
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 6,
-            strokeOpacity: 0,
-            strokeColor: trenchColor,
-            fillOpacity: 1.0,
-            fillColor: trenchColor,
-          },
-          map: map,
-          title: tSet,
-        });
+    for (let c = 0; c < rawCoords.length; c++) {
+      let coord = validateMapCoordinate(rawCoords[c]);
+      if (coord != null) {
+        tPath[tSet].push(coord);
       }
-      if (c == trenchCoordinates[tSet].length - 1) {
-        if (c > 0) {
-          endMarker[tSet] = new google.maps.Marker({
-            position: {
-              lat: trenchCoordinates[tSet][c].y,
-              lng: trenchCoordinates[tSet][c].x,
-            },
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 6,
-              strokeOpacity: 0,
-              strokeColor: trenchColor,
-              fillOpacity: 1.0,
-              fillColor: trenchColor,
-            },
-            map: map,
-            title: tSet,
-          });
-        }
-      }
-      tPath[tSet].push({
-        lat: trenchCoordinates[tSet][c].y,
-        lng: trenchCoordinates[tSet][c].x,
+    }
+    if (tPath[tSet].length === 0) {
+      continue;
+    }
+    startMarker[tSet] = new AdvancedMarkerElementCtor({
+      position: tPath[tSet][0],
+      content: createMapDotElement(trenchColor, 12),
+      map: map,
+      title: String(tSet),
+    });
+    if (tPath[tSet].length > 1) {
+      endMarker[tSet] = new AdvancedMarkerElementCtor({
+        position: tPath[tSet][tPath[tSet].length - 1],
+        content: createMapDotElement(trenchColor, 12),
+        map: map,
+        title: String(tSet),
       });
     }
-    tPoly[tSet] = new google.maps.Polyline({
+    tPoly[tSet] = new PolylineCtor({
       path: tPath[tSet],
       strokeOpacity: trenchOpacity,
       strokeColor: trenchColor,
@@ -309,40 +315,74 @@ async function drawOnMap() {
       ],
       map: map,
     });
-    tPoly[tSet].setMap(map);
-    google.maps.event.addListener(tPoly[tSet], "click", function (h) {
-      ductPanel = new google.maps.InfoWindow({
+    tPoly[tSet].addListener("click", function (h) {
+      if (ductPanel != null) {
+        ductPanel.close();
+      }
+      ductPanel = new InfoWindowCtor({
         headerContent: "Ducts",
         position: h.latLng,
         content: "<ul><li>none</li></ul>",
       });
       ductPanel.open({
         shouldFocus: true,
-        map,
+        map: map,
       });
     });
-    google.maps.event.addListener(tPoly[tSet], "mouseover", function (e) {
+    tPoly[tSet].addListener("mouseover", function (e) {
       injectTooltip(e, trenchId);
     });
-    google.maps.event.addListener(tPoly[tSet], "mouseout", function (e) {
+    tPoly[tSet].addListener("mouseout", function (e) {
       deleteTooltip(e);
     });
-    google.maps.event.addListener(tPoly[tSet], "rightclick", function (h) {
-      polePanel = new google.maps.InfoWindow({
+    tPoly[tSet].addListener("rightclick", function (h) {
+      if (polePanel != null) {
+        polePanel.close();
+      }
+      polePanel = new InfoWindowCtor({
         headerContent: "Poles",
         position: h.latLng,
         content: "<ul><li>none</li></ul>",
       });
       polePanel.open({
         shouldFocus: true,
-        map,
+        map: map,
       });
     });
+  }
+}
+async function displayMap() {
+  try {
+    const mapsLib = await google.maps.importLibrary("maps");
+    const markerLib = await google.maps.importLibrary("marker");
+    MapCtor = mapsLib.Map;
+    PolylineCtor = mapsLib.Polyline;
+    InfoWindowCtor = mapsLib.InfoWindow;
+    AdvancedMarkerElementCtor = markerLib.AdvancedMarkerElement;
+
+    map = new MapCtor(document.getElementById("map"), {
+      zoom: 17,
+      center: mapCenter,
+      mapTypeId: "hybrid",
+      mapId: mapId,
+      disableDefaultUI: true,
+    });
+    lineSymbol = {
+      path: "M 0,-1 0,1",
+      strokeOpacity: 1.0,
+      scale: 4,
+    };
+    await drawOnMap();
+  } catch (e) {
+    console.error("Failed to initialize Google Map for trenchLifetime:", e);
   }
 }
 async function fetchTrenchGeometryLifetime() {
   let t = document.getElementById("trenchId");
   trenchId = t.options[t.selectedIndex].value;
+  if (trenchId == "-1") {
+    return;
+  }
 
   await fetch(
     localStorage.getItem("ni.gatewayUrl") +
@@ -361,49 +401,40 @@ async function fetchTrenchGeometryLifetime() {
         return response.json();
       }
     })
-    .then((data) => {
-      if (data != null) {
-        trenchCoordinates = {};
+    .then(async (data) => {
+      if (data != null && typeof data === "object") {
         trenchCoordinates = JSON.parse(JSON.stringify(data));
-        if (trenchCoordinates.sets.length > 0) {
-          let tSet = trenchCoordinates.sets[0].point;
-          if (trenchCoordinates[tSet].length > 0) {
-            mapCenter = {
-              lat: trenchCoordinates[tSet][0].y,
-              lng: trenchCoordinates[tSet][0].x,
-            };
+        if (
+          Array.isArray(trenchCoordinates.sets) &&
+          trenchCoordinates.sets.length > 0
+        ) {
+          let tSet = trenchCoordinates.sets[0]?.point;
+          if (
+            tSet != null &&
+            Array.isArray(trenchCoordinates[tSet]) &&
+            trenchCoordinates[tSet].length > 0
+          ) {
+            let firstCoord = validateMapCoordinate(trenchCoordinates[tSet][0]);
+            if (firstCoord != null) {
+              mapCenter = firstCoord;
+            }
           }
         }
       }
-      if (
-        document.getElementById("mapRender") !== undefined &&
-        document.getElementById("mapRender") != null
-      ) {
+      if (map != null) {
         map.setCenter(mapCenter);
-        wipeMapClean();
-        drawOnMap();
+        await wipeMapClean();
+        await drawOnMap();
+      } else {
+        if (mapRenderReady != null) {
+          await mapRenderReady;
+        }
+        loadGoogleMaps(mapRenderUrl, displayMap);
       }
     })
     .catch((e) => {
       console.error(e);
     });
-  loadScript(mapRenderUrl, function () {
-    function displayMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 17,
-        center: mapCenter,
-        mapTypeId: "hybrid",
-        disableDefaultUI: true,
-      });
-      lineSymbol = {
-        path: "M 0,-1 0,1",
-        strokeOpacity: 1.0,
-        scale: 4,
-      };
-      drawOnMap();
-    }
-    window.displayMap = displayMap;
-  });
 }
 try {
   fetchMapRender();

@@ -8,19 +8,24 @@
 // © 2026 Cowdrey Consulting. All rights reserved.
 //=====================================================================
 //
-var map;
-var trenchPath;
+var map = null;
+var trenchPath = null;
 var lineSymbol;
 let trenchId = null;
 let point = null;
 let mapVendor = null;
+let mapId = "DEMO_MAP_ID";
 let trenchCoordinates = [];
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
+let mapRenderReady = null;
+let MapCtor = null;
+let PolylineCtor = null;
+let InfoWindowCtor = null;
 var ductPanel = null;
 var polePanel = null;
-let ductList = "";
-let poleList = "";
+let ductList = "<ul><li>none</li></ul>";
+let poleList = "<ul><li>none</li></ul>";
 var tipObj = null;
 
 function injectTooltip(event, data) {
@@ -123,6 +128,9 @@ function fetchListTrench() {
       }
     })
     .then((data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
       let suppliedTrenchId = window.location.pathname.replace(
         localStorage.getItem("ni.rootUrl") + "/trench/",
         ""
@@ -177,23 +185,29 @@ function fetchTrenchPoints() {
           }
         })
         .then((data) => {
+          if (!Array.isArray(data)) {
+            return;
+          }
           let trenchPoints =
             "<option disabled value='-1'> -- select a date/time -- </option>";
           for (var i = 0; i < data.length; i++) {
-            if (i==0) {
-            trenchPoints +=
-              "<option selected='selected' value='" +
-              data[i].point +
-              "' >" +
-              data[i].point +
-              "</option>";
+            if (data[i] == null || data[i].point == null) {
+              continue;
+            }
+            if (i == 0) {
+              trenchPoints +=
+                "<option selected='selected' value='" +
+                data[i].point +
+                "' >" +
+                data[i].point +
+                "</option>";
             } else {
-            trenchPoints +=
-              "<option value='" +
-              data[i].point +
-              "' >" +
-              data[i].point +
-              "</option>";
+              trenchPoints +=
+                "<option value='" +
+                data[i].point +
+                "' >" +
+                data[i].point +
+                "</option>";
             }
           }
           document.getElementById("trenchPoint").innerHTML = trenchPoints;
@@ -203,40 +217,121 @@ function fetchTrenchPoints() {
           console.error(e);
         });
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
 }
 function fetchMapRender() {
-  fetch(localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  mapRenderReady = fetch(
+    localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender",
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
+      console.error("Failed to fetch /ui/mapRender:", response.status);
     })
     .then((data) => {
-      if (data.vendor != null) {
-        document.getElementById("mapVendor").innerHTML =
-          "<option value='" +
-          data.vendor +
-          "' selected='selected'>" +
-          data.vendor +
-          "</option>";
-        // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
-        // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
-        // <option disabled value='ERSI'>ERSI</option>
+      let validated = validateMapRenderResponse(data);
+      if (validated == null) {
+        return;
       }
-      if (data.url != null) {
-        mapRenderUrl = data.url + "&loading=async&callback=displayMap&v=weekly";
-      }
+      mapVendor = validated.vendor;
+      mapId = validated.mapId;
+      document.getElementById("mapVendor").innerHTML =
+        "<option value='" +
+        validated.vendor +
+        "' selected='selected'>" +
+        validated.vendor +
+        "</option>";
+      // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
+      // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
+      // <option disabled value='ERSI'>ERSI</option>
+      mapRenderUrl = buildGoogleMapsScriptUrl(validated.url, "displayMap");
     })
     .catch((e) => {
       console.error(e);
     });
+  return mapRenderReady;
+}
+async function displayMap() {
+  try {
+    const mapsLib = await google.maps.importLibrary("maps");
+    MapCtor = mapsLib.Map;
+    PolylineCtor = mapsLib.Polyline;
+    InfoWindowCtor = mapsLib.InfoWindow;
+
+    map = new MapCtor(document.getElementById("map"), {
+      zoom: 17,
+      center: mapCenter,
+      mapTypeId: "hybrid",
+      mapId: mapId,
+      disableDefaultUI: true,
+    });
+    lineSymbol = {
+      path: "M 0,-1 0,1",
+      strokeOpacity: 1,
+      scale: 4,
+    };
+
+    trenchPath = new PolylineCtor({
+      path: trenchCoordinates,
+      strokeOpacity: 1.0,
+      strokeColor: "#8B0000",
+      strokeWeight: 4,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: "0",
+          repeat: "20px",
+        },
+      ],
+      map: map,
+    });
+    trenchPath.addListener("click", function (h) {
+      if (ductPanel != null) {
+        ductPanel.close();
+      }
+      ductPanel = new InfoWindowCtor({
+        headerContent: "Ducts",
+        position: h.latLng,
+        content: ductList,
+      });
+      ductPanel.open({
+        shouldFocus: true,
+        map: map,
+      });
+    });
+    trenchPath.addListener("mouseover", function (e) {
+      injectTooltip(e, trenchId);
+    });
+    trenchPath.addListener("mouseout", function (e) {
+      deleteTooltip(e);
+    });
+    trenchPath.addListener("rightclick", function (h) {
+      if (polePanel != null) {
+        polePanel.close();
+      }
+      polePanel = new InfoWindowCtor({
+        headerContent: "Poles",
+        position: h.latLng,
+        content: poleList,
+      });
+      polePanel.open({
+        shouldFocus: true,
+        map: map,
+      });
+    });
+  } catch (e) {
+    console.error("Failed to initialize Google Map for trench:", e);
+  }
 }
 function fetchTrenchGeometry() {
   let t = document.getElementById("trenchId");
@@ -245,6 +340,10 @@ function fetchTrenchGeometry() {
   point = p.options[p.selectedIndex].value;
   trenchCoordinates = [];
   mapCenter = { lat: 0, lng: 0 };
+
+  if (trenchId == "-1" || point == "-1") {
+    return;
+  }
 
   fetch(
     localStorage.getItem("ni.gatewayUrl") +
@@ -265,25 +364,27 @@ function fetchTrenchGeometry() {
         return response.json();
       }
     })
-    .then((data) => {
-      if (data != null) {
-        if (data.pole != null) {
+    .then(async (data) => {
+      if (data != null && typeof data === "object") {
+        if (Array.isArray(data.pole) && data.pole.length > 0) {
           poleList = "<ul>";
-          for (let p = 0; p < data.pole.length; p++) {
+          for (let i = 0; i < data.pole.length; i++) {
             poleList +=
               '<li><a href="' +
               localStorage.getItem("ni.rootUrl") +
               "/pole/" +
-              data.pole[p] +
+              data.pole[i] +
               "?country=" +
               niSelectedCountry +
               '">' +
-              data.pole[p] +
+              data.pole[i] +
               "</a></li>";
           }
           poleList += "</ul>";
+        } else {
+          poleList = "<ul><li>none</li></ul>";
         }
-        if (data.duct != null) {
+        if (Array.isArray(data.duct) && data.duct.length > 0) {
           ductList = "<ul>";
           for (let d = 0; d < data.duct.length; d++) {
             ductList +=
@@ -301,27 +402,30 @@ function fetchTrenchGeometry() {
         } else {
           ductList = "<ul><li>none</li></ul>";
         }
-        if (data.coordinates.length > 0) {
-          let mi = Number.parseFloat(data.coordinates.length / 2).toFixed(0);
-          mapCenter = {
-            lat: data.coordinates[mi].y,
-            lng: data.coordinates[mi].x,
-          };
+        if (Array.isArray(data.coordinates)) {
+          for (var i = 0; i < data.coordinates.length; i++) {
+            let coord = validateMapCoordinate(data.coordinates[i]);
+            if (coord != null) {
+              trenchCoordinates.push(coord);
+            }
+          }
+        }
+        if (trenchCoordinates.length > 0) {
+          let mi = Math.floor(trenchCoordinates.length / 2);
+          mapCenter = trenchCoordinates[mi];
         } else {
           mapCenter = { lat: 0, lng: 0 };
         }
-        for (var i = 0; i < data.coordinates.length; i++) {
-          let c = { lat: data.coordinates[i].y, lng: data.coordinates[i].x };
-          trenchCoordinates.push(c);
-        }
-        if (
-          document.getElementById("mapRender") !== undefined &&
-          document.getElementById("mapRender") != null
-        ) {
+        if (map != null && trenchPath != null) {
           map.setCenter(mapCenter);
           trenchPath.setMap(null);
           trenchPath.setPath(trenchCoordinates);
           trenchPath.setMap(map);
+        } else {
+          if (mapRenderReady != null) {
+            await mapRenderReady;
+          }
+          loadGoogleMaps(mapRenderUrl, displayMap);
         }
       }
       fetchTrenchDistance(trenchId, point);
@@ -330,66 +434,6 @@ function fetchTrenchGeometry() {
     .catch((e) => {
       console.error(e);
     });
-  loadScript(mapRenderUrl, function () {
-    function displayMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 17,
-        center: mapCenter,
-        mapTypeId: "hybrid",
-        disableDefaultUI: true,
-      });
-      lineSymbol = {
-        path: "M 0,-1 0,1",
-        strokeOpacity: 1,
-        scale: 4,
-      };
-
-      trenchPath = new google.maps.Polyline({
-        path: trenchCoordinates,
-        strokeOpacity: 1.0,
-        strokeColor: "#8B0000",
-        strokeWeight: 4,
-        icons: [
-          {
-            icon: lineSymbol,
-            offset: "0",
-            repeat: "20px",
-          },
-        ],
-        map: map,
-      });
-      trenchPath.setMap(map);
-      google.maps.event.addListener(trenchPath, "click", function (h) {
-        ductPanel = new google.maps.InfoWindow({
-          headerContent: "Ducts",
-          position: h.latLng,
-          content: ductList,
-        });
-        ductPanel.open({
-          shouldFocus: true,
-          map,
-        });
-      });
-      google.maps.event.addListener(trenchPath, "mouseover", function (e) {
-        injectTooltip(e, trenchId);
-      });
-      google.maps.event.addListener(trenchPath, "mouseout", function (e) {
-        deleteTooltip(e);
-      });
-      google.maps.event.addListener(trenchPath, "rightclick", function (h) {
-        polePanel = new google.maps.InfoWindow({
-          headerContent: "Poles",
-          position: h.latLng,
-          content: poleList,
-        });
-        polePanel.open({
-          shouldFocus: true,
-          map,
-        });
-      });
-    }
-    window.displayMap = displayMap;
-  });
 }
 try {
   fetchMapRender();

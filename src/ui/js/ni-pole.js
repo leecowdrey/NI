@@ -8,39 +8,28 @@
 // © 2026 Cowdrey Consulting. All rights reserved.
 //=====================================================================
 //
-var map;
+var map = null;
 var polePath;
 var lineSymbol;
 let poleId = null;
 let point = null;
 let mapVendor = null;
+let mapId = "DEMO_MAP_ID";
 let poleX = 0;
 let poleY = 0;
 let marker = null;
 let endMarker = null;
 let mapCenter = { lat: 0, lng: 0 };
 let mapRenderUrl = null;
+let mapRenderReady = null;
+let MapCtor = null;
+let InfoWindowCtor = null;
+let AdvancedMarkerElementCtor = null;
 var trenchPanel = null;
 var sitePanel = null;
-let trenchList = "";
-let siteList = "";
+let trenchList = "<ul><li>none</li></ul>";
+let siteList = "<ul><li>none</li></ul>";
 var tipObj = null;
-
-function injectTooltip(event, data) {
-  if (!tipObj && event) {
-    tipObj = document.createElement("div");
-    tipObj.setAttribute("class", "mappolytooltip");
-    tipObj.innerHTML = data;
-    document.body.appendChild(tipObj);
-  }
-}
-function deleteTooltip(event) {
-  if (tipObj) {
-    //delete the tooltip if it exists in the DOM
-    document.body.removeChild(tipObj);
-    tipObj = null;
-  }
-}
 
 function injectTooltip(event, data) {
   if (!tipObj && event) {
@@ -76,6 +65,9 @@ function fetchListPoles() {
       }
     })
     .then((data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
       let suppliedPoleId = window.location.pathname.replace(
         localStorage.getItem("ni.rootUrl") + "/pole/",
         ""
@@ -126,23 +118,29 @@ function fetchPolePoints() {
         }
       })
       .then((data) => {
+        if (!Array.isArray(data)) {
+          return;
+        }
         let polePoints =
           "<option disabled value='-1'> -- select a date/time point -- </option>";
         for (var i = 0; i < data.length; i++) {
-          if (i==0) {
-          polePoints +=
-            "<option selected='selected' value='" +
-            data[i].point +
-            "' >" +
-            data[i].point +
-            "</option>";
+          if (data[i] == null || data[i].point == null) {
+            continue;
+          }
+          if (i == 0) {
+            polePoints +=
+              "<option selected='selected' value='" +
+              data[i].point +
+              "' >" +
+              data[i].point +
+              "</option>";
           } else {
-          polePoints +=
-            "<option value='" +
-            data[i].point +
-            "' >" +
-            data[i].point +
-            "</option>";
+            polePoints +=
+              "<option value='" +
+              data[i].point +
+              "' >" +
+              data[i].point +
+              "</option>";
           }
         }
         document.getElementById("polePoint").innerHTML = polePoints;
@@ -154,44 +152,118 @@ function fetchPolePoints() {
   }
 }
 function fetchMapRender() {
-  fetch(localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    keepalive: true,
-  })
+  mapRenderReady = fetch(
+    localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender",
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
+      console.error("Failed to fetch /ui/mapRender:", response.status);
     })
     .then((data) => {
-      if (data.vendor != null) {
-        document.getElementById("mapVendor").innerHTML =
-          "<option value='" +
-          data.vendor +
-          "' selected='selected'>" +
-          data.vendor +
-          "</option>";
-        // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
-        // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
-        // <option disabled value='ERSI'>ERSI</option>
+      let validated = validateMapRenderResponse(data);
+      if (validated == null) {
+        return;
       }
-      if (data.url != null) {
-        mapRenderUrl = data.url + "&loading=async&callback=displayMap&v=weekly";
-      }
+      mapVendor = validated.vendor;
+      mapId = validated.mapId;
+      document.getElementById("mapVendor").innerHTML =
+        "<option value='" +
+        validated.vendor +
+        "' selected='selected'>" +
+        validated.vendor +
+        "</option>";
+      // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
+      // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
+      // <option disabled value='ERSI'>ERSI</option>
+      mapRenderUrl = buildGoogleMapsScriptUrl(validated.url, "displayMap");
     })
     .catch((e) => {
       console.error(e);
     });
+  return mapRenderReady;
+}
+function createPoleMarker(position) {
+  let pinElement = createMapPinElement("fa fa-arrows-v", "#D93025");
+  let poleMarker = new AdvancedMarkerElementCtor({
+    map: map,
+    position: position,
+    content: pinElement,
+    title: poleId || "",
+    gmpClickable: true,
+  });
+  poleMarker.addListener("gmp-click", function () {
+    if (trenchPanel != null) {
+      trenchPanel.close();
+    }
+    trenchPanel = new InfoWindowCtor({
+      headerContent: "Trench",
+      content: trenchList,
+    });
+    trenchPanel.open({
+      anchor: poleMarker,
+      shouldFocus: true,
+      map: map,
+    });
+  });
+  pinElement.addEventListener("mouseenter", function (e) {
+    injectTooltip(e, poleId);
+  });
+  pinElement.addEventListener("mouseleave", function (e) {
+    deleteTooltip(e);
+  });
+  pinElement.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (sitePanel != null) {
+      sitePanel.close();
+    }
+    sitePanel = new InfoWindowCtor({
+      headerContent: "Site",
+      content: siteList,
+    });
+    sitePanel.open({
+      anchor: poleMarker,
+      shouldFocus: true,
+      map: map,
+    });
+  });
+  return poleMarker;
+}
+async function displayMap() {
+  try {
+    const mapsLib = await google.maps.importLibrary("maps");
+    const markerLib = await google.maps.importLibrary("marker");
+    MapCtor = mapsLib.Map;
+    InfoWindowCtor = mapsLib.InfoWindow;
+    AdvancedMarkerElementCtor = markerLib.AdvancedMarkerElement;
+
+    let pos = { lat: poleY, lng: poleX };
+    map = new MapCtor(document.getElementById("map"), {
+      zoom: 17,
+      center: pos,
+      mapTypeId: "hybrid",
+      mapId: mapId,
+      disableDefaultUI: true,
+    });
+    marker = createPoleMarker(pos);
+  } catch (e) {
+    console.error("Failed to initialize Google Map for pole:", e);
+  }
 }
 function fetchPole() {
   let t = document.getElementById("poleId");
   poleId = t.options[t.selectedIndex].value;
   let p = document.getElementById("polePoint");
   point = p.options[p.selectedIndex].value;
-  poleCoordinates = [];
   mapCenter = { lat: 0, lng: 0 };
   if (poleId != "-1" && point != "-1") {
     fetch(
@@ -213,147 +285,84 @@ function fetchPole() {
           return response.json();
         }
       })
-      .then((data) => {
-        if (data != null) {
-          poleX = data.coordinate.x;
-          poleY = data.coordinate.y;
-          if (data.connectsTo?.trenchId != null) {
-            trenchList =
-              '<li><a href="' +
-              localStorage.getItem("ni.rootUrl") +
-              "/trench/" +
-              data.connectsTo?.trenchId +
-              "?country=" +
-              niSelectedCountry +
-              '">' +
-              data.connectsTo?.trenchId +
-              "</a></li>";
-          } else {
-            trenchList = "<ul><li>none</li></ul>";
+      .then(async (data) => {
+        if (data == null || typeof data !== "object") {
+          return;
+        }
+        let coord = validateMapCoordinate(data.coordinate);
+        if (coord == null) {
+          console.error("Invalid pole coordinate payload:", data.coordinate);
+          return;
+        }
+        poleX = coord.lng;
+        poleY = coord.lat;
+        mapCenter = coord;
+
+        if (data.connectsTo?.trenchId != null) {
+          trenchList =
+            '<ul><li><a href="' +
+            localStorage.getItem("ni.rootUrl") +
+            "/trench/" +
+            data.connectsTo.trenchId +
+            "?country=" +
+            niSelectedCountry +
+            '">' +
+            data.connectsTo.trenchId +
+            "</a></li></ul>";
+        } else {
+          trenchList = "<ul><li>none</li></ul>";
+        }
+        if (data.connectsTo?.siteId != null) {
+          siteList =
+            '<ul><li><a href="' +
+            localStorage.getItem("ni.rootUrl") +
+            "/site/" +
+            data.connectsTo.siteId +
+            "?country=" +
+            niSelectedCountry +
+            '">' +
+            data.connectsTo.siteId +
+            "</a></li></ul>";
+        } else {
+          siteList = "<ul><li>none</li></ul>";
+        }
+
+        if (
+          data.construction?.height != null &&
+          data.construction?.unit != null
+        ) {
+          document
+            .getElementById("poleHeight")
+            .setAttribute(
+              "value",
+              data.construction.height + data.construction.unit
+            );
+        }
+        if (data.construction?.classifier != null) {
+          document
+            .getElementById("poleClassifier")
+            .setAttribute("value", data.construction.classifier);
+        }
+
+        if (map != null) {
+          map.setCenter(coord);
+          if (marker != null) {
+            marker.position = coord;
+            marker.title = poleId || "";
+            marker.map = map;
+          } else if (AdvancedMarkerElementCtor != null) {
+            marker = createPoleMarker(coord);
           }
-          if (data.connectsTo?.siteId != null) {
-            siteList =
-              '<li><a href="' +
-              localStorage.getItem("ni.rootUrl") +
-              "/site/" +
-              data.connectsTo?.siteId +
-              "?country=" +
-              niSelectedCountry +
-              '">' +
-              data.connectsTo?.siteId +
-              "</a></li>";
-          } else {
-            siteList = "<ul><li>none</li></ul>";
+        } else {
+          if (mapRenderReady != null) {
+            await mapRenderReady;
           }
-          if (
-            document.getElementById("mapRender") !== undefined &&
-            document.getElementById("mapRender") != null
-          ) {
-            map.setCenter({ lat: poleY, lng: poleX });
-            if (marker != null) {
-              marker.setMap(null);
-            }
-            marker.setPosition({ lat: poleY, lng: poleX });
-            marker.setMap(map);
-            google.maps.event.addListener(marker, "click", function (h) {
-              trenchPanel = new google.maps.InfoWindow({
-                headerContent: "Trench",
-                position: marker,
-                content: trenchList,
-              });
-              trenchPanel.open({
-                shouldFocus: true,
-                map,
-              });
-            });
-            google.maps.event.addListener(marker, "mouseover", function (e) {
-              injectTooltip(e, poleId);
-            });
-            google.maps.event.addListener(marker, "mouseout", function (e) {
-              deleteTooltip(e);
-            });
-            google.maps.event.addListener(marker, "rightclick", function (h) {
-              sitePanel = new google.maps.InfoWindow({
-                headerContent: "Site",
-                position: marker,
-                content: siteList,
-              });
-              sitePanel.open({
-                shouldFocus: true,
-                map,
-              });
-            });
-          }
-          if (
-            data.construction?.height != null &&
-            data.construction?.unit != null
-          ) {
-            document
-              .getElementById("poleHeight")
-              .setAttribute(
-                "value",
-                data.construction.height + data.construction.unit
-              );
-          }
-          if (data.construction?.classifier != null) {
-            document
-              .getElementById("poleClassifier")
-              .setAttribute("value", data.construction.classifier);
-          }
+          loadGoogleMaps(mapRenderUrl, displayMap);
         }
       })
       .catch((e) => {
         console.error(e);
       });
-    loadScript(mapRenderUrl, function () {
-      function displayMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 17,
-          center: { lat: poleY, lng: poleX },
-          mapTypeId: "hybrid",
-          disableDefaultUI: true,
-        });
-        marker = new google.maps.Marker({
-          position: { lat: poleY, lng: poleX },
-          label: {
-            text: "\ue7ee", // codepoint from https://fonts.google.com/icons
-            fontFamily: "Material Symbols Outlined",
-            color: "#ffffff",
-            fontSize: "18px",
-          },
-          map: map,
-        });
-        google.maps.event.addListener(marker, "click", function (h) {
-          trenchPanel = new google.maps.InfoWindow({
-            headerContent: "Trench",
-            position: { lat: poleY, lng: poleX },
-            content: trenchList,
-          });
-          trenchPanel.open({
-            shouldFocus: true,
-            map,
-          });
-        });
-        google.maps.event.addListener(marker, "mouseover", function (e) {
-          injectTooltip(e, poleId);
-        });
-        google.maps.event.addListener(marker, "mouseout", function (e) {
-          deleteTooltip(e);
-        });
-        google.maps.event.addListener(marker, "rightclick", function (h) {
-          sitePanel = new google.maps.InfoWindow({
-            headerContent: "Site",
-            position: { lat: poleY, lng: poleX },
-            content: siteList,
-          });
-          sitePanel.open({
-            shouldFocus: true,
-            map,
-          });
-        });
-      }
-      window.displayMap = displayMap;
-    });
   }
 }
 try {

@@ -13,11 +13,12 @@ import cacheControl from "express-cache-controller";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import favicon from "serve-favicon";
+import http from "http";
 import https from "https";
 import path from "path";
 import fs from "fs";
 import { Console } from "node:console";
-import { fileURLToPath } from "url";
+import { URL, fileURLToPath } from "node:url";
 import dayjs from "dayjs";
 
 const allPrintableRegEx = /[ -~]/gi;
@@ -70,9 +71,11 @@ var urlPrefix = null;
 var urlVerison = null;
 var oauth = null;
 var oauthDiscovery = null;
+var oauthIssuer = null;
 var oauthAuthorize = null;
 var oauthToken = null;
 var oauthLogout = null;
+var oauthRevoke = null;
 var oauthSecretId = null;
 var oauthSecret = null;
 var server = null;
@@ -155,6 +158,18 @@ async function apiGatewayDnsSD() {
         dns: e,
       });
     }
+    if (apiGatewayDns == null && process.env.APIGW_ADDRESS) {
+      let gwPort = toInteger(process.env.APIGW_PORT) || 8443;
+      let fallbackUrl =
+        "https://" +
+        process.env.APIGW_ADDRESS +
+        ":" +
+        gwPort +
+        urlPrefix +
+        urlVerison;
+      apiGatewayDns = fallbackUrl;
+      apiGatewayIp = fallbackUrl;
+    }
   }
   apiGatewayResolve = setTimeout(apiGatewayDnsSD, dnsResolveIntervalMs);
 }
@@ -165,6 +180,70 @@ function tick() {
   //  process.stdout.write(".");
   //}
   tickTimer = setTimeout(tick, tickIntervalMs);
+}
+
+async function discoverOAuth() {
+  if (!oauth || oauthDiscovery == null) {
+    return false;
+  }
+  try {
+    let response = await fetch(oauthDiscovery, {
+      method: "GET",
+      headers: {
+        Accept: OAS.mimeJSON,
+      },
+      keepalive: true,
+      signal: AbortSignal.timeout(endpointRetryMs),
+    });
+    if (response.ok && response.status == 200) {
+      let data = await response.json();
+      if (data != null) {
+        oauthIssuer = data.issuer || null;
+        oauthAuthorize = data.authorization_endpoint || null;
+        oauthLogout = data.end_session_endpoint || null;
+        oauthToken = data.token_endpoint || null;
+        oauthRevoke = data.revocation_endpoint || null;
+        if (DEBUG) {
+          LOGGER.debug(
+            dayjs().format(OAS.dayjsFormat),
+            "debug",
+            "oauthDiscovery",
+            {
+              issuer: oauthIssuer,
+              authorize: oauthAuthorize,
+              logout: oauthLogout,
+              token: oauthToken,
+              revoke: oauthRevoke,
+            }
+          );
+        }
+        return oauthToken != null;
+      }
+    } else {
+      let errText = await response.text().catch(() => "");
+      LOGGER.error(
+        dayjs().format(OAS.dayjsFormat),
+        "error",
+        "oauthDiscovery",
+        {
+          url: oauthDiscovery,
+          status: response.status,
+          error: errText || response.statusText,
+        }
+      );
+    }
+  } catch (err) {
+    LOGGER.error(
+      dayjs().format(OAS.dayjsFormat),
+      "error",
+      "oauthDiscovery",
+      {
+        url: oauthDiscovery,
+        error: err?.message || err,
+      }
+    );
+  }
+  return false;
 }
 
 // load env
@@ -197,7 +276,13 @@ function loadEnv() {
       process.env.UISERV_DIST_DIRECTORY || "/usr/local/ni/apiServer/dist"
     );
     oauth = toBoolean(process.env.OAUTH) || false;
-    oauthDiscovery = process.env.OAUTH_DISCOVERY_URL || serveUrlPrefix;
+    oauthDiscovery =
+      process.env.OAUTH_DISCOVERY_URL ||
+      "https://" +
+        (process.env.IAM_ADDRESS || "127.0.0.1") +
+        ":" +
+        (process.env.IAM_PORT_HTTPS || 6443) +
+        "/realms/NI/.well-known/openid-configuration";
     oauthSecretId = process.env.OAUTH_CLIENT_ID || "NI";
     oauthSecret = process.env.OAUTH_CLIENT_SECRET || "NI";
     tlsSslVerification = toBoolean(
@@ -205,6 +290,8 @@ function loadEnv() {
     );
     if (tlsSslVerification) {
       process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+    } else {
+      delete process.env["NODE_TLS_REJECT_UNAUTHORIZED"];
     }
   } catch (err) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "loadenv", err);
@@ -369,82 +456,10 @@ var run = async () => {
 
   // oauth Discovery if enabled
   if (oauth) {
-    if (oauthDiscovery != null) {
-      await fetch(oauthDiscovery, {
-        method: "GET",
-        headers: {
-          Accept: OAS.mimeJSON,
-        },
-        keepalive: true,
-        signal: AbortSignal.timeout(endpointRetryMs),
-      })
-        .then((response) => {
-          if (response.ok) {
-            if (
-              response.status == 200 &&
-              toInteger(response.headers.get("Content-Length")) > 0
-            ) {
-              return response.json();
-            }
-          } else {
-            LOGGER.error(
-              dayjs().format(OAS.dayjsFormat),
-              "error",
-              "oauthDiscovery",
-              {
-                url: oauthDiscovery,
-                status: response.status,
-                error: response.statusText,
-              }
-            );
-          }
-        })
-        .then(async (data) => {
-          if (data != null) {
-            oauthAuthorize = data.authorization_endpoint;
-            oauthLogout = data.end_session_endpoint;
-            oauthToken = data.token_endpoint;
-            if (DEBUG) {
-              LOGGER.debug(
-                dayjs().format(OAS.dayjsFormat),
-                "debug",
-                "oauthDiscovery",
-                {
-                  authorize: oauthAuthorize,
-                  logout: oauthLogout,
-                  token: oauthToken,
-                }
-              );
-            }
-          }
-        })
-        .catch((err) => {
-          LOGGER.error(
-            dayjs().format(OAS.dayjsFormat),
-            "error",
-            "oauthDiscovery",
-            {
-              error: err,
-            }
-          );
-        });
-    }
+    await discoverOAuth();
   }
 
   // setup Express middleware
-
-  // enable caching
-  app.use(cacheControl({ maxAge: 1 }));
-
-  // request bodies
-  app.use(
-    express.json({
-      limit: "1Mb",
-      type: OAS.mimeJSON,
-    })
-  );
-
-  app.use(bodyParser.urlencoded());
 
   // cosmetic and middleware tweaks
   //app.set("title", appName);
@@ -478,6 +493,106 @@ var run = async () => {
     tokens["response-time"](req, res) +
     " } }";
   app.use(morgan(morganFormat, { stream: process.stdout }));
+
+  // Same-origin API Gateway reverse proxy when UISERV_TLS_INSECURE_CONNECTIONS=true
+  // so browser requests avoid cross-origin self-signed certificate errors (ERR_CERT_AUTHORITY_INVALID)
+  app.use(urlPrefix + urlVerison, (req, res, next) => {
+    if (!tlsSslVerification) {
+      return next();
+    }
+    let targetBase = apiGatewayDns || apiGatewayIp;
+    if (targetBase == null) {
+      return res
+        .contentType(OAS.mimeJSON)
+        .status(503)
+        .json({ errors: "API Gateway unavailable" });
+    }
+    try {
+      let upstream = new URL(targetBase);
+      let upstreamPath = upstream.pathname.replace(/\/$/, "") + req.url;
+      let proxyHeaders = { ...req.headers, host: upstream.host };
+      delete proxyHeaders["connection"];
+      delete proxyHeaders["keep-alive"];
+      delete proxyHeaders["transfer-encoding"];
+      delete proxyHeaders["upgrade"];
+      proxyHeaders["x-forwarded-for"] = req.ip;
+      proxyHeaders["x-forwarded-proto"] = req.protocol || "https";
+
+      let transport = upstream.protocol === "http:" ? http : https;
+      let proxyOptions = {
+        protocol: upstream.protocol,
+        hostname: upstream.hostname,
+        port: upstream.port || (upstream.protocol === "http:" ? 80 : 443),
+        path: upstreamPath,
+        method: req.method,
+        headers: proxyHeaders,
+        timeout: serveTimeOutRequest,
+      };
+      if (upstream.protocol === "https:") {
+        proxyOptions.rejectUnauthorized = !tlsSslVerification;
+      }
+
+      let proxyReq = transport.request(proxyOptions, (proxyRes) => {
+        res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
+        proxyRes.pipe(res);
+      });
+
+      proxyReq.on("timeout", () => {
+        proxyReq.destroy();
+        if (!res.headersSent) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(504)
+            .json({ errors: "API Gateway timeout", url: req.originalUrl });
+        }
+      });
+
+      proxyReq.on("error", (err) => {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "gatewayProxy", {
+          target: targetBase,
+          url: req.originalUrl,
+          error: err?.message || err,
+        });
+        if (!res.headersSent) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(502)
+            .json({ errors: err?.message || "API Gateway proxy error" });
+        }
+      });
+
+      req.on("aborted", () => {
+        proxyReq.destroy();
+      });
+
+      req.pipe(proxyReq);
+    } catch (err) {
+      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "gatewayProxy", {
+        target: targetBase,
+        url: req.originalUrl,
+        error: err?.message || err,
+      });
+      if (!res.headersSent) {
+        res
+          .contentType(OAS.mimeJSON)
+          .status(502)
+          .json({ errors: err?.message || "API Gateway proxy error" });
+      }
+    }
+  });
+
+  // enable caching
+  app.use(cacheControl({ maxAge: 1 }));
+
+  // request bodies
+  app.use(
+    express.json({
+      limit: "1Mb",
+      type: OAS.mimeJSON,
+    })
+  );
+
+  app.use(bodyParser.urlencoded());
 
   // CORS
   //app.use(cors());
@@ -565,15 +680,17 @@ var run = async () => {
   });
 
   app.get(serveUrlPrefix + "/metadata", function (req, res, next) {
+    let proxyGatewayUrl =
+      "https://" + req.get("host") + urlPrefix + urlVerison;
     let resJson = {
       build: appBuild,
       country: niCountryCode,
       currencyIsoCode: niCurrencyIsoCode,
       currencyName: niCurrencyName,
       currencySymbol: niCurrencySymbol,
-      gatewayUrl: apiGatewayDns,
-      gatewayUrlDns: apiGatewayDns,
-      gatewayUrlIp: apiGatewayIp,
+      gatewayUrl: tlsSslVerification ? proxyGatewayUrl : apiGatewayDns,
+      gatewayUrlDns: tlsSslVerification ? proxyGatewayUrl : apiGatewayDns,
+      gatewayUrlIp: tlsSslVerification ? proxyGatewayUrl : apiGatewayIp,
       icon: "/favicon.ico",
       name: appName,
       notificatonIcon: "/favicon.ico",
@@ -600,38 +717,58 @@ var run = async () => {
     res.render("readiness", { payload: payload });
   });
 
-  app.post(serveUrlPrefix + "/logout", function (req, res, next) {
+  app.post(serveUrlPrefix + "/logout", async function (req, res, next) {
     if (oauth) {
+      if (oauthLogout == null) {
+        await discoverOAuth();
+      }
+      if (oauthLogout == null) {
+        return res.sendStatus(503);
+      }
       if (req.body?.access_token != null && req.body?.refresh_token != null) {
-        let auth = new URLSearchParams({
+        let authParams = {
           client_id: oauthSecretId,
           client_secret: oauthSecret,
           refresh_token: req.body.refresh_token,
-        });
-        fetch(oauthLogout, {
-          method: "POST",
-          headers: {
-            "Content-Type": OAS.mimeUrlFormEncoded,
-            Accept: OAS.mimeJSON,
-            Authorization: "Bearer " + req.body.access_token,
-          },
-          body: auth,
-          keepalive: true,
-        })
-          .then((response) => {
-            if (response.ok) {
-              res.sendStatus(204);
-            } else {
-              res.sendStatus(response.status);
-            }
-          })
-          .catch((err) => {
-            LOGGER.debug(dayjs().format(OAS.dayjsFormat), "logout", {
-              url: oauthLogout,
-              error: err,
-            });
-            res.sendStatus(502);
+        };
+        if (req.body?.id_token != null && req.body.id_token.length > 0) {
+          authParams.id_token_hint = req.body.id_token;
+        }
+        let auth = new URLSearchParams(authParams);
+        try {
+          let response = await fetch(oauthLogout, {
+            method: "POST",
+            headers: {
+              "Content-Type": OAS.mimeUrlFormEncoded,
+              Accept: OAS.mimeJSON,
+              Authorization: "Bearer " + req.body.access_token,
+            },
+            body: auth,
+            keepalive: true,
+            signal: AbortSignal.timeout(endpointRetryMs),
           });
+          if (response.ok) {
+            res.sendStatus(204);
+          } else {
+            if (DEBUG) {
+              let errText = await response.text().catch(() => "");
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "logout", {
+                url: oauthLogout,
+                status: response.status,
+                error: errText || response.statusText,
+              });
+            }
+            res.sendStatus(response.status);
+          }
+        } catch (err) {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "logout", {
+            url: oauthLogout,
+            error: err?.message || err,
+          });
+          if (!res.headersSent) {
+            res.sendStatus(502);
+          }
+        }
       } else {
         res.sendStatus(401);
       }
@@ -640,56 +777,67 @@ var run = async () => {
     }
   });
 
-  app.post(serveUrlPrefix + "/login/refresh", function (req, res, next) {
+  app.post(serveUrlPrefix + "/login/refresh", async function (req, res, next) {
     if (oauth) {
+      if (oauthToken == null) {
+        await discoverOAuth();
+      }
+      if (oauthToken == null) {
+        return res.sendStatus(503);
+      }
       if (req.body?.refresh_token != null) {
-        let resJson = {};
         let auth = new URLSearchParams({
           client_id: oauthSecretId,
           client_secret: oauthSecret,
           grant_type: "refresh_token",
           refresh_token: req.body.refresh_token,
-          scope: "openid ni",
+          scope: "openid " + oauthSecretId,
         });
-        fetch(oauthToken, {
-          method: "POST",
-          headers: {
-            "Content-Type": OAS.mimeUrlFormEncoded,
-            Accept: OAS.mimeJSON,
-          },
-          body: auth,
-          keepalive: true,
-        })
-          .then((response) => {
-            if (response.ok) {
-              if (
-                response.status == 200 &&
-                toInteger(response.headers.get("Content-Length")) > 0
-              ) {
-                return response.json();
-              }
-              return null;
-            } else {
-              res.sendStatus(response.status);
-              return undefined;
-            }
-          })
-          .then(async (data) => {
-            if (res.headersSent) return;
+        try {
+          let response = await fetch(oauthToken, {
+            method: "POST",
+            headers: {
+              "Content-Type": OAS.mimeUrlFormEncoded,
+              Accept: OAS.mimeJSON,
+            },
+            body: auth,
+            keepalive: true,
+            signal: AbortSignal.timeout(endpointRetryMs),
+          });
+          if (response.ok && response.status == 200) {
+            let data = await response.json();
             if (data != null) {
-              resJson = data;
-              res.contentType(OAS.mimeJSON).status(200).json(resJson);
+              res.contentType(OAS.mimeJSON).status(200).json(data);
             } else {
               res.sendStatus(401);
             }
-          })
-          .catch((err) => {
-            if (!res.headersSent) {
-              res.contentType(OAS.mimeJSON).status(404).json({
-                errors: err,
+          } else {
+            if (DEBUG) {
+              let errText = await response.text().catch(() => "");
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "loginRefresh", {
+                url: oauthToken,
+                status: response.status,
+                error: errText || response.statusText,
               });
             }
-          });
+            res.sendStatus(response.status);
+          }
+        } catch (err) {
+          LOGGER.error(
+            dayjs().format(OAS.dayjsFormat),
+            "error",
+            "loginRefresh",
+            {
+              url: oauthToken,
+              error: err?.message || err,
+            }
+          );
+          if (!res.headersSent) {
+            res.contentType(OAS.mimeJSON).status(502).json({
+              errors: err?.message || String(err),
+            });
+          }
+        }
       } else {
         res.sendStatus(401);
       }
@@ -698,45 +846,39 @@ var run = async () => {
     }
   });
 
-  app.post(serveUrlPrefix + "/login", function (req, res, next) {
+  app.post(serveUrlPrefix + "/login", async function (req, res, next) {
     if (oauth) {
+      if (oauthToken == null) {
+        await discoverOAuth();
+      }
+      if (oauthToken == null) {
+        return res.sendStatus(503);
+      }
       if (req.body?.username != null && req.body?.password != null) {
-        let resJson = {};
         let auth = new URLSearchParams({
           client_id: oauthSecretId,
           client_secret: oauthSecret,
           grant_type: "password",
           password: req.body.password,
-          scope: "openid ni",
+          scope: "openid " + oauthSecretId,
           username: req.body.username,
         });
-        fetch(oauthToken, {
-          method: "POST",
-          headers: {
-            "Content-Type": OAS.mimeUrlFormEncoded,
-            Accept: OAS.mimeJSON,
-          },
-          body: auth,
-          keepalive: true,
-        })
-          .then((response) => {
-            if (response.ok) {
-              if (
-                response.status == 200 &&
-                toInteger(response.headers.get("Content-Length")) > 0
-              ) {
-                return response.json();
-              }
-              return null;
-            } else {
-              res.sendStatus(response.status);
-              return undefined;
-            }
-          })
-          .then(async (data) => {
-            if (res.headersSent) return;
+        try {
+          let response = await fetch(oauthToken, {
+            method: "POST",
+            headers: {
+              "Content-Type": OAS.mimeUrlFormEncoded,
+              Accept: OAS.mimeJSON,
+            },
+            body: auth,
+            keepalive: true,
+            signal: AbortSignal.timeout(endpointRetryMs),
+          });
+          if (response.ok && response.status == 200) {
+            let data = await response.json();
             if (data != null) {
-              resJson = {
+              let resJson = {
+                id_token: data.id_token,
                 access_token: data.access_token,
                 expires_in: data.expires_in,
                 refresh_expires_in: data.refresh_expires_in,
@@ -749,14 +891,28 @@ var run = async () => {
             } else {
               res.sendStatus(401);
             }
-          })
-          .catch((err) => {
-            if (!res.headersSent) {
-              res.contentType(OAS.mimeJSON).status(404).json({
-                errors: err,
+          } else {
+            if (DEBUG) {
+              let errText = await response.text().catch(() => "");
+              LOGGER.debug(dayjs().format(OAS.dayjsFormat), "login", {
+                url: oauthToken,
+                status: response.status,
+                error: errText || response.statusText,
               });
             }
+            res.sendStatus(response.status);
+          }
+        } catch (err) {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "login", {
+            url: oauthToken,
+            error: err?.message || err,
           });
+          if (!res.headersSent) {
+            res.contentType(OAS.mimeJSON).status(502).json({
+              errors: err?.message || String(err),
+            });
+          }
+        }
       } else {
         res.sendStatus(401);
       }

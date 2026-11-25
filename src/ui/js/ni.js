@@ -438,7 +438,6 @@ function tokenRefresh() {
       clearTimeout(niOAuthRefresh);
     }
     let auth = new URLSearchParams({
-      client_id: clientId,
       grant_type: "refresh_token",
       scope: localStorage.getItem("ni.auth.scope"),
       refresh_token: localStorage.getItem("ni.auth.refreshToken"),
@@ -453,10 +452,7 @@ function tokenRefresh() {
     })
       .then((response) => {
         if (response.ok) {
-          if (
-            response.status == 200 &&
-            toInteger(response.headers.get("Content-Length")) > 0
-          ) {
+          if (response.status == 200) {
             return response.json();
           }
         } else if (response.status == 401) {
@@ -502,10 +498,7 @@ function login(username, password, oauth = false) {
       })
         .then((response) => {
           if (response.ok) {
-            if (
-              response.status == 200 &&
-              toInteger(response.headers.get("Content-Length")) > 0
-            ) {
+            if (response.status == 200) {
               return response.json();
             }
           } else if (response.status == 400) {
@@ -560,8 +553,9 @@ function logout() {
   let oauth = toBoolean(localStorage.getItem("ni.auth.oauth"));
   if (oauth) {
     let auth = new URLSearchParams({
-      access_token: localStorage.getItem("ni.auth.accessToken"),
-      refresh_token: localStorage.getItem("ni.auth.refreshToken"),
+      id_token: localStorage.getItem("ni.auth.idToken") || "",
+      access_token: localStorage.getItem("ni.auth.accessToken") || "",
+      refresh_token: localStorage.getItem("ni.auth.refreshToken") || "",
     });
     let status = fetch(localStorage.getItem("ni.rootUrl") + "/logout", {
       method: "POST",
@@ -589,15 +583,178 @@ function logout() {
   }
   window.location.replace(localStorage.getItem("ni.rootUrl"));
 }
-function loadScript(scriptPath, callback, id = "mapRender") {
+function buildGoogleMapsScriptUrl(rawUrl, callbackName = "displayMap") {
+  if (typeof rawUrl !== "string" || rawUrl.trim().length === 0) {
+    console.error("Invalid Google Maps script URL:", rawUrl);
+    return null;
+  }
+  try {
+    let parsed = new URL(rawUrl.trim(), window.location.origin);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+      console.error("Unsupported Google Maps script URL protocol:", parsed.protocol);
+      return null;
+    }
+    let apiKey = parsed.searchParams.get("key");
+    if (
+      apiKey == null ||
+      apiKey.trim().length === 0 ||
+      apiKey === "null" ||
+      apiKey === "undefined"
+    ) {
+      console.error("Google Maps script URL is missing a valid API key");
+      return null;
+    }
+    parsed.searchParams.set("v", "weekly");
+    parsed.searchParams.set("loading", "async");
+    let existingLibs = (parsed.searchParams.get("libraries") || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+    if (!existingLibs.includes("marker")) {
+      existingLibs.push("marker");
+    }
+    parsed.searchParams.set("libraries", existingLibs.join(","));
+    if (typeof callbackName === "string" && callbackName.trim().length > 0) {
+      parsed.searchParams.set("callback", callbackName.trim());
+    }
+    return parsed.toString();
+  } catch (e) {
+    console.error("Failed to parse Google Maps script URL:", e);
+    return null;
+  }
+}
+function validateMapRenderResponse(data) {
+  if (data == null || typeof data !== "object") {
+    console.error("Invalid /ui/mapRender response payload");
+    return null;
+  }
+  let vendor =
+    typeof data.vendor === "string" && data.vendor.trim().length > 0
+      ? data.vendor.trim()
+      : null;
+  let url =
+    typeof data.url === "string" && data.url.trim().length > 0
+      ? data.url.trim()
+      : null;
+  if (vendor == null || url == null) {
+    console.error("Incomplete /ui/mapRender response payload:", data);
+    return null;
+  }
+  let mapId =
+    typeof data.mapId === "string" && data.mapId.trim().length > 0
+      ? data.mapId.trim()
+      : "DEMO_MAP_ID";
+  return { vendor, url, mapId };
+}
+function validateMapCoordinate(coord) {
+  if (coord == null || typeof coord !== "object") {
+    return null;
+  }
+  let lng = Number(coord.x);
+  let lat = Number(coord.y);
   if (
-    document.getElementById(id) === undefined ||
-    document.getElementById(id) == null
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng) ||
+    lat < -90 ||
+    lat > 90 ||
+    lng < -180 ||
+    lng > 180
   ) {
+    return null;
+  }
+  return { lat, lng };
+}
+function createMapPinElement(iconClass, bgColor = "#D93025") {
+  let pin = document.createElement("div");
+  pin.style.width = "30px";
+  pin.style.height = "30px";
+  pin.style.borderRadius = "50% 50% 50% 0";
+  pin.style.transform = "rotate(-45deg)";
+  pin.style.backgroundColor = bgColor;
+  pin.style.border = "2px solid #ffffff";
+  pin.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.45)";
+  pin.style.display = "flex";
+  pin.style.alignItems = "center";
+  pin.style.justifyContent = "center";
+  pin.style.cursor = "pointer";
+  let icon = document.createElement("i");
+  icon.className = iconClass;
+  icon.style.transform = "rotate(45deg)";
+  icon.style.color = "#ffffff";
+  icon.style.fontSize = "14px";
+  pin.appendChild(icon);
+  return pin;
+}
+function createMapDotElement(color, sizePx = 12) {
+  let dot = document.createElement("div");
+  dot.style.width = sizePx + "px";
+  dot.style.height = sizePx + "px";
+  dot.style.borderRadius = "50%";
+  dot.style.backgroundColor = color;
+  dot.style.border = "1px solid rgba(0, 0, 0, 0.35)";
+  dot.style.boxSizing = "border-box";
+  return dot;
+}
+function loadGoogleMaps(scriptUrl, initCallback, id = "mapRender") {
+  if (typeof initCallback !== "function") {
+    console.error("Google Maps init callback is required");
+    return false;
+  }
+  if (
+    window.google &&
+    window.google.maps &&
+    typeof window.google.maps.importLibrary === "function"
+  ) {
+    Promise.resolve(initCallback()).catch((e) => console.error(e));
+    return true;
+  }
+  window.displayMap = function () {
+    Promise.resolve(initCallback()).catch((e) => console.error(e));
+  };
+  let existing = document.getElementById(id);
+  if (existing != null) {
+    return true;
+  }
+  if (typeof scriptUrl !== "string" || scriptUrl.trim().length === 0) {
+    console.error("Google Maps script URL is missing or invalid");
+    return false;
+  }
+  let s = document.createElement("script");
+  s.id = id;
+  s.src = scriptUrl;
+  s.async = true;
+  s.defer = true;
+  s.onerror = function (err) {
+    console.error("Failed to load Google Maps script:", err);
+    if (s.parentNode) {
+      s.parentNode.removeChild(s);
+    }
+  };
+  document.head.appendChild(s);
+  return true;
+}
+function loadScript(scriptPath, callback, id = "mapRender") {
+  if (typeof scriptPath !== "string" || scriptPath.trim().length === 0) {
+    console.error("loadScript called with invalid scriptPath:", scriptPath);
+    return;
+  }
+  if (document.getElementById(id) == null) {
     let s = document.createElement("script");
     s.setAttribute("id", id);
     s.setAttribute("src", scriptPath);
-    s.onload = callback();
+    s.async = true;
+    s.defer = true;
+    if (typeof callback === "function") {
+      s.onload = function () {
+        callback();
+      };
+    }
+    s.onerror = function (err) {
+      console.error("Failed to load script:", scriptPath, err);
+      if (s.parentNode) {
+        s.parentNode.removeChild(s);
+      }
+    };
     document.head.appendChild(s);
   }
 }

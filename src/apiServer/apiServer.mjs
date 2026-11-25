@@ -20784,40 +20784,74 @@ var run = async () => {
               ddRows[0][3]
             );
             let mapKey = null;
-            switch (ddRows[0][3]) {
-              case OAS.secretTypeToken:
-                mapKey = mapSecret.token.key;
-                break;
-              case OAS.secretTypeIdentity:
-                mapKey = mapSecret.identity.token;
-                break;
+            if (mapSecret != null) {
+              switch (ddRows[0][3]) {
+                case OAS.secretTypeToken:
+                  mapKey = mapSecret?.token?.key ?? null;
+                  break;
+                case OAS.secretTypeIdentity:
+                  mapKey = mapSecret?.identity?.token ?? null;
+                  break;
+              }
             }
+            if (typeof mapKey !== "string" || mapKey.trim().length === 0) {
+              res
+                .contentType(OAS.mimeJSON)
+                .status(404)
+                .json({ errors: "default map provider credentials not found" });
+              return;
+            }
+            if (typeof ddRows[0][2] !== "string" || ddRows[0][2].trim().length === 0) {
+              res
+                .contentType(OAS.mimeJSON)
+                .status(500)
+                .json({ errors: "default map provider renderUrl not configured" });
+              return;
+            }
+            let parsedRenderUrl;
+            try {
+              parsedRenderUrl = new URL(ddRows[0][2].trim());
+            } catch (urlErr) {
+              res
+                .contentType(OAS.mimeJSON)
+                .status(500)
+                .json({ errors: "invalid default map provider renderUrl" });
+              return;
+            }
+            parsedRenderUrl.searchParams.set("key", mapKey.trim());
+            let resolvedUrl = parsedRenderUrl.toString();
 
             switch (ddRows[0][1]) {
               case OAS.mapVendorOpenStreetMap:
                 resJson = {
                   vendor: OAS.mapVendorOpenStreetMap,
-                  url: ddRows[0][2] + "?key=" + mapKey,
+                  url: resolvedUrl,
                 };
                 break;
               case OAS.mapVendorGoogleMaps:
                 resJson = {
                   vendor: OAS.mapVendorGoogleMaps,
-                  url: ddRows[0][2] + "?key=" + mapKey,
+                  url: resolvedUrl,
                 };
                 break;
               case OAS.mapVendorMicrosoftAzure:
                 resJson = {
                   vendor: OAS.mapVendorMicrosoftAzure,
-                  url: ddRows[0][2] + "?key=" + mapKey,
+                  url: resolvedUrl,
                 };
                 break;
               case OAS.mapVendorERSI:
                 resJson = {
                   vendor: OAS.mapVendorERSI,
-                  url: ddRows[0][2] + "?key=" + mapKey,
+                  url: resolvedUrl,
                 };
                 break;
+              default:
+                res
+                  .contentType(OAS.mimeJSON)
+                  .status(404)
+                  .json({ errors: "unsupported default map provider" });
+                return;
             }
             res.contentType(OAS.mimeJSON).status(200).json(resJson);
           } else {

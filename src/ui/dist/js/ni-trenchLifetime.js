@@ -1,1 +1,444 @@
-var trenchPath,lineSymbol,tPath=[],tPoly=[];let trenchId=null,mapVendor=null,trenchCoordinates={},trenchColor="#8B0000",trenchOpacity=1,startMarker=[],endMarker=[],mapCenter={lat:0,lng:0},mapRenderUrl=null;var ductPanel=null,polePanel=null;let ductList="",poleList="";var tipObj=null;function injectTooltip(e,t){!tipObj&&e&&((tipObj=document.createElement("div")).setAttribute("class","mappolytooltip"),tipObj.innerHTML=t,document.body.appendChild(tipObj))}function deleteTooltip(e){tipObj&&(document.body.removeChild(tipObj),tipObj=null)}function fetchTrenchPremisesPassed(e,t){fetch(localStorage.getItem("ni.gatewayUrl")+"/trench/premisesPassed/"+e+"?point="+t,{method:"GET",headers:{Accept:"application/json"},keepalive:!0}).then((e=>{if(e.ok)return e.json()})).then((e=>{null!=e&&null!=e.passed&&document.getElementById("trenchPremisesPassed").setAttribute("value",e.passed)})).catch((e=>{console.error(e)}))}function fetchTrenchDistance(e,t){fetch(localStorage.getItem("ni.gatewayUrl")+"/trench/distance/"+e+"?point="+t,{method:"GET",headers:{Accept:"application/json"},keepalive:!0}).then((e=>{if(e.ok)return e.json()})).then((e=>{null!=e&&null!=e.distance&&null!=e.unit&&document.getElementById("trenchDistance").setAttribute("value",e.distance+e.unit)})).catch((e=>{console.error(e)}))}function fetchListTrench(){fetch(localStorage.getItem("ni.gatewayUrl")+"/trench?country="+niSelectedCountry,{method:"GET",headers:{Accept:"application/json"},keepalive:!0}).then((e=>{if(e.ok)return e.json()})).then((e=>{let t=window.location.pathname.replace(localStorage.getItem("ni.rootUrl")+"/trenchLifetime/",""),n="<option disabled value='-1' selected='selected'> -- select a trench -- </option>";null!=t&&(n="<option disabled value='-1'> -- select a trench -- </option>");for(var o=0;o<e.length;o++)t==e[o]?n+="<option value='"+e[o]+"' selected='selected'>"+e[o]+"</option>":n+="<option value='"+e[o]+"' >"+e[o]+"</option>";document.getElementById("trenchId").innerHTML=n,document.getElementById("trenchDistance").setAttribute("value",""),null!=t&&fetchTrenchGeometryLifetime()})).catch((e=>{console.error(e)}))}function fetchMapRender(){fetch(localStorage.getItem("ni.gatewayUrl")+"/ui/mapRender",{method:"GET",headers:{Accept:"application/json"},keepalive:!0}).then((e=>{if(e.ok)return e.json()})).then((e=>{null!=e.vendor&&(document.getElementById("mapVendor").innerHTML="<option value='"+e.vendor+"' selected='selected'>"+e.vendor+"</option>"),null!=e.url&&(mapRenderUrl=e.url+"&loading=async&callback=displayMap&v=weekly")})).catch((e=>{console.error(e)}))}async function wipeMapClean(){if(null!=startMarker){for(let e=0;e<startMarker.length;e++)startMarker[e].setMap(null),startMarker[e]=null;startMarker.splice(0,startMarker.length)}if(null!=endMarker){for(let e=0;e<endMarker.length;e++)endMarker[e].setMap(null),endMarker[e]=null;endMarker.splice(0,endMarker.length)}if(Object.keys(tPoly).length>0){for(let e in tPoly)tPoly[e].setMap(null),tPoly[e]=null;tPoly=[]}null!=tPath&&tPath.splice(0,tPath.length)}async function drawOnMap(){trenchCoordinates.sets.length>0&&(fetchTrenchPremisesPassed(trenchId,trenchCoordinates.sets[trenchCoordinates.sets.length-1].point),fetchTrenchDistance(trenchId,trenchCoordinates.sets[trenchCoordinates.sets.length-1].point));for(let e=0;e<trenchCoordinates.sets.length;e++){let t=trenchCoordinates.sets[e].point;"predicted"==trenchCoordinates.sets[e].source?(trenchOpacity=0,trenchColor=e%2==0?"#FFFF00":"#CCCC00"):(trenchOpacity=1,trenchColor=e%2==0?"#8B0000":"#FF6600"),tPath[t]=[];for(let e=0;e<trenchCoordinates[t].length;e++)0==e&&(startMarker[t]=new google.maps.Marker({position:{lat:trenchCoordinates[t][e].y,lng:trenchCoordinates[t][e].x},icon:{path:google.maps.SymbolPath.CIRCLE,scale:6,strokeOpacity:0,strokeColor:trenchColor,fillOpacity:1,fillColor:trenchColor},map,title:t})),e==trenchCoordinates[t].length-1&&e>0&&(endMarker[t]=new google.maps.Marker({position:{lat:trenchCoordinates[t][e].y,lng:trenchCoordinates[t][e].x},icon:{path:google.maps.SymbolPath.CIRCLE,scale:6,strokeOpacity:0,strokeColor:trenchColor,fillOpacity:1,fillColor:trenchColor},map,title:t})),tPath[t].push({lat:trenchCoordinates[t][e].y,lng:trenchCoordinates[t][e].x});tPoly[t]=new google.maps.Polyline({path:tPath[t],strokeOpacity:trenchOpacity,strokeColor:trenchColor,strokeWeight:4,icons:[{icon:lineSymbol,offset:"0",repeat:"20px"}],map}),tPoly[t].setMap(map),google.maps.event.addListener(tPoly[t],"click",(function(e){(ductPanel=new google.maps.InfoWindow({headerContent:"Ducts",position:e.latLng,content:"<ul><li>none</li></ul>"})).open({shouldFocus:!0,map})})),google.maps.event.addListener(tPoly[t],"mouseover",(function(e){injectTooltip(e,trenchId)})),google.maps.event.addListener(tPoly[t],"mouseout",(function(e){deleteTooltip(e)})),google.maps.event.addListener(tPoly[t],"rightclick",(function(e){(polePanel=new google.maps.InfoWindow({headerContent:"Poles",position:e.latLng,content:"<ul><li>none</li></ul>"})).open({shouldFocus:!0,map})}))}}async function fetchTrenchGeometryLifetime(){let e=document.getElementById("trenchId");trenchId=e.options[e.selectedIndex].value,await fetch(localStorage.getItem("ni.gatewayUrl")+"/trench/geometry/lifetime/"+trenchId,{method:"GET",headers:{Accept:"application/json"},keepalive:!0}).then((e=>{if(e.ok)return e.json()})).then((e=>{if(null!=e&&(trenchCoordinates={},trenchCoordinates=JSON.parse(JSON.stringify(e)),trenchCoordinates.sets.length>0)){let e=trenchCoordinates.sets[0].point;trenchCoordinates[e].length>0&&(mapCenter={lat:trenchCoordinates[e][0].y,lng:trenchCoordinates[e][0].x})}void 0!==document.getElementById("mapRender")&&null!=document.getElementById("mapRender")&&(map.setCenter(mapCenter),wipeMapClean(),drawOnMap())})).catch((e=>{console.error(e)})),loadScript(mapRenderUrl,(function(){window.displayMap=function(){map=new google.maps.Map(document.getElementById("map"),{zoom:17,center:mapCenter,mapTypeId:"hybrid",disableDefaultUI:!0}),lineSymbol={path:"M 0,-1 0,1",strokeOpacity:1,scale:4},drawOnMap()}}))}try{fetchMapRender(),countryListPopulate(fetchListTrench)}catch(e){console.error(e)}
+//=====================================================================
+// Network Insight (NI) - JavaScript: trenchLifetime
+//
+// Corporate Headquarters:
+// Cowdrey Consulting · United Kingdom · T:+447442104556
+// https://www.cowdrey.net/
+//
+// © 2026 Cowdrey Consulting. All rights reserved.
+//=====================================================================
+//
+var map = null;
+var trenchPath;
+var tPath = {};
+var tPoly = {};
+var lineSymbol;
+let trenchId = null;
+let mapVendor = null;
+let mapId = "DEMO_MAP_ID";
+let trenchCoordinates = {};
+let trenchColor = "#8B0000";
+let trenchOpacity = 1.0;
+let startMarker = {};
+let endMarker = {};
+let mapCenter = { lat: 0, lng: 0 };
+let mapRenderUrl = null;
+let mapRenderReady = null;
+let MapCtor = null;
+let PolylineCtor = null;
+let InfoWindowCtor = null;
+let AdvancedMarkerElementCtor = null;
+var ductPanel = null;
+var polePanel = null;
+let ductList = "";
+let poleList = "";
+var tipObj = null;
+
+function injectTooltip(event, data) {
+  if (!tipObj && event) {
+    tipObj = document.createElement("div");
+    tipObj.setAttribute("class", "mappolytooltip");
+    tipObj.innerHTML = data;
+    document.body.appendChild(tipObj);
+  }
+}
+function deleteTooltip(event) {
+  if (tipObj) {
+    //delete the tooltip if it exists in the DOM
+    document.body.removeChild(tipObj);
+    tipObj = null;
+  }
+}
+function fetchTrenchPremisesPassed(id, p) {
+  fetch(
+    localStorage.getItem("ni.gatewayUrl") +
+      "/trench/premisesPassed/" +
+      id +
+      "?point=" +
+      p,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        if (data.passed != null) {
+          document
+            .getElementById("trenchPremisesPassed")
+            .setAttribute("value", data.passed);
+        }
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}
+function fetchTrenchDistance(id, p) {
+  fetch(
+    localStorage.getItem("ni.gatewayUrl") +
+      "/trench/distance/" +
+      id +
+      "?point=" +
+      p,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    })
+    .then((data) => {
+      if (data != null) {
+        if (data.distance != null && data.unit != null) {
+          document
+            .getElementById("trenchDistance")
+            .setAttribute("value", data.distance + data.unit);
+        }
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}
+function fetchListTrench() {
+  fetch(
+    localStorage.getItem("ni.gatewayUrl") +
+      "/trench?country=" +
+      niSelectedCountry,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    })
+    .then((data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
+      let suppliedTrenchId = window.location.pathname.replace(
+        localStorage.getItem("ni.rootUrl") + "/trenchLifetime/",
+        ""
+      );
+      let trenchIds =
+        "<option disabled value='-1' selected='selected'> -- select a trench -- </option>";
+      if (suppliedTrenchId != null) {
+        trenchIds =
+          "<option disabled value='-1'> -- select a trench -- </option>";
+      }
+      for (var i = 0; i < data.length; i++) {
+        if (suppliedTrenchId == data[i]) {
+          trenchIds +=
+            "<option value='" +
+            data[i] +
+            "' selected='selected'>" +
+            data[i] +
+            "</option>";
+        } else {
+          trenchIds +=
+            "<option value='" + data[i] + "' >" + data[i] + "</option>";
+        }
+      }
+      document.getElementById("trenchId").innerHTML = trenchIds;
+      document.getElementById("trenchDistance").setAttribute("value", "");
+      if (suppliedTrenchId != null) {
+        fetchTrenchGeometryLifetime();
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}
+
+function fetchMapRender() {
+  mapRenderReady = fetch(
+    localStorage.getItem("ni.gatewayUrl") + "/ui/mapRender",
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      console.error("Failed to fetch /ui/mapRender:", response.status);
+    })
+    .then((data) => {
+      let validated = validateMapRenderResponse(data);
+      if (validated == null) {
+        return;
+      }
+      mapVendor = validated.vendor;
+      mapId = validated.mapId;
+      document.getElementById("mapVendor").innerHTML =
+        "<option value='" +
+        validated.vendor +
+        "' selected='selected'>" +
+        validated.vendor +
+        "</option>";
+      // <option disabled value='OpenStreet Map'>OpenStreet Map</option>
+      // <option disabled value='Microsoft Azure'>Microsoft Azure</option>
+      // <option disabled value='ERSI'>ERSI</option>
+      mapRenderUrl = buildGoogleMapsScriptUrl(validated.url, "displayMap");
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+  return mapRenderReady;
+}
+async function wipeMapClean() {
+  for (let key in startMarker) {
+    if (startMarker[key] != null) {
+      startMarker[key].map = null;
+      startMarker[key] = null;
+    }
+  }
+  startMarker = {};
+  for (let key in endMarker) {
+    if (endMarker[key] != null) {
+      endMarker[key].map = null;
+      endMarker[key] = null;
+    }
+  }
+  endMarker = {};
+  for (let key in tPoly) {
+    if (tPoly[key] != null) {
+      tPoly[key].setMap(null);
+      tPoly[key] = null;
+    }
+  }
+  tPoly = {};
+  tPath = {};
+}
+async function drawOnMap() {
+  if (
+    map == null ||
+    PolylineCtor == null ||
+    AdvancedMarkerElementCtor == null ||
+    !Array.isArray(trenchCoordinates?.sets)
+  ) {
+    return;
+  }
+  if (trenchCoordinates.sets.length > 0) {
+    let lastPoint =
+      trenchCoordinates.sets[trenchCoordinates.sets.length - 1]?.point;
+    if (lastPoint != null) {
+      fetchTrenchPremisesPassed(trenchId, lastPoint);
+      fetchTrenchDistance(trenchId, lastPoint);
+    }
+  }
+  for (let s = 0; s < trenchCoordinates.sets.length; s++) {
+    let setInfo = trenchCoordinates.sets[s];
+    if (setInfo == null || setInfo.point == null) {
+      continue;
+    }
+    let tSet = setInfo.point;
+    let rawCoords = trenchCoordinates[tSet];
+    if (!Array.isArray(rawCoords) || rawCoords.length === 0) {
+      continue;
+    }
+    if (setInfo.source == "predicted") {
+      trenchOpacity = 0;
+      if (s % 2 == 0) {
+        trenchColor = "#FFFF00";
+      } else {
+        trenchColor = "#CCCC00";
+      }
+    } else {
+      trenchOpacity = 1.0;
+      if (s % 2 == 0) {
+        trenchColor = "#8B0000";
+      } else {
+        trenchColor = "#FF6600";
+      }
+    }
+    tPath[tSet] = [];
+    for (let c = 0; c < rawCoords.length; c++) {
+      let coord = validateMapCoordinate(rawCoords[c]);
+      if (coord != null) {
+        tPath[tSet].push(coord);
+      }
+    }
+    if (tPath[tSet].length === 0) {
+      continue;
+    }
+    startMarker[tSet] = new AdvancedMarkerElementCtor({
+      position: tPath[tSet][0],
+      content: createMapDotElement(trenchColor, 12),
+      map: map,
+      title: String(tSet),
+    });
+    if (tPath[tSet].length > 1) {
+      endMarker[tSet] = new AdvancedMarkerElementCtor({
+        position: tPath[tSet][tPath[tSet].length - 1],
+        content: createMapDotElement(trenchColor, 12),
+        map: map,
+        title: String(tSet),
+      });
+    }
+    tPoly[tSet] = new PolylineCtor({
+      path: tPath[tSet],
+      strokeOpacity: trenchOpacity,
+      strokeColor: trenchColor,
+      strokeWeight: 4,
+      icons: [
+        {
+          icon: lineSymbol,
+          offset: "0",
+          repeat: "20px",
+        },
+      ],
+      map: map,
+    });
+    tPoly[tSet].addListener("click", function (h) {
+      if (ductPanel != null) {
+        ductPanel.close();
+      }
+      ductPanel = new InfoWindowCtor({
+        headerContent: "Ducts",
+        position: h.latLng,
+        content: "<ul><li>none</li></ul>",
+      });
+      ductPanel.open({
+        shouldFocus: true,
+        map: map,
+      });
+    });
+    tPoly[tSet].addListener("mouseover", function (e) {
+      injectTooltip(e, trenchId);
+    });
+    tPoly[tSet].addListener("mouseout", function (e) {
+      deleteTooltip(e);
+    });
+    tPoly[tSet].addListener("rightclick", function (h) {
+      if (polePanel != null) {
+        polePanel.close();
+      }
+      polePanel = new InfoWindowCtor({
+        headerContent: "Poles",
+        position: h.latLng,
+        content: "<ul><li>none</li></ul>",
+      });
+      polePanel.open({
+        shouldFocus: true,
+        map: map,
+      });
+    });
+  }
+}
+async function displayMap() {
+  try {
+    const mapsLib = await google.maps.importLibrary("maps");
+    const markerLib = await google.maps.importLibrary("marker");
+    MapCtor = mapsLib.Map;
+    PolylineCtor = mapsLib.Polyline;
+    InfoWindowCtor = mapsLib.InfoWindow;
+    AdvancedMarkerElementCtor = markerLib.AdvancedMarkerElement;
+
+    map = new MapCtor(document.getElementById("map"), {
+      zoom: 17,
+      center: mapCenter,
+      mapTypeId: "hybrid",
+      mapId: mapId,
+      disableDefaultUI: true,
+    });
+    lineSymbol = {
+      path: "M 0,-1 0,1",
+      strokeOpacity: 1.0,
+      scale: 4,
+    };
+    await drawOnMap();
+  } catch (e) {
+    console.error("Failed to initialize Google Map for trenchLifetime:", e);
+  }
+}
+async function fetchTrenchGeometryLifetime() {
+  let t = document.getElementById("trenchId");
+  trenchId = t.options[t.selectedIndex].value;
+  if (trenchId == "-1") {
+    return;
+  }
+
+  await fetch(
+    localStorage.getItem("ni.gatewayUrl") +
+      "/trench/geometry/lifetime/" +
+      trenchId,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      keepalive: true,
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    })
+    .then(async (data) => {
+      if (data != null && typeof data === "object") {
+        trenchCoordinates = JSON.parse(JSON.stringify(data));
+        if (
+          Array.isArray(trenchCoordinates.sets) &&
+          trenchCoordinates.sets.length > 0
+        ) {
+          let tSet = trenchCoordinates.sets[0]?.point;
+          if (
+            tSet != null &&
+            Array.isArray(trenchCoordinates[tSet]) &&
+            trenchCoordinates[tSet].length > 0
+          ) {
+            let firstCoord = validateMapCoordinate(trenchCoordinates[tSet][0]);
+            if (firstCoord != null) {
+              mapCenter = firstCoord;
+            }
+          }
+        }
+      }
+      if (map != null) {
+        map.setCenter(mapCenter);
+        await wipeMapClean();
+        await drawOnMap();
+      } else {
+        if (mapRenderReady != null) {
+          await mapRenderReady;
+        }
+        loadGoogleMaps(mapRenderUrl, displayMap);
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}
+try {
+  fetchMapRender();
+  countryListPopulate(fetchListTrench);
+} catch (e) {
+  console.error(e);
+}
