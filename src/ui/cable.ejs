@@ -62,18 +62,18 @@
 
         .cable-panel {
             width: 75%;
-            height: calc(40vh - 10px);
+            min-height: 420px;
             margin-top: 20px;
             margin-left: 20px;
-            display: grid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .grid {
-            --max-cable-rows=48;
-            --max-cable-columns=1;
-            display: grid;
-            grid-template-rows: 40px repeat(var(--max-cable-rows), 40px) 40px;
-            grid-template-columns: repeat(var(--max-cable-columns), 40fr);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
         }
 

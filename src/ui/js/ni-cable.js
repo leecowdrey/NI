@@ -11,6 +11,437 @@
 let cableId = null;
 let cableRawPoints = [];
 let point = null;
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function createSvgElement(tag, attrs = {}) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    el.setAttribute(key, String(value));
+  }
+  return el;
+}
+
+function getCableStateStyle(state, source) {
+  const stroke = source === "predicted" ? "#ffff00" : "#ffffff";
+  switch (state) {
+    case "free":
+      return { fill: "#008000", stroke, text: "#ffffff" };
+    case "used":
+      return { fill: "#000000", stroke, text: "#ffffff" };
+    case "reserved":
+      return { fill: "#808080", stroke, text: "#ffffff" };
+    case "faulty":
+      return { fill: "#ff0000", stroke, text: "#ffffff" };
+    default:
+      return { fill: "#333333", stroke, text: "#ffffff" };
+  }
+}
+
+function packCirclesInCircle(count, containerRadius, gap = 2) {
+  if (count <= 0 || containerRadius <= 0) {
+    return { radius: 0, positions: [] };
+  }
+  if (count === 1) {
+    return {
+      radius: Math.max(1, containerRadius - gap),
+      positions: [{ x: 0, y: 0 }],
+    };
+  }
+  if (count === 2) {
+    const r = Math.max(1, (containerRadius - gap * 1.5) / 2);
+    const d = r + gap / 2;
+    return {
+      radius: r,
+      positions: [
+        { x: -d, y: 0 },
+        { x: d, y: 0 },
+      ],
+    };
+  }
+
+  function buildRings(r, innerCount) {
+    const step = 2 * r + gap;
+    const rings = [];
+    let ringRadius = 0;
+    if (innerCount === 1) {
+      if (r + gap > containerRadius) {
+        return null;
+      }
+      rings.push({ radius: 0, capacity: 1 });
+      ringRadius = step;
+    } else {
+      const sinVal = Math.sin(Math.PI / innerCount);
+      ringRadius = (r + gap / 2) / sinVal;
+      if (ringRadius + r + gap > containerRadius) {
+        return null;
+      }
+      rings.push({ radius: ringRadius, capacity: innerCount });
+      ringRadius += step;
+    }
+    let total = innerCount;
+    while (ringRadius + r + gap <= containerRadius && total < count) {
+      const ratio = (r + gap / 2) / ringRadius;
+      if (ratio >= 1) {
+        break;
+      }
+      const cap = Math.floor(Math.PI / Math.asin(ratio));
+      if (cap < 1) {
+        break;
+      }
+      rings.push({ radius: ringRadius, capacity: cap });
+      total += cap;
+      ringRadius += step;
+    }
+    return total >= count ? rings : null;
+  }
+
+  function findBestRings(r) {
+    for (let inner = 1; inner <= Math.min(6, count); inner++) {
+      const rings = buildRings(r, inner);
+      if (rings) {
+        return rings;
+      }
+    }
+    return null;
+  }
+
+  let low = 0.5;
+  let high = containerRadius / 2;
+  let bestR = low;
+  let bestRings = null;
+  for (let iter = 0; iter < 32; iter++) {
+    const mid = (low + high) / 2;
+    const rings = findBestRings(mid);
+    if (rings) {
+      bestR = mid;
+      bestRings = rings;
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+
+  const positions = [];
+  if (!bestRings) {
+    return { radius: bestR, positions };
+  }
+  let remaining = count;
+  for (let i = 0; i < bestRings.length && remaining > 0; i++) {
+    const ring = bestRings[i];
+    const take = Math.min(remaining, ring.capacity);
+    if (ring.radius === 0) {
+      positions.push({ x: 0, y: 0 });
+    } else {
+      for (let k = 0; k < take; k++) {
+        const angle = -Math.PI / 2 + (2 * Math.PI * k) / take;
+        positions.push({
+          x: ring.radius * Math.cos(angle),
+          y: ring.radius * Math.sin(angle),
+        });
+      }
+    }
+    remaining -= take;
+  }
+  return { radius: bestR, positions };
+}
+
+function drawCableCrossSection(container, data, source) {
+  const size = 400;
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerRadius = 188;
+  const jacketInnerRadius = 170;
+  const isPredicted = source === "predicted";
+
+  const svg = createSvgElement("svg", {
+    viewBox: "0 0 " + size + " " + size,
+    role: "img",
+    "aria-label": "Cable cross-section (" + data.technology + ")",
+    class: "cable-cross-section",
+  });
+  svg.style.width = "100%";
+  svg.style.maxWidth = "400px";
+  svg.style.height = "auto";
+  svg.style.display = "block";
+  svg.style.margin = "0 auto";
+
+  // Outer cable jacket / sheath
+  svg.appendChild(
+    createSvgElement("circle", {
+      cx,
+      cy,
+      r: outerRadius,
+      fill: "#262f40",
+      stroke: isPredicted ? "#ffff00" : "#9aa7bd",
+      "stroke-width": 4,
+    })
+  );
+
+  // Inner insulation / core cavity
+  svg.appendChild(
+    createSvgElement("circle", {
+      cx,
+      cy,
+      r: jacketInnerRadius,
+      fill: "#111827",
+      stroke: "#4b5563",
+      "stroke-width": 2,
+    })
+  );
+
+  const counts = { used: 0, free: 0, reserved: 0, faulty: 0 };
+  const tally = (state) => {
+    if (state === "free") counts.free += 1;
+    else if (state === "used") counts.used += 1;
+    else if (state === "reserved") counts.reserved += 1;
+    else if (state === "faulty") counts.faulty += 1;
+  };
+
+  const drawCoreCircle = (parent, x, y, r, state, label, tooltip, strokeWidth = 1.5) => {
+    const style = getCableStateStyle(state, source);
+    const g = createSvgElement("g");
+    const title = createSvgElement("title");
+    title.textContent = tooltip;
+    g.appendChild(title);
+
+    g.appendChild(
+      createSvgElement("circle", {
+        cx: x.toFixed(2),
+        cy: y.toFixed(2),
+        r: Math.max(1, r).toFixed(2),
+        fill: style.fill,
+        stroke: style.stroke,
+        "stroke-width": strokeWidth,
+      })
+    );
+
+    if (r >= 7 && label != null) {
+      const fontSize = Math.min(16, Math.max(6.5, r * (String(label).length > 2 ? 0.58 : 0.85)));
+      const text = createSvgElement("text", {
+        x: x.toFixed(2),
+        y: y.toFixed(2),
+        fill: style.text,
+        "font-family": "'Courier New', Courier, monospace",
+        "font-size": fontSize.toFixed(1),
+        "font-weight": "bold",
+        "text-anchor": "middle",
+        "dominant-baseline": "central",
+        "pointer-events": "none",
+      });
+      text.textContent = String(label);
+      g.appendChild(text);
+    }
+    parent.appendChild(g);
+  };
+
+  switch (data.technology) {
+    case "coax": {
+      const state = data.configuration.state || "free";
+      tally(state);
+      // Braided outer shield & dielectric rings characteristic of coax cross-section
+      svg.appendChild(
+        createSvgElement("circle", {
+          cx,
+          cy,
+          r: 148,
+          fill: "#1f2937",
+          stroke: "#cbd5e1",
+          "stroke-width": 3,
+          "stroke-dasharray": "6 4",
+        })
+      );
+      svg.appendChild(
+        createSvgElement("circle", {
+          cx,
+          cy,
+          r: 120,
+          fill: "#334155",
+          stroke: "#64748b",
+          "stroke-width": 1.5,
+        })
+      );
+      drawCoreCircle(svg, cx, cy, 64, state, "1", "Coax Core: " + state, 2.5);
+      break;
+    }
+    case "copper": {
+      const state = data.configuration.state || "free";
+      tally(state);
+      const pairs = Math.max(1, toInteger(data.configuration.twistedPairs));
+      // Inner shield ring
+      svg.appendChild(
+        createSvgElement("circle", {
+          cx,
+          cy,
+          r: 152,
+          fill: "#182132",
+          stroke: "#b87333",
+          "stroke-width": 2.5,
+        })
+      );
+      const packed = packCirclesInCircle(pairs, 142, pairs > 12 ? 2 : 3);
+      for (let j = 0; j < packed.positions.length; j++) {
+        const pos = packed.positions[j];
+        drawCoreCircle(
+          svg,
+          cx + pos.x,
+          cy + pos.y,
+          packed.radius,
+          state,
+          j + 1,
+          "Pair " + (j + 1) + ": " + state,
+          packed.radius > 10 ? 1.5 : 1
+        );
+      }
+      break;
+    }
+    case "ethernet": {
+      const state = data.configuration.state || "free";
+      tally(state);
+      // 4 twisted-pair bundles inside an ethernet jacket
+      svg.appendChild(
+        createSvgElement("circle", {
+          cx,
+          cy,
+          r: 152,
+          fill: "#182132",
+          stroke: "#64748b",
+          "stroke-width": 2,
+        })
+      );
+      const packed = packCirclesInCircle(4, 140, 8);
+      for (let j = 0; j < packed.positions.length; j++) {
+        const pos = packed.positions[j];
+        drawCoreCircle(
+          svg,
+          cx + pos.x,
+          cy + pos.y,
+          packed.radius,
+          state,
+          j + 1,
+          "Ethernet Pair " + (j + 1) + ": " + state,
+          2
+        );
+      }
+      break;
+    }
+    case "singleFiber": {
+      const strands = Math.max(1, toInteger(data.configuration.strands));
+      const statesArr = Array.isArray(data.configuration.states)
+        ? data.configuration.states
+        : [];
+      const stateByStrand = new Map();
+      for (let idx = 0; idx < statesArr.length; idx++) {
+        if (statesArr[idx]?.strand != null) {
+          stateByStrand.set(toInteger(statesArr[idx].strand), statesArr[idx].state);
+        }
+      }
+      const gap = strands > 24 ? 2 : 3.5;
+      const packed = packCirclesInCircle(strands, jacketInnerRadius - 6, gap);
+      for (let j = 0; j < strands; j++) {
+        const strandNum = j + 1;
+        const st =
+          stateByStrand.get(strandNum) ||
+          statesArr[j]?.state ||
+          "free";
+        tally(st);
+        const pos = packed.positions[j];
+        drawCoreCircle(
+          svg,
+          cx + pos.x,
+          cy + pos.y,
+          packed.radius,
+          st,
+          strandNum,
+          "Strand " + strandNum + ": " + st,
+          packed.radius > 12 ? 1.8 : 1.2
+        );
+      }
+      break;
+    }
+    case "multiFiber": {
+      const ribbons = Math.max(1, toInteger(data.configuration.ribbons));
+      const strands = Math.max(1, toInteger(data.configuration.strands));
+      const statesArr = Array.isArray(data.configuration.states)
+        ? data.configuration.states
+        : [];
+      const stateByKey = new Map();
+      for (let idx = 0; idx < statesArr.length; idx++) {
+        const entry = statesArr[idx];
+        if (entry?.ribbon != null && entry?.strand != null) {
+          stateByKey.set(
+            toInteger(entry.ribbon) + ":" + toInteger(entry.strand),
+            entry.state
+          );
+        }
+      }
+      const tubeGap = ribbons > 12 ? 2.5 : 4;
+      const packedTubes = packCirclesInCircle(
+        ribbons,
+        jacketInnerRadius - 6,
+        tubeGap
+      );
+      for (let o = 0; o < ribbons; o++) {
+        const tubePos = packedTubes.positions[o];
+        const tx = cx + tubePos.x;
+        const ty = cy + tubePos.y;
+        const tubeR = packedTubes.radius;
+
+        // Buffer tube / ribbon bundle jacket
+        const tubeGroup = createSvgElement("g");
+        const tubeTitle = createSvgElement("title");
+        tubeTitle.textContent = "Ribbon " + (o + 1) + " (" + strands + " strands)";
+        tubeGroup.appendChild(tubeTitle);
+        tubeGroup.appendChild(
+          createSvgElement("circle", {
+            cx: tx.toFixed(2),
+            cy: ty.toFixed(2),
+            r: Math.max(2, tubeR).toFixed(2),
+            fill: "#1e293b",
+            stroke: isPredicted ? "#ffff00" : "#94a3b8",
+            "stroke-width": tubeR > 20 ? 1.8 : 1,
+          })
+        );
+
+        const innerCavity = Math.max(1.5, tubeR - Math.max(1.5, tubeR * 0.08));
+        const strandGap = Math.max(0.6, innerCavity * 0.04);
+        const packedStrands = packCirclesInCircle(strands, innerCavity, strandGap);
+        for (let j = 0; j < strands; j++) {
+          const ribbonNum = o + 1;
+          const strandNum = j + 1;
+          const st =
+            stateByKey.get(ribbonNum + ":" + strandNum) ||
+            statesArr[o * strands + j]?.state ||
+            "free";
+          tally(st);
+          const spos = packedStrands.positions[j];
+          const label =
+            packedStrands.radius >= 11
+              ? ribbonNum + "." + strandNum
+              : packedStrands.radius >= 7
+                ? strandNum
+                : null;
+          drawCoreCircle(
+            tubeGroup,
+            tx + spos.x,
+            ty + spos.y,
+            packedStrands.radius,
+            st,
+            label,
+            "Ribbon " + ribbonNum + " · Strand " + strandNum + ": " + st,
+            packedStrands.radius > 8 ? 1.2 : 0.7
+          );
+        }
+        svg.appendChild(tubeGroup);
+      }
+      break;
+    }
+  }
+
+  container.appendChild(svg);
+  return counts;
+}
+
 function fetchListCable() {
   fetch(
     localStorage.getItem("ni.gatewayUrl") +
@@ -25,11 +456,14 @@ function fetchListCable() {
     }
   )
     .then((response) => {
-      if (response.ok) {
+      if (response.ok && response.status == 200) {
         return response.json();
       }
     })
     .then((data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
       let suppliedCableId = window.location.pathname.replace(
         localStorage.getItem("ni.rootUrl") + "/cable/",
         ""
@@ -37,7 +471,7 @@ function fetchListCable() {
       let cableIds =
         "<option disabled value='-1' selected='selected'> -- select a cable -- </option>";
       if (suppliedCableId != null) {
-        trenchIds =
+        cableIds =
           "<option disabled value='-1'> -- select a cable -- </option>";
       }
       for (var i = 0; i < data.length; i++) {
@@ -90,298 +524,28 @@ function fetchCable(cableId, point = null) {
     }
   )
     .then((response) => {
-      if (response.ok) {
+      if (response.ok && response.status == 200) {
         return response.json();
       }
     })
     .then((data) => {
-      if (data.configuration != null) {
-        let cableOuter = 0;
-        let cableInner = 1;
-        let cableGridMaxOuter = 36;
-        let cableGridMaxInner = 48;
-        let cableGridColumns = 24;
-        let cableUsed = 0;
-        let cableFree = 0;
-        let cableReserved = 0;
-        let cableFaulty = 0;
+      if (data?.configuration != null) {
         let c = document.getElementById("country");
         let selectedCountry = c.options[c.selectedIndex].value;
         let source = "historical";
         if (data.source != null) {
           source = data.source;
         }
-        switch (data.technology) {
-          case "coax":
-            cableOuter = 1;
-            cableInner = 1;
-            break;
-          case "copper":
-            cableOuter = 1;
-            cableInner = 1;
-            break;
-          case "ethernet":
-            cableOuter = 1;
-            cableInner = 1;
-            break;
-          case "singleFiber":
-            cableOuter = 1;
-            cableInner = data.configuration.strands;
-            break;
-          case "multiFiber":
-            cableOuter = data.configuration.ribbons;
-            cableInner = data.configuration.strands;
-            break;
-        }
-        if (cableInner > cableGridMaxInner) {
-          cableGridColumns = Math.max(
-            Math.ceil(cableInner / cableGridMaxInner),
-            cableGridMaxInner
-          );
-        }
+        const counts = drawCableCrossSection(grid, data, source);
+        let cableUsed = counts.used;
+        let cableFree = counts.free;
+        let cableReserved = counts.reserved;
+        let cableFaulty = counts.faulty;
 
-        grid.style.setProperty("--max-cable-rows", cableGridMaxInner);
-        grid.style.setProperty("--max-cable-columns", cableGridColumns);
-
-        for (let o = 0; o < cableOuter; o++) {
-          for (let j = 0; j < cableInner; j++) {
-            let cell = document.createElement("div");
-            cell.setAttribute("id", "cable" + o + "-" + j);
-            switch (data.technology) {
-              case "coax":
-                cell.setAttribute("title", data.configuration.state);
-                switch (data.configuration.state) {
-                  case "free":
-                    cell.setAttribute("title", data.configuration.state);
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFree");
-                    } else {
-                      cell.setAttribute("class", "cableFree");
-                    }
-                    cableFree = cableFree + 1;
-                    break;
-                  case "used":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableUsed");
-                    } else {
-                      cell.setAttribute("class", "cableUsed");
-                    }
-                    cableUsed = cableUsed + 1;
-                    break;
-                  case "reserved":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableReserved");
-                    } else {
-                      cell.setAttribute("class", "cableReserved");
-                    }
-                    cableReserved = cableReserved + 1;
-                    break;
-                  case "faulty":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFaulty");
-                    } else {
-                      cell.setAttribute("class", "cableFaulty");
-                    }
-                    cableFaulty = cableFaulty + 1;
-                    break;
-                }
-                break;
-              case "copper":
-                cell.setAttribute("title", data.configuration.state);
-                switch (data.configuration.state) {
-                  case "free":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFree");
-                    } else {
-                      cell.setAttribute("class", "cableFree");
-                    }
-                    cableFree = cableFree + 1;
-                    break;
-                  case "used":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableUsed");
-                    } else {
-                      cell.setAttribute("class", "cableUsed");
-                    }
-                    cableUsed = cableUsed + 1;
-                    break;
-                  case "reserved":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableReserved");
-                    } else {
-                      cell.setAttribute("class", "cableReserved");
-                    }
-                    cableReserved = cableReserved + 1;
-                    break;
-                  case "faulty":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFaulty");
-                    } else {
-                      cell.setAttribute("class", "cableFaulty");
-                    }
-                    cableFaulty = cableFaulty + 1;
-                    break;
-                }
-                break;
-              case "ethernet":
-                cell.setAttribute("title", data.configuration.state);
-                switch (data.configuration.state) {
-                  case "free":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFree");
-                    } else {
-                      cell.setAttribute("class", "cableFree");
-                    }
-                    cableFree = cableFree + 1;
-                    break;
-                  case "used":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableUsed");
-                    } else {
-                      cell.setAttribute("class", "cableUsed");
-                    }
-                    cableUsed = cableUsed + 1;
-                    break;
-                  case "reserved":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableReserved");
-                    } else {
-                      cell.setAttribute("class", "cableReserved");
-                    }
-                    cableReserved = cableReserved + 1;
-                    break;
-                  case "faulty":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFaulty");
-                    } else {
-                      cell.setAttribute("class", "cableFaulty");
-                    }
-                    cableFaulty = cableFaulty + 1;
-                    break;
-                }
-                break;
-              case "singleFiber":
-                cell.setAttribute(
-                  "title",
-                  data.configuration.states[j].strand +
-                    " " +
-                    data.configuration.states[j].state
-                );
-                switch (data.configuration.states[j].state) {
-                  case "free":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFree");
-                    } else {
-                      cell.setAttribute("class", "cableFree");
-                    }
-                    cableFree = cableFree + 1;
-                    break;
-                  case "used":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableUsed");
-                    } else {
-                      cell.setAttribute("class", "cableUsed");
-                    }
-                    cableUsed = cableUsed + 1;
-                    break;
-                  case "reserved":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableReserved");
-                    } else {
-                      cell.setAttribute("class", "cableReserved");
-                    }
-                    cableReserved = cableReserved + 1;
-                    break;
-                  case "faulty":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFaulty");
-                    } else {
-                      cell.setAttribute("class", "cableFaulty");
-                    }
-                    cableFaulty = cableFaulty + 1;
-                    break;
-                }
-                break;
-              case "multiFiber":
-                cell.setAttribute(
-                  "title",
-                  o +
-                    1 +
-                    "." +
-                    (j + 1) +
-                    " " +
-                    data.configuration.states[j].state
-                );
-                switch (data.configuration.states[j].state) {
-                  case "free":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFree");
-                    } else {
-                      cell.setAttribute("class", "cableFree");
-                    }
-                    cableFree = cableFree + 1;
-                    break;
-                  case "used":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableUsed");
-                    } else {
-                      cell.setAttribute("class", "cableUsed");
-                    }
-                    cableUsed = cableUsed + 1;
-                    break;
-                  case "reserved":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableReserved");
-                    } else {
-                      cell.setAttribute("class", "cableReserved");
-                    }
-                    cableReserved = cableReserved + 1;
-                    break;
-                  case "faulty":
-                    if (source == "predicted") {
-                      cell.setAttribute("class", "predictedCableFaulty");
-                    } else {
-                      cell.setAttribute("class", "cableFaulty");
-                    }
-                    cableFaulty = cableFaulty + 1;
-                    break;
-                }
-                break;
-            }
-
-            cell.classList.add("cell");
-            grid.appendChild(cell);
-            // <i class="fa fa-check"></i> or &#10003;
-            // <i class="fa fa fa-exclamation"></i> or &#x26A0;
-            // <i class="fa fa-times"></i> or &#10060;
-            switch (data.technology) {
-              case "coax":
-                document.getElementById("cable" + o + "-" + j).innerHTML =
-                  "<br>" + (j + 1);
-                break;
-              case "copper":
-                document.getElementById("cable" + o + "-" + j).innerHTML =
-                  "<br>" + (j + 1);
-                break;
-              case "ethernet":
-                document.getElementById("cable" + o + "-" + j).innerHTML =
-                  "<br>" + (j + 1);
-                break;
-              case "singleFiber":
-                document.getElementById("cable" + o + "-" + j).innerHTML =
-                  "<br>" + (j + 1);
-                break;
-              case "multiFiber":
-                document.getElementById("cable" + o + "-" + j).innerHTML =
-                  "<br>" + (o + 1) + "." + (j + 1);
-                break;
-            }
-          }
-        }
         let metadata =
           "<b>Reference:</b>&emsp;" +
-          data.reference +
-          "</b>&emsp;( " +
+          (data.reference != null ? data.reference : "") +
+          "&emsp;( " +
           cableId +
           " )<br>&emsp;Source:&emsp;" +
           data.source +
@@ -525,11 +689,14 @@ function fetchCablePoints() {
       }
     )
       .then((response) => {
-        if (response.ok) {
+        if (response.ok && response.status == 200) {
           return response.json();
         }
       })
       .then((data) => {
+        if (!Array.isArray(data)) {
+          return;
+        }
         cableRawPoints = [];
         let cablePoints =
           "<option disabled value='-1'> -- select a date/time -- </option>";
@@ -552,7 +719,7 @@ function fetchCablePoints() {
           cableRawPoints.push(data[i].point);
         }
         document.getElementById("cablePoint").innerHTML = cablePoints;
-          fetchCable();
+        fetchCable();
       })
       .catch((e) => {
         console.error(e);
