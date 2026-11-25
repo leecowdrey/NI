@@ -67,35 +67,13 @@ const queueTables = [
   "replicationQueue",
 ];
 const pruneTables = [
-  { table: "cable", shadow: "_cableCoax", key: "cableId" },
-  { table: "cable", shadow: "_cableCopper", key: "cableId" },
-  {
-    table: "cable",
-    shadow: "_cableEthernet",
-    key: "cableId",
-  },
-  {
-    table: "cable",
-    shadow: "_cableMultiFiber",
-    key: "cableId",
-  },
-  {
-    table: "cable",
-    shadow: "_cableSingleFiber",
-    key: "cableId",
-  },
+  { table: "cable", shadow: "_cable", key: "cableId" },
   { table: "duct", shadow: "_duct", key: "ductId" },
   //{ table: "ne", shadow: "_ne", key: "neId" },
   { table: "pole", shadow: "_pole", key: "poleId" },
   { table: "rack", shadow: "_rack", key: "rackId" },
-  //{ table: "service",shadow: "_serviceEgress",key: "serviceId" },
-  //{ table: "service", shadow: "_serviceIngress", key: "serviceId" },
+  //{ table: "service", shadow: "_service", key: "serviceId" },
   { table: "site", shadow: "_site", key: "siteId" },
-  {
-    table: "trench",
-    shadow: "_trenchCoordinate",
-    key: "trenchId",
-  },
   { table: "trench", shadow: "_trench", key: "trenchId" },
 ];
 
@@ -2406,19 +2384,20 @@ async function jobPrune() {
           );
           let DDIdsRows = DDIdsRead.getRows();
           for (let p = 0; p < DDIdsRows.length; p++) {
+            let resourceId = DDIdsRows[p][0];
             let ddParent = await DDC.runAndReadAll(
               "SELECT strftime(tsPoint, '%Y-%m-%d %H:%M:%S'),historicalTsId,predictedTsId FROM " +
                 pruneTables[i].table +
                 " WHERE id = '" +
-                DDIdsRows[p] +
+                resourceId +
                 "'"
             );
             let ddParentRows = ddParent.getRows();
             if (ddParentRows.length > 0) {
               let point = dayjs(ddParentRows[0][0]);
-              let historicalTsid = ddParentRows[0][1];
+              let historicalTsId = ddParentRows[0][1];
               let predictedTsId = ddParentRows[0][2];
-              if (historicalTsid != null) {
+              if (historicalTsId != null) {
                 let historicalTimestamp = point.subtract(
                   historicalDuration,
                   historicalUnit
@@ -2429,11 +2408,11 @@ async function jobPrune() {
                     " WHERE source = 'historical' AND point < strptime('" +
                     historicalTimestamp.format("YYYYMMDD[T]HHmmss") +
                     "','%Y%m%dT%H%M%S')::timestamp AND tsId != " +
-                    historicalTsid +
+                    historicalTsId +
                     " AND " +
                     pruneTables[i].key +
                     " = '" +
-                    DDIdsRows[p] +
+                    resourceId +
                     "'"
                 );
               }
@@ -2452,132 +2431,115 @@ async function jobPrune() {
                     " AND " +
                     pruneTables[i].key +
                     " = '" +
-                    DDIdsRows[p] +
+                    resourceId +
                     "'"
                 );
-              }
-              // remove any predicted which has been surpassed by historical
-              if (predictedTsId != null) {
-                if (pruneTables[i].shadow == "_ne") {
-                  let ddRead = await DDC.runAndReadAll(
-                    "SELECT tsId FROM " +
-                      pruneTables[i].shadow +
-                      " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                      pruneTables[i].shadow +
-                      " " +
-                      "WHERE source = 'historical' AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "') " +
-                      "AND tsId != " +
-                      predictedTsId +
-                      " AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "'"
-                  );
-                  let ddRows = ddRead.getRows();
-                  for (let idx in ddRows) {
-                    await DDC.run(
-                      "DELETE from _nePortCoax WHERE neTsId = " + ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePortEthernet WHERE neTsId = " +
-                        ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePortLoopback WHERE neTsId = " +
-                        ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePortFiber WHERE neTsId = " +
-                        ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePortXdsl WHERE neTsId = " + ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePortVirtual WHERE neTsId = " +
-                        ddRows[idx][0]
-                    );
-                    await DDC.run(
-                      "DELETE from _nePort WHERE neTsId = " + ddRows[idx][0]
-                    );
-                  }
-                }
-                if (pruneTables[i].shadow == "_rack") {
-                  let ddRead = await DDC.runAndReadAll(
-                    "SELECT tsId FROM " +
-                      pruneTables[i].shadow +
-                      " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                      pruneTables[i].shadow +
-                      " " +
-                      "WHERE source = 'historical' AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "') " +
-                      "AND tsId != " +
-                      predictedTsId +
-                      " AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "'"
-                  );
-                }
-                if (
-                  pruneTables[i].shadow == "_cableSingleFiber" ||
-                  pruneTables[i].shadow == "_cableMultiFiber"
-                ) {
-                  let ddRead = await DDC.runAndReadAll(
-                    "SELECT tsId FROM " +
-                      pruneTables[i].shadow +
-                      " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
-                      pruneTables[i].shadow +
-                      " " +
-                      "WHERE source = 'historical' AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "') " +
-                      "AND tsId != " +
-                      predictedTsId +
-                      " AND " +
-                      pruneTables[i].key +
-                      " = '" +
-                      DDIdsRows[p] +
-                      "'"
-                  );
-                  let ddRows = ddRead.getRows();
-                  for (let idx in ddRows) {
-                    await DDC.run(
-                      "DELETE from _cableFiberState WHERE fiberTsId = " +
-                        ddRows[idx][0]
-                    );
-                  }
-                }
+                // remove any predicted which has been surpassed by historical
                 await DDC.run(
                   "DELETE FROM " +
                     pruneTables[i].shadow +
-                    " " +
-                    "WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
+                    " WHERE source = 'predicted' AND point < (SELECT max(point) FROM " +
                     pruneTables[i].shadow +
-                    " " +
-                    "WHERE source = 'historical' AND " +
+                    " WHERE source = 'historical' AND " +
                     pruneTables[i].key +
                     " = '" +
-                    DDIdsRows[p] +
-                    "') " +
-                    "AND tsId != " +
+                    resourceId +
+                    "') AND tsId != " +
                     predictedTsId +
                     " AND " +
                     pruneTables[i].key +
                     " = '" +
-                    DDIdsRows[p] +
+                    resourceId +
                     "'"
+                );
+              }
+              // cascade-delete only orphaned child rows no longer referenced by the shadow table
+              if (pruneTables[i].shadow == "_cable") {
+                await DDC.run(
+                  "DELETE FROM _cableCoax WHERE cableId = '" +
+                    resourceId +
+                    "' AND tsId NOT IN (SELECT coaxTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND coaxTsId IS NOT NULL)"
+                );
+                await DDC.run(
+                  "DELETE FROM _cableCopper WHERE cableId = '" +
+                    resourceId +
+                    "' AND tsId NOT IN (SELECT copperTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND copperTsId IS NOT NULL)"
+                );
+                await DDC.run(
+                  "DELETE FROM _cableEthernet WHERE cableId = '" +
+                    resourceId +
+                    "' AND tsId NOT IN (SELECT ethernetTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND ethernetTsId IS NOT NULL)"
+                );
+                await DDC.run(
+                  "DELETE FROM _cableSingleFiber WHERE cableId = '" +
+                    resourceId +
+                    "' AND tsId NOT IN (SELECT singleFiberTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND singleFiberTsId IS NOT NULL)"
+                );
+                await DDC.run(
+                  "DELETE FROM _cableMultiFiber WHERE cableId = '" +
+                    resourceId +
+                    "' AND tsId NOT IN (SELECT multiFiberTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND multiFiberTsId IS NOT NULL)"
+                );
+                await DDC.run(
+                  "DELETE FROM _cableFiberState WHERE cableId = '" +
+                    resourceId +
+                    "' AND fiberTsId NOT IN (SELECT singleFiberTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND singleFiberTsId IS NOT NULL UNION SELECT multiFiberTsId FROM _cable WHERE cableId = '" +
+                    resourceId +
+                    "' AND multiFiberTsId IS NOT NULL)"
+                );
+              } else if (pruneTables[i].shadow == "_trench") {
+                await DDC.run(
+                  "DELETE FROM _trenchCoordinate WHERE trenchId = '" +
+                    resourceId +
+                    "' AND trenchTsId NOT IN (SELECT tsId FROM _trench WHERE trenchId = '" +
+                    resourceId +
+                    "')"
+                );
+              } else if (pruneTables[i].shadow == "_rack") {
+                await DDC.run(
+                  "DELETE FROM _rackSlot WHERE rackId = '" +
+                    resourceId +
+                    "' AND rackTsId NOT IN (SELECT tsId FROM _rack WHERE rackId = '" +
+                    resourceId +
+                    "')"
+                );
+              } else if (pruneTables[i].shadow == "_ne") {
+                await DDC.run(
+                  "DELETE FROM _nePortCoax WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePortEthernet WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePortLoopback WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePortFiber WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePortXdsl WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePortVirtual WHERE neTsId NOT IN (SELECT tsId FROM _ne)"
+                );
+                await DDC.run(
+                  "DELETE FROM _nePort WHERE neId = '" +
+                    resourceId +
+                    "' AND neTsId NOT IN (SELECT tsId FROM _ne WHERE neId = '" +
+                    resourceId +
+                    "')"
                 );
               }
             }
