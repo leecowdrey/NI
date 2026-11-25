@@ -155,6 +155,16 @@ function chunkArray(arr, size) {
   return res;
 }
 
+async function parseJsonResponse(response) {
+  if (response.ok && response.status !== 204) {
+    const text = await response.text();
+    if (text.trim().length > 0) {
+      return JSON.parse(text);
+    }
+  }
+  return null;
+}
+
 // error handling
 const errorTypes = ["unhandledRejection", "uncaughtException"];
 errorTypes.forEach((errType) => {
@@ -358,9 +368,7 @@ async function getDateBoundary() {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -500,9 +508,7 @@ async function duplicate(bundle) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -564,7 +570,7 @@ async function duplicate(bundle) {
         body: JSON.stringify(resource),
         signal: AbortSignal.timeout(requestTimeoutMs),
       })
-        .then((response) => {
+        .then(async (response) => {
           if (DEBUG) {
             LOGGER.debug(
               dayjs().format(OAS.dayjsFormat),
@@ -582,6 +588,14 @@ async function duplicate(bundle) {
           if (response.ok) {
             return true;
           } else {
+            LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
+              event: "updateResource",
+              qId: bundle.qId,
+              resource: bundle.resource,
+              id: bundle.id,
+              status: response.status,
+              error: await response.text().catch(() => response.statusText),
+            });
             return false;
           }
         })
@@ -663,9 +677,7 @@ async function predictCable(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -700,9 +712,7 @@ async function predictCable(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -749,9 +759,7 @@ async function predictCable(bundle) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -1453,7 +1461,7 @@ async function predictCable(bundle) {
     body: JSON.stringify(resource),
     signal: AbortSignal.timeout(requestTimeoutMs),
   })
-    .then((response) => {
+    .then(async (response) => {
       if (DEBUG) {
         LOGGER.debug(
           dayjs().format(OAS.dayjsFormat),
@@ -1471,6 +1479,14 @@ async function predictCable(bundle) {
       if (response.ok) {
         return true;
       } else {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictCable", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          status: response.status,
+          error: await response.text().catch(() => response.statusText),
+        });
         return false;
       }
     })
@@ -1534,9 +1550,7 @@ async function predictDuct(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -1571,9 +1585,7 @@ async function predictDuct(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -1620,9 +1632,7 @@ async function predictDuct(bundle) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -1748,7 +1758,7 @@ async function predictDuct(bundle) {
     body: JSON.stringify(resource),
     signal: AbortSignal.timeout(requestTimeoutMs),
   })
-    .then((response) => {
+    .then(async (response) => {
       if (DEBUG) {
         LOGGER.debug(
           dayjs().format(OAS.dayjsFormat),
@@ -1766,6 +1776,14 @@ async function predictDuct(bundle) {
       if (response.ok) {
         return true;
       } else {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictDuct", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          status: response.status,
+          error: await response.text().catch(() => response.statusText),
+        });
         return false;
       }
     })
@@ -1865,9 +1883,7 @@ async function predictNe(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -1902,9 +1918,7 @@ async function predictNe(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -1944,9 +1958,7 @@ async function predictNe(bundle) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -2020,7 +2032,7 @@ async function predictNe(bundle) {
     body: JSON.stringify(resource),
     signal: AbortSignal.timeout(requestTimeoutMs),
   })
-    .then((response) => {
+    .then(async (response) => {
       if (DEBUG) {
         LOGGER.debug(
           dayjs().format(OAS.dayjsFormat),
@@ -2038,6 +2050,14 @@ async function predictNe(bundle) {
       if (response.ok) {
         return true;
       } else {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictNe", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          status: response.status,
+          error: await response.text().catch(() => response.statusText),
+        });
         return false;
       }
     })
@@ -2101,9 +2121,7 @@ async function predictRack(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -2138,9 +2156,7 @@ async function predictRack(bundle) {
   })
     .then((response) => {
       if (response.ok) {
-        if (toInteger(response.headers.get("Content-Length")) > 0) {
-          return response.json();
-        }
+        return parseJsonResponse(response);
       }
     })
     .then((data) => {
@@ -2180,9 +2196,7 @@ async function predictRack(bundle) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         }
       })
       .then((data) => {
@@ -2264,7 +2278,7 @@ async function predictRack(bundle) {
     body: JSON.stringify(resource),
     signal: AbortSignal.timeout(requestTimeoutMs),
   })
-    .then((response) => {
+    .then(async (response) => {
       if (DEBUG) {
         LOGGER.debug(
           dayjs().format(OAS.dayjsFormat),
@@ -2282,6 +2296,14 @@ async function predictRack(bundle) {
       if (response.ok) {
         return true;
       } else {
+        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "predictRack", {
+          event: "updateResource",
+          qId: bundle.qId,
+          resource: bundle.resource,
+          id: bundle.id,
+          status: response.status,
+          error: await response.text().catch(() => response.statusText),
+        });
         return false;
       }
     })
@@ -2425,11 +2447,8 @@ async function queueDrain() {
       })
         .then((response) => {
           if (response.ok) {
-            if (
-              response.status == 200 &&
-              toInteger(response.headers.get("Content-Length")) > 0
-            ) {
-              return response.json();
+            if (response.status == 200) {
+              return parseJsonResponse(response);
             } else if (response.status == 204) {
               if (DEBUG) {
                 LOGGER.debug(
@@ -2482,13 +2501,7 @@ async function queueDrain() {
                 })
                   .then((timelineResponse) => {
                     if (timelineResponse.ok) {
-                      if (
-                        toInteger(
-                          timelineResponse.headers.get("Content-Length")
-                        ) > 0
-                      ) {
-                        return timelineResponse.json();
-                      }
+                      return parseJsonResponse(timelineResponse);
                     }
                   })
                   .then(async (timelineData) => {
@@ -2784,9 +2797,7 @@ async function checkEndpointReadiness() {
       })
         .then((response) => {
           if (response.ok) {
-            if (toInteger(response.headers.get("Content-Length")) > 0) {
-              return response.json();
-            }
+            return parseJsonResponse(response);
           } else {
             ENDPOINT_READY = false;
             LOGGER.error(
