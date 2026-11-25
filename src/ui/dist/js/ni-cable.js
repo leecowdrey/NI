@@ -216,8 +216,13 @@ function drawCableCrossSection(container, data, source) {
       })
     );
 
-    if (r >= 7 && label != null) {
-      const fontSize = Math.min(16, Math.max(6.5, r * (String(label).length > 2 ? 0.58 : 0.85)));
+    if (label != null) {
+      const labelStr = String(label);
+      const maxWidth = r * 1.7;
+      const fontSize = Math.min(
+        16,
+        Math.max(2.5, Math.min(r * 0.95, maxWidth / (labelStr.length * 0.62)))
+      );
       const text = createSvgElement("text", {
         x: x.toFixed(2),
         y: y.toFixed(2),
@@ -229,7 +234,7 @@ function drawCableCrossSection(container, data, source) {
         "dominant-baseline": "central",
         "pointer-events": "none",
       });
-      text.textContent = String(label);
+      text.textContent = labelStr;
       g.appendChild(text);
     }
     parent.appendChild(g);
@@ -298,31 +303,17 @@ function drawCableCrossSection(container, data, source) {
     case "ethernet": {
       const state = data.configuration.state || "free";
       tally(state);
-      // 4 twisted-pair bundles inside an ethernet jacket
       svg.appendChild(
         createSvgElement("circle", {
           cx,
           cy,
-          r: 152,
-          fill: "#182132",
+          r: 148,
+          fill: "#1f2937",
           stroke: "#64748b",
           "stroke-width": 2,
         })
       );
-      const packed = packCirclesInCircle(4, 140, 8);
-      for (let j = 0; j < packed.positions.length; j++) {
-        const pos = packed.positions[j];
-        drawCoreCircle(
-          svg,
-          cx + pos.x,
-          cy + pos.y,
-          packed.radius,
-          state,
-          j + 1,
-          "Ethernet Pair " + (j + 1) + ": " + state,
-          2
-        );
-      }
+      drawCoreCircle(svg, cx, cy, 64, state, "1", "Ethernet Core: " + state, 2.5);
       break;
     }
     case "singleFiber": {
@@ -415,12 +406,7 @@ function drawCableCrossSection(container, data, source) {
             "free";
           tally(st);
           const spos = packedStrands.positions[j];
-          const label =
-            packedStrands.radius >= 11
-              ? ribbonNum + "." + strandNum
-              : packedStrands.radius >= 7
-                ? strandNum
-                : null;
+          const label = ribbonNum + "." + strandNum;
           drawCoreCircle(
             tubeGroup,
             tx + spos.x,
