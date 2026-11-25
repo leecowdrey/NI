@@ -29624,30 +29624,29 @@ var run = async () => {
             .matches(OAS.dateTime),
         ],
         [
+          body("snmp").isObject(),
           body("snmp.version").default("v1").isIn(OAS.snmpVersion),
-          oneOf(
-            [
-            [
-              body("snmp.community.read").default("public").isString().trim(),
-              body("snmp.community.write").default("private").isString().trim(),
-              body("snmp.community.trap").default("public").isString().trim(),
-            ],
-            [
-              body("snmp.v3.username").isString().trim(),
-              body("snmp.v3.authorization.protocol").isIn(
-                OAS.snmpAuthorizationProtocol
-              ),
-              body("snmp.v3.authorization.password").isString().trim(),
-              body("snmp.v3.encryption.protocol").isIn(
-                OAS.snmpEncryptionProtocol
-              ),
-              body("snmp.v3.encryption.password").isString().trim(),
-            ]
-            ],
-            {
-              message: "either v1,v2c or v3 SNMP payload must be supplied",
-            }
+          body("snmp.community").isObject(),
+          body("snmp.community.read").default("public").isString().trim(),
+          body("snmp.community.write").default("private").isString().trim(),
+          body("snmp.community.trap").default("public").isString().trim(),
+          body("snmp.expiration")
+            .default(OAS.secretExpiration)
+            .matches(OAS.dateTime),
+        ],
+        [
+          body("snmp").isObject(),
+          body("snmp.version").equals("v3"),
+          body("snmp.v3").isObject(),
+          body("snmp.v3.username").isString().trim(),
+          body("snmp.v3.authorization.protocol").isIn(
+            OAS.snmpAuthorizationProtocol
           ),
+          body("snmp.v3.authorization.password").isString().trim(),
+          body("snmp.v3.encryption.protocol").isIn(
+            OAS.snmpEncryptionProtocol
+          ),
+          body("snmp.v3.encryption.password").isString().trim(),
           body("snmp.expiration")
             .default(OAS.secretExpiration)
             .matches(OAS.dateTime),
