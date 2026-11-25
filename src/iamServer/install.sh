@@ -163,7 +163,7 @@ sed -i -e "s|#db-username=.*|db-username=${USERNAME}|" ${WORKING_DIRECTORY}/conf
 sed -i -e "s|#db-password=.*|db-password=${DB_PASSWORD}|" ${WORKING_DIRECTORY}/conf/keycloak.conf && \
 sed -i -e "s|#https-certificate-file=.*|https-certificate-file=${WORKING_DIRECTORY}/keys/certificates/${SSL_CERT}|" ${WORKING_DIRECTORY}/conf/keycloak.conf && \
 sed -i -e "s|#https-certificate-key-file=.*|https-certificate-key-file=${WORKING_DIRECTORY}/keys/certificates/${SSL_KEY}|" ${WORKING_DIRECTORY}/conf/keycloak.conf && \
-sed -i -e "s|#hostname=.*|hostname=${ADDRESS}\nhttps-port=${PORT}|" ${WORKING_DIRECTORY}/conf/keycloak.conf && \
+sed -i -e "s|#hostname=.*|hostname=${ADDRESS}\nhttps-port=${PORT}\nspi-sticky-session-encoder--infinispan--should-attach-route=false|" ${WORKING_DIRECTORY}/conf/keycloak.conf && \
 chown -R ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/conf/keycloak.conf
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
@@ -184,8 +184,8 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "- Copying NI base realm"
-cp -f NI-realm.json ${WORKING_DIRECTORY}/export/ && \
-cp -f NI-users-0.json ${WORKING_DIRECTORY}/export/ && \
+cp -f ${CLI_PATH}/NI-realm.json ${WORKING_DIRECTORY}/export/ && \
+cp -f ${CLI_PATH}/NI-users-0.json ${WORKING_DIRECTORY}/export/ && \
 chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/export/NI-realm.json && \
 chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/export/NI-users-0.json
 RETVAL=$?

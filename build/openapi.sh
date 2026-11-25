@@ -162,9 +162,10 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating OpenAPI version and build tag"
-if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+OS_NAME=$(uname -s)
+if [[ "${OS_NAME}" == "Linux" ]] ; then
   sed -i -e "s/^  version: .*/  version: ${NI_VERSION}.${NI_BUILD}/" api/ni.yaml
-elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+elif [[ "${OS_NAME}" == "Darwin" ]] ; then
   sed -i '' "s/^  version: .*/  version: ${NI_VERSION}.${NI_BUILD}/" api/ni.yaml
 fi
 RETVAL=$?

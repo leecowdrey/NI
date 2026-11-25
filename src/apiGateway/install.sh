@@ -210,7 +210,7 @@ sed -i -e "s|0.0.0.0|${ADDRESS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json &
 sed -i -e "s|\"max_rate\": 32767|\"max_rate\": ${RATE_LIMIT_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"capacity\": 32767|\"capacity\": ${CAPACITY_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"every\": \"1m\"|\"every\": \"${RATE_LIMIT_EVERY}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
-sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json
+sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/config/apiGateway.json && \
 chmod 660 ${WORKING_DIRECTORY}/config/apiGateway.json

@@ -152,7 +152,7 @@ set +x
 
 ## ensure root and have initial tools and config
 # check on linux environments but not darwin, cygwin, msys, win32 nor freebsd
-# [[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
+# [[ "$(uname -s)" == "Linux" && $(id -u) -ne 0 ]] && exit 1
 
 ## check for external dependencies
 doing "Checking for YAML Query (yq)"
@@ -167,9 +167,10 @@ RETVAL=$?
 
 doing "Updating build tag"
 NI_BUILD=$(date +'%s')
-if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+OS_NAME=$(uname -s)
+if [[ "${OS_NAME}" == "Linux" ]] ; then
   sed -i -e "s/NI_BUILD=.*/NI_BUILD=\"${NI_BUILD}\"/" src/ni.ini
-elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+elif [[ "${OS_NAME}" == "Darwin" ]] ; then
   sed -i '' "s/NI_BUILD=.*/NI_BUILD=\"${NI_BUILD}\"/" src/ni.ini
 fi
 RETVAL=$?

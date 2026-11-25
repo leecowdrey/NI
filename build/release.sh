@@ -219,7 +219,7 @@ EOF
 
 ## ensure root and have initial tools and config
 # check on linux environments but not darwin, cygwin, msys, win32 nor freebsd
-# [[ "${OSTYPE}" == "linux-gnu"* && $(id -u) -ne 0 ]] && exit 1
+# [[ "$(uname -s)" == "Linux" && $(id -u) -ne 0 ]] && exit 1
 
 NI_VERSION=$(grep -E "^NI_VERSION=.*" ../src/ni.ini|cut -d '=' -f2-|cut -d '"' -f2)
 NI_BUILD=$(grep -E "^NI_BUILD=.*" ../src/ni.ini|cut -d '=' -f2-|cut -d '"' -f2)
