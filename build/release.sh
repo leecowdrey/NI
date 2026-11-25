@@ -268,27 +268,33 @@ cp -f ../src/ni.ini . && \
 cp -f ../src/oasConstants.mjs . && \
 cp -f ../src/common.sh . && \
 cp -f ../src/db/schema.sql db/ && \
-cp -R -f ../src/alertService/* alertService/ && \
-cp -R -f ../src/apiGateway/* apiGateway/ && \
-cp -R -f ../src/apiServer/* apiServer/ && \
-cp -R -f ../src/dnsServer/* dnsServer/ && \
-cp -R -f ../src/fetchService/* fetchService/ && \
-cp -R -f ../src/iamServer/* iamServer/ && \
-cp -R -f ../src/predictService/* predictService/ && \
-cp -R -f ../src/ui/dist/* ui/dist/ && \
-cp -R -f ../src/uiServer/* uiServer/
+cp -R -P -f ../src/alertService/* alertService/ && \
+cp -R -P -f ../src/apiGateway/* apiGateway/ && \
+cp -R -P -f ../src/apiServer/* apiServer/ && \
+cp -R -P -f ../src/dnsServer/* dnsServer/ && \
+cp -R -P -f ../src/fetchService/* fetchService/ && \
+cp -R -P -f ../src/iamServer/* iamServer/ && \
+cp -R -P -f ../src/predictService/* predictService/ && \
+cp -R -P -f ../src/ui/dist/* ui/dist/ && \
+cp -R -P -f ../src/uiServer/* uiServer/
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 
 doing "Updating license public key"
-if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+OS_NAME=$(uname -s)
+if [[ "${OS_NAME}" == "Linux" ]] ; then
   NI_LICENSE_PUBLIC_KEY=$(base64 -w 0 ../src/licenseGen/niMasterKey.pub) && \
+  [[ -n "${NI_LICENSE_PUBLIC_KEY}" ]] && \
   sed -i -e "s|NI_LICENSE_PUBLIC_KEY=.*|NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"|" ni.ini
-elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+elif [[ "${OS_NAME}" == "Darwin" ]] ; then
   NI_LICENSE_PUBLIC_KEY=$(base64 -i ../src/licenseGen/niMasterKey.pub | tr -d '\n') && \
+  [[ -n "${NI_LICENSE_PUBLIC_KEY}" ]] && \
   sed -i '' "s|NI_LICENSE_PUBLIC_KEY=.*|NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"|" ni.ini
-fi
+else
+  false
+fi && \
+grep -q "^NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"$" apiServer/ni.ini
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -305,9 +311,9 @@ RETVAL=$?
 
 ## work out which platform
 NI_MD5="md5"
-if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
+if [[ "$(uname -s)" == "Linux" ]] ; then
   NI_MD5="md5sum"
-elif [[ "${OSTYPE}" == "darwin"* ]] ; then
+elif [[ "$(uname -s)" == "Darwin" ]] ; then
   NI_MD5="md5"
 fi
 
