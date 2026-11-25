@@ -216,7 +216,7 @@ async function displayMap() {
     map = new MapCtor(document.getElementById("map"), {
       zoom: 17,
       center: pos,
-      mapTypeId: "hybrid",
+      mapTypeId: "roadmap",
       mapId: mapId,
       disableDefaultUI: true,
     });

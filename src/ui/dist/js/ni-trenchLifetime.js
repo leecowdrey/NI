@@ -363,7 +363,7 @@ async function displayMap() {
     map = new MapCtor(document.getElementById("map"), {
       zoom: 17,
       center: mapCenter,
-      mapTypeId: "hybrid",
+      mapTypeId: "roadmap",
       mapId: mapId,
       disableDefaultUI: true,
     });
