@@ -200,7 +200,7 @@ function createPoleMarker(position) {
     title: poleId || "",
     gmpClickable: true,
   });
-  poleMarker.addListener("gmp-click", function () {
+  poleMarker.addEventListener("gmp-click", function () {
     if (trenchPanel != null) {
       trenchPanel.close();
     }

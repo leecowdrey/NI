@@ -700,6 +700,20 @@ function loadGoogleMaps(scriptUrl, initCallback, id = "mapRender") {
     console.error("Google Maps init callback is required");
     return false;
   }
+  window.gm_authFailure = function () {
+    console.error(
+      "Google Maps authentication failed (InvalidKeyMapError / invalid API key). Update the Google Maps API key in Settings -> Map Providers."
+    );
+    let mapEl = document.getElementById("map");
+    if (mapEl != null) {
+      mapEl.innerHTML =
+        '<div style="padding:16px;background:#333;color:#fff;border-radius:6px;max-width:480px;font-family:sans-serif;">' +
+        "<strong>Google Maps authentication failed</strong><br>" +
+        "The configured Google Maps API key was rejected (InvalidKeyMapError). " +
+        "Please update it with a valid Maps JavaScript API key in <em>Settings &rarr; Map Providers</em>." +
+        "</div>";
+    }
+  };
   if (
     window.google &&
     window.google.maps &&

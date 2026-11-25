@@ -1087,40 +1087,23 @@ async function jobUpdateGeometry() {
               OAS.wktEpsg3857,
               OAS.wktEpsg4326
             );
-            if (coordinates != null) {
-              if (coordinates.length > 0) {
-                for (let i = 0; i < coordinates.length; i++) {
-                  if (coordinates[i].x != null && coordinates[i].y != null) {
-                    let ddtc = await DDC.prepare(
-                      "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y) VALUES (strptime($1,$2)::timestamp,$3,$4,$5,$6,$7)"
-                    );
-                    ddtc.bindVarchar(1, ddRows[idx][3]);
-                    ddtc.bindVarchar(2, pointFormat);
-                    ddtc.bindInteger(3, ddRows[idx][0]);
-                    ddtc.bindVarchar(4, ddRows[idx][1]);
-                    ddtc.bindVarchar(5, ddRows[idx][2]);
-                    ddtc.bindFloat(
-                      6,
-                      toDecimal(coordinates[i].x, OAS.X_scale, OAS.XY_precision)
-                    );
-                    ddtc.bindFloat(
-                      7,
-                      toDecimal(coordinates[i].y, OAS.Y_scale, OAS.XY_precision)
-                    );
-                    await ddtc.run();
-                    await DDC.run(
-                      "UPDATE _trench SET wkt = null WHERE tsId = " +
-                        ddRows[idx][0]
-                    );
-                    if (ddRows[idx][2] == OAS.historical) {
-                      await dbAddQueueItem(
-                        OAS.queueResourceTrench,
-                        ddRows[idx][1],
-                        OAS.queueResourceTypeUpdate
-                      );
-                    }
-                  }
-                }
+            if (coordinates != null && coordinates.length > 0) {
+              await insertTrenchCoordinates(
+                ddRows[idx][3],
+                ddRows[idx][0],
+                ddRows[idx][1],
+                ddRows[idx][2],
+                coordinates
+              );
+              await DDC.run(
+                "UPDATE _trench SET wkt = null WHERE tsId = " + ddRows[idx][0]
+              );
+              if (ddRows[idx][2] == OAS.sourceHistorical) {
+                await dbAddQueueItem(
+                  OAS.queueResourceTrench,
+                  ddRows[idx][1],
+                  OAS.queueResourceTypeUpdate
+                );
               }
             }
           }
@@ -2805,6 +2788,69 @@ async function getSeqNextValue(seqName) {
     val = toInteger(ddSeq[0][0]);
   }
   return val;
+}
+
+async function insertTrenchCoordinates(
+  point,
+  trenchTsId,
+  trenchId,
+  source,
+  coordinates
+) {
+  if (!Array.isArray(coordinates) || coordinates.length === 0) {
+    return;
+  }
+  const batchSize = 500;
+  const safePoint = String(point).replace(/'/g, "''");
+  const safeTrenchId = String(trenchId).replace(/'/g, "''");
+  const safeSource = String(source).replace(/'/g, "''");
+  const safeTsId = toInteger(trenchTsId);
+
+  for (let start = 0; start < coordinates.length; start += batchSize) {
+    const end = Math.min(start + batchSize, coordinates.length);
+    const values = [];
+    for (let i = start; i < end; i++) {
+      const coord = coordinates[i];
+      if (coord == null || coord.x == null || coord.y == null) {
+        continue;
+      }
+      const x = toDecimal(coord.x, OAS.X_scale, OAS.XY_precision);
+      const y = toDecimal(coord.y, OAS.Y_scale, OAS.XY_precision);
+      const z =
+        coord.z != null ? toDecimal(coord.z, OAS.Z_scale, OAS.Z_precision) : 0;
+      const m =
+        coord.m != null
+          ? "'" + String(coord.m).replace(/'/g, "''") + "'"
+          : "NULL";
+      values.push(
+        "(strptime('" +
+          safePoint +
+          "','" +
+          pointFormat +
+          "')::timestamp," +
+          safeTsId +
+          ",'" +
+          safeTrenchId +
+          "','" +
+          safeSource +
+          "'," +
+          x +
+          "," +
+          y +
+          "," +
+          z +
+          "," +
+          m +
+          ")"
+      );
+    }
+    if (values.length > 0) {
+      await DDC.run(
+        "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z,m) VALUES " +
+          values.join(",")
+      );
+    }
+  }
 }
 
 // load env
@@ -18626,45 +18672,13 @@ var run = async () => {
             );
           }
 
-          for (let i = 0; i < req.body.coordinates.length; i++) {
-            let ddtc = await DDC.prepare(
-              "INSERT INTO _trenchCoordinate (point,trenchTsId,trenchId,source,x,y,z) VALUES (strptime($1,$2)::timestamp,$3,$4,$5,$6,$7,$8)"
-            );
-            ddtc.bindVarchar(1, req.body.point);
-            ddtc.bindVarchar(2, pointFormat);
-            ddtc.bindInteger(3, tsId);
-            ddtc.bindVarchar(4, trenchId);
-            ddtc.bindVarchar(5, req.body.source);
-            ddtc.bindFloat(
-              6,
-              toDecimal(
-                req.body.coordinates[i].x,
-                OAS.X_scale,
-                OAS.XY_precision
-              )
-            );
-            ddtc.bindFloat(
-              7,
-              toDecimal(
-                req.body.coordinates[i].y,
-                OAS.Y_scale,
-                OAS.XY_precision
-              )
-            );
-            ddtc.bindFloat(
-              8,
-              toDecimal(req.body.coordinates[i].z, OAS.Z_scale, OAS.Z_precision)
-            );
-            await ddtc.run();
-            if (req.body.coordinates[i]?.m != null) {
-              await DDC.run(
-                "UPDATE _trenchCoordinate SET m = '" +
-                  req.body.coordinates[i].m +
-                  "' WHERE tsId = " +
-                  tsCId
-              );
-            }
-          }
+          await insertTrenchCoordinates(
+            req.body.point,
+            tsId,
+            trenchId,
+            req.body.source,
+            req.body.coordinates
+          );
           if (req.body.source == OAS.sourceHistorical) {
             await dbAddQueueItem(
               OAS.queueResourceTrench,
@@ -20117,7 +20131,7 @@ var run = async () => {
                   tsId
               );
             }
-            if (req.body.build?.jobId != null) {
+            if (req.body.reference != null) {
               await DDC.run(
                 "UPDATE _trench SET reference = '" +
                   req.body.reference.replace(/'/g, "''") +
@@ -20238,56 +20252,13 @@ var run = async () => {
               );
             }
 
-            for (let i = 0; i < req.body.coordinates.length; i++) {
-              let tsCId = await getSeqNextValue("seq_trenchCoordinate");
-              let ddtc = await DDC.prepare(
-                "INSERT INTO _trenchCoordinate (tsId,point,trenchTsId,trenchId,source,x,y) VALUES ($1,strptime($2,$3)::timestamp,$4,$5,$6,$7,$8)"
-              );
-              ddtc.bindInteger(1, tsCId);
-              ddtc.bindVarchar(2, req.body.point);
-              ddtc.bindVarchar(3, pointFormat);
-              ddtc.bindInteger(4, tsId);
-              ddtc.bindVarchar(5, req.params.trenchId);
-              ddtc.bindVarchar(6, req.body.source);
-              ddtc.bindFloat(
-                7,
-                toDecimal(
-                  req.body.coordinates[i].x,
-                  OAS.X_scale,
-                  OAS.XY_precision
-                )
-              );
-              ddtc.bindFloat(
-                8,
-                toDecimal(
-                  req.body.coordinates[i].y,
-                  OAS.Y_scale,
-                  OAS.XY_precision
-                )
-              );
-              await ddtc.run();
-
-              if (req.body.coordinates[i]?.z != null) {
-                await DDC.run(
-                  "UPDATE _trenchCoordinate SET z = " +
-                    toDecimal(
-                      req.body.coordinates[i].z,
-                      OAS.Z_scale,
-                      OAS.Z_precision
-                    ) +
-                    " WHERE tsId = " +
-                    tsCId
-                );
-              }
-              if (req.body.coordinates[i]?.m != null) {
-                await DDC.run(
-                  "UPDATE _trenchCoordinate SET m = '" +
-                    req.body.coordinates[i].m +
-                    "' WHERE tsId = " +
-                    tsCId
-                );
-              }
-            }
+            await insertTrenchCoordinates(
+              req.body.point,
+              tsId,
+              req.params.trenchId,
+              req.body.source,
+              req.body.coordinates
+            );
             if (req.body.source == OAS.sourceHistorical) {
               await dbAddQueueItem(
                 OAS.queueResourceTrench,
@@ -21411,57 +21382,19 @@ var run = async () => {
                     );
                   }
 
-                  for (let c = 0; c < trench.coordinates.length; c++) {
-                    let tsCId = await getSeqNextValue("seq_trenchCoordinate");
-                    let ddtc = await DDC.prepare(
-                      "INSERT INTO _trenchCoordinate (tsId,point,trenchTsId,trenchId,source,x,y,z) VALUES ($1,strptime($2,$3)::timestamp,$4,$5,$6,$7,$8,$9)"
+                  await insertTrenchCoordinates(
+                    trench.point,
+                    tsId,
+                    trench.trenchId,
+                    trench.source,
+                    trench.coordinates
+                  );
+                  if (trench.source == OAS.sourceHistorical) {
+                    await dbAddQueueItem(
+                      OAS.queueResourceTrench,
+                      trench.trenchId,
+                      OAS.queueResourceTypeCreate
                     );
-                    ddtc.bindInteger(1, tsCId);
-                    ddtc.bindVarchar(2, trench.point);
-                    ddtc.bindVarchar(3, pointFormat);
-                    ddtc.bindInteger(4, tsId);
-                    ddtc.bindVarchar(5, trench.trenchId);
-                    ddtc.bindVarchar(6, trench.source);
-                    ddtc.bindFloat(
-                      7,
-                      toDecimal(
-                        trench.coordinates[c].x,
-                        OAS.X_scale,
-                        OAS.XY_precision
-                      )
-                    );
-                    ddtc.bindFloat(
-                      8,
-                      toDecimal(
-                        trench.coordinates[c].y,
-                        OAS.Y_scale,
-                        OAS.XY_precision
-                      )
-                    );
-                    ddtc.bindFloat(
-                      9,
-                      toDecimal(
-                        trench.coordinates[c].z,
-                        OAS.Z_scale,
-                        OAS.Z_precision
-                      )
-                    );
-                    await ddtc.run();
-                    if (trench.coordinates[c]?.m != null) {
-                      await DDC.run(
-                        "UPDATE _trenchCoordinate SET m = '" +
-                          trench.coordinates[c].m +
-                          "' WHERE tsId = " +
-                          tsCId
-                      );
-                    }
-                    if (trench.source == OAS.sourceHistorical) {
-                      await dbAddQueueItem(
-                        OAS.queueResourceTrench,
-                        trench.trenchId,
-                        OAS.queueResourceTypeCreate
-                      );
-                    }
                   }
                 }
               }

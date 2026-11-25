@@ -52,6 +52,7 @@ var endpointTimer = null;
 var dnsSdTimer = null;
 var endpointRetryMs = null;
 var endpointKeepaliveMs = null;
+var requestTimeoutMs = 120000;
 var endPointUrlPrefix = null;
 var endPointUrlVersion = null;
 var appName = null;
@@ -246,6 +247,8 @@ function loadEnv() {
     toInteger(process.env.PREDICTSRV_ENDPOINT_RETRY_INTERVAL_MS) || 15000;
   endpointKeepaliveMs =
     toInteger(process.env.PREDICTSRV_ENDPOINT_KEEPALIVE_INTERVAL_MS) || 60000;
+  requestTimeoutMs =
+    toInteger(process.env.PREDICTSRV_TIMEOUT_REQUEST_MS) || 120000;
   endPointUrlPrefix = process.env.APISERV_URL_PREFIX || "/ni";
   endPointUrlVersion = process.env.APISERV_URL_VERSION || "/v1";
   tlsSslVerification = toBoolean(
@@ -351,7 +354,7 @@ async function getDateBoundary() {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -467,7 +470,7 @@ async function duplicate(bundle) {
       headers: {
         Authorization: serviceAuthentication,
       },
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (!response.ok) {
@@ -493,7 +496,7 @@ async function duplicate(bundle) {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -509,7 +512,7 @@ async function duplicate(bundle) {
       })
       .catch((err) => {
         LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "duplicate", {
-          event: "updateResource",
+          event: "getResource",
           qId: bundle.qId,
           resource: bundle.resource,
           id: bundle.id,
@@ -559,8 +562,7 @@ async function duplicate(bundle) {
           Authorization: serviceAuthentication,
         },
         body: JSON.stringify(resource),
-        keepalive: true,
-        signal: AbortSignal.timeout(endpointRetryMs),
+        signal: AbortSignal.timeout(requestTimeoutMs),
       })
         .then((response) => {
           if (DEBUG) {
@@ -628,7 +630,7 @@ async function predictCable(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (!response.ok) {
@@ -657,7 +659,7 @@ async function predictCable(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -694,7 +696,7 @@ async function predictCable(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -743,7 +745,7 @@ async function predictCable(bundle) {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -753,36 +755,38 @@ async function predictCable(bundle) {
         }
       })
       .then((data) => {
-        if (data != null) {
+        if (data != null && data.configuration != null) {
           switch (data.technology) {
             case "coax":
-              timeline.push(OAS.cableState.indexOf(data.configuration.state));
-              break;
             case "copper":
-              timeline.push(OAS.cableState.indexOf(data.configuration.state));
-              break;
             case "ethernet":
-              timeline.push(OAS.cableState.indexOf(data.configuration.state));
+              if (data.configuration.state != null) {
+                timeline.push(OAS.cableState.indexOf(data.configuration.state));
+              }
               break;
             case "singleFiber":
-              for (let s = 0; s < data.configuration.states.length; s++) {
-                timeline.push({
-                  strand: data.configuration.states[s].strand,
-                  state: OAS.cableState.indexOf(
-                    data.configuration.states[s].state
-                  ),
-                });
+              if (Array.isArray(data.configuration.states)) {
+                for (let s = 0; s < data.configuration.states.length; s++) {
+                  timeline.push({
+                    strand: data.configuration.states[s].strand,
+                    state: OAS.cableState.indexOf(
+                      data.configuration.states[s].state
+                    ),
+                  });
+                }
               }
               break;
             case "multiFiber":
-              for (let s = 0; s < data.configuration.states.length; s++) {
-                timeline.push({
-                  ribbon: data.configuration.states[s].ribbon,
-                  strand: data.configuration.states[s].strand,
-                  state: OAS.cableState.indexOf(
-                    data.configuration.states[s].state
-                  ),
-                });
+              if (Array.isArray(data.configuration.states)) {
+                for (let s = 0; s < data.configuration.states.length; s++) {
+                  timeline.push({
+                    ribbon: data.configuration.states[s].ribbon,
+                    strand: data.configuration.states[s].strand,
+                    state: OAS.cableState.indexOf(
+                      data.configuration.states[s].state
+                    ),
+                  });
+                }
               }
               break;
           }
@@ -1155,7 +1159,7 @@ async function predictCable(bundle) {
           */
       break;
     case "singleFiber":
-      for (let s = 1; s <= resource.configuration.strands; s++) {
+      for (let s = 1; s <= (resource.configuration?.strands || 0); s++) {
         let strandSpecific = [];
         for (let u = 0; u < timeline.length; u++) {
           if (timeline[u].strand == s) {
@@ -1279,19 +1283,21 @@ async function predictCable(bundle) {
               }
             );
           }
-          for (let r = 0; r < resource.configuration.states.length; r++) {
-            if (resource.configuration.states[r].strand == s) {
-              resource.configuration.states[r].state =
-                OAS.cableState[singleFiberNext] || OAS.cableStateFree;
-              break;
+          if (Array.isArray(resource.configuration?.states)) {
+            for (let r = 0; r < resource.configuration.states.length; r++) {
+              if (resource.configuration.states[r].strand == s) {
+                resource.configuration.states[r].state =
+                  OAS.cableState[singleFiberNext] || OAS.cableStateFree;
+                break;
+              }
             }
           }
         }
       }
       break;
     case "multiFiber":
-      for (let r = 1; r <= resource.configuration.ribbons; r++) {
-        for (let s = 1; s <= resource.configuration.strands; s++) {
+      for (let r = 1; r <= (resource.configuration?.ribbons || 0); r++) {
+        for (let s = 1; s <= (resource.configuration?.strands || 0); s++) {
           let strandSpecific = [];
           for (let u = 0; u < timeline.length; u++) {
             if (timeline[u].ribbon == r && timeline[u].strand == s) {
@@ -1416,14 +1422,16 @@ async function predictCable(bundle) {
                 }
               );
             }
-            for (let u = 0; u < resource.configuration.states.length; u++) {
-              if (
-                resource.configuration.states[u].ribbon == r &&
-                resource.configuration.states[u].strand == s
-              ) {
-                resource.configuration.states[u].state =
-                  OAS.cableState[multiFiberNext] || OAS.cableStateFree;
-                break;
+            if (Array.isArray(resource.configuration?.states)) {
+              for (let u = 0; u < resource.configuration.states.length; u++) {
+                if (
+                  resource.configuration.states[u].ribbon == r &&
+                  resource.configuration.states[u].strand == s
+                ) {
+                  resource.configuration.states[u].state =
+                    OAS.cableState[multiFiberNext] || OAS.cableStateFree;
+                  break;
+                }
               }
             }
           }
@@ -1443,8 +1451,7 @@ async function predictCable(bundle) {
       Authorization: serviceAuthentication,
     },
     body: JSON.stringify(resource),
-    keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (DEBUG) {
@@ -1494,7 +1501,7 @@ async function predictDuct(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (!response.ok) {
@@ -1523,7 +1530,7 @@ async function predictDuct(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -1560,7 +1567,7 @@ async function predictDuct(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -1609,7 +1616,7 @@ async function predictDuct(bundle) {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -1739,8 +1746,7 @@ async function predictDuct(bundle) {
       Authorization: serviceAuthentication,
     },
     body: JSON.stringify(resource),
-    keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (DEBUG) {
@@ -1790,7 +1796,7 @@ async function predictPole(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -1826,7 +1832,7 @@ async function predictNe(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (!response.ok) {
@@ -1855,7 +1861,7 @@ async function predictNe(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -1892,7 +1898,7 @@ async function predictNe(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -1934,7 +1940,7 @@ async function predictNe(bundle) {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -1944,7 +1950,7 @@ async function predictNe(bundle) {
         }
       })
       .then((data) => {
-        if (data != null) {
+        if (data != null && Array.isArray(data.ports)) {
           for (let p = 0; p < data.ports.length; p++) {
             timeline.push({
               port: data.ports[p].name,
@@ -2012,8 +2018,7 @@ async function predictNe(bundle) {
       Authorization: serviceAuthentication,
     },
     body: JSON.stringify(resource),
-    keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (DEBUG) {
@@ -2063,7 +2068,7 @@ async function predictRack(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (!response.ok) {
@@ -2092,7 +2097,7 @@ async function predictRack(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -2129,7 +2134,7 @@ async function predictRack(bundle) {
       Authorization: serviceAuthentication,
     },
     keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -2171,7 +2176,7 @@ async function predictRack(bundle) {
         Authorization: serviceAuthentication,
       },
       keepalive: true,
-      signal: AbortSignal.timeout(endpointRetryMs),
+      signal: AbortSignal.timeout(requestTimeoutMs),
     })
       .then((response) => {
         if (response.ok) {
@@ -2181,7 +2186,7 @@ async function predictRack(bundle) {
         }
       })
       .then((data) => {
-        if (data != null) {
+        if (Array.isArray(data)) {
           for (let s = 0; s < data.length; s++) {
             timeline.push({
               slot: data[s].slot,
@@ -2229,14 +2234,16 @@ async function predictRack(bundle) {
         if (mode != null) {
           let newUsage = OAS.rackSlotUsage[mode] || OAS.rackSlotUsageFree;
           // update resource slots
-          for (let r = 0; r < resource.slotUsage.length; r++) {
-            if (resource.slotUsage[r].slot == s) {
-              // if used was in use then leave it as in use
-              // NOTE: clear the neId and host attributes if changing from used
-              //if (resource.slotUsage[r].usage != OAS.rackSlotUsageUsed) {
-              resource.slotUsage[r].usage = newUsage;
-              //}
-              break;
+          if (Array.isArray(resource.slotUsage)) {
+            for (let r = 0; r < resource.slotUsage.length; r++) {
+              if (resource.slotUsage[r].slot == s) {
+                // if used was in use then leave it as in use
+                // NOTE: clear the neId and host attributes if changing from used
+                //if (resource.slotUsage[r].usage != OAS.rackSlotUsageUsed) {
+                resource.slotUsage[r].usage = newUsage;
+                //}
+                break;
+              }
             }
           }
         }
@@ -2255,8 +2262,7 @@ async function predictRack(bundle) {
       Authorization: serviceAuthentication,
     },
     body: JSON.stringify(resource),
-    keepalive: true,
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (DEBUG) {
@@ -2306,7 +2312,7 @@ async function predictService(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -2342,7 +2348,7 @@ async function predictSite(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -2378,7 +2384,7 @@ async function predictTrench(bundle) {
     headers: {
       Authorization: serviceAuthentication,
     },
-    signal: AbortSignal.timeout(endpointRetryMs),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   })
     .then((response) => {
       if (response.ok) {
@@ -2415,7 +2421,7 @@ async function queueDrain() {
           Authorization: serviceAuthentication,
         },
         keepalive: true,
-        signal: AbortSignal.timeout(endpointRetryMs),
+        signal: AbortSignal.timeout(requestTimeoutMs),
       })
         .then((response) => {
           if (response.ok) {
@@ -2472,7 +2478,7 @@ async function queueDrain() {
                     Authorization: serviceAuthentication,
                   },
                   keepalive: true,
-                  signal: AbortSignal.timeout(endpointRetryMs),
+                  signal: AbortSignal.timeout(requestTimeoutMs),
                 })
                   .then((timelineResponse) => {
                     if (timelineResponse.ok) {
@@ -2729,7 +2735,7 @@ async function deleteQueueItem(qId) {
         headers: {
           Authorization: serviceAuthentication,
         },
-        signal: AbortSignal.timeout(endpointRetryMs),
+        signal: AbortSignal.timeout(requestTimeoutMs),
       })
         .then((response) => {
           if (!response.ok) {

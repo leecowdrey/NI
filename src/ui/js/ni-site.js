@@ -160,7 +160,7 @@ function createSiteMarker(position) {
     title: siteId || "",
     gmpClickable: true,
   });
-  siteMarker.addListener("gmp-click", function () {
+  siteMarker.addEventListener("gmp-click", function () {
     if (!document.getElementById("onNet").checked) {
       return;
     }

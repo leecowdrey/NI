@@ -55,7 +55,7 @@ function deleteProvider() {
   let id = p.options[p.selectedIndex].value;
   if (id != null && id != "-1") {
     if (!document.getElementById("systemDefault").checked) {
-      fetch("<%=payload.gatewayUrl%>/admin/map/provider/" + id, {
+      fetch(localStorage.getItem("ni.gatewayUrl") + "/admin/map/provider/" + id, {
         method: "DELETE",
         keepalive: true,
       })
@@ -127,7 +127,7 @@ function saveProvider() {
         if (id == "-1") {
           // new provider
           //
-          fetch("<%=payload.gatewayUrl%>/admin/map/provider", {
+          fetch(localStorage.getItem("ni.gatewayUrl") + "/admin/map/provider", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -149,7 +149,7 @@ function saveProvider() {
           // existing provider
           //
           reqJson.mapProviderId = id;
-          fetch("<%=payload.gatewayUrl%>/admin/map/provider/" + id, {
+          fetch(localStorage.getItem("ni.gatewayUrl") + "/admin/map/provider/" + id, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -239,7 +239,7 @@ function fetchProvider() {
   let p = document.getElementById("provider");
   let id = p.options[p.selectedIndex].value;
   if (id != null) {
-    fetch("<%=payload.gatewayUrl%>/admin/map/provider/" + id, {
+    fetch(localStorage.getItem("ni.gatewayUrl") + "/admin/map/provider/" + id, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -260,7 +260,7 @@ function fetchProvider() {
   }
 }
 function fetchProviderList() {
-  fetch("<%=payload.gatewayUrl%>/admin/map/provider", {
+  fetch(localStorage.getItem("ni.gatewayUrl") + "/admin/map/provider", {
     method: "GET",
     headers: {
       Accept: "application/json",
