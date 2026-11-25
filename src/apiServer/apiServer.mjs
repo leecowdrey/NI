@@ -8273,71 +8273,28 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costCable WHERE lower(technology) = lower($1) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.technology);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " already exists",
+                errors: "technology " + req.body.technology + " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costCable (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costCable (technology,unit,costPerUnit) VALUES ($1,$2,$3)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(1, req.body.technology);
+            ddp.bindVarchar(2, req.body.unit || "m");
+            ddp.bindFloat(3, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costCable (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8353,24 +8310,18 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costCable WHERE lower(technology) = lower($1) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.technology);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costCable SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costCable SET unit = $1, costPerUnit = $2 WHERE lower(technology) = lower($3)"
             );
             ddp.bindVarchar(1, req.body.unit);
             ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindVarchar(3, req.body.technology);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -8378,16 +8329,9 @@ var run = async () => {
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " not found",
+                errors: "technology " + req.body.technology + " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8403,62 +8347,26 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costCable WHERE lower(technology) = lower($1) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.technology);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " not found",
+                errors: "technology " + req.body.technology + " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costCable WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costCable WHERE lower(technology) = lower($1)"
             );
+            ddp.bindVarchar(1, req.body.technology);
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costCable WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costCable WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8512,71 +8420,35 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costDuct WHERE lower(category) = lower($1) AND configuration = $2 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.category);
+          ddpCheck.bindInteger(2, toInteger(req.body.configuration));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "category " +
+                  req.body.category +
+                  " and configuration " +
+                  req.body.configuration +
                   " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costDuct (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costDuct (category,configuration,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindVarchar(1, req.body.category);
+            ddp.bindInteger(2, toInteger(req.body.configuration));
+            ddp.bindVarchar(3, req.body.unit || "m");
             ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costDuct (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8592,24 +8464,20 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costDuct WHERE lower(category) = lower($1) AND configuration = $2 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.category);
+          ddpCheck.bindInteger(2, toInteger(req.body.configuration));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costDuct SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costDuct SET unit = $1, costPerUnit = $2 WHERE lower(category) = lower($3) AND configuration = $4"
             );
             ddp.bindVarchar(1, req.body.unit);
             ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindVarchar(3, req.body.category);
+            ddp.bindInteger(4, toInteger(req.body.configuration));
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -8618,15 +8486,13 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "category " +
+                  req.body.category +
+                  " and configuration " +
+                  req.body.configuration +
                   " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8642,62 +8508,33 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costDuct WHERE lower(category) = lower($1) AND configuration = $2 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.category);
+          ddpCheck.bindInteger(2, toInteger(req.body.configuration));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "category " +
+                  req.body.category +
+                  " and configuration " +
+                  req.body.configuration +
                   " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costDuct WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costDuct WHERE lower(category) = lower($1) AND configuration = $2"
             );
+            ddp.bindVarchar(1, req.body.category);
+            ddp.bindInteger(2, toInteger(req.body.configuration));
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costDuct WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costDuct WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8749,71 +8586,34 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costNe WHERE lower(vendor) = lower($1) AND lower(model) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.vendor);
+          ddpCheck.bindVarchar(2, req.body.model);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "vendor " +
+                  req.body.vendor +
+                  " and model " +
+                  req.body.model +
                   " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costNe (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costNe (vendor,model,costPerUnit) VALUES ($1,$2,$3)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(1, req.body.vendor);
+            ddp.bindVarchar(2, req.body.model);
+            ddp.bindFloat(3, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costNe (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8829,24 +8629,19 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costNe WHERE lower(vendor) = lower($1) AND lower(model) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.vendor);
+          ddpCheck.bindVarchar(2, req.body.model);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costNe SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costNe SET costPerUnit = $1 WHERE lower(vendor) = lower($2) AND lower(model) = lower($3)"
             );
-            ddp.bindVarchar(1, req.body.unit);
-            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindFloat(1, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(2, req.body.vendor);
+            ddp.bindVarchar(3, req.body.model);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -8855,15 +8650,13 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "vendor " +
+                  req.body.vendor +
+                  " and model " +
+                  req.body.model +
                   " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8879,62 +8672,33 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costNe WHERE lower(vendor) = lower($1) AND lower(model) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.vendor);
+          ddpCheck.bindVarchar(2, req.body.model);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  "vendor " +
+                  req.body.vendor +
+                  " and model " +
+                  req.body.model +
                   " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costNe WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costNe WHERE lower(vendor) = lower($1) AND lower(model) = lower($2)"
             );
+            ddp.bindVarchar(1, req.body.vendor);
+            ddp.bindVarchar(2, req.body.model);
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costNe WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costNe WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -8986,17 +8750,13 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower($1) AND lower(classifier) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.purpose);
+          ddpCheck.bindVarchar(2, req.body.classifier);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
@@ -9004,53 +8764,20 @@ var run = async () => {
                 errors:
                   "purpose " +
                   req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  " and classifier " +
+                  req.body.classifier +
                   " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costPole (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costPole (purpose,classifier,costPerUnit) VALUES ($1,$2,$3)"
             );
             ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(2, req.body.classifier);
+            ddp.bindFloat(3, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costPole (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9066,24 +8793,19 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower($1) AND lower(classifier) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.purpose);
+          ddpCheck.bindVarchar(2, req.body.classifier);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costPole SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costPole SET costPerUnit = $1 WHERE lower(purpose) = lower($2) AND lower(classifier) = lower($3)"
             );
-            ddp.bindVarchar(1, req.body.unit);
-            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindFloat(1, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(2, req.body.purpose);
+            ddp.bindVarchar(3, req.body.classifier);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -9094,13 +8816,11 @@ var run = async () => {
                 errors:
                   "purpose " +
                   req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  " and classifier " +
+                  req.body.classifier +
                   " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9116,17 +8836,13 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costPole WHERE lower(purpose) = lower($1) AND lower(classifier) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.purpose);
+          ddpCheck.bindVarchar(2, req.body.classifier);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
@@ -9134,44 +8850,19 @@ var run = async () => {
                 errors:
                   "purpose " +
                   req.body.purpose +
-                  " and type " +
-                  req.body.type +
+                  " and classifier " +
+                  req.body.classifier +
                   " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costPole WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costPole WHERE lower(purpose) = lower($1) AND lower(classifier) = lower($2)"
             );
+            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(2, req.body.classifier);
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costPole WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costPole WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9222,71 +8913,27 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costRack WHERE slots = $1 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindInteger(1, toInteger(req.body.slots));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " already exists",
+                errors: "slots " + req.body.slots + " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costRack (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costRack (slots,costPerUnit) VALUES ($1,$2)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindInteger(1, toInteger(req.body.slots));
+            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costRack (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9302,24 +8949,17 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costRack WHERE slots = $1 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindInteger(1, toInteger(req.body.slots));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costRack SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costRack SET costPerUnit = $1 WHERE slots = $2"
             );
-            ddp.bindVarchar(1, req.body.unit);
-            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindFloat(1, toDecimal(req.body.costPerUnit));
+            ddp.bindInteger(2, toInteger(req.body.slots));
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -9327,16 +8967,9 @@ var run = async () => {
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " not found",
+                errors: "slots " + req.body.slots + " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9352,62 +8985,24 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costRack WHERE slots = $1 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindInteger(1, toInteger(req.body.slots));
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
-                errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
-                  req.body.type +
-                  " not found",
+                errors: "slots " + req.body.slots + " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costRack WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
-            );
+            let ddp = await DDC.prepare("DELETE FROM costRack WHERE slots = $1");
+            ddp.bindInteger(1, toInteger(req.body.slots));
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costRack WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costRack WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9440,9 +9035,6 @@ var run = async () => {
                 lagMembers: toInteger(ddRows[idx][3]),
                 costPerUnit: toDecimal(ddRows[idx][4]),
               };
-              if (ddRows[idx][0] == "unclassified" && ddRows[idx][1] != null) {
-                resObj.type = ddRows[idx][1];
-              }
               resJson.push(resObj);
             }
             res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -9464,71 +9056,43 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let lagMembers = toInteger(req.body.lagMembers);
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costService WHERE lower(type) = lower($1) AND rate = $2 AND lower(unit) = lower($3) AND lagMembers = $4 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.type);
+          ddpCheck.bindInteger(2, toInteger(req.body.rate));
+          ddpCheck.bindVarchar(3, req.body.unit);
+          ddpCheck.bindInteger(4, lagMembers);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
+                  "type " +
                   req.body.type +
+                  ", rate " +
+                  req.body.rate +
+                  ", unit " +
+                  req.body.unit +
+                  " and lagMembers " +
+                  lagMembers +
                   " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costService (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costService (type,rate,unit,lagMembers,costPerUnit) VALUES ($1,$2,$3,$4,$5)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindVarchar(2, req.body.type);
+            ddp.bindVarchar(1, req.body.type);
+            ddp.bindInteger(2, toInteger(req.body.rate));
             ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindInteger(4, lagMembers);
+            ddp.bindFloat(5, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costService (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9544,24 +9108,24 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let lagMembers = toInteger(req.body.lagMembers);
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costService WHERE lower(type) = lower($1) AND rate = $2 AND lower(unit) = lower($3) AND lagMembers = $4 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.type);
+          ddpCheck.bindInteger(2, toInteger(req.body.rate));
+          ddpCheck.bindVarchar(3, req.body.unit);
+          ddpCheck.bindInteger(4, lagMembers);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costService SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costService SET costPerUnit = $1 WHERE lower(type) = lower($2) AND rate = $3 AND lower(unit) = lower($4) AND lagMembers = $5"
             );
-            ddp.bindVarchar(1, req.body.unit);
-            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindFloat(1, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(2, req.body.type);
+            ddp.bindInteger(3, toInteger(req.body.rate));
+            ddp.bindVarchar(4, req.body.unit);
+            ddp.bindInteger(5, lagMembers);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -9570,15 +9134,17 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
+                  "type " +
                   req.body.type +
+                  ", rate " +
+                  req.body.rate +
+                  ", unit " +
+                  req.body.unit +
+                  " and lagMembers " +
+                  lagMembers +
                   " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9594,62 +9160,42 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let lagMembers = toInteger(req.body.lagMembers);
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costService WHERE lower(type) = lower($1) AND rate = $2 AND lower(unit) = lower($3) AND lagMembers = $4 LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.type);
+          ddpCheck.bindInteger(2, toInteger(req.body.rate));
+          ddpCheck.bindVarchar(3, req.body.unit);
+          ddpCheck.bindInteger(4, lagMembers);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
-                  " and type " +
+                  "type " +
                   req.body.type +
+                  ", rate " +
+                  req.body.rate +
+                  ", unit " +
+                  req.body.unit +
+                  " and lagMembers " +
+                  lagMembers +
                   " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costService WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costService WHERE lower(type) = lower($1) AND rate = $2 AND lower(unit) = lower($3) AND lagMembers = $4"
             );
+            ddp.bindVarchar(1, req.body.type);
+            ddp.bindInteger(2, toInteger(req.body.rate));
+            ddp.bindVarchar(3, req.body.unit);
+            ddp.bindInteger(4, lagMembers);
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costService WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costService WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9701,71 +9247,34 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costSite WHERE lower(area) = lower($1) AND lower(type) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.area);
+          ddpCheck.bindVarchar(2, req.body.type);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(409)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
+                  "area " +
+                  req.body.area +
                   " and type " +
                   req.body.type +
                   " already exists",
               });
           } else {
             let ddp = await DDC.prepare(
-              "INSERT INTO costSite (purpose,type,unit,costPerUnit) VALUES ($1,$2,$3,$4)"
+              "INSERT INTO costSite (area,type,costPerUnit) VALUES ($1,$2,$3)"
             );
-            ddp.bindVarchar(1, req.body.purpose);
+            ddp.bindVarchar(1, req.body.area);
             ddp.bindVarchar(2, req.body.type);
-            ddp.bindVarchar(3, req.body.unit);
-            ddp.bindFloat(4, toDecimal(req.body.costPerUnit));
+            ddp.bindFloat(3, toDecimal(req.body.costPerUnit));
             await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(409)
-              .json({
-                errors: "purpose " + req.body.purpose + " already exists",
-              });
-          } else {
-            let ddp = await DDC.prepare(
-              "INSERT INTO costSite (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
-            );
-            ddp.bindVarchar(1, req.body.purpose);
-            ddp.bindInteger(2, req.body.unit);
-            ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
-            await ddp.run();
-            res.sendStatus(204);
-          }
-        } else {
-          res
-            .contentType(OAS.mimeJSON)
-            .status(400)
-            .json({ errors: "unsupported variation" });
-        }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9781,24 +9290,19 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costSite WHERE lower(area) = lower($1) AND lower(type) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length > 0) {
+          ddpCheck.bindVarchar(1, req.body.area);
+          ddpCheck.bindVarchar(2, req.body.type);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length > 0) {
             let ddp = await DDC.prepare(
-              "UPDATE costSite SET unit = $1, costPerUnit = $2 WHERE lower(purpose) = lower($3) AND lower(type) = lower($4)"
+              "UPDATE costSite SET costPerUnit = $1 WHERE lower(area) = lower($2) AND lower(type) = lower($3)"
             );
-            ddp.bindVarchar(1, req.body.unit);
-            ddp.bindFloat(2, toDecimal(req.body.costPerUnit));
-            ddp.bindVarchar(3, req.body.purpose);
-            ddp.bindVarchar(4, req.body.type);
+            ddp.bindFloat(1, toDecimal(req.body.costPerUnit));
+            ddp.bindVarchar(2, req.body.area);
+            ddp.bindVarchar(3, req.body.type);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -9807,15 +9311,13 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
+                  "area " +
+                  req.body.area +
                   " and type " +
                   req.body.type +
                   " not found",
               });
           }
-              */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -9831,62 +9333,33 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          /*
-        if (req.body.purpose == "unclassified" && req.body.type != null) {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') AND lower(type) = lower('" +
-              req.body.type +
-              "') LIMIT 1"
+          let ddpCheck = await DDC.prepare(
+            "SELECT rowid FROM costSite WHERE lower(area) = lower($1) AND lower(type) = lower($2) LIMIT 1"
           );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
+          ddpCheck.bindVarchar(1, req.body.area);
+          ddpCheck.bindVarchar(2, req.body.type);
+          let ddRead = await ddpCheck.runAndReadAll();
+          if (ddRead.getRows().length == 0) {
             return res
               .contentType(OAS.mimeJSON)
               .status(404)
               .json({
                 errors:
-                  "purpose " +
-                  req.body.purpose +
+                  "area " +
+                  req.body.area +
                   " and type " +
                   req.body.type +
                   " not found",
               });
           } else {
-            await DDC.run(
-              "DELETE FROM costSite WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "') AND lower(type) = lower('" +
-                req.body.type +
-                "')"
+            let ddp = await DDC.prepare(
+              "DELETE FROM costSite WHERE lower(area) = lower($1) AND lower(type) = lower($2)"
             );
+            ddp.bindVarchar(1, req.body.area);
+            ddp.bindVarchar(2, req.body.type);
+            await ddp.run();
             res.sendStatus(204);
           }
-        } else if (req.body.purpose != "unclassified") {
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT rowid FROM costSite WHERE lower(purpose) = lower('" +
-              req.body.purpose +
-              "') LIMIT 1"
-          );
-          let ddRows = ddRead.getRows();
-          if (ddRows.length == 0) {
-            return res
-              .contentType(OAS.mimeJSON)
-              .status(404)
-              .json({
-                errors: "purpose " + req.body.purpose + " not found",
-              });
-          } else {
-            await DDC.run(
-              "DELETE FROM costSite WHERE lower(purpose) = lower('" +
-                req.body.purpose +
-                "')"
-            );
-            res.sendStatus(204);
-          }
-            */
-          res.sendStatus(410);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -10284,9 +9757,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, cableId);
             await ddp.run();
@@ -11446,7 +10919,7 @@ var run = async () => {
               resJson = {
                 qId: toInteger(ddRows[0][0]),
                 point: ddRows[0][1],
-                fetchJobId: ddROws[0][2],
+                fetchJobId: ddRows[0][2],
               };
               res.contentType(OAS.mimeJSON).status(200).json(resJson);
             } else {
@@ -12638,9 +12111,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, ductId);
             await ddp.run();
@@ -13654,24 +13127,24 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          if (body?.siteId != null) {
-            if (!(await dbIdExists(body.siteId, "site"))) {
-              return {
-                status: 404,
-                body: {
-                  errors: "siteId " + body.siteId + " does not exist",
-                },
-              };
+          if (req.body?.siteId != null) {
+            if (!(await dbIdExists(req.body.siteId, "site"))) {
+              return res
+                .contentType(OAS.mimeJSON)
+                .status(404)
+                .json({
+                  errors: "siteId " + req.body.siteId + " does not exist",
+                });
             }
           }
-          if (body?.rackId != null) {
-            if (!(await dbIdExists(body.rackId, "rack"))) {
-              return {
-                status: 404,
-                body: {
-                  errors: "rackId " + body.rackId + " does not exist",
-                },
-              };
+          if (req.body?.rackId != null) {
+            if (!(await dbIdExists(req.body.rackId, "rack"))) {
+              return res
+                .contentType(OAS.mimeJSON)
+                .status(404)
+                .json({
+                  errors: "rackId " + req.body.rackId + " does not exist",
+                });
             }
           }
           let neId = uuidv4();
@@ -13680,7 +13153,7 @@ var run = async () => {
           }
           let status = await addNe(neId, req.body);
           if (status == 200) {
-            if (body.source == OAS.sourceHistorical) {
+            if (req.body.source == OAS.sourceHistorical) {
               await dbAddQueueItem(
                 OAS.queueResourceNe,
                 neId,
@@ -13690,9 +13163,9 @@ var run = async () => {
             return res
               .contentType(OAS.mimeJSON)
               .status(status)
-              .json({ id: neId });
+              .json({ neId: neId });
           } else {
-            return res.sendStatusstatus(status);
+            return res.sendStatus(status);
           }
         } else {
           return res
@@ -14546,9 +14019,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, poleId);
             await ddp.run();
@@ -16571,9 +16044,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, serviceId);
             await ddp.run();
@@ -18008,9 +17481,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, siteId);
             await ddp.run();
@@ -18990,9 +18463,9 @@ var run = async () => {
                 tsCol +
                 " = $2, tsPoint = strptime($3,$4)::timestamp WHERE id = $5"
             );
-            ddp.bindBoolean(1, toBoolean(body.delete));
+            ddp.bindBoolean(1, toBoolean(req.body.delete));
             ddp.bindInteger(2, tsId);
-            ddp.bindVarchar(3, body.point || point);
+            ddp.bindVarchar(3, req.body.point);
             ddp.bindVarchar(4, pointFormat);
             ddp.bindVarchar(5, trenchId);
             await ddp.run();
@@ -24065,6 +23538,128 @@ var run = async () => {
       }
     }
 
+    function formatFetchJobRow(row) {
+      let resObj = {
+        fetchId: row[0],
+        description: row[1],
+        protocol: row[2],
+        cronTime: row[3],
+        enabled: row[4],
+        retry: {
+          retries: toInteger(row[27]),
+          currentRetry: toInteger(row[28]),
+          retryDelay: toInteger(row[29]),
+          maxLifeRetries: toInteger(row[30]),
+          currentLifeRetries: toInteger(row[31]),
+        },
+        function: row[32],
+      };
+      if (row[5] != null) {
+        resObj.ne = {
+          neId: row[5],
+        };
+      }
+      if (row[6] != null || row[7] != null || row[8] != null) {
+        resObj.email = {
+          emailId: row[6],
+          address: row[7],
+          subject: row[8],
+        };
+      }
+      if (row[9] != null) {
+        resObj.file = {
+          url: row[9],
+        };
+      }
+      if (row[10] != null) {
+        resObj.http = {
+          url: row[10],
+        };
+      }
+      if (row[11] != null || row[12] != null) {
+        resObj.kafka = {
+          kafkaId: row[11],
+          topic: row[12],
+        };
+      }
+      if (row[13] != null || row[14] != null || row[15] != null) {
+        resObj.mysql = {
+          host: row[13],
+          database: row[14],
+          schema: row[15],
+          port: toInteger(row[16]),
+        };
+      }
+      if (row[17] != null || row[19] != null || row[21] != null) {
+        resObj.oracle = {
+          host: row[17],
+          protocol: row[18],
+          sid: row[19],
+          port: toInteger(row[20]),
+          schema: row[21],
+        };
+      }
+      if (row[22] != null || row[23] != null) {
+        resObj.snmp = {
+          oid: row[22],
+          mibDocumentId: row[23],
+        };
+      }
+      if (row[24] != null || row[25] != null || row[26] != null) {
+        resObj.workflow = {
+          engineId: row[24],
+          runnerId: row[25],
+          workflowName: row[26],
+        };
+      }
+      return resObj;
+    }
+
+    async function validateFetchJobForeignKeys(data) {
+      if (data.ne?.neId != null) {
+        if (!(await dbIdExists(data.ne.neId, "ne"))) {
+          return "neId " + data.ne.neId + " does not exist";
+        }
+      }
+      if (data.email?.emailId != null) {
+        if (!(await dbIdExists(data.email.emailId, "adminEmail"))) {
+          return "emailId " + data.email.emailId + " does not exist";
+        }
+      }
+      if (data.kafka?.kafkaId != null) {
+        if (!(await dbIdExists(data.kafka.kafkaId, "adminKafka"))) {
+          return "kafkaId " + data.kafka.kafkaId + " does not exist";
+        }
+      }
+      if (data.snmp?.mibDocumentId != null) {
+        if (!(await dbIdExists(data.snmp.mibDocumentId, "document"))) {
+          return "mibDocumentId " + data.snmp.mibDocumentId + " does not exist";
+        }
+      }
+      if (data.workflow?.engineId != null) {
+        if (!(await dbIdExists(data.workflow.engineId, "adminWorkflow"))) {
+          return "engineId " + data.workflow.engineId + " does not exist";
+        }
+      }
+      return null;
+    }
+
+    function bindPreparedParams(ddp, bindings) {
+      for (let i = 0; i < bindings.length; i++) {
+        let param = bindings[i];
+        let idx = i + 1;
+        if (param.type === "int") {
+          ddp.bindInteger(idx, toInteger(param.value));
+        } else if (param.type === "bool") {
+          ddp.bindBoolean(idx, toBoolean(param.value));
+        } else if (param.type === "float") {
+          ddp.bindFloat(idx, toDecimal(param.value));
+        } else {
+          ddp.bindVarchar(idx, String(param.value));
+        }
+      }
+    }
+
     async function getAllFetchJobs(req, res, next) {
       try {
         let result = validationResult(req);
@@ -24074,9 +23669,7 @@ var run = async () => {
             req.query.pageNumber
           );
           let resJson = [];
-          let ddRead = await DDC.runAndReadAll(
-            "SELECT id FROM fetchJob WHERE delete = false"
-          );
+          let ddRead = await DDC.runAndReadAll("SELECT id FROM fetchJob");
           let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
           if (ddRows.length > 0) {
             for (let idx in ddRows) {
@@ -24102,7 +23695,127 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          res.sendStatus(410);
+          let fkError = await validateFetchJobForeignKeys(req.body);
+          if (fkError != null) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({ errors: fkError });
+          }
+          let fetchId = req.body.fetchId != null ? req.body.fetchId : uuidv4();
+          if (await dbIdExists(fetchId, "fetchJob")) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(409)
+              .json({ errors: "fetchId " + fetchId + " already exists" });
+          }
+          let cols = [];
+          let placeholders = [];
+          let bindings = [];
+          const pushField = (col, value, type = "varchar") => {
+            if (value !== undefined && value !== null) {
+              cols.push(col);
+              bindings.push({ type, value });
+              placeholders.push("$" + bindings.length);
+            }
+          };
+          pushField("id", fetchId, "varchar");
+          pushField("description", req.body.description, "varchar");
+          pushField("protocol", req.body.protocol, "varchar");
+          pushField(
+            "cronTime",
+            req.body.cronTime != null ? req.body.cronTime : "0 0 * * *",
+            "varchar"
+          );
+          pushField(
+            "enabled",
+            req.body.enabled != null ? req.body.enabled : false,
+            "bool"
+          );
+          pushField("neId", req.body.ne?.neId, "varchar");
+          pushField("emailId", req.body.email?.emailId, "varchar");
+          pushField("emailAddress", req.body.email?.address, "varchar");
+          pushField("emailSubject", req.body.email?.subject, "varchar");
+          pushField("fileUrl", req.body.file?.url, "varchar");
+          pushField("httpUrl", req.body.http?.url, "varchar");
+          pushField("kafkaId", req.body.kafka?.kafkaId, "varchar");
+          pushField("kafkaTopic", req.body.kafka?.topic, "varchar");
+          pushField("mysqlHost", req.body.mysql?.host, "varchar");
+          pushField("mysqlDatabase", req.body.mysql?.database, "varchar");
+          pushField("mysqlSchema", req.body.mysql?.schema, "varchar");
+          pushField(
+            "mysqlPort",
+            req.body.mysql?.port != null ? req.body.mysql.port : 3307,
+            "int"
+          );
+          pushField("oracleHost", req.body.oracle?.host, "varchar");
+          pushField(
+            "oracleProtocol",
+            req.body.oracle?.protocol != null ? req.body.oracle.protocol : "TCP",
+            "varchar"
+          );
+          pushField("oracleSid", req.body.oracle?.sid, "varchar");
+          pushField(
+            "oraclePort",
+            req.body.oracle?.port != null ? req.body.oracle.port : 1521,
+            "int"
+          );
+          pushField("oracleSchema", req.body.oracle?.schema, "varchar");
+          pushField("snmpReadOid", req.body.snmp?.oid, "varchar");
+          pushField("snmpMibDocumentId", req.body.snmp?.mibDocumentId, "varchar");
+          pushField("workflowEngineId", req.body.workflow?.engineId, "varchar");
+          pushField("workflowRunnerId", req.body.workflow?.runnerId, "varchar");
+          pushField("workflowName", req.body.workflow?.workflowName, "varchar");
+          pushField(
+            "retries",
+            req.body.retry?.retries != null ? req.body.retry.retries : 1,
+            "int"
+          );
+          pushField(
+            "currentRetry",
+            req.body.retry?.currentRetry != null
+              ? req.body.retry.currentRetry
+              : 0,
+            "int"
+          );
+          pushField(
+            "retryDelay",
+            req.body.retry?.retryDelay != null ? req.body.retry.retryDelay : 60,
+            "int"
+          );
+          pushField(
+            "maxLifeRetries",
+            req.body.retry?.maxLifeRetries != null
+              ? req.body.retry.maxLifeRetries
+              : 16,
+            "int"
+          );
+          pushField(
+            "currentLifeRetries",
+            req.body.retry?.currentLifeRetries != null
+              ? req.body.retry.currentLifeRetries
+              : 0,
+            "int"
+          );
+          pushField(
+            "function",
+            req.body.function != null ? req.body.function : "noop();",
+            "varchar"
+          );
+
+          let ddp = await DDC.prepare(
+            "INSERT INTO fetchJob (" +
+              cols.join(",") +
+              ") VALUES (" +
+              placeholders.join(",") +
+              ")"
+          );
+          bindPreparedParams(ddp, bindings);
+          await ddp.run();
+          res
+            .contentType(OAS.mimeJSON)
+            .status(200)
+            .json({ fetchId: fetchId });
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -24118,7 +23831,25 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          res.sendStatus(410);
+          let ddp = await DDC.prepare(
+            "SELECT id,description,protocol,cronTime,enabled,neId,emailId,emailAddress,emailSubject,fileUrl,httpUrl,kafkaId,kafkaTopic,mysqlHost,mysqlDatabase,mysqlSchema,mysqlPort,oracleHost,oracleProtocol,oracleSid,oraclePort,oracleSchema,snmpReadOid,snmpMibDocumentId,workflowEngineId,workflowRunnerId,workflowName,retries,currentRetry,retryDelay,maxLifeRetries,currentLifeRetries,function FROM fetchJob WHERE id = $1 LIMIT 1"
+          );
+          ddp.bindVarchar(1, req.params.fetchId);
+          let ddRead = await ddp.runAndReadAll();
+          let ddRows = ddRead.getRows();
+          if (ddRows.length > 0) {
+            res
+              .contentType(OAS.mimeJSON)
+              .status(200)
+              .json(formatFetchJobRow(ddRows[0]));
+          } else {
+            res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "fetchId " + req.params.fetchId + " does not exist",
+              });
+          }
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -24134,7 +23865,197 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          res.sendStatus(410);
+          if (!(await dbIdExists(req.params.fetchId, "fetchJob"))) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "fetchId " + req.params.fetchId + " does not exist",
+              });
+          }
+          let fkError = await validateFetchJobForeignKeys(req.body);
+          if (fkError != null) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({ errors: fkError });
+          }
+
+          let sets = [];
+          let bindings = [];
+          const setField = (col, value, type = "varchar") => {
+            if (value === null) {
+              sets.push(col + " = NULL");
+            } else if (value !== undefined) {
+              bindings.push({ type, value });
+              sets.push(col + " = $" + bindings.length);
+            }
+          };
+
+          if (req.body.description !== undefined) {
+            setField("description", req.body.description, "varchar");
+          }
+          if (req.body.protocol !== undefined) {
+            setField("protocol", req.body.protocol, "varchar");
+          }
+          if (req.body.cronTime !== undefined) {
+            setField("cronTime", req.body.cronTime, "varchar");
+          }
+          if (req.body.enabled !== undefined) {
+            setField("enabled", req.body.enabled, "bool");
+          }
+          if (req.body.ne === null) {
+            setField("neId", null);
+          } else if (req.body.ne !== undefined) {
+            if (req.body.ne.neId !== undefined) {
+              setField("neId", req.body.ne.neId, "varchar");
+            }
+          }
+          if (req.body.email === null) {
+            setField("emailId", null);
+            setField("emailAddress", null);
+            setField("emailSubject", null);
+          } else if (req.body.email !== undefined) {
+            if (req.body.email.emailId !== undefined) {
+              setField("emailId", req.body.email.emailId, "varchar");
+            }
+            if (req.body.email.address !== undefined) {
+              setField("emailAddress", req.body.email.address, "varchar");
+            }
+            if (req.body.email.subject !== undefined) {
+              setField("emailSubject", req.body.email.subject, "varchar");
+            }
+          }
+          if (req.body.file === null) {
+            setField("fileUrl", null);
+          } else if (req.body.file !== undefined) {
+            if (req.body.file.url !== undefined) {
+              setField("fileUrl", req.body.file.url, "varchar");
+            }
+          }
+          if (req.body.http === null) {
+            setField("httpUrl", null);
+          } else if (req.body.http !== undefined) {
+            if (req.body.http.url !== undefined) {
+              setField("httpUrl", req.body.http.url, "varchar");
+            }
+          }
+          if (req.body.kafka === null) {
+            setField("kafkaId", null);
+            setField("kafkaTopic", null);
+          } else if (req.body.kafka !== undefined) {
+            if (req.body.kafka.kafkaId !== undefined) {
+              setField("kafkaId", req.body.kafka.kafkaId, "varchar");
+            }
+            if (req.body.kafka.topic !== undefined) {
+              setField("kafkaTopic", req.body.kafka.topic, "varchar");
+            }
+          }
+          if (req.body.mysql === null) {
+            setField("mysqlHost", null);
+            setField("mysqlDatabase", null);
+            setField("mysqlSchema", null);
+            setField("mysqlPort", 3307, "int");
+          } else if (req.body.mysql !== undefined) {
+            if (req.body.mysql.host !== undefined) {
+              setField("mysqlHost", req.body.mysql.host, "varchar");
+            }
+            if (req.body.mysql.database !== undefined) {
+              setField("mysqlDatabase", req.body.mysql.database, "varchar");
+            }
+            if (req.body.mysql.schema !== undefined) {
+              setField("mysqlSchema", req.body.mysql.schema, "varchar");
+            }
+            if (req.body.mysql.port !== undefined) {
+              setField("mysqlPort", req.body.mysql.port, "int");
+            }
+          }
+          if (req.body.oracle === null) {
+            setField("oracleHost", null);
+            setField("oracleProtocol", "TCP", "varchar");
+            setField("oracleSid", null);
+            setField("oraclePort", 1521, "int");
+            setField("oracleSchema", null);
+          } else if (req.body.oracle !== undefined) {
+            if (req.body.oracle.host !== undefined) {
+              setField("oracleHost", req.body.oracle.host, "varchar");
+            }
+            if (req.body.oracle.protocol !== undefined) {
+              setField("oracleProtocol", req.body.oracle.protocol, "varchar");
+            }
+            if (req.body.oracle.sid !== undefined) {
+              setField("oracleSid", req.body.oracle.sid, "varchar");
+            }
+            if (req.body.oracle.port !== undefined) {
+              setField("oraclePort", req.body.oracle.port, "int");
+            }
+            if (req.body.oracle.schema !== undefined) {
+              setField("oracleSchema", req.body.oracle.schema, "varchar");
+            }
+          }
+          if (req.body.snmp === null) {
+            setField("snmpReadOid", null);
+            setField("snmpMibDocumentId", null);
+          } else if (req.body.snmp !== undefined) {
+            if (req.body.snmp.oid !== undefined) {
+              setField("snmpReadOid", req.body.snmp.oid, "varchar");
+            }
+            if (req.body.snmp.mibDocumentId !== undefined) {
+              setField("snmpMibDocumentId", req.body.snmp.mibDocumentId, "varchar");
+            }
+          }
+          if (req.body.workflow === null) {
+            setField("workflowEngineId", null);
+            setField("workflowRunnerId", null);
+            setField("workflowName", null);
+          } else if (req.body.workflow !== undefined) {
+            if (req.body.workflow.engineId !== undefined) {
+              setField("workflowEngineId", req.body.workflow.engineId, "varchar");
+            }
+            if (req.body.workflow.runnerId !== undefined) {
+              setField("workflowRunnerId", req.body.workflow.runnerId, "varchar");
+            }
+            if (req.body.workflow.workflowName !== undefined) {
+              setField("workflowName", req.body.workflow.workflowName, "varchar");
+            }
+          }
+          if (req.body.retry !== undefined && req.body.retry !== null) {
+            if (req.body.retry.retries !== undefined) {
+              setField("retries", req.body.retry.retries, "int");
+            }
+            if (req.body.retry.currentRetry !== undefined) {
+              setField("currentRetry", req.body.retry.currentRetry, "int");
+            }
+            if (req.body.retry.retryDelay !== undefined) {
+              setField("retryDelay", req.body.retry.retryDelay, "int");
+            }
+            if (req.body.retry.maxLifeRetries !== undefined) {
+              setField("maxLifeRetries", req.body.retry.maxLifeRetries, "int");
+            }
+            if (req.body.retry.currentLifeRetries !== undefined) {
+              setField(
+                "currentLifeRetries",
+                req.body.retry.currentLifeRetries,
+                "int"
+              );
+            }
+          }
+          if (req.body.function !== undefined) {
+            setField("function", req.body.function, "varchar");
+          }
+
+          if (sets.length > 0) {
+            bindings.push({ type: "varchar", value: req.params.fetchId });
+            let ddp = await DDC.prepare(
+              "UPDATE fetchJob SET " +
+                sets.join(", ") +
+                " WHERE id = $" +
+                bindings.length
+            );
+            bindPreparedParams(ddp, bindings);
+            await ddp.run();
+          }
+          res.sendStatus(204);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -24150,7 +24071,142 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          res.sendStatus(410);
+          if (!(await dbIdExists(req.params.fetchId, "fetchJob"))) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({
+                errors: "fetchId " + req.params.fetchId + " does not exist",
+              });
+          }
+          let fkError = await validateFetchJobForeignKeys(req.body);
+          if (fkError != null) {
+            return res
+              .contentType(OAS.mimeJSON)
+              .status(404)
+              .json({ errors: fkError });
+          }
+
+          let sets = [];
+          let bindings = [];
+          const setField = (col, value, type = "varchar") => {
+            if (value === null || value === undefined) {
+              sets.push(col + " = NULL");
+            } else {
+              bindings.push({ type, value });
+              sets.push(col + " = $" + bindings.length);
+            }
+          };
+
+          setField("description", req.body.description, "varchar");
+          setField("protocol", req.body.protocol, "varchar");
+          setField(
+            "cronTime",
+            req.body.cronTime != null ? req.body.cronTime : "0 0 * * *",
+            "varchar"
+          );
+          setField(
+            "enabled",
+            req.body.enabled != null ? req.body.enabled : false,
+            "bool"
+          );
+          setField("neId", req.body.ne?.neId ?? null, "varchar");
+          setField("emailId", req.body.email?.emailId ?? null, "varchar");
+          setField("emailAddress", req.body.email?.address ?? null, "varchar");
+          setField("emailSubject", req.body.email?.subject ?? null, "varchar");
+          setField("fileUrl", req.body.file?.url ?? null, "varchar");
+          setField("httpUrl", req.body.http?.url ?? null, "varchar");
+          setField("kafkaId", req.body.kafka?.kafkaId ?? null, "varchar");
+          setField("kafkaTopic", req.body.kafka?.topic ?? null, "varchar");
+          setField("mysqlHost", req.body.mysql?.host ?? null, "varchar");
+          setField("mysqlDatabase", req.body.mysql?.database ?? null, "varchar");
+          setField("mysqlSchema", req.body.mysql?.schema ?? null, "varchar");
+          setField(
+            "mysqlPort",
+            req.body.mysql?.port != null ? req.body.mysql.port : 3307,
+            "int"
+          );
+          setField("oracleHost", req.body.oracle?.host ?? null, "varchar");
+          setField(
+            "oracleProtocol",
+            req.body.oracle?.protocol != null ? req.body.oracle.protocol : "TCP",
+            "varchar"
+          );
+          setField("oracleSid", req.body.oracle?.sid ?? null, "varchar");
+          setField(
+            "oraclePort",
+            req.body.oracle?.port != null ? req.body.oracle.port : 1521,
+            "int"
+          );
+          setField("oracleSchema", req.body.oracle?.schema ?? null, "varchar");
+          setField("snmpReadOid", req.body.snmp?.oid ?? null, "varchar");
+          setField(
+            "snmpMibDocumentId",
+            req.body.snmp?.mibDocumentId ?? null,
+            "varchar"
+          );
+          setField(
+            "workflowEngineId",
+            req.body.workflow?.engineId ?? null,
+            "varchar"
+          );
+          setField(
+            "workflowRunnerId",
+            req.body.workflow?.runnerId ?? null,
+            "varchar"
+          );
+          setField(
+            "workflowName",
+            req.body.workflow?.workflowName ?? null,
+            "varchar"
+          );
+          setField(
+            "retries",
+            req.body.retry?.retries != null ? req.body.retry.retries : 1,
+            "int"
+          );
+          setField(
+            "currentRetry",
+            req.body.retry?.currentRetry != null
+              ? req.body.retry.currentRetry
+              : 0,
+            "int"
+          );
+          setField(
+            "retryDelay",
+            req.body.retry?.retryDelay != null ? req.body.retry.retryDelay : 60,
+            "int"
+          );
+          setField(
+            "maxLifeRetries",
+            req.body.retry?.maxLifeRetries != null
+              ? req.body.retry.maxLifeRetries
+              : 16,
+            "int"
+          );
+          setField(
+            "currentLifeRetries",
+            req.body.retry?.currentLifeRetries != null
+              ? req.body.retry.currentLifeRetries
+              : 0,
+            "int"
+          );
+          setField(
+            "function",
+            req.body.function != null ? req.body.function : "noop();",
+            "varchar"
+          );
+
+          bindings.push({ type: "varchar", value: req.params.fetchId });
+          let ddp = await DDC.prepare(
+            "UPDATE fetchJob SET " +
+              sets.join(", ") +
+              " WHERE id = $" +
+              bindings.length
+          );
+          bindPreparedParams(ddp, bindings);
+          await ddp.run();
+          res.sendStatus(204);
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -24167,9 +24223,9 @@ var run = async () => {
         let result = validationResult(req);
         if (result.isEmpty()) {
           if (await dbIdExists(req.params.fetchId, "fetchJob")) {
-            await DDC.run(
-              "DELETE FROM fetchJob WHERE id = '" + req.params.fetchId + "'"
-            );
+            let ddp = await DDC.prepare("DELETE FROM fetchJob WHERE id = $1");
+            ddp.bindVarchar(1, req.params.fetchId);
+            await ddp.run();
             res.sendStatus(204);
           } else {
             res
@@ -28833,6 +28889,7 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/cost/cable",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       body("technology").isIn(OAS.cableTechnology),
+      body("unit").default("m").isIn(OAS.sizeUnit),
       body("costPerUnit").isFloat(OAS.costPerUnit),
       addCableCost
     );
@@ -28862,7 +28919,6 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/cost/cable",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       body("technology").isIn(OAS.cableTechnology),
-      body("type").optional().isIn(OAS.constructionType),
       deleteCableCost
     );
 
@@ -28923,7 +28979,6 @@ var run = async () => {
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       body("category").isIn(OAS.ductSizeCategory),
       body("configuration").isInt(OAS.ductConfiguration),
-      body("type").optional().isIn(OAS.constructionType),
       deleteDuctCost
     );
 
@@ -29653,6 +29708,39 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/fetch",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+      body("fetchId").optional().isUUID(4),
+      body("description").isString().trim().notEmpty(),
+      body("protocol").isIn(OAS.fetchProtocol),
+      body("cronTime").optional().isString().trim().notEmpty(),
+      body("enabled").optional().isBoolean({ strict: true }),
+      body("ne.neId").optional().isUUID(4),
+      body("email.emailId").optional().isUUID(4),
+      body("email.address").optional().isEmail(),
+      body("email.subject").optional().isLength(OAS.emailSubject),
+      body("file.url").optional().isString().trim(),
+      body("http.url").optional().isURL({ protocols: OAS.url_protocols }),
+      body("kafka.kafkaId").optional().isUUID(4),
+      body("kafka.topic").optional().isString().trim(),
+      body("mysql.host").optional().isString().trim(),
+      body("mysql.database").optional().isString().trim(),
+      body("mysql.schema").optional().isString().trim(),
+      body("mysql.port").optional().isInt(OAS.port),
+      body("oracle.host").optional().isString().trim(),
+      body("oracle.protocol").optional().isIn(["TCP", "UDP"]),
+      body("oracle.sid").optional().isString().trim(),
+      body("oracle.port").optional().isInt(OAS.port),
+      body("oracle.schema").optional().isString().trim(),
+      body("snmp.oid").optional().isString().trim(),
+      body("snmp.mibDocumentId").optional().isUUID(4),
+      body("workflow.engineId").optional().isUUID(4),
+      body("workflow.runnerId").optional().isString().trim(),
+      body("workflow.workflowName").optional().isString().trim(),
+      body("retry.retries").optional().isInt({ min: 0, max: 8 }),
+      body("retry.currentRetry").optional().isInt({ min: 0, max: 8 }),
+      body("retry.retryDelay").optional().isInt(OAS.callback_retryDelay),
+      body("retry.maxLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("retry.currentLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("function").optional().isString(),
       addFetchJob
     );
 
@@ -29691,8 +29779,41 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       param("fetchId").isUUID(4),
-      updateFetchJob,
-      replaceFetchJob
+      body("description").optional().isString().trim().notEmpty(),
+      body("protocol").optional().isIn(OAS.fetchProtocol),
+      body("cronTime").optional().isString().trim().notEmpty(),
+      body("enabled").optional().isBoolean({ strict: true }),
+      body("ne.neId").optional({ values: "null" }).isUUID(4),
+      body("email.emailId").optional({ values: "null" }).isUUID(4),
+      body("email.address").optional({ values: "null" }).isEmail(),
+      body("email.subject").optional({ values: "null" }).isLength(OAS.emailSubject),
+      body("file.url").optional({ values: "null" }).isString().trim(),
+      body("http.url")
+        .optional({ values: "null" })
+        .isURL({ protocols: OAS.url_protocols }),
+      body("kafka.kafkaId").optional({ values: "null" }).isUUID(4),
+      body("kafka.topic").optional({ values: "null" }).isString().trim(),
+      body("mysql.host").optional({ values: "null" }).isString().trim(),
+      body("mysql.database").optional({ values: "null" }).isString().trim(),
+      body("mysql.schema").optional({ values: "null" }).isString().trim(),
+      body("mysql.port").optional().isInt(OAS.port),
+      body("oracle.host").optional({ values: "null" }).isString().trim(),
+      body("oracle.protocol").optional().isIn(["TCP", "UDP"]),
+      body("oracle.sid").optional({ values: "null" }).isString().trim(),
+      body("oracle.port").optional().isInt(OAS.port),
+      body("oracle.schema").optional({ values: "null" }).isString().trim(),
+      body("snmp.oid").optional({ values: "null" }).isString().trim(),
+      body("snmp.mibDocumentId").optional({ values: "null" }).isUUID(4),
+      body("workflow.engineId").optional({ values: "null" }).isUUID(4),
+      body("workflow.runnerId").optional({ values: "null" }).isString().trim(),
+      body("workflow.workflowName").optional({ values: "null" }).isString().trim(),
+      body("retry.retries").optional().isInt({ min: 0, max: 8 }),
+      body("retry.currentRetry").optional().isInt({ min: 0, max: 8 }),
+      body("retry.retryDelay").optional().isInt(OAS.callback_retryDelay),
+      body("retry.maxLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("retry.currentLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("function").optional().isString(),
+      updateFetchJob
     );
 
     /*
@@ -29705,6 +29826,40 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/fetch/:fetchId",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       param("fetchId").isUUID(4),
+      body("description").isString().trim().notEmpty(),
+      body("protocol").isIn(OAS.fetchProtocol),
+      body("cronTime").optional().isString().trim().notEmpty(),
+      body("enabled").optional().isBoolean({ strict: true }),
+      body("ne.neId").optional({ values: "null" }).isUUID(4),
+      body("email.emailId").optional({ values: "null" }).isUUID(4),
+      body("email.address").optional({ values: "null" }).isEmail(),
+      body("email.subject").optional({ values: "null" }).isLength(OAS.emailSubject),
+      body("file.url").optional({ values: "null" }).isString().trim(),
+      body("http.url")
+        .optional({ values: "null" })
+        .isURL({ protocols: OAS.url_protocols }),
+      body("kafka.kafkaId").optional({ values: "null" }).isUUID(4),
+      body("kafka.topic").optional({ values: "null" }).isString().trim(),
+      body("mysql.host").optional({ values: "null" }).isString().trim(),
+      body("mysql.database").optional({ values: "null" }).isString().trim(),
+      body("mysql.schema").optional({ values: "null" }).isString().trim(),
+      body("mysql.port").optional().isInt(OAS.port),
+      body("oracle.host").optional({ values: "null" }).isString().trim(),
+      body("oracle.protocol").optional().isIn(["TCP", "UDP"]),
+      body("oracle.sid").optional({ values: "null" }).isString().trim(),
+      body("oracle.port").optional().isInt(OAS.port),
+      body("oracle.schema").optional({ values: "null" }).isString().trim(),
+      body("snmp.oid").optional({ values: "null" }).isString().trim(),
+      body("snmp.mibDocumentId").optional({ values: "null" }).isUUID(4),
+      body("workflow.engineId").optional({ values: "null" }).isUUID(4),
+      body("workflow.runnerId").optional({ values: "null" }).isString().trim(),
+      body("workflow.workflowName").optional({ values: "null" }).isString().trim(),
+      body("retry.retries").optional().isInt({ min: 0, max: 8 }),
+      body("retry.currentRetry").optional().isInt({ min: 0, max: 8 }),
+      body("retry.retryDelay").optional().isInt(OAS.callback_retryDelay),
+      body("retry.maxLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("retry.currentLifeRetries").optional().isInt(OAS.callback_maxLifeRetries),
+      body("function").optional().isString(),
       replaceFetchJob
     );
 
