@@ -165,7 +165,7 @@ function nodejs_dep_scan() {
    local DEPS=$(jq -r ".|length" dependencies.json)
    if [ "${DEPS:-0}" -gt 0 ] ; then
      npm install --omit=dev --no-audit --no-fund &>/dev/null
-     for ((d=1;d<${DEPS};d++)) ; do
+     for ((d=0;d<${DEPS};d++)) ; do
        local DEP=$(jq -r ".[${d}]" dependencies.json)
        local DEPVER=$(jq -r ".dependencies.\"${DEP}\"" package.json)
        local DEPLIC="Proprietary"
@@ -175,7 +175,8 @@ function nodejs_dep_scan() {
        echo "| \`${DEP}\` | ${DEPVER} | ${DEPLIC} |" >> ../../docs/nodejs-dependencies.md
      done
      [[ -d "node_modules" ]] && rm -R -f node_modules &>/dev/null
-     for ((d=1;d<${DEPS};d++)) ; do
+     [[ -f "package-lock.json" ]] && rm -f package-lock.json &>/dev/null
+     for ((d=0;d<${DEPS};d++)) ; do
        local DEP=$(jq -r ".[${d}]" dependencies.json)
        echo -e "\n#### \`${DEP}\`\n\n" >> ../../docs/nodejs-dependencies.md
        echo "\`\`\`npm" >> ../../docs/nodejs-dependencies.md
@@ -255,6 +256,7 @@ RETVAL=$?
 
 doing "Documenting: licenseGen (NodeJS)"
 nodejs_dep_scan "licenseGen"
+RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 popd &>/dev/null

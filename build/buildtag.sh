@@ -172,6 +172,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
 elif [[ "${OSTYPE}" == "darwin"* ]] ; then
   sed -i '' "s/NI_BUILD=.*/NI_BUILD=\"${NI_BUILD}\"/" src/ni.ini
 fi
+RETVAL=$?
 git diff --quiet src/ni.ini &>/dev/null || git add -f src/ni.ini
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

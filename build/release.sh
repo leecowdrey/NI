@@ -158,17 +158,8 @@ set +x
 # 4 - preset (low,medium,high)
 function js_obfuscate() {
   local RETVAL=0
-  local LOCK_START_DATE="2025-01-01"
-  local LOCK_END_DATE="2049-12-31"
   export NODE_NO_WARNINGS=1
-  if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
-    LOCK_START_DATE=$(date +"%Y-%m-%d") 
-    LOCK_END_DATE=$(date -d "15 month" +'%Y-%m-%d')
-  elif [[ "${OSTYPE}" ==  "darwin"* ]] ; then
-    LOCK_START_DATE=$(date +'%Y-%m-%d')
-    LOCK_END_DATE=$(date -v +15m +'%Y-%m-%d')
-  fi
-  local JS_TMP=$(mktemp -q -p ./ NIXXXXXXXX)
+  local JS_TMP=$(mktemp ./NIXXXXXXXX)
   [[ -f "${JS_TMP}" ]] && mv -f ${JS_TMP} ${JS_TMP}.js &>/dev/null
   JS_TMP="${JS_TMP}.js"
   for JS in $(find ../src/${1} -maxdepth 1 -type f -name "${2}") ; do
@@ -176,66 +167,53 @@ function js_obfuscate() {
       local JS_REL="${JS/$JS_SRC/}"
       if [[ "${JS}" != *"oasConstants.mjs"* ]] ; then
         cat > ${JS_TMP} <<EOF
-const JSConfuser = require("js-confuser");
+const JavaScriptObfuscator = require("javascript-obfuscator");
 const { readFileSync, writeFileSync } = require("fs");
 
 // Read input code
 const sourceCode = readFileSync("${JS}", "utf8");
+const preset = "${4:-low}";
+const presetMap = {
+  low: "low-obfuscation",
+  medium: "medium-obfuscation",
+  high: "high-obfuscation",
+};
 const options = {
+  optionsPreset: presetMap[preset] || "low-obfuscation",
   target: "${3}",
-  preset: "low",
-  calculator: false,
-  variableMasking: false,
-  renameVariables: false,
-  renameGlobals: false,
-  hexadecimalNumbers: true,
   compact: true,
-  minify: false,
-  stringCompression: true,
-  stringConcealing: true,
-  stringEncoding: true,
-  stringSplitting: false,
-  objectExtraction: false,
-  renameLabels: false,
-  movedDeclarations: false,
-  duplicateLiteralsRemoval: false,
-  globalConcealing: false,
-  preserveFunctionLength: true,
-  shuffle: false,
-  pack: false,
-  flatten: false,
-  rgf: false,
-  controlFlowFlattening: false,
-  dispatcher: false,
-  opaquePredicates: false,
-  deadCode: false,
-  astScrambler: false,
-  lock: {
-    selfDefending: false,
-    customLocks: false,
-    integrity: false,
-    antiDebug: false,
-    tamperProtection: false,
-  },
+  controlFlowFlattening: preset === "medium" || preset === "high",
+  deadCodeInjection: preset === "high",
+  debugProtection: false,
+  disableConsoleOutput: false,
+  identifierNamesGenerator: "hexadecimal",
+  numbersToExpressions: false,
+  renameGlobals: false,
+  renameProperties: false,
+  selfDefending: false,
+  simplify: false,
+  splitStrings: false,
+  stringArray: true,
+  stringArrayEncoding: ["base64"],
+  stringArrayThreshold: 0.75,
+  unicodeEscapeSequence: false,
 };
 
-JSConfuser.obfuscate(sourceCode, options)
-  .then((result) => {
-    // Write output code
-    writeFileSync("${JS_REL}", result.code);
-  })
-  .catch((err) => {
-    // Error occurred
-    console.error(err);
-    process.exit(1);
-  });
+try {
+  const result = JavaScriptObfuscator.obfuscate(sourceCode, options);
+  writeFileSync("${JS_REL}", result.getObfuscatedCode());
+} catch (err) {
+  console.error(err);
+  process.exit(1);
+}
 EOF
-        node ${JS_TMP}
+        node ${JS_TMP} >/dev/null
         RETVAL=$?
-        [[ ${RETVAL} -ne 0 ]] && break
         [[ -f "${JS_TMP}" ]] && rm -f ${JS_TMP} &>/dev/null
+        [[ ${RETVAL} -ne 0 ]] && break
     fi
   done
+  [[ -f "${JS_TMP}" ]] && rm -f ${JS_TMP} &>/dev/null
   return ${RETVAL}
 }
 
@@ -280,7 +258,7 @@ which node &> /dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 which npm &> /dev/null || exit 1
-npm install --no-audit --no-fund --silent --save-dev js-confuser &>/dev/null
+npm install --no-audit --no-fund --silent --save-dev javascript-obfuscator@^5.10.1 &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -305,12 +283,13 @@ RETVAL=$?
 
 doing "Updating license public key"
 if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
-  ni_LICENSE_PUBLIC_KEY=$(base64 -w 0 ../src/licenseGen/niMasterKey.pub)
-  sed -i -e "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" ni.ini
+  NI_LICENSE_PUBLIC_KEY=$(base64 -w 0 ../src/licenseGen/niMasterKey.pub) && \
+  sed -i -e "s|NI_LICENSE_PUBLIC_KEY=.*|NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"|" ni.ini
 elif [[ "${OSTYPE}" == "darwin"* ]] ; then
-  ni_LICENSE_PUBLIC_KEY=$(base64 -i ../src/licenseGen/niMasterKey.pub)
-  sed -i '' "s/NI_LICENSE_PUBLIC_KEY=.*/NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"/" ni.ini
+  NI_LICENSE_PUBLIC_KEY=$(base64 -i ../src/licenseGen/niMasterKey.pub | tr -d '\n') && \
+  sed -i '' "s|NI_LICENSE_PUBLIC_KEY=.*|NI_LICENSE_PUBLIC_KEY=\"${NI_LICENSE_PUBLIC_KEY}\"|" ni.ini
 fi
+RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 ## run the Obfuscation
@@ -334,7 +313,7 @@ fi
 
 ## create distribution archive
 doing "Creating distribution archive"
-TAR_OPTIONS="--exclude .git* --exclude cveignore.json --dereference -zcf"
+TAR_OPTIONS="--exclude .git* --exclude cveignore.json -h -zcf"
 tar ${TAR_OPTIONS} ni_alertService_${NI_VERSION}.tar.gz alertService/* && \
 tar ${TAR_OPTIONS} ni_apiGateway_${NI_VERSION}.tar.gz apiGateway/* && \
 tar ${TAR_OPTIONS} ni_apiServer_${NI_VERSION}.tar.gz apiServer/* && \

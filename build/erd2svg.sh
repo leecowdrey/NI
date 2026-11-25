@@ -157,7 +157,7 @@ RETVAL=$?
 which npm &> /dev/null || exit 1
 
 doing "Mermaid ERD to SVG"
-npx -y -p @mermaid-js/mermaid-cli mmdc -i docs/data-model/er-diagram.mermaid -o docs/data-model/ni-model.svg -e svg &>/dev/null && \
+npx --yes -p @mermaid-js/mermaid-cli mmdc -i docs/data-model/er-diagram.mermaid -o docs/data-model/ni-model.svg -e svg &>/dev/null && \
 git diff --quiet docs/data-model/ni-model.svg &>/dev/null || git add -f docs/data-model/ni-model.svg
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"

@@ -167,15 +167,15 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]] ; then
 elif [[ "${OSTYPE}" == "darwin"* ]] ; then
   sed -i '' "s/^  version: .*/  version: ${NI_VERSION}.${NI_BUILD}/" api/ni.yaml
 fi
-git diff --quiet src/ni.ini &>/dev/null || git add -f src/ni.ini
+RETVAL=$?
+git diff --quiet api/ni.yaml &>/dev/null || git add -f api/ni.yaml
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 
 [[ -d "api" ]] || exit 255
 doing "OpenAPI Generate JSON"
 git diff --quiet api/ni.yaml &>/dev/null || git add -f api/ni.yaml
-#yq -p yaml -o json api/ni.yaml > api/ni.json && \
-yq "." api/ni.yaml > api/ni.json && \
+yq "." -o=json api/ni.yaml > api/ni.json && \
 git diff --quiet api/ni.json &>/dev/null || git add -f api/ni.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
@@ -184,7 +184,7 @@ if [ ${RETVAL} -eq 0 ] ; then
  which npx &>/dev/null
  if [ $? -eq 0 ] ; then
    doing "OpenAPI Generate HTML"
-   npx -y @redocly/cli@latest build-docs api/ni.yaml -o docs/api/ni.html &>/dev/null && \
+   npx --yes @redocly/cli@latest build-docs api/ni.yaml -o docs/api/ni.html &>/dev/null && \
    git diff --quiet docs/api/ni.html &>/dev/null || git add -f docs/api/ni.html
    RETVAL=$?
    [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
