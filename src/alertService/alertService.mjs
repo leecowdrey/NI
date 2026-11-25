@@ -92,6 +92,16 @@ function sleep(ms) {
   });
 }
 
+async function parseJsonResponse(response) {
+  if (response.ok && response.status !== 204) {
+    const text = await response.text();
+    if (text.trim().length > 0) {
+      return JSON.parse(text);
+    }
+  }
+  return null;
+}
+
 function chunkArray(arr, size) {
   let res = [];
   for (let i = 0; i < arr.length; i += size) {
@@ -332,11 +342,8 @@ async function alertJobs() {
     })
       .then((response) => {
         if (response.ok) {
-          if (
-            response.status == 200 &&
-            toInteger(response.headers.get("Content-Length")) > 0
-          ) {
-            return response.json();
+          if (response.status == 200) {
+            return parseJsonResponse(response);
           }
         } else {
           LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "alertJobs", {
@@ -395,11 +402,8 @@ async function fetchTokenSecretKey(realm) {
     })
       .then((response) => {
         if (response.ok) {
-          if (
-            response.status == 200 &&
-            toInteger(response.headers.get("Content-Length")) > 0
-          ) {
-            return response.json();
+          if (response.status == 200) {
+            return parseJsonResponse(response);
           }
         } else {
           LOGGER.error(
@@ -473,11 +477,8 @@ async function queueDrain() {
       })
         .then((response) => {
           if (response.ok) {
-            if (
-              response.status == 200 &&
-              toInteger(response.headers.get("Content-Length")) > 0
-            ) {
-              return response.json();
+            if (response.status == 200) {
+              return parseJsonResponse(response);
             } else if (response.status == 204) {
               queueDrainTimer = setTimeout(queueDrain, queueDrainIntervalMs);
               queueEmpty = true;
@@ -617,9 +618,7 @@ async function checkEndpointReadiness() {
       })
         .then((response) => {
           if (response.ok) {
-            if (toInteger(response.headers.get("Content-Length")) > 0) {
-              return response.json();
-            }
+            return parseJsonResponse(response);
           } else {
             ENDPOINT_READY = false;
             LOGGER.error(
@@ -730,9 +729,7 @@ async function sendMail(q) {
     })
       .then((response) => {
         if (response.ok) {
-          if (toInteger(response.headers.get("Content-Length")) > 0) {
-            return response.json();
-          }
+          return parseJsonResponse(response);
         } else {
           return null;
         }

@@ -30,10 +30,7 @@ function fetchDuctPoints() {
       keepalive: true,
     })
       .then((response) => {
-        if (
-          response.status == 200 &&
-          toInteger(response.headers.get("Content-Length")) > 0
-        ) {
+        if (response.ok && response.status == 200) {
           return response.json();
         }
       })
@@ -80,13 +77,8 @@ function fetchListDuct() {
     }
   )
     .then((response) => {
-      if (response.ok) {
-        if (
-          response.status == 200 &&
-          toInteger(response.headers.get("Content-Length")) > 0
-        ) {
-          return response.json();
-        }
+      if (response.ok && response.status == 200) {
+        return response.json();
       }
     })
     .then((data) => {
@@ -97,7 +89,7 @@ function fetchListDuct() {
       let ductIds =
         "<option disabled value='-1' selected='selected'> -- select a duct -- </option>";
       if (suppliedDuctId != null) {
-        trenchIds =
+        ductIds =
           "<option disabled value='-1'> -- select a duct -- </option>";
       }
       for (var i = 0; i < data.length; i++) {
@@ -146,13 +138,8 @@ function fetchDuct() {
     }
   )
     .then((response) => {
-      if (response.ok) {
-        if (
-          response.status == 200 &&
-          toInteger(response.headers.get("Content-Length")) > 0
-        ) {
-          return response.json();
-        }
+      if (response.ok && response.status == 200) {
+        return response.json();
       }
     })
     .then((data) => {
