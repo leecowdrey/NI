@@ -9983,7 +9983,8 @@ var run = async () => {
     }
 
     async function getCablesCapacityState(req, res, next) {
-      //TODO:
+      // TODO
+      res.sendStatus(405);
     }
 
     async function deleteSingleCable(req, res, next) {

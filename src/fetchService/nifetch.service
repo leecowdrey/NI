@@ -1,6 +1,8 @@
 [Unit]
 Description=NI Fetch Service
-After=multi-user.target
+After=multi-user.target niapi.service
+Requires=niapi.service
+PartOf=niapi.service
 
 [Service]
 UMask=007

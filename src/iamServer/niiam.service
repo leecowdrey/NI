@@ -1,6 +1,8 @@
 [Unit]
 Description=Identity and Access Management Server
-After=multi-user.target
+After=multi-user.target niapi.service
+Requires=niapi.service
+PartOf=niapi.service
 
 [Service]
 Type=simple
