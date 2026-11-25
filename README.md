@@ -1375,7 +1375,7 @@ DNSSERV_RESOLVCONF=1
 NI is developed and supported on Debian based operating systems, this includes Ubuntu and other similar variants. The minimum supported version of Debian is version 12.
 
 > **Note:**
-> - RedHat Enterprise Linux (RHEL) and its variants are not supported but compatible and installation scripts will require adjustment to support the RHEL package manager. For demonstration systems any host supporting DuckDB, NodeJS 22.x can be used.
+> - RedHat Enterprise Linux (RHEL) and its variants are not supported but compatible and installation scripts will require adjustment to support the RHEL package manager. For demonstration systems any host supporting DuckDB, NodeJS 26.x can be used.
 
 ## 12.4. Host Firewalls
 

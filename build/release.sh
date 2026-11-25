@@ -280,7 +280,7 @@ which node &> /dev/null || exit 1
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 which npm &> /dev/null || exit 1
-npm -y install --silent --save-dev js-confuser &>/dev/null
+npm install --no-audit --no-fund --silent --save-dev js-confuser &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

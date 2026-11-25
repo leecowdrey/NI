@@ -17,9 +17,10 @@ steps:
 - script: which jq &>/dev/null || sudo apt install -y jq &>/dev/null
   displayName: 'Install JQ'
   workingDirectory: $(System.DefaultWorkingDirectory)
-- script: which node &>/dev/null || sudo apt install -y nodejs &>/dev/null
-  displayName: 'Install NodeJS'
-  workingDirectory: $(System.DefaultWorkingDirectory)
+- task: NodeTool@0
+  inputs:
+    versionSpec: '26.x'
+  displayName: 'Install NodeJS 26.x'
 - script: |
     git config --global user.email "pipeline@azure.com"
     git config --global user.name "Azure DevOps"
@@ -35,13 +36,13 @@ steps:
     [[ -d "./node_modules" ]] && rm -R -f ./node_modules &>/dev/null
     [[ -f "./package-lock.json" ]] && rm -f ./package-lock.json &>/dev/null
     export NODE_NO_WARNINGS=1
-    npm -y install --no-audit --no-fund --silent --omit=dev &>/dev/null 2>&1
+    npm install --no-audit --no-fund --silent --omit=dev &>/dev/null 2>&1
   displayName: 'Install AuditJS OSSI'
   workingDirectory: $(System.DefaultWorkingDirectory)
 - script: |
     cd src/apiServer
     export NODE_NO_WARNINGS=1
-    npx -y --no-audit --no-fund --silent auditjs@latest ossi --whitelist ./cveignore.json --quiet --json &> ./cve.json 
+    npx --yes --silent auditjs@latest ossi --whitelist ./cveignore.json --quiet --json &> ./cve.json 
     [[ $? -eq 0 ]] || cat ./cve.json|jq
     [[ -d "./node_modules" ]] && rm -R -f ./node_modules &>/dev/null
     [[ -f "./package-lock.json" ]] && rm -f ./package-lock.json &>/dev/null

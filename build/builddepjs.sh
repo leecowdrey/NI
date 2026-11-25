@@ -164,7 +164,7 @@ function nodejs_dep_scan() {
    jq -r ".dependencies|keys" package.json > dependencies.json
    local DEPS=$(jq -r ".|length" dependencies.json)
    if [ "${DEPS:-0}" -gt 0 ] ; then
-     npm install --omit=dev &>/dev/null
+     npm install --omit=dev --no-audit --no-fund &>/dev/null
      for ((d=1;d<${DEPS};d++)) ; do
        local DEP=$(jq -r ".[${d}]" dependencies.json)
        local DEPVER=$(jq -r ".dependencies.\"${DEP}\"" package.json)

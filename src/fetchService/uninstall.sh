@@ -35,7 +35,7 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
 
 doing "Removing NodeJS libraries"
-su --shell /bin/bash -l - -c "cd ${WORKING_DIRECTORY} && npm uninstall \$(ls -1 node_modules | tr '/\n' ' ')" ${USERNAME} &>/dev/null
+su --shell /bin/bash -l - -c "cd ${WORKING_DIRECTORY} && rm -rf node_modules package-lock.json" ${USERNAME} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || info "- fail"
 

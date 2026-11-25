@@ -159,7 +159,7 @@ which npm &> /dev/null || exit 1
 doing "Packing UI"
 set +x
 pushd src/ui &>/dev/null
-npm install webpack &>/dev/null && \
+npm install --no-audit --no-fund &>/dev/null && \
 npm run build &>/dev/null && \
 git add -A dist/* &>/dev/null
 RETVAL=$?

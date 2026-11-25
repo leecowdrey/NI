@@ -158,7 +158,7 @@ set +x
 function nodejs_scan() {
   local RETVAL=0
   #export NODE_NO_WARNINGS=1
-  push src/${1} &>/dev/null
+  pushd src/${1} &>/dev/null
   [[ -d "node_modules" ]] && rm -R -f node_modules &>/dev/null
   [[ -f "package-lock.json" ]] && rm -f package-lock.json &>/dev/null
   [[ -f "cve.json" ]] && rm -f cve.json &>/dev/null
@@ -171,8 +171,8 @@ function nodejs_scan() {
     done
     OSSI_CLI_PARAM="--whitelist ./cveignore.json ${OSSI_CLI_PARAM}"
   fi
-  npm -y install --silent --omit=dev &>/dev/null
-  npx -y auditjs@latest ossi ${OSSI_CLI_PARAM} &> cve.json && \
+  npm install --no-audit --no-fund --silent --omit=dev &>/dev/null
+  npx --yes auditjs@latest ossi ${OSSI_CLI_PARAM} &> cve.json && \
   git diff --quiet cve.json &>/dev/null || git add -f cve.json 
   RETVAL=$?
   [[ -d "node_modules" ]] && rm -R -f node_modules &>/dev/null

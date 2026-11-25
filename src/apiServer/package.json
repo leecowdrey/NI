@@ -1,21 +1,24 @@
 {
   "dependencies": {
-    "@duckdb/node-api": "latest",
+    "@duckdb/node-api": "^1.5.6-r.2",
     "basic-auth-connect": "^1.1.0",
     "compare-versions": "^6.1.1",
-    "compression": "^1.8.1",
-    "dayjs": "^1.11.18",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "express-fileupload": "^1.5.2",
-    "express-validator": "^7.2.1",
-    "js-base64": "^3.7.8",
-    "morgan": "^1.10.1",
-    "node-cron": "^4.2.1",
+    "compression": "^1.8.2",
+    "dayjs": "^1.11.23",
+    "dotenv": "^17.4.2",
+    "express": "^5.3.0",
+    "express-fileupload": "^1.6.0",
+    "express-validator": "^7.3.2",
+    "js-base64": "^3.9.7",
+    "morgan": "^1.12.1",
+    "node-cron": "^4.6.0",
     "nocache": "^4.0.0",
     "serve-favicon": "^2.5.1",
-    "software-license-key": "^1.0.2",
-    "uuid": "^13.0.0"
+    "software-license-key": "^1.1.0",
+    "uuid": "^14.0.3"
+  },
+  "engines": {
+    "node": ">=26.0.0"
   },
   "type": "module",
   "scripts": {

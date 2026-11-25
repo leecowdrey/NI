@@ -21,7 +21,7 @@ alert "NI UI Server Upgrade"
 which curl &> /dev/null || exit 1
 which openssl &> /dev/null || exit 1
 which unzip &> /dev/null || exit 1
-which node &> /dev/null || exit 1
+(which node &> /dev/null && [[ "$(node -v | sed 's/^v//' | cut -d'.' -f1)" -ge 26 ]]) || (curl -fsSL https://deb.nodesource.com/setup_26.x -o nodesource_setup.sh && bash nodesource_setup.sh && rm -f nodesource_setup.sh && apt update && apt install -y libatomic1 nodejs)
 which npm &> /dev/null || exit 1
 
 ADDRESS=$(grep -E "^UISERV_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -65,7 +65,7 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating NodeJS libraries"
-su --shell /bin/bash -l - -c "npm update --omit=dev" ${USERNAME} &>/dev/null
+su --shell /bin/bash -l - -c "npm install --omit=dev --no-audit --no-fund && npm rebuild" ${USERNAME} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

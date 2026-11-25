@@ -18,7 +18,7 @@ alert "NI Prediction Server Upgrade"
 # ensure root and have initial tools and config
 [[ $(id -u) -ne 0 ]] && exit 1
 [[ -f "${ENV}" ]] || exit 1
-which node &> /dev/null || exit 1
+(which node &> /dev/null && [[ "$(node -v | sed 's/^v//' | cut -d'.' -f1)" -ge 26 ]]) || (curl -fsSL https://deb.nodesource.com/setup_26.x -o nodesource_setup.sh && bash nodesource_setup.sh && rm -f nodesource_setup.sh && apt update && apt install -y libatomic1 nodejs)
 which npm &> /dev/null || exit 1
 
 CONFIG_DIRECTORY=$(grep -E "^CONFIG_DIRECTORY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -50,7 +50,7 @@ RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
 doing "Updating NodeJS libraries"
-su --shell /bin/bash -l - -c "npm update --omit=dev" ${USERNAME} &>/dev/null
+su --shell /bin/bash -l - -c "npm install --omit=dev --no-audit --no-fund && npm rebuild" ${USERNAME} &>/dev/null
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
