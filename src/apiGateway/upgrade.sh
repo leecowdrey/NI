@@ -50,8 +50,9 @@ SSL_CSR=$(grep -E "^APIGW_SSL_CSR=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_CERT=$(grep -E "^APIGW_SSL_CERT=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_DAYS=$(grep -E "^APIGW_SSL_DAYS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 SSL_SIZE=$(grep -E "^APIGW_SSL_SIZE=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-SERVICE_USERNAME=$(grep -E "^APISERV_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
-SERVICE_KEY=$(grep -E "^APISERV_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_USERNAME=$(grep -E "^NI_SERVICE_USERNAME=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_KEY=$(grep -E "^NI_SERVICE_KEY=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
+SERVICE_DIGEST=$(echo -n "${SERVICE_USERNAME}:${SERVICE_KEY}"|base64 -w 0)
 KRAKEND_VERSION=$(grep -E "^APIGW_KRAKEND_VERSION=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 KRAKEND_IGNORE_AUTH_VALIDATOR=$(grep -E "^APIGW_IGNORE_AUTH_VALIDATOR=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
 IAM_ADDRESS=$(grep -E "^IAM_ADDRESS=.*" ${ENV}|cut -d '=' -f2-|cut -d '"' -f2)
@@ -119,8 +120,8 @@ sed -i -e "s|0.0.0.0|${ADDRESS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json &
 sed -i -e "s|\"max_rate\": 32767|\"max_rate\": ${RATE_LIMIT_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"capacity\": 32767|\"capacity\": ${CAPACITY_REQUESTS}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 sed -i -e "s|\"every\": \"1m\"|\"every\": \"${RATE_LIMIT_EVERY}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
-sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json
-sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json&& \
+sed -i -e "s|\"allow_insecure_connections\": false|\"allow_insecure_connections\": ${TLS_INSECURE_CONNECTIONS,,}|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
+sed -i -e "s|\"Basic #\"|\"Basic ${SERVICE_DIGEST}\"|g" ${WORKING_DIRECTORY}/config/apiGateway.json && \
 chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/config/apiGateway.json && \
 chmod 660 ${WORKING_DIRECTORY}/config/apiGateway.json
 RETVAL=$?

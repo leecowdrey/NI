@@ -277,7 +277,7 @@
     "commissioned": "20250731",
     "onNet": true,
     "area": "urban",
-    "type": "utility",
+    "type": "unclassified",
     "location": {
       "country": "ESP",
       "region": "Catalonia",
@@ -331,7 +331,7 @@
     "commissioned": "20250731",
     "onNet": true,
     "area": "urban",
-    "type": "utility",
+    "type": "unclassified",
     "location": {
       "country": "ESP",
       "region": "Catalonia",
@@ -358,7 +358,7 @@
     "commissioned": "20250731",
     "onNet": true,
     "area": "urban",
-    "type": "utility",
+    "type": "unclassified",
     "location": {
       "country": "ESP",
       "region": "Catalonia",
@@ -412,7 +412,7 @@
     "commissioned": "20250731",
     "onNet": true,
     "area": "urban",
-    "type": "utility",
+    "type": "unclassified",
     "location": {
       "country": "ESP",
       "region": "Asturias",
@@ -627,7 +627,7 @@
     "commissioned": "20250731",
     "onNet": true,
     "area": "psz",
-    "type": "utility",
+    "type": "unclassified",
     "location": {
       "country": "ESP",
       "region": "Catalonia",

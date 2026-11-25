@@ -2314,6 +2314,7 @@ export const areaType = [
   "residential",
   "rural",
   "industrial",
+  "commercial",
   "mixed",
   "psz",
   "urban",
@@ -2507,7 +2508,6 @@ export const countryCode = [
   "ARM",
   "ASM",
   "ATA",
-  "ATF",
   "ATG",
   "AUS",
   "AUT",
@@ -2548,6 +2548,7 @@ export const countryCode = [
   "CRI",
   "CUB",
   "CUW",
+  "CXR",
   "CYM",
   "CYP",
   "CZE",
@@ -2622,6 +2623,7 @@ export const countryCode = [
   "LTU",
   "LUX",
   "LVA",
+  "MAC",
   "MAR",
   "MCO",
   "MDA",
@@ -2916,31 +2918,20 @@ export const languageCode = [
 export const currencySymbol = [
   "$",
   "£",
-  "¥",
-  "฿",
   "₣",
-  "₦",
-  "₪",
   "€",
-  "₴",
   "₹",
   "₺",
   "₽",
   "B$",
   "Cg",
-  "DH",
   "EC$",
   "F.CFA",
   "Fr",
-  "JD",
   "kr",
-  "QR",
   "R",
-  "RM",
-  "Rp",
   "S$",
   "XCG",
-  "zł",
 ];
 export const currencyIsoCode = [
   "AUD",
@@ -2951,28 +2942,13 @@ export const currencyIsoCode = [
   "EUR",
   "FKP",
   "GBP",
-  "HKD",
-  "IDR",
-  "ILS",
   "INR",
-  "ISK",
-  "JOD",
-  "JPY",
-  "MAD",
-  "MXN",
-  "MYR",
-  "NGN",
   "NOK",
   "NZD",
-  "PLN",
-  "QAR",
   "RUB",
-  "SEK",
   "SGD",
   "SHP",
-  "THB",
   "TRY",
-  "UAH",
   "USD",
   "XAF",
   "XCD",
@@ -3015,12 +2991,12 @@ export const poleStateUsed = "used";
 export const poleStateReserved = "reserved";
 export const poleStateFaulty = "faulty";
 export const poleState = [
-  poleStateUsed,
+  poleStateFree,
   poleStateUsed,
   poleStateReserved,
   poleStateFaulty,
 ];
-export const port = { min: 1, max: 65536 };
+export const port = { min: 1, max: 65535 };
 export const portCoaxConfigurationRate = ["MHz", "GHz"];
 export const portConfiguration_coax_channels = { min: 1, max: 512 };
 export const portConfiguration_coax_width = { min: 0.1, max: 100000 };
@@ -3028,7 +3004,7 @@ export const portConfiguration_ethernet_rate = { min: 1, max: 768 };
 export const portConfiguration_single_fiber_channels = { min: 1, max: 512 };
 export const portConfiguration_single_fiber_rate = { min: 1, max: 768 };
 export const portConfiguration_single_fiber_width = { min: 1, max: 1000 };
-export const portConfiguration_xdsl_rate = { min: 1, max: 768 };
+export const portConfiguration_xdsl_rate = { min: 1, max: 100 };
 export const portEthernetConfiguration = [
   "Cat3",
   "Cat4",
@@ -3124,7 +3100,6 @@ export const siteType = [
   "sdu",
   "street",
   "unclassified",
-  "utility",
 ];
 export const sizeUnit = ["cm", "mm", "m", "km", "Mm", "inch", "feet"];
 export const sourceHistorical = "historical";

@@ -93,7 +93,6 @@ const pruneTables = [
   { table: "site", shadow: "_site", key: "siteId" },
   {
     table: "trench",
-    ref: "coordinateTsId",
     shadow: "_trenchCoordinate",
     key: "trenchId",
   },
@@ -231,7 +230,7 @@ const ftsTables = [
   {
     table: "_cable",
     key: "cableId",
-    field: ["reference", "technology", "state"],
+    field: ["reference", "technology"],
     next: null,
   },
   {
@@ -389,7 +388,6 @@ const ftsTables = [
       "reference",
       "region",
       "street",
-      "town",
       "town",
       "type",
     ],
@@ -589,7 +587,7 @@ function validateProbability(probability, source = OAS.sourceHistorical) {
 
 function encrypt(plain) {
   let encrypted = "";
-  if (plain.length > 0) {
+  if (plain != null && plain.length > 0) {
     let cipher = crypto.createCipheriv(
       cipherAlgorithm,
       Buffer.from(encryptionKey, "base64"),
@@ -597,19 +595,28 @@ function encrypt(plain) {
     );
     encrypted = cipher.update(plain, "utf8", "base64");
     encrypted += cipher.final("base64");
+    let authTag = cipher.getAuthTag().toString("base64");
+    encrypted = encrypted + "." + authTag;
   }
   return encrypted;
 }
 
 function decrypt(encrypted) {
   let plain = "";
-  if (encrypted.length > 0) {
-    let decipher = crypto.createCipheriv(
+  if (Buffer.isBuffer(encrypted)) {
+    encrypted = encrypted.toString("utf8");
+  }
+  if (encrypted != null && encrypted.length > 0) {
+    let [cipherText, authTag] = encrypted.split(".");
+    let decipher = crypto.createDecipheriv(
       cipherAlgorithm,
       Buffer.from(encryptionKey, "base64"),
       Buffer.from(encryptionIV, "base64")
     );
-    plain = decipher.update(encrypted, "base64", "utf8");
+    if (authTag) {
+      decipher.setAuthTag(Buffer.from(authTag, "base64"));
+    }
+    plain = decipher.update(cipherText, "base64", "utf8");
     plain += decipher.final("utf8");
   }
   return plain;
@@ -685,7 +692,7 @@ function chunkArray(arr, size) {
 
 function getArrayPage(src = [], pageSize, pageNumber) {
   let arr = chunkArray(src, pageSize);
-  if (typeof arr[pageNumber] === undefined) {
+  if (typeof arr[pageNumber] === "undefined") {
     return [];
   } else {
     if (arr[pageNumber] != null) {
@@ -791,10 +798,8 @@ async function jobBackup(target) {
 }
 
 function epsg4326toEpsg3857(coordinates) {
-  let x = pos[0];
-  let y = pos[1];
-  x = (coordinates[0] * 20037508.34) / 180;
-  y =
+  let x = (coordinates[0] * 20037508.34) / 180;
+  let y =
     Math.log(Math.tan(((90 + coordinates[1]) * Math.PI) / 360)) /
     (Math.PI / 180);
   y = (y * 20037508.34) / 180;
@@ -2482,9 +2487,9 @@ async function jobPrune() {
                       " = '" +
                       DDIdsRows[p] +
                       "') " +
-                      "AND tsId != '" +
+                      "AND tsId != " +
                       predictedTsId +
-                      "' AND " +
+                      " AND " +
                       pruneTables[i].key +
                       " = '" +
                       DDIdsRows[p] +
@@ -2531,9 +2536,9 @@ async function jobPrune() {
                       " = '" +
                       DDIdsRows[p] +
                       "') " +
-                      "AND tsId != '" +
+                      "AND tsId != " +
                       predictedTsId +
-                      "' AND " +
+                      " AND " +
                       pruneTables[i].key +
                       " = '" +
                       DDIdsRows[p] +
@@ -2555,9 +2560,9 @@ async function jobPrune() {
                       " = '" +
                       DDIdsRows[p] +
                       "') " +
-                      "AND tsId != '" +
+                      "AND tsId != " +
                       predictedTsId +
-                      "' AND " +
+                      " AND " +
                       pruneTables[i].key +
                       " = '" +
                       DDIdsRows[p] +
@@ -2583,9 +2588,9 @@ async function jobPrune() {
                     " = '" +
                     DDIdsRows[p] +
                     "') " +
-                    "AND tsId != '" +
+                    "AND tsId != " +
                     predictedTsId +
-                    "' AND " +
+                    " AND " +
                     pruneTables[i].key +
                     " = '" +
                     DDIdsRows[p] +
@@ -3078,7 +3083,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -3144,9 +3149,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -3570,22 +3575,19 @@ var run = async () => {
             switch (body.snmp.version) {
               case "v3":
                 ddp = await DDC.prepare(
-                  "INSERT INTO secret (scope,realm,type,snmpVersion,snmpUsername,snmpAuthorizationProtocol,snmpEncryptionProtocol,snmpAuthorizationPassword,snmpEncryptionPassword,expiration) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,strptime($10,$11)::timestamp)"
+                  "INSERT INTO secret (scope,realm,type,snmpVersion,snmpUsername,snmpAuthorizationProtocol,snmpAuthorizationPassword,snmpEncryptionProtocol,snmpEncryptionPassword,expiration) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,strptime($10,$11)::timestamp)"
                 );
                 ddp.bindVarchar(1, body.scope);
                 ddp.bindVarchar(2, body.realm);
                 ddp.bindVarchar(3, body.type);
                 ddp.bindVarchar(4, body.snmp.version);
                 ddp.bindVarchar(5, encrypt(body.snmp.v3.username));
-                ddp.bindVarchar(
-                  6,
-                  encrypt(body.snmp.v3.authorization.protocol)
-                );
+                ddp.bindVarchar(6, body.snmp.v3.authorization.protocol);
                 ddp.bindVarchar(
                   7,
                   encrypt(body.snmp.v3.authorization.password)
                 );
-                ddp.bindVarchar(8, encrypt(body.snmp.v3.encryption.protocol));
+                ddp.bindVarchar(8, body.snmp.v3.encryption.protocol);
                 ddp.bindVarchar(9, encrypt(body.snmp.v3.encryption.password));
                 ddp.bindVarchar(10, body.snmp.expiration);
                 ddp.bindVarchar(11, pointFormat);
@@ -3598,7 +3600,7 @@ var run = async () => {
                 ddp.bindVarchar(1, body.scope);
                 ddp.bindVarchar(2, body.realm);
                 ddp.bindVarchar(3, body.type);
-                ddp.bindVarchar(4, encrypt(body.snmp.version));
+                ddp.bindVarchar(4, body.snmp.version);
                 ddp.bindVarchar(5, encrypt(body.snmp.community.read));
                 ddp.bindVarchar(6, encrypt(body.snmp.community.write));
                 ddp.bindVarchar(7, encrypt(body.snmp.community.trap));
@@ -3714,7 +3716,7 @@ var run = async () => {
         switch (body.type) {
           case OAS.secretTypeIdentity:
             ddp = await DDC.prepare(
-              "UPDATE secret SET identityProviderBase = $1, identityProviderAuthorization = $2, identityProviderToken = $3, identityProviderWellKnown = $4) WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
+              "UPDATE secret SET identityProviderBase = $1, identityProviderAuthorization = $2, identityProviderToken = $3, identityProviderWellKnown = $4 WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
             );
             ddp.bindVarchar(1, encrypt(body.identity.base));
             ddp.bindVarchar(2, encrypt(body.identity.authorization));
@@ -3740,19 +3742,16 @@ var run = async () => {
             switch (body.snmp.version) {
               case "v3":
                 ddp = await DDC.prepare(
-                  "UPDATE secret SET snmpVersion = $1,snmpUsername = $2,snmpAuthorizationProtocol = $3,snmpEncryptionProtocol = $4,snmpAuthorizationPassword = $5,snmpEncryptionPassword = $6 WHERE lower(scope) = lower($7) AND lower(realm) = lower($8) AND type = $9"
+                  "UPDATE secret SET snmpVersion = $1,snmpUsername = $2,snmpAuthorizationProtocol = $3,snmpAuthorizationPassword = $4,snmpEncryptionProtocol = $5,snmpEncryptionPassword = $6 WHERE lower(scope) = lower($7) AND lower(realm) = lower($8) AND type = $9"
                 );
                 ddp.bindVarchar(1, body.snmp.version);
                 ddp.bindVarchar(2, encrypt(body.snmp.v3.username));
-                ddp.bindVarchar(
-                  3,
-                  encrypt(body.snmp.v3.authorization.protocol)
-                );
+                ddp.bindVarchar(3, body.snmp.v3.authorization.protocol);
                 ddp.bindVarchar(
                   4,
                   encrypt(body.snmp.v3.authorization.password)
                 );
-                ddp.bindVarchar(5, encrypt(body.snmp.v3.encryption.protocol));
+                ddp.bindVarchar(5, body.snmp.v3.encryption.protocol);
                 ddp.bindVarchar(6, encrypt(body.snmp.v3.encryption.password));
                 ddp.bindVarchar(7, body.scope);
                 ddp.bindVarchar(8, body.realm);
@@ -3763,7 +3762,7 @@ var run = async () => {
                 ddp = await DDC.prepare(
                   "UPDATE secret SET snmpVersion = $1,snmpCommunityRead = $2,snmpCommunityWrite = $3,snmpCommunityTrap = $4 WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
                 );
-                ddp.bindVarchar(1, encrypt(body.snmp.version));
+                ddp.bindVarchar(1, body.snmp.version);
                 ddp.bindVarchar(2, encrypt(body.snmp.community.read));
                 ddp.bindVarchar(3, encrypt(body.snmp.community.write));
                 ddp.bindVarchar(4, encrypt(body.snmp.community.trap));
@@ -3775,7 +3774,7 @@ var run = async () => {
             break;
           case OAS.secretTypeSsh:
             ddp = await DDC.prepare(
-              "UPDATE secret SET sshUsername = $1,sshKeyPrivate = $2,sshKeyPublic = $3 WHERE lower(scope) = lower($5) AND lower(realm) = lower($6) AND type = $7"
+              "UPDATE secret SET sshUsername = $1,sshKeyPrivate = $2,sshKeyPublic = $3 WHERE lower(scope) = lower($4) AND lower(realm) = lower($5) AND type = $6"
             );
             ddp.bindVarchar(1, encrypt(body.ssh.username));
             ddp.bindVarchar(2, encrypt(body.ssh.key.private));
@@ -4049,26 +4048,26 @@ var run = async () => {
                 };
                 switch (ddRows[0][1]) {
                   case "v3":
+                    resJson.snmp.v3 = {
+                      authorization: {
+                        protocol: ddRows[0][6],
+                        password: decrypt(ddRows[0][7]),
+                      },
+                      encryption: {
+                        protocol: ddRows[0][8],
+                        password: decrypt(ddRows[0][9]),
+                      },
+                    };
                     if (ddRows[0][5] != null) {
-                      resJson.snmp.v3.username = decrypt(ddRows(ddRows[0][5]));
+                      resJson.snmp.v3.username = decrypt(ddRows[0][5]);
                     }
-                    resJson.snmp.v3.authorization.protocol = decrypt(
-                      ddRows(ddRows[0][6])
-                    );
-                    resJson.snmp.v3.authorization.password = decrypt(
-                      ddRows(ddRows[0][7])
-                    );
-                    resJson.snmp.v3.encryption.protocol = decrypt(
-                      ddRows(ddRows[0][8])
-                    );
-                    resJson.snmp.v3.encryption.password = decrypt(
-                      ddRows(ddRows[0][9])
-                    );
                     break;
                   default:
-                    resJson.snmp.community.read = decrypt(ddRows[0][2]);
-                    resJson.snmp.community.write = decrypt(ddRows[0][3]);
-                    resJson.snmp.community.trap = decrypt(ddRows[0][4]);
+                    resJson.snmp.community = {
+                      read: decrypt(ddRows[0][2]),
+                      write: decrypt(ddRows[0][3]),
+                      trap: decrypt(ddRows[0][4]),
+                    };
                 }
                 resJson.snmp.expiration = ddRows[0][0];
               }
@@ -4609,7 +4608,10 @@ var run = async () => {
             ddp.bindBoolean(7, toBoolean(req.body[i].send.encryption.starttls));
             await ddp.run();
 
-            if (req.body[i].receive != null && req.body[i].receive != {}) {
+            if (
+              req.body[i].receive != null &&
+              Object.keys(req.body[i].receive).length > 0
+            ) {
               let emailReceiveSecret = {
                 scope: "adminEmailReceive",
                 realm: req.body[i].emailProviderId,
@@ -4635,7 +4637,7 @@ var run = async () => {
               );
               ddp.bindBoolean(
                 6,
-                toBoolean(eq.body[i].receive.encryption.starttls)
+                toBoolean(req.body[i].receive.encryption.starttls)
               );
               ddp.bindVarchar(7, req.body[i].receive.rootFolder);
               ddp.bindVarchar(8, req.body[i].receive.folderSeparator);
@@ -4716,13 +4718,13 @@ var run = async () => {
               resObj.send = {
                 username: emailSendSecret.plain.username,
                 password: emailSendSecret.plain.password,
-                host: ddSendRows[0][2],
-                port: toInteger(ddSendRows[0][3]),
-                protocol: ddSendRows[0][4],
-                authentication: ddSendRows[0][5],
+                host: ddSendRows[0][0],
+                port: toInteger(ddSendRows[0][1]),
+                protocol: ddSendRows[0][2],
+                authentication: ddSendRows[0][3],
                 encryption: {
-                  enabled: toBoolean(ddSendRows[0][6]),
-                  starttls: toBoolean(ddSendRows[0][7]),
+                  enabled: toBoolean(ddSendRows[0][4]),
+                  starttls: toBoolean(ddSendRows[0][5]),
                 },
               };
             }
@@ -4807,7 +4809,10 @@ var run = async () => {
           ddp.bindBoolean(7, toBoolean(req.body.send.encryption.starttls));
           await ddp.run();
 
-          if (req.body.receive != null && req.body.receive != {}) {
+          if (
+            req.body.receive != null &&
+            Object.keys(req.body.receive).length > 0
+          ) {
             let emailReceiveSecret = {
               scope: "adminEmailReceive",
               realm: emailProviderId,
@@ -4820,7 +4825,7 @@ var run = async () => {
             };
             let result = await addSecret(emailReceiveSecret);
             let ddp = await DDC.prepare(
-              "INSERT INTO adminEmailReceive (adminEmailId,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+              "INSERT INTO adminEmailReceive (adminEmailId,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
             );
             ddp.bindVarchar(1, emailProviderId);
             ddp.bindVarchar(2, req.body.receive.host);
@@ -5117,7 +5122,7 @@ var run = async () => {
           );
           ddp.bindVarchar(1, req.params.emailProviderId);
           await ddp.run();
-          ddp = await DDC.run(
+          ddp = await DDC.prepare(
             "DELETE FROM adminEmailReceive WHERE adminEmailId = $1"
           );
           ddp.bindVarchar(1, req.params.emailProviderId);
@@ -5157,7 +5162,10 @@ var run = async () => {
           ddp.bindBoolean(7, toBoolean(req.body.send.encryption.starttls));
           await ddp.run();
 
-          if (req.body.receive != null && req.body.receive != {}) {
+          if (
+            req.body.receive != null &&
+            Object.keys(req.body.receive).length > 0
+          ) {
             let emailReceiveSecret = {
               scope: "adminEmailReceive",
               realm: req.params.emailProviderId,
@@ -5170,7 +5178,7 @@ var run = async () => {
             };
             let result = await addSecret(emailReceiveSecret);
             let ddp = await DDC.prepare(
-              "INSERT INTO adminEmailReceive (adminEmailId,username,password,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
+              "INSERT INTO adminEmailReceive (adminEmailId,host,port,protocol,encryptionEnabled,encryptionStartTls,rootFolder,folderSeparator) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
             );
             ddp.bindVarchar(1, req.params.emailProviderId);
             ddp.bindVarchar(2, req.body.receive.host);
@@ -5611,7 +5619,7 @@ var run = async () => {
             );
             ddp.bindVarchar(12, req.body.producer.compressionMethod);
             ddp.bindVarchar(13, req.body.producer.authentication);
-            ddp.bindVarchar(14, req.body.kafkaProducerId);
+            ddp.bindVarchar(14, req.params.kafkaProducerId);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -6100,7 +6108,7 @@ var run = async () => {
                 },
               };
               let result = await updateSecret(mapSecret);
-            } else if (req.body[i].identityProvider?.authorization != null) {
+            } else if (req.body.identityProvider?.authorization != null) {
               let mapSecret = {
                 scope: "adminMap",
                 realm: req.params.mapProviderId,
@@ -6120,8 +6128,8 @@ var run = async () => {
             );
             ddp.bindVarchar(1, req.body.vendor);
             ddp.bindBoolean(2, toBoolean(req.body.default));
-            ddp.bindVarchar(3, encrypt(req.body.renderUrl));
-            ddp.bindVarchar(4, req.body.mapProviderId);
+            ddp.bindVarchar(3, req.body.renderUrl);
+            ddp.bindVarchar(4, req.params.mapProviderId);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -6489,7 +6497,7 @@ var run = async () => {
             ddp.bindVarchar(1, req.body.name.replace(/'/g, "''"));
             ddp.bindVarchar(2, req.body.engine.url);
             ddp.bindVarchar(3, req.body.engine.type);
-            ddp.bindVarchar(4, req.body.workflowEngineId);
+            ddp.bindVarchar(4, req.params.workflowEngineId);
             await ddp.run();
             res.sendStatus(204);
           } else {
@@ -6651,10 +6659,12 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          let resJson = { requestorId: req.body.requestorId };
-          for (let i = 0; i < req.body.length; i++) {
+          let resJson = { requestorId: req.body.requestorId, alerts: [] };
+          for (let i = 0; i < req.body.alerts.length; i++) {
             let ddAlert = await DDC.runAndReadAll(
-              "SELECT id FROM alert WHERE id = '" + req.body[i].alertId + "'"
+              "SELECT id FROM alert WHERE id = '" +
+                req.body.alerts[i].alertId +
+                "'"
             );
             let ddRows = ddAlert.getRows();
             if (ddRows.length > 0) {
@@ -6665,29 +6675,29 @@ var run = async () => {
                 realm: req.body.requestorId + "/" + subscriptionId,
                 type: OAS.secretTypePlain,
                 plain: {
-                  username: req.body[i].username,
-                  password: req.body[i].password,
+                  username: req.body.alerts[i].username,
+                  password: req.body.alerts[i].password,
                   expiration: OAS.secretExpiration,
                 },
               };
-              let result = await addSecret(callbackSecret);
+              let secretResult = await addSecret(callbackSecret);
               let ddp = await DDC.prepare(
                 "INSERT INTO alertCallback (id,alertId,requestorId,subscriptionId,callbackUrl,authentication,retries,currentRetry,retryDelay,maxLifeRetries,currentLifeRetries) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)"
               );
               ddp.bindVarchar(1, alertCallbackId);
-              ddp.bindVarchar(2, req.body[i].alertId);
+              ddp.bindVarchar(2, req.body.alerts[i].alertId);
               ddp.bindVarchar(3, req.body.requestorId);
               ddp.bindVarchar(4, subscriptionId);
-              ddp.bindVarchar(5, req.body[i].callbackUrl);
-              ddp.bindVarchar(6, req.body[i].authentication);
-              ddp.bindInteger(7, req.body[i].retries);
+              ddp.bindVarchar(5, req.body.alerts[i].callbackUrl);
+              ddp.bindVarchar(6, req.body.alerts[i].authentication);
+              ddp.bindInteger(7, req.body.alerts[i].retries);
               ddp.bindInteger(8, 0);
-              ddp.bindInteger(9, req.body[i].retryDelay);
-              ddp.bindInteger(10, req.body[i].maxLifeRetries);
+              ddp.bindInteger(9, req.body.alerts[i].retryDelay);
+              ddp.bindInteger(10, req.body.alerts[i].maxLifeRetries);
               ddp.bindInteger(11, 0);
               await ddp.run();
               resJson.alerts.push({
-                alertId: req.body.alertId,
+                alertId: req.body.alerts[i].alertId,
                 subscriptionId: subscriptionId,
               });
             } else {
@@ -6695,8 +6705,10 @@ var run = async () => {
                 .contentType(OAS.mimeJSON)
                 .status(404)
                 .json({
-                  errors: "alertId " + req.body.alertId + " does not exist",
+                  errors:
+                    "alertId " + req.body.alerts[i].alertId + " does not exist",
                 });
+              return;
             }
           }
           res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -6785,11 +6797,11 @@ var run = async () => {
               alertId: ddRows[0][1],
               emailProviderId: ddRows[0][2],
               subject: ddRows[0][3],
-              recipient: [],
+              recipients: [],
             };
 
             let ddRecRead = await DDC.runAndReadAll(
-              "SELECT recipient FROM alertNotifyRecipient WHERE id = '" +
+              "SELECT recipient FROM alertNotifyRecipient WHERE alertNotifyId = '" +
                 ddRows[0][0] +
                 "' AND notificationId = '" +
                 req.params.notificationId +
@@ -6798,7 +6810,7 @@ var run = async () => {
             let ddRecRows = ddRecRead.getRows();
             if (ddRecRows.length > 0) {
               for (let idx in ddRecRows) {
-                resJson.recipient.push(ddRecRows[idx][0]);
+                resJson.recipients.push(ddRecRows[idx][0]);
               }
             }
           }
@@ -6904,7 +6916,7 @@ var run = async () => {
             res
               .contentType(OAS.mimeJSON)
               .status(404)
-              .json({ errors: "not found", requestorId: req.body.requestorId });
+              .json({ errors: "not found", requestorId: req.query.requestorId });
           }
         } else {
           res
@@ -7194,11 +7206,11 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          let alertdocumentId = uuidv4();
+          let alertContentId = uuidv4();
           let ddp = await DDC.prepare(
             "INSERT INTO alertContent (id, point, alertId, content) VALUES ($1,strptime($2,$3)::timestamp,$4,$5)"
           );
-          ddp.bindVarchar(1, alertdocumentId);
+          ddp.bindVarchar(1, alertContentId);
           ddp.bindVarchar(2, req.body.point);
           ddp.bindVarchar(3, pointFormat);
           ddp.bindVarchar(4, req.body.alertId);
@@ -7207,7 +7219,7 @@ var run = async () => {
           res
             .contentType(OAS.mimeJSON)
             .status(200)
-            .json({ alertdocumentId: alertdocumentId });
+            .json({ alertContentId: alertContentId });
         } else {
           res
             .contentType(OAS.mimeJSON)
@@ -7223,10 +7235,10 @@ var run = async () => {
       try {
         let result = validationResult(req);
         if (result.isEmpty()) {
-          if (await dbIdExists(req.params.alertdocumentId, "alertContent")) {
+          if (await dbIdExists(req.params.alertContentId, "alertContent")) {
             await DDC.run(
               "DELETE FROM alertContent WHERE id = '" +
-                req.params.alertdocumentId +
+                req.params.alertContentId +
                 "'"
             );
             res.sendStatus(204);
@@ -7236,8 +7248,8 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "alertdocumentId " +
-                  req.params.alertdocumentId +
+                  "alertContentId " +
+                  req.params.alertContentId +
                   " does not exist",
               });
           }
@@ -7287,20 +7299,20 @@ var run = async () => {
           let ddp = await DDC.prepare(
             "SELECT id FROM alertContent WHERE id = $1"
           );
-          ddp.bindVarchar(1, req.params.alertdocumentId);
+          ddp.bindVarchar(1, req.params.alertContentId);
           let ddRead = await ddp.runAndReadAll();
           let ddRows = ddRead.getRows();
           if (ddRows.length > 0) {
             let ddp = await DDC.prepare(
               "SELECT strftime(point,$2),alertId,content FROM alertContent WHERE id = $1"
             );
-            ddp.bindVarchar(1, req.params.alertdocumentId);
+            ddp.bindVarchar(1, req.params.alertContentId);
             ddp.bindVarchar(2, pointFormat);
             let ddRead = await ddp.runAndReadAll();
             let ddRows = ddRead.getRows();
             if (ddRows.length > 0) {
               resJson = {
-                alertdocumentId: req.params.alertdocumentId,
+                alertContentId: req.params.alertContentId,
                 point: ddRows[0][0],
                 alertId: ddRows[0][1],
                 content: ddRows[0][2],
@@ -7315,8 +7327,8 @@ var run = async () => {
               .status(404)
               .json({
                 errors:
-                  "alertdocumentId " +
-                  req.params.alertdocumentId +
+                  "alertContentId " +
+                  req.params.alertContentId +
                   " does not exist",
               });
           }
@@ -8168,7 +8180,7 @@ var run = async () => {
               let resObj = {
                 vendor: ddRows[idx][0],
                 model: ddRows[idx][1],
-                costPerUnit: toDecimal(ddRows[idx][3]),
+                costPerUnit: toDecimal(ddRows[idx][2]),
               };
               resJson.push(resObj);
             }
@@ -9432,8 +9444,8 @@ var run = async () => {
                 "INSERT INTO costTrench (purpose,unit,costPerUnit) VALUES ($1,$2,$3)"
               );
               ddp.bindVarchar(1, req.body.purpose);
-              ddp.bindInteger(2, req.body.unit);
-              ddp.bindVarchar(3, toDecimal(req.body.costPerUnit));
+              ddp.bindVarchar(2, req.body.unit);
+              ddp.bindFloat(3, toDecimal(req.body.costPerUnit));
               await ddp.run();
               res.sendStatus(204);
             }
@@ -10184,7 +10196,7 @@ var run = async () => {
                 ddp = await DDC.prepare(
                   "INSERT INTO _cable (tsId,point,source,cableId,ductId,poleId,technology," +
                     configTsCol +
-                    "),reference,probability,country SELECT $1,strptime($2,$3)::timestamp,source,cableId,ductId,poleId,technology,$4,reference,probability,country FROM _cable WHERE tsId = $5"
+                    ",reference,probability,country) SELECT $1,strptime($2,$3)::timestamp,source,cableId,ductId,poleId,technology,$4,reference,probability,country FROM _cable WHERE tsId = $5"
                 );
                 ddp.bindInteger(1, tsId);
                 ddp.bindVarchar(2, point);
@@ -12587,7 +12599,7 @@ var run = async () => {
               point: ddDuctRows[0][16],
               country: ddDuctRows[0][18],
               probability: validateProbability(
-                ddDuctRows[0][18],
+                ddDuctRows[0][17],
                 ddDuctRows[0][5]
               ),
               trenchId: ddDuctRows[0][7],
@@ -13038,7 +13050,7 @@ var run = async () => {
               3,
               toDecimal(body.ports[p].configuration.frequencyRange.high)
             );
-            ddp.bindFloat(4, toDecimal(body.ports[p].configuration.channels));
+            ddp.bindInteger(4, toInteger(body.ports[p].configuration.channels));
             ddp.bindFloat(5, toDecimal(body.ports[p].configuration.width));
             ddp.bindVarchar(6, body.ports[p].configuration.unit);
             await ddp.run();
@@ -13499,7 +13511,7 @@ var run = async () => {
           let resPort = {};
           switch (ddPortRows[idx][2]) {
             case "coax":
-              let ddCoax = await DDC.prepare(
+              let ddCoax = await DDC.runAndReadAll(
                 "SELECT frequencyLow,frequencyHigh,channels,width,unit FROM _nePortCoax WHERE neTsId = " +
                   ddRows[0][19]
               );
@@ -15179,7 +15191,7 @@ var run = async () => {
           rackId: rackId,
           point: ddRows[0][5],
           country: ddRows[0][26],
-          probability: validateProbability(ddRows[0][25], ddRows[0][5]),
+          probability: validateProbability(ddRows[0][25], ddRows[0][7]),
           commissioned: ddRows[0][9],
           siteId: ddRows[0][11],
           coordinate: {
@@ -15393,15 +15405,16 @@ var run = async () => {
       for (let r = 1; r <= body.slots; r++) {
         let slotTsId = await getSeqNextValue("seq_rackSlot");
         let ddp = await DDC.prepare(
-          "INSERT INTO _rackSlot (tsId,point,source,rackTsId,rackId,slot,usage) VALUES ($1,strptime($2,$3)::timestamp,$4,$5,$6,$7,$8)"
+          "INSERT INTO _rackSlot (tsId,point,source,probability,rackTsId,rackId,slot,usage) VALUES ($1,strptime($2,$3)::timestamp,$4,$5,$6,$7,$8,$9)"
         );
         ddp.bindInteger(1, slotTsId);
         ddp.bindVarchar(2, body.point);
         ddp.bindVarchar(3, pointFormat);
         ddp.bindVarchar(4, body.source);
-        ddp.bindInteger(5, tsId);
-        ddp.bindVarchar(6, rackId);
-        ddp.bindInteger(7, r);
+        ddp.bindFloat(5, validateProbability(body.probability, body.source));
+        ddp.bindInteger(6, tsId);
+        ddp.bindVarchar(7, rackId);
+        ddp.bindInteger(8, r);
         let usage = "free";
         let neId = null;
         let host = null;
@@ -15419,7 +15432,7 @@ var run = async () => {
             }
           }
         }
-        ddp.bindVarchar(8, usage);
+        ddp.bindVarchar(9, usage);
         await ddp.run();
         if (neId != null && host != null) {
           await DDC.run(
@@ -16371,7 +16384,7 @@ var run = async () => {
                 }
 
                 let ddp = await DDC.prepare(
-                  "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probability,country,cost) SELECT $1,strptime($2,$3)::timestamp,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,reference,probabiltiy,country,cost FROM _service WHERE tsId = $4"
+                  "INSERT INTO _service (tsId,point,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,probability,country,cost) SELECT $1,strptime($2,$3)::timestamp,source,serviceId,reference,customerName,customerReference,commissioned,decommissioned,lagGroup,lagMembers,rate,unit,probability,country,cost FROM _service WHERE tsId = $4"
                 );
                 ddp.bindInteger(1, tsId);
                 ddp.bindVarchar(2, point);
@@ -17138,7 +17151,19 @@ var run = async () => {
 
     async function getMultipleServices(req, res, next) {
       try {
+        let result = validationResult(req);
+        if (!result.isEmpty()) {
+          res
+            .contentType(OAS.mimeJSON)
+            .status(400)
+            .json({ errors: result.array() });
+          return;
+        }
         let resJson = [];
+        let { pageSize, pageNumber } = pageSizeNumber(
+          req.query.pageSize,
+          req.query.pageNumber
+        );
         let ddRead = await DDC.runAndReadAll(
           "SELECT id,delete,tsPoint,historicalTsId,predictedTsId,source,reference,customerName,customerReference,strftime(commissioned,'" +
             dateFormat +
@@ -17148,7 +17173,7 @@ var run = async () => {
             pointFormat +
             "'),tsId,rate,unit,probability,country,cost FROM service,_service WHERE _service.serviceId = service.id AND service.delete = false ORDER BY _service.point DESC"
         );
-        let ddRows = ddRead.getRows();
+        let ddRows = getArrayPage(ddRead.getRows(), pageSize, pageNumber);
         if (ddRows.length > 0) {
           for (let idx in ddRows) {
             let resObj = {
@@ -18240,7 +18265,7 @@ var run = async () => {
         let toY = 0;
         let toZ = 0;
         let ddFrom = await DDC.runAndReadAll(
-          "SELECT X,Y FROM _site WHERE id = (SELECT historicalTsId FROM site WHERE id = '" +
+          "SELECT X,Y FROM _site WHERE tsId = (SELECT historicalTsId FROM site WHERE id = '" +
             req.body.from +
             "')"
         );
@@ -18250,11 +18275,11 @@ var run = async () => {
           fromX = ddFromRows[0][0];
           fromY = ddFromRows[0][1];
           let ddTo = await DDC.runAndReadAll(
-            "SELECT X,Y FROM _site WHERE id = (SELECT historicalTsId FROM site WHERE id = '" +
+            "SELECT X,Y FROM _site WHERE tsId = (SELECT historicalTsId FROM site WHERE id = '" +
               req.body.to +
               "' LIMIT 1)"
           );
-          let ddToRows = ddFrom.getRows();
+          let ddToRows = ddTo.getRows();
           if (ddToRows.length > 0) {
             toX = ddToRows[0][0];
             toY = ddToRows[0][1];
@@ -22664,7 +22689,9 @@ var run = async () => {
     async function documentType(documentId) {
       let mimeType = "*/*";
       let ddRead = await DDC.runAndReadAll(
-        "SELECT mimeType FROM document WHERE id = '" + documentId + "' LIMIT 1"
+        "SELECT _document.mimeType FROM document,_document WHERE document.id = '" +
+          documentId +
+          "' AND _document.tsId = document.historicalTsId LIMIT 1"
       );
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
@@ -22691,9 +22718,9 @@ var run = async () => {
           break;
       }
 
-      let datePoint = "AND _document.tsId = document.historicalTsId";
+      let datePoint = "AND _document.tsId = document." + tsCol;
       let ddp = await DDC.prepare(
-        "SELECT document.id, content FROM document,_document WHERE document.id = $1 AND _document.documentId = document.id AND document.delete = false " +
+        "SELECT document.id,_document.path,_document.name FROM document,_document WHERE document.id = $1 AND _document.documentId = document.id AND document.delete = false " +
           datePoint +
           " ORDER BY _document.point DESC LIMIT 1"
       );
@@ -22701,7 +22728,7 @@ var run = async () => {
       let ddRead = await ddp.runAndReadAll();
       let ddRows = ddRead.getRows();
       if (ddRows.length > 0) {
-        blob = ddRows[0][0];
+        blob = path.join(ddRows[0][1], ddRows[0][2]);
       }
       return { status: 200, blob: blob };
     }
@@ -22720,7 +22747,7 @@ var run = async () => {
             "DELETE FROM _document WHERE documentId = '" + documentId + "'"
           );
           await DDC.run(
-            "UPDATE content SET delete = true, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+            "UPDATE document SET delete = true, historicalTsId = NULL, predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
               documentId +
               "'"
           );
@@ -22743,7 +22770,7 @@ var run = async () => {
                 "' AND source = 'predicted'"
             );
             await DDC.run(
-              "UPDATE content SET predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
+              "UPDATE document SET predictedTsId = NULL, tsPoint = now()::timestamp WHERE id = '" +
                 documentId +
                 "'"
             );
@@ -22752,7 +22779,7 @@ var run = async () => {
             let tsId = await getSeqNextValue("seq_document");
             let point = dayjs().format(OAS.dayjsFormat);
             let tsCol = "historicalTsId";
-            switch (ddRows[0][2]) {
+            switch (ddRows[0][4]) {
               case OAS.sourceHistorical:
                 tsCol = "historicalTsId";
                 break;
@@ -22764,7 +22791,7 @@ var run = async () => {
                 break;
             }
             let ddp = await DDC.prepare(
-              "INSERT INTO _document (tsId,point,source,documentId,content) SELECT $1,strptime($2,$3)::timestamp,documentId,content FROM _document WHERE tsId = $4"
+              "INSERT INTO _document (tsId,point,source,probability,documentId,mimeType,path,name,sizeBytes,md5Hash) SELECT $1,strptime($2,$3)::timestamp,source,probability,documentId,mimeType,path,name,sizeBytes,md5Hash FROM _document WHERE tsId = $4"
             );
             ddp.bindInteger(1, tsId);
             ddp.bindVarchar(2, point);
@@ -22772,7 +22799,7 @@ var run = async () => {
             ddp.bindInteger(4, ddRows[0][2]);
             await ddp.run();
             await DDC.run(
-              "UPDATE content SET " +
+              "UPDATE document SET " +
                 tsCol +
                 " = " +
                 tsId +
@@ -23901,6 +23928,8 @@ var run = async () => {
     app.get(
       serveUrlPrefix + serveUrlVersion + "/currency",
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+      query("pageSize").optional().isInt(OAS.pageSize),
+      query("pageNumber").optional().isInt(OAS.pageNumber),
       getAllCurrencies
     );
 
@@ -24538,6 +24567,7 @@ var run = async () => {
       /*
     oneOf(
       [
+      [
         body("*.credentials.identity").isString().trim(),
         body("*.credentials.key").isString().trim(),
       ],
@@ -24569,6 +24599,7 @@ var run = async () => {
           allow_fragments: true,
           allow_query_components: false,
         }),
+      ]
       ],
       {
         message:
@@ -24674,6 +24705,18 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/admin/map/provider/:mapProviderId",
       param("mapProviderId").isUUID(4),
       deleteMapProvider
+    );
+
+    /*
+       Tag:           Administration - Maps
+       operationId:   getDefaultMapProvider
+       exposed Route: /ni/v1/admin/map/provider/default
+       HTTP method:   GET
+    */
+    app.get(
+      serveUrlPrefix + serveUrlVersion + "/admin/map/provider/default",
+      header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+      getDefaultMapProvider
     );
 
     /*
@@ -24804,18 +24847,6 @@ var run = async () => {
         }
       ),
       replaceMapProvider
-    );
-
-    /*
-       Tag:           Administration - Maps
-       operationId:   getDefaultMapProvider
-       exposed Route: /ni/v1/admin/map/provider/default
-       HTTP method:   GET
-    */
-    app.get(
-      serveUrlPrefix + serveUrlVersion + "/admin/map/provider/default",
-      header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      getDefaultMapProvider
     );
 
     /*
@@ -25020,7 +25051,7 @@ var run = async () => {
       body(OAS.queueResourceTypeDelete)
         .default(false)
         .isBoolean({ strict: true }),
-      body("funtion").default("noop();").isString().trim(),
+      body("function").default("noop();").isString().trim(),
       addSingleAlert
     );
 
@@ -25056,7 +25087,7 @@ var run = async () => {
       body("alerts.*.authentication")
         .default("none")
         .isIn(OAS.restAuthentication),
-      body("alerts.*.retires").default(0).isInt(OAS.callback_retries),
+      body("alerts.*.retries").default(0).isInt(OAS.callback_retries),
       body("alerts.*.retryDelay").isInt(OAS.callback_retryDelay).default(60),
       body("alerts.*.maxLifeRetries")
         .default(16)
@@ -25080,13 +25111,13 @@ var run = async () => {
     /*
        Tag:           Alerts
        operationId:   getNotifyAlert
-       exposed Route: /ni/v1/alert/notify
+       exposed Route: /ni/v1/alert/notify/:notificationId
        HTTP method:   GET
     */
     app.get(
-      serveUrlPrefix + serveUrlVersion + "/alert/notify",
+      serveUrlPrefix + serveUrlVersion + "/alert/notify/:notificationId",
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      body("notificationId").isUUID(4),
+      param("notificationId").isUUID(4),
       getNotifyAlert
     );
 
@@ -25192,9 +25223,9 @@ var run = async () => {
        HTTP method:   GET
     */
     app.get(
-      serveUrlPrefix + serveUrlVersion + "/alert/content/:alertdocumentId",
+      serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      param("alertdocumentId").isUUID(4),
+      param("alertContentId").isUUID(4),
       getSingleAlertContent
     );
 
@@ -25223,8 +25254,8 @@ var run = async () => {
        HTTP method:   DELETE
     */
     app.delete(
-      serveUrlPrefix + serveUrlVersion + "/alert/content/:alertdocumentId",
-      param("alertdocumentId").isUUID(4),
+      serveUrlPrefix + serveUrlVersion + "/alert/content/:alertContentId",
+      param("alertContentId").isUUID(4),
       deleteSingleAlertContent
     );
 
@@ -25341,65 +25372,9 @@ var run = async () => {
       param("alertId").isUUID(4),
       body("description").isString().trim(),
       body(OAS.queueResourceTypeDelete).optional().isBoolean({ strict: true }),
-      body("funtion").optional().isString().trim(),
+      body("function").optional().isString().trim(),
       updateSingleAlert
     );
-
-    /*
-       Tag:           Fetch
-       operationId:   getAllFetchJobs
-       exposed Route: /ni/v1/fetch
-       HTTP method:   GET
-    */
-    app.get(
-      serveUrlPrefix + serveUrlVersion + "/fetch",
-      header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      query("pageSize").optional().isInt(OAS.pageSize),
-      query("pageNumber").optional().isInt(OAS.pageNumber),
-      getAllFetchJobs
-    );
-
-    /*
-       Tag:           Fetch
-       operationId:   getFetchJob
-       exposed Route: /ni/v1/fetch/{fetchJobId}
-       HTTP method:   GET
-    */
-    /*
-  app.get(
-    serveUrlPrefix + serveUrlVersion + "/fetch/:fetchJobId",
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    param("fetchJobId").isUUID(4),
-    getFetchJob
-  );
-  */
-
-    /*
-       Tag:           Fetch
-       operationId:   deleteFetchJob
-       exposed Route: /ni/v1/fetch/{fetch}
-       HTTP method:   GET
-    */
-    app.delete(
-      serveUrlPrefix + serveUrlVersion + "/fetch/:fetchJobId",
-      param("fetchJobId").isUUID(4),
-      deleteFetchJob
-    );
-
-    /*
-       Tag:           Fetch
-       operationId:   addFetchJob
-       exposed Route: /ni/v1/fetch
-       HTTP method:   POST
-    */
-    /*
-  app.post(
-    serveUrlPrefix + serveUrlVersion + "/fetch",
-    header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-    addFetchJob
-  );
-  */
 
     /*
        Tag:           Fetch
@@ -25471,6 +25446,7 @@ var run = async () => {
       body("cost").optional().isFloat(OAS.cost),
       body("configuration").isObject(),
       oneOf(
+        [
         [
           // single fiber cable
           body("configuration.strands")
@@ -25548,6 +25524,7 @@ var run = async () => {
             .default("Gbps")
             .isIn(OAS.cableEthernetConfigurationRate),
           body("state").isIn(OAS.cableState),
+        ]
         ],
         {
           message:
@@ -25594,8 +25571,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
       param("cableId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -25613,6 +25592,7 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/cable/:cableId",
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
       param("cableId").isUUID(4),
+      query("point").optional().matches(OAS.dateTime),
       getSingleCable
     );
 
@@ -25647,6 +25627,7 @@ var run = async () => {
       body("cost").optional().isFloat(OAS.cost),
       body("configuration").optional().isObject(),
       oneOf(
+        [
         [
           // single fiber cable
           body("configuration.strands")
@@ -25728,6 +25709,7 @@ var run = async () => {
             .optional()
             .isIn(OAS.cableEthernetConfigurationRate),
           body("state").optional().isIn(OAS.cableState),
+        ]
         ],
         {
           message:
@@ -25759,6 +25741,7 @@ var run = async () => {
       body("cost").optional().isFloat(OAS.cost),
       body("configuration").isObject(),
       oneOf(
+        [
         [
           // single fiber cable
           body("configuration.strands")
@@ -25836,6 +25819,7 @@ var run = async () => {
             .default("Gbps")
             .isIn(OAS.cableEthernetConfigurationRate),
           body("state").isIn(OAS.cableState),
+        ]
         ],
         {
           message:
@@ -25936,6 +25920,7 @@ var run = async () => {
       body("*.configuration").isObject(),
       oneOf(
         [
+        [
           // single fiber cable
           body("*.configuration.strands")
             .default(1)
@@ -26012,6 +25997,7 @@ var run = async () => {
             .default("Gbps")
             .isIn(OAS.cableEthernetConfigurationRate),
           body("*.configuration.state").isIn(OAS.cableState),
+        ]
         ],
         {
           message:
@@ -26122,8 +26108,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/duct/:ductId",
       param("ductId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -26373,6 +26361,7 @@ var run = async () => {
       body("ports.*.configuration").isObject(),
       oneOf(
         [
+        [
           // fiber
           body("ports.*.configuration.rate")
             .default(1)
@@ -26430,6 +26419,7 @@ var run = async () => {
           body("ports.*.configuration.unit")
             .default("Gbps")
             .isIn(OAS.portEthernetConfigurationRate),
+        ]
         ],
         {
           message:
@@ -26440,6 +26430,7 @@ var run = async () => {
       body("ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
       body("ports.*.connectsTo").optional().isObject(),
       oneOf(
+        [
         [
           // single fiber
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
@@ -26458,6 +26449,7 @@ var run = async () => {
         [
           // ethernet, xdsl, coax
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
+        ]
         ],
         {
           message:
@@ -26487,8 +26479,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/ne/:neId",
       param("neId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -26560,6 +26554,7 @@ var run = async () => {
       body("ports.*.configuration").optional().isObject(),
       oneOf(
         [
+        [
           // fiber
           body("ports.*.configuration.rate")
             .optional()
@@ -26616,6 +26611,7 @@ var run = async () => {
           body("ports.*.configuration.unit")
             .optional()
             .isIn(OAS.portEthernetConfigurationRate),
+        ]
         ],
         {
           message:
@@ -26626,6 +26622,7 @@ var run = async () => {
       body("ports.*.errorCount").optional().isInt(OAS.portErrorCount),
       body("ports.*.connectsTo").optional().isObject(),
       oneOf(
+        [
         [
           // single fiber
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
@@ -26644,6 +26641,7 @@ var run = async () => {
         [
           // ethernet, xdsl, coax
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
+        ]
         ],
         {
           message:
@@ -26687,6 +26685,7 @@ var run = async () => {
       body("ports.*.technology").isIn(OAS.portTechnology),
       body("ports.*.configuration").isObject(),
       oneOf(
+        [
         [
           // fiber
           body("ports.*.configuration.rate")
@@ -26750,6 +26749,7 @@ var run = async () => {
           body("ports.*.configuration.unit")
             .default("Gbps")
             .isIn(OAS.portEthernetConfigurationRate),
+        ]
         ],
         {
           message:
@@ -26760,6 +26760,7 @@ var run = async () => {
       body("ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
       body("ports.*.connectsTo").optional().isObject(),
       oneOf(
+        [
         [
           // single fiber
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
@@ -26778,6 +26779,7 @@ var run = async () => {
         [
           // ethernet, xdsl, coax
           body("ports.*.connectsTo.cableId").optional().isUUID(4),
+        ]
         ],
         {
           message:
@@ -26842,6 +26844,7 @@ var run = async () => {
       body("*.ports.*.configuration").isObject(),
       oneOf(
         [
+        [
           // fiber
           body("*.ports.*.configuration.rate")
             .default(1)
@@ -26898,6 +26901,7 @@ var run = async () => {
           body("*.ports.*.configuration.unit")
             .default("Gbps")
             .isIn(OAS.portEthernetConfigurationRate),
+        ]
         ],
         {
           message:
@@ -26908,6 +26912,7 @@ var run = async () => {
       body("*.ports.*.errorCount").default(0).isInt(OAS.portErrorCount),
       body("*.ports.*.connectsTo").optional().isObject(),
       oneOf(
+        [
         [
           // single fiber
           body("*.ports.*.connectsTo.cableId").optional().isUUID(4),
@@ -26926,6 +26931,7 @@ var run = async () => {
         [
           // ethernet, xdsl, coax
           body("*.ports.*.connectsTo.cableId").optional().isUUID(4),
+        ]
         ],
         {
           message:
@@ -27035,6 +27041,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId").if(body("connectsTo").exists()).isUUID(4),
         ],
@@ -27045,6 +27052,7 @@ var run = async () => {
         [
           // pole
           body("connectsTo.poleId").if(body("connectsTo").exists()).isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -27096,8 +27104,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/pole/:poleId",
       param("poleId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -27191,6 +27201,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId").optional().isUUID(4),
         ],
@@ -27201,6 +27212,7 @@ var run = async () => {
         [
           // pole
           body("connectsTo.poleId").optional().isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -27282,6 +27294,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId")
             .optional()
@@ -27301,6 +27314,7 @@ var run = async () => {
             .optional()
             .if(body("build.actual").exists())
             .isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -27402,6 +27416,7 @@ var run = async () => {
       body("*.connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("*.connectsTo.siteId")
             .optional()
@@ -27421,6 +27436,7 @@ var run = async () => {
             .optional()
             .if(body("*.connectsTo").exists())
             .isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -27493,8 +27509,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/rack/:rackId",
       param("rackId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -27823,8 +27841,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/service/:serviceId",
       param("serviceId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -27954,6 +27974,8 @@ var run = async () => {
     app.get(
       serveUrlPrefix + serveUrlVersion + "/services",
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
+      query("pageSize").optional().isInt(OAS.pageSize),
+      query("pageNumber").optional().isInt(OAS.pageNumber),
       getMultipleServices
     );
 
@@ -28088,13 +28110,15 @@ var run = async () => {
       body("location.postalCode").isString().trim(),
       oneOf(
         [
+        [
           body("location.coordinate").isObject(),
           body("location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
           body("location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
           body("location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
           body("location.coordinate.m").optional().isString().trim(),
         ],
-        [body("location.wkt").isString().trim()],
+        [body("location.wkt").isString().trim()]
+        ],
         {
           message: "either coordinates or single WKT must be supplied",
         }
@@ -28122,8 +28146,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/site/:siteId",
       param("siteId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -28279,13 +28305,15 @@ var run = async () => {
       body("*.location.postalCode").isString().trim(),
       oneOf(
         [
+        [
           body("*.location.coordinate").isObject(),
           body("*.location.coordinate.x").default(0).isFloat(OAS.coordinate_x),
           body("*.location.coordinate.y").default(0).isFloat(OAS.coordinate_y),
           body("*.location.coordinate.z").default(0).isFloat(OAS.coordinate_z),
           body("*.location.coordinate.m").optional().isString().trim(),
         ],
-        [body("*.location.wkt").isString().trim()],
+        [body("*.location.wkt").isString().trim()]
+        ],
         {
           message: "either coordinates or single WKT must be supplied",
         }
@@ -28308,11 +28336,11 @@ var run = async () => {
        HTTP method:   POST
     */
     app.post(
-      serveUrlPrefix + serveUrlVersion + "/sites",
+      serveUrlPrefix + serveUrlVersion + "/sites/distance",
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      param("from").isUUID(4),
-      param("to").isUUID(4),
+      body("from").isUUID(4),
+      body("to").isUUID(4),
       distanceSites
     );
 
@@ -28405,6 +28433,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId")
             .if(body("connectsTo").exists())
@@ -28424,6 +28453,7 @@ var run = async () => {
             .if(body("connectsTo").exists())
             .optional()
             .isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -28432,13 +28462,15 @@ var run = async () => {
       */
       oneOf(
         [
+        [
           body("coordinates").isArray({ min: 1 }),
           body("coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
           body("coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
           body("coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
           body("coordinates.*.m").optional().isString().trim(),
         ],
-        [body("wkt").isString().trim()],
+        [body("wkt").isString().trim()]
+        ],
         {
           message: "either coordinates or single WKT must be supplied",
         }
@@ -28483,8 +28515,10 @@ var run = async () => {
       serveUrlPrefix + serveUrlVersion + "/trench/:trenchId",
       param("trenchId").isUUID(4),
       oneOf(
+        [
         [query(OAS.sourcePredicted).optional()],
-        [query("restore").optional()],
+        [query("restore").optional()]
+        ],
         {
           message: "predicted or restore query parameters can not be mixed",
         }
@@ -28636,6 +28670,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId").optional().isUUID(4),
         ],
@@ -28646,6 +28681,7 @@ var run = async () => {
         [
           // pole
           body("connectsTo.poleId").optional().isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -28725,6 +28761,7 @@ var run = async () => {
       body("connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("connectsTo.siteId")
             .optional()
@@ -28744,6 +28781,7 @@ var run = async () => {
             .optional()
             .if(body("connectsTo").exists())
             .isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -28847,6 +28885,7 @@ var run = async () => {
       body("*.connectsTo").optional().isObject(),
       oneOf(
         [
+        [
           // site
           body("*.connectsTo.siteId")
             .optional()
@@ -28866,6 +28905,7 @@ var run = async () => {
             .optional()
             .if(body("*.connectsTo").exists())
             .isUUID(4),
+        ]
         ],
         {
           message: "either site, trench or pole identifier must be supplied",
@@ -28873,13 +28913,15 @@ var run = async () => {
       ),
       oneOf(
         [
+        [
           body("*.coordinates").isArray({ min: 1 }),
           body("*.coordinates.*.x").default(0).isFloat(OAS.coordinate_x),
           body("*.coordinates.*.y").default(0).isFloat(OAS.coordinate_y),
           body("*.coordinates.*.z").default(0).isFloat(OAS.coordinate_z),
           body("*.coordinates.*.m").optional().isString().trim(),
         ],
-        [body("*.wkt").isString().trim()],
+        [body("*.wkt").isString().trim()]
+        ],
         {
           message: "either coordinates or single WKT must be supplied",
         }
@@ -29542,6 +29584,7 @@ var run = async () => {
       body("type").isIn(OAS.secretType),
       oneOf(
         [
+        [
           body("plain.username").isString().trim(),
           body("plain.password").isString().trim(),
           body("plain.expiration")
@@ -29584,6 +29627,7 @@ var run = async () => {
           body("snmp.version").default("v1").isIn(OAS.snmpVersion),
           oneOf(
             [
+            [
               body("snmp.community.read").default("public").isString().trim(),
               body("snmp.community.write").default("private").isString().trim(),
               body("snmp.community.trap").default("public").isString().trim(),
@@ -29598,6 +29642,7 @@ var run = async () => {
                 OAS.snmpEncryptionProtocol
               ),
               body("snmp.v3.encryption.password").isString().trim(),
+            ]
             ],
             {
               message: "either v1,v2c or v3 SNMP payload must be supplied",
@@ -29630,6 +29675,7 @@ var run = async () => {
           body("token.expiration")
             .default(OAS.secretExpiration)
             .matches(OAS.dateTime),
+        ],
         ],
         {
           message:
@@ -29737,18 +29783,6 @@ var run = async () => {
       header("Content-Type").default(OAS.mimeJSON).isIn(OAS.mimeContentType),
       header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
       addFetchJob
-    );
-
-    /*
-       Tag:           Fetch Jobs
-       operationId:   getAllFetchJobDetails
-       exposed Route: /ni/v1/fetch/jobs
-       HTTP method:   GET
-    */
-    app.get(
-      serveUrlPrefix + serveUrlVersion + "/fetch/jobs",
-      header("Accept").default(OAS.mimeJSON).isIn(OAS.mimeAcceptType),
-      getAllFetchJobDetails
     );
 
     /*

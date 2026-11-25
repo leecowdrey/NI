@@ -58,7 +58,6 @@ var cveDirectory = null;
 var fxRateUpdate = null;
 var queueDrainTimer = null;
 var queueDrainIntervalMs = 30000;
-var endpointTimer = null;
 var jobs = null;
 var jobsCronIds = [];
 
@@ -149,7 +148,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -206,9 +205,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -233,9 +232,9 @@ function loadEnv() {
     "Basic " +
     Buffer.from(serviceUsername + ":" + serviceKey).toString("base64");
   cveScan = toBoolean(process.env.FETCHSRV_CVE_SCAN || false);
-  cveDirectory =
-    path.resolve(process.env.FETCHSRV_CVE_DIRECTORY) ||
-    "/usr/local/ni/cvelistV5";
+  cveDirectory = path.resolve(
+    process.env.FETCHSRV_CVE_DIRECTORY || "/usr/local/ni/cvelistV5"
+  );
   tlsSslVerification = toBoolean(
     process.env.FETCHSRV_TLS_INSECURE_CONNECTIONS || false
   );
@@ -254,6 +253,12 @@ function quit() {
     for (let j = 0; j < jobsCronIds.length; j++) {
       jobsCronIds[j].stop();
     }
+  }
+  if (queueDrainTimer != null) {
+    clearTimeout(queueDrainTimer);
+  }
+  if (dateBoundaryTimer != null) {
+    clearTimeout(dateBoundaryTimer);
   }
   if (endpointTimer != null) {
     clearTimeout(endpointTimer);
@@ -383,7 +388,7 @@ async function fetchJobs() {
         } else {
           LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "fetchJobs", {
             scope: secretScope,
-            realm: realm,
+            url: url,
             status: response.status,
             error: response.statusText,
           });
@@ -622,7 +627,6 @@ async function jobFxRateUpdate(fxRateApiUrl) {
         method: "GET",
         headers: {
           Accept: OAS.mimeJSON,
-          Authorization: serviceAuthentication,
         },
         signal: AbortSignal.timeout(endpointRetryMs),
       })
@@ -766,8 +770,8 @@ async function jobCveRepoPull(target = cveDirectory) {
         if (fs.lstatSync(target).isDirectory()) {
           try {
             if (fs.existsSync(path.join(target, ".git", "index.lock"))) {
-              fs.unlink(
-                path.join(target, ".git", "index.lock", (err) => {
+              fs.unlink(path.join(target, ".git", "index.lock"), (err) => {
+                if (err) {
                   LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
                     event: "cveRepoPull",
                     state: "failed",
@@ -775,8 +779,8 @@ async function jobCveRepoPull(target = cveDirectory) {
                     file: path.join(target, ".git", "index.lock"),
                     error: err,
                   });
-                })
-              );
+                }
+              });
             }
           } catch (err) {
             LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
@@ -904,8 +908,8 @@ async function jobCveListBuild(target = cveDirectory) {
                             ).format(OAS.dayjsFormat);
                           }
                           if (
-                            cveObj.containers?.cna?.affected[0]?.platforms
-                              .length > 0
+                            cveObj.containers?.cna?.affected?.[0]?.platforms
+                              ?.length > 0
                           ) {
                             for (
                               let p = 0;
@@ -920,8 +924,8 @@ async function jobCveListBuild(target = cveDirectory) {
                             }
                           }
                           if (
-                            cveObj.containers?.cna?.affected[0]?.versions
-                              .length > 0
+                            cveObj.containers?.cna?.affected?.[0]?.versions
+                              ?.length > 0
                           ) {
                             for (
                               let v = 0;
@@ -1324,6 +1328,7 @@ var run = async () => {
   await fetchJobs();
 
   // create cronJobs for all enabled jobs based on protocol
+  if (Array.isArray(jobs)) {
   for (let j = 0; j < jobs.length; j++) {
     let fetchId = jobs[j].fetchId;
     let cronProtocol = jobs[j].protocol;
@@ -1448,6 +1453,7 @@ var run = async () => {
         },
       });
     }
+  }
   }
 
   // process a queue item

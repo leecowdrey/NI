@@ -50,7 +50,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -107,9 +107,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -134,7 +134,7 @@ function help() {
       "]\t\t\tsecond,minute,hour,day,week,month,quarter or year\n" +
       "\t\t[--role=" +
       niDefaultRole +
-      "\n\t\t[--host=" +
+      "]\n\t\t[--host=" +
       niDefaultHost +
       "]\t\t\tthe hostname executing API Server\n" + 
       "\t\t[--domain=" +

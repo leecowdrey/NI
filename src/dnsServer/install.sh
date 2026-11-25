@@ -242,7 +242,7 @@ sed -i -e "s|srv-host=_https._tcp.gateway.ni.cowdrey.local,gateway.ni.cowdrey.lo
 sed -i -e "s|address=/apiserver.ni.cowdrey.local/0.0.0.0|address=/apiserver.ni.cowdrey.local/${APISERV_ADDRESS}|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
 sed -i -e "s|srv-host=_https._tcp.apiserver.ni.cowdrey.local,apiserver.ni.cowdrey.local,7443,1|srv-host=_https._tcp.apiserver.ni.cowdrey.local,apiserver.ni.cowdrey.local,${APISERV_PORT},1|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
 sed -i -e "s|address=/iam.ni.cowdrey.local/0.0.0.0|address=/iam.ni.cowdrey.local/${IAM_ADDRESS}|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
-sed -i -e "s|srv-host=_https._tcp.iam.ni.cowdrey.local,iam.ni.cowdrey.local,6443,1|srv-host=_https._tcp.iam.ni.cowdrey.local,iam.ni.cowdrey.local,${IAM_PORT},1|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
+sed -i -e "s|srv-host=_https._tcp.iam.ni.cowdrey.local,iam.ni.cowdrey.local,6443,1|srv-host=_https._tcp.iam.ni.cowdrey.local,iam.ni.cowdrey.local,${IAM_PORT_HTTPS},1|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
 sed -i -e "s|NI.cowdrey.local|${HOST,,}.${DOMAIN,,}|g" ${WORKING_DIRECTORY}/config/dnsServer.conf && \
 grep -E "^nameserver" ${WORKING_DIRECTORY}/config/resolv.conf|sed -e "s|nameserver |server=|g" >> ${WORKING_DIRECTORY}/config/dnsServer.conf
 

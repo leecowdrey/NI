@@ -138,7 +138,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -195,9 +195,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -341,7 +341,7 @@ async function alertJobs() {
         } else {
           LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "alertJobs", {
             scope: secretScope,
-            realm: realm,
+            url: url,
             status: response.status,
             error: response.statusText,
           });
@@ -502,8 +502,8 @@ async function queueDrain() {
               let q = {
                 qId: toInteger(data.qId),
                 point: data.point,
-                type: type,
-                alertId: id,
+                type: data.type,
+                alertId: data.alertId,
                 callbackAlertId: null,
                 publishAlertId: null,
                 notifyAlertId: null,
@@ -529,7 +529,7 @@ async function queueDrain() {
                 case "publish":
                   break;
                 case "notify":
-                  sendMail(q);
+                  await sendMail(q);
                   break;
                 case "workflow":
                   break;
@@ -713,13 +713,13 @@ async function sendMail(q) {
   let mailAuthPassword = "";
   let mailStartTLS = false;
   let mailEncryption = true;
-  let mailSubect = "NI: alert";
+  let mailSubject = "NI: alert";
   let mailPlainTextBody = "alert X threshold reached";
   let mailHtmlBody = "<p>alert X <b>threshold reached</b></p>";
-  let id = "c154c1b3-c0a6-47c3-856d-fed40e9acf19";
+  let providerId = q.emailProviderId || q.notifyAlertId || q.alertId;
 
   try {
-    await fetch(ENDPOINT + "/admin/email/provider/" + q.id, {
+    await fetch(ENDPOINT + "/admin/email/provider/" + providerId, {
       method: "GET",
       headers: {
         Accept: OAS.mimeJSON,
@@ -779,7 +779,7 @@ async function sendMail(q) {
     let mailOptions = {
       from: mailFrom, // Sender addresses comma separated
       to: mailTo, // Recipient addresses comma separated
-      subject: mailSubect, // Subject line
+      subject: mailSubject, // Subject line
       text: mailPlainTextBody, // Plain text body
       html: mailHtmlBody,
     };
@@ -809,25 +809,23 @@ async function sendMail(q) {
 }
 
 async function jobAlertNeCveScan(threshold = 100) {
-  if (cveScan) {
-    try {
-      LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-        event: "alertNeCveScan",
-        state: "start",
-        threshold: threshold,
-      });
-      // TODO:
-      LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-        event: "alertNeCveScan",
-        state: "stop",
-      });
-    } catch (e) {
-      LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        event: "alertNeCveScan",
-        state: "failed",
-        error: e,
-      });
-    }
+  try {
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "start",
+      threshold: threshold,
+    });
+    // TODO:
+    LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
+      event: "alertNeCveScan",
+      state: "stop",
+    });
+  } catch (e) {
+    LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
+      event: "alertNeCveScan",
+      state: "failed",
+      error: e,
+    });
   }
 }
 
@@ -1110,12 +1108,12 @@ async function jobAlertDqTrench() {
     });
     // TODO:
     LOGGER.info(dayjs().format(OAS.dayjsFormat), "info", {
-      event: "alertDqMissingConnectedTo",
+      event: "alertDqTrench",
       state: "stop",
     });
   } catch (e) {
     LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-      event: "alertDqMissingConnectedTo",
+      event: "alertDqTrench",
       state: "failed",
       error: e,
     });
@@ -1384,47 +1382,49 @@ var run = async () => {
   await alertJobs();
 
   // create cronJobs for all enabled jobs based on protocol
-  for (let j = 0; j < jobs.length; j++) {
-    let cronMaxRandomDelay = Math.floor(Math.random() * 13 * 1000);
-    try {
-      if (
-        jobs[j].function != null &&
-        jobs[j].cronTime != null &&
-        toBoolean(jobs[j].enabled) == true
-      ) {
-        jobsCronIds.push(
-          eval(
-            "cron.schedule('" +
-              jobs[j].cronTime +
-              "',() => {" +
-              jobs[j].function +
-              "},{scheduled: " +
-              jobs[j].enabled +
-              ",recoverMissedExecutions: true, name: '" +
-              jobs[j].description +
-              "',noOverlap: true,maxRandomDelay: " +
-              cronMaxRandomDelay +
-              "});"
-          )
-        );
+  if (Array.isArray(jobs)) {
+    for (let j = 0; j < jobs.length; j++) {
+      let cronMaxRandomDelay = Math.floor(Math.random() * 13 * 1000);
+      try {
+        if (
+          jobs[j].function != null &&
+          jobs[j].cronTime != null &&
+          toBoolean(jobs[j].enabled) == true
+        ) {
+          jobsCronIds.push(
+            eval(
+              "cron.schedule('" +
+                jobs[j].cronTime +
+                "',() => {" +
+                jobs[j].function +
+                "},{scheduled: " +
+                jobs[j].enabled +
+                ",recoverMissedExecutions: true, name: '" +
+                jobs[j].description +
+                "',noOverlap: true,maxRandomDelay: " +
+                cronMaxRandomDelay +
+                "});"
+            )
+          );
+          if (DEBUG) {
+            LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", "cronJobs", {
+              id: jobs[j].alertId,
+              description: jobs[j].description,
+              enabled: jobs[j].enabled,
+              time: jobs[j].cronTime,
+              function: jobs[j].function,
+              delay: cronMaxRandomDelay,
+            });
+          }
+        }
+      } catch (err) {
         if (DEBUG) {
-          LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", "cronJobs", {
+          LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "cronJobs", {
             id: jobs[j].alertId,
-            description: jobs[j].description,
-            enabled: jobs[j].enabled,
-            time: jobs[j].cronTime,
             function: jobs[j].function,
-            delay: cronMaxRandomDelay,
+            error: err,
           });
         }
-      }
-    } catch (err) {
-      if (DEBUG) {
-        LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", "cronJobs", {
-          id: jobs[j].alertId,
-          function: jobs[j].cronFunction,
-          error: err,
-        });
       }
     }
   }

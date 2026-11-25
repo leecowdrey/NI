@@ -75,6 +75,7 @@ var oauthToken = null;
 var oauthLogout = null;
 var oauthSecretId = null;
 var oauthSecret = null;
+var server = null;
 
 function toBoolean(s) {
   return String(s).toLowerCase() === "true";
@@ -175,7 +176,7 @@ function loadEnv() {
     appBuild = process.env.NI_BUILD || "00000000.00";
     niCountryCode = process.env.NI_DEFAULT_COUNTRY_CODE || "GBR";
     niCurrencyIsoCode = process.env.NI_DEFAULT_CURRENCY_ISOCODE || "GBP";
-    niCurrencyName = process.env.NI_DEFAULT_CURRENCY_NANE || "Sterling";
+    niCurrencyName = process.env.NI_DEFAULT_CURRENCY_NAME || "Sterling";
     niCurrencySymbol = process.env.NI_DEFAULT_CURRENCY_SYMBOL || "£";
     tickIntervalMs = toInteger(process.env.UISERV_TICK_INTERVAL_MS) || 60000;
     urlPrefix = process.env.APISERV_URL_PREFIX || "/ni";
@@ -221,8 +222,8 @@ function quit() {
   if (apiGatewayResolve != null) {
     clearTimeout(apiGatewayResolve);
   }
-  if (app != null) {
-    app.close();
+  if (server != null) {
+    server.close();
   }
 }
 
@@ -237,7 +238,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -303,9 +304,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -349,7 +350,7 @@ var run = async () => {
       dns: apiGatewayDns,
       ip: apiGatewayIp,
     },
-    ouath: {
+    oauth: {
       enabled: oauth,
       discovery: oauthDiscovery,
       credentials: {
@@ -567,7 +568,7 @@ var run = async () => {
     let resJson = {
       build: appBuild,
       country: niCountryCode,
-      currencyIsoCode: niCurrencyName,
+      currencyIsoCode: niCurrencyIsoCode,
       currencyName: niCurrencyName,
       currencySymbol: niCurrencySymbol,
       gatewayUrl: apiGatewayDns,
@@ -612,7 +613,7 @@ var run = async () => {
           headers: {
             "Content-Type": OAS.mimeUrlFormEncoded,
             Accept: OAS.mimeJSON,
-            Authentication: "Bearer " + req.body.access_token,
+            Authorization: "Bearer " + req.body.access_token,
           },
           body: auth,
           keepalive: true,
@@ -627,10 +628,9 @@ var run = async () => {
           .catch((err) => {
             LOGGER.debug(dayjs().format(OAS.dayjsFormat), "logout", {
               url: oauthLogout,
-              status: response.status,
               error: err,
             });
-            res.sendStatus(response.status);
+            res.sendStatus(502);
           });
       } else {
         res.sendStatus(401);
@@ -648,6 +648,7 @@ var run = async () => {
           client_id: oauthSecretId,
           client_secret: oauthSecret,
           grant_type: "refresh_token",
+          refresh_token: req.body.refresh_token,
           scope: "openid ni",
         });
         fetch(oauthToken, {
@@ -667,11 +668,14 @@ var run = async () => {
               ) {
                 return response.json();
               }
+              return null;
             } else {
               res.sendStatus(response.status);
+              return undefined;
             }
           })
           .then(async (data) => {
+            if (res.headersSent) return;
             if (data != null) {
               resJson = data;
               res.contentType(OAS.mimeJSON).status(200).json(resJson);
@@ -680,9 +684,11 @@ var run = async () => {
             }
           })
           .catch((err) => {
-            res.contentType(OAS.mimeJSON).status(404).json({
-              errors: err,
-            });
+            if (!res.headersSent) {
+              res.contentType(OAS.mimeJSON).status(404).json({
+                errors: err,
+              });
+            }
           });
       } else {
         res.sendStatus(401);
@@ -721,11 +727,14 @@ var run = async () => {
               ) {
                 return response.json();
               }
+              return null;
             } else {
               res.sendStatus(response.status);
+              return undefined;
             }
           })
           .then(async (data) => {
+            if (res.headersSent) return;
             if (data != null) {
               resJson = {
                 access_token: data.access_token,
@@ -742,9 +751,11 @@ var run = async () => {
             }
           })
           .catch((err) => {
-            res.contentType(OAS.mimeJSON).status(404).json({
-              errors: err,
-            });
+            if (!res.headersSent) {
+              res.contentType(OAS.mimeJSON).status(404).json({
+                errors: err,
+              });
+            }
           });
       } else {
         res.sendStatus(401);
@@ -1265,7 +1276,7 @@ var run = async () => {
       process.exit(1);
     }
   }
-  const server = https.createServer(
+  server = https.createServer(
     {
       key: fs.readFileSync(path.join(configDirectory, sslKey), "utf-8"),
       cert: fs.readFileSync(path.join(configDirectory, sslCert), "utf-8"),

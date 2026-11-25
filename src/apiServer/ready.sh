@@ -41,6 +41,7 @@ doing "Checking for API Readiness"
 READY_ATTEMPTS=3
 READY_ATTEMPT=0
 while [[ ${READY_ATTEMPT} -lt ${READY_ATTEMPTS} ]] ; do
+     READY_ATTEMPT=$((READY_ATTEMPT + 1))
      READY=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure --connect-timeout 15 \
           -X GET "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/api/readiness" \
           -H "Accept: application/json" \

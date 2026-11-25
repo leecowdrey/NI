@@ -20,7 +20,7 @@ LOAD spatial;
 ---
 
 CREATE TYPE aggregationUnit AS ENUM ('hour','day','week','month','quarter','half-year','year');
-CREATE TYPE areaType AS ENUM ('residential','rural','industrial','mixed','psz','urban','unclassified','utility');
+CREATE TYPE areaType AS ENUM ('residential','rural','industrial','commercial','mixed','psz','urban','unclassified','utility');
 CREATE TYPE alertType AS ENUM ('callback','publish','notify','workflow');
 CREATE TYPE restAuthentication AS ENUM ('none','basic','oidc','token');
 CREATE TYPE cableCoaxConfigurationFrequency AS ENUM ('MHz','GHz');
@@ -32,10 +32,10 @@ CREATE TYPE cableState AS ENUM ('free','used','reserved','faulty','predicted');
 CREATE TYPE cableTechnology AS ENUM ('coax','ethernet','copper','singleFiber','multiFiber');
 CREATE TYPE constructionType AS ENUM ('micro','narrow','hand-dug','backhoe','inline','portable','large', 'unclassified');
 CREATE TYPE countryCode AS ENUM (
-  'ABW','AFG','AGO','AIA','ALB','AND','ARE','ARG','ARM','ASM','ATA','ATF','ATG','AUS','AUT','AZE','BDI','BEL','BEN','BES','BFA','BGD','BGR','BHR','BHS','BIH','BLM','BLR','BLZ','BMU','BOL','BRA','BRB','BRN','BTN','BWA','CAF','CAN','CHE','CHL','CHN','CIV','CMR','COD','COG','COK','COL','COM','CPV','CRI','CUB','CUW','CYM','CYP','CZE','DEU','DJI','DMA','DNK','DOM','DZA','ECU','EGY','ERI','ESP','EST','ETH','FIN','FJI','FLK','FRA','FRO','FSM','GAB','GBR','GEO','GGY','GHA','GIB','GIN','GLP','GMB','GNB','GNQ','GRC','GRD','GRL','GTM','GUF','GUM','GUY','HND','HRV','HTI','HUN','IDN','IMN','IND','IRL','IRN','IRQ','ISL','ISR','ITA','JAM','JOR','JPN','KAZ','KEN','KGZ','KHM','KIR','KNA','KOR','KWT','LAO','LBN','LBR','LBY','LCA','LIE','LKA','LSO','LTU','LUX','LVA','MAR','MCO','MDA','MDG','MDV','MEX','MHL','MKD','MLI','MLT','MMR','MNE','MNG','MNP','MOZ','MRT','MSR','MTQ','MUS','MWI','MYS','MYT','NAM','NCL','NER','NGA','NIC','NIU','NLD','NOR','NPL','NRU','NZL','OMN','PAK','PAN','PCN','PER','PHL','PLW','PNG','POL','PRK','PRT','PRY','PSE','PYF','QAT','REU','ROU','RUS','RWA','SAU','SDN','SEN','SGP','SHN','SLB','SLE','SLV','SMR','SOM','SRB','SSD','STP','SUR','SVK','SVN','SWE','SWZ','SYC','SYR','TCA','TCD','TGO','THA','TJK','TKL','TKM','TLS','TON','TTO','TUN','TUR','TUV','TWN','TZA','UGA','UKR','URY','USA','UZB','VAT','VCT','VEN','VGB','VIR','VNM','VUT','WLF','WSM','YEM','ZAF','ZMB','ZWE'
+  'ABW','AFG','AGO','AIA','ALB','AND','ARE','ARG','ARM','ASM','ATA','ATG','AUS','AUT','AZE','BDI','BEL','BEN','BES','BFA','BGD','BGR','BHR','BHS','BIH','BLM','BLR','BLZ','BMU','BOL','BRA','BRB','BRN','BTN','BWA','CAF','CAN','CHE','CHL','CHN','CIV','CMR','COD','COG','COK','COL','COM','CPV','CRI','CUB','CUW','CXR','CYM','CYP','CZE','DEU','DJI','DMA','DNK','DOM','DZA','ECU','EGY','ERI','ESP','EST','ETH','FIN','FJI','FLK','FRA','FRO','FSM','GAB','GBR','GEO','GGY','GHA','GIB','GIN','GLP','GMB','GNB','GNQ','GRC','GRD','GRL','GTM','GUF','GUM','GUY','HND','HRV','HTI','HUN','IDN','IMN','IND','IRL','IRN','IRQ','ISL','ISR','ITA','JAM','JOR','JPN','KAZ','KEN','KGZ','KHM','KIR','KNA','KOR','KWT','LAO','LBN','LBR','LBY','LCA','LIE','LKA','LSO','LTU','LUX','LVA','MAC','MAR','MCO','MDA','MDG','MDV','MEX','MHL','MKD','MLI','MLT','MMR','MNE','MNG','MNP','MOZ','MRT','MSR','MTQ','MUS','MWI','MYS','MYT','NAM','NCL','NER','NGA','NIC','NIU','NLD','NOR','NPL','NRU','NZL','OMN','PAK','PAN','PCN','PER','PHL','PLW','PNG','POL','PRK','PRT','PRY','PSE','PYF','QAT','REU','ROU','RUS','RWA','SAU','SDN','SEN','SGP','SHN','SLB','SLE','SLV','SMR','SOM','SRB','SSD','STP','SUR','SVK','SVN','SWE','SWZ','SYC','SYR','TCA','TCD','TGO','THA','TJK','TKL','TKM','TLS','TON','TTO','TUN','TUR','TUV','TWN','TZA','UGA','UKR','URY','USA','UZB','VAT','VCT','VEN','VGB','VIR','VNM','VUT','WLF','WSM','YEM','ZAF','ZMB','ZWE'
 );
-CREATE TYPE currencySymbol AS ENUM ('$','£','¥','฿','₣','₦','₪','€','₴','₹','₺','₽','B$','Cg','DH','EC$','F.CFA','Fr','JD','kr','QR','R','RM','Rp','S$','XCG','zł');
-CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','HKD','IDR','ILS','INR','ISK','JOD','JPY','MAD','MXN','MYR','NGN','NOK','NZD','PLN','QAR','RUB','SEK','SGD','SHP','THB','TRY','UAH','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
+CREATE TYPE currencySymbol AS ENUM ('$','£','₣','€','₹','₺','₽','B$','Cg','EC$','F.CFA','Fr','kr','R','S$','XCG');
+CREATE TYPE currencyIsoCode AS ENUM ('AUD','BND','CHF','CLP','DKK','EUR','FKP','GBP','INR','NOK','NZD','RUB','SGD','SHP','TRY','USD','XAF','XCD','XCG','XOF','XPF','ZAR');
 CREATE TYPE depthClassifier AS ENUM ('low','medium','deep');
 CREATE TYPE ductPurpose AS ENUM ('gas','power','cable','water');
 CREATE TYPE ductSizeCategory AS ENUM ('duct','subduct');
@@ -56,7 +56,7 @@ CREATE TYPE kafkaProducerCompressionMethod AS ENUM ('none','gzip');
 CREATE TYPE languageCode AS ENUM ('aa' ,'ab' ,'ae' ,'af' ,'ak' ,'am' ,'an' ,'ar' ,'as' ,'av' ,'ay' ,'az' ,'ba' ,'be' ,'bg' ,'bh' ,'bi' ,'bm' ,'bn' ,'bo' ,'br' ,'bs' ,'ca' ,'ce' ,'ch' ,'co' ,'cr' ,'cs' ,'cu' ,'cv' ,'cy' ,'da' ,'de' ,'dv' ,'dz' ,'ee' ,'el' ,'en' ,'eo' ,'es' ,'et' ,'eu' ,'fa' ,'ff' ,'fi' ,'fj' ,'fo' ,'fr' ,'fy' ,'ga' ,'gd' ,'gl' ,'gn' ,'gu' ,'gv' ,'ha' ,'he' ,'hi' ,'ho' ,'hr' ,'ht' ,'hu' ,'hy' ,'hz' ,'ia' ,'id' ,'ie' ,'ig' ,'ii' ,'ik' ,'io' ,'is' ,'it' ,'iu' ,'ja' ,'jv' ,'ka' ,'kg' ,'ki' ,'kj' ,'kk' ,'kl' ,'km' ,'kn' ,'ko' ,'kr' ,'ks' ,'ku' ,'kv' ,'kw' ,'ky' ,'la' ,'lb' ,'lg' ,'li' ,'ln' ,'lo' ,'lt' ,'lu' ,'lv' ,'mg' ,'mh' ,'mi' ,'mk' ,'ml' ,'mn' ,'mr' ,'ms' ,'mt' ,'my' ,'na' ,'nb' ,'nd' ,'ne' ,'ng' ,'nl' ,'nn' ,'nr' ,'nv' ,'ny' ,'oc' ,'oj' ,'om' ,'or' ,'os' ,'pa' ,'pi' ,'pl' ,'ps' ,'pt' ,'qu' ,'rm' ,'rn' ,'ro' ,'ru' ,'rw' ,'sa' ,'sc' ,'sd' ,'se' ,'sg' ,'si' ,'sk' ,'sl' ,'sm' ,'sn' ,'so' ,'sq' ,'sr' ,'ss' ,'st' ,'su' ,'sv' ,'sw' ,'ta' ,'te' ,'tg' ,'th' ,'ti' ,'tk' ,'tl' ,'tn' ,'to' ,'tr' ,'ts' ,'tt' ,'tw' ,'ty' ,'ug' ,'uk' ,'ur' ,'uz' ,'ve' ,'vi' ,'vo' ,'wa' ,'wo' ,'xh' ,'yi' ,'yo' ,'za' ,'zh' ,'zu');
 CREATE TYPE languageName AS ENUM ('Afar (aar)' ,'Abkhaz (abk)' ,'Avestan (ave)' ,'Afrikaans (afr)' ,'Akan (aka)' ,'Amharic (amh)' ,'Aragonese (arg)' ,'Arabic (ara)' ,'Assamese (asm)' ,'Avaric (ava)' ,'Aymara (aym)' ,'Azerbaijani (aze)' ,'Bashkir (bak)' ,'Belarusian (bel)' ,'Bulgarian (bul)' ,'Bihari (bih)' ,'Bislama (bis)' ,'Bambara (bam)' ,'Bengali (ben)' ,'Tibetan (bod, tib)' ,'Breton (bre)' ,'Bosnian (bos)' ,'Catalan (cat)' ,'Chechen (che)' ,'Chamorro (cha)' ,'Corsican (cos)' ,'Cree (cre)' ,'Czech (ces, cze)' ,'Church Slavonic (chu)' ,'Chuvash (chv)' ,'Welsh (cym, wel)' ,'Danish (dan)' ,'German (deu, ger)' ,'Dhivehi (div)' ,'Dzongkha (dzo)' ,'Ewe (ewe)' ,'Greek (ell, gre)' ,'English (eng)' ,'Esperanto (epo)' ,'Spanish (spa)' ,'Estonian (est)' ,'Basque (eus, baq)' ,'Persian (fas, per)' ,'Fula (ful)' ,'Finnish (fin)' ,'Fijian (fij)' ,'Faroese (fao)' ,'French (fra, fre)' ,'West Frisian (fry)' ,'Irish (gle)' ,'Scottish Gaelic (gla)' ,'Galician (glg)' ,'Guaraní (grn)' ,'Gujarati (guj)' ,'Manx (glv)' ,'Hausa (hau)' ,'Hebrew (heb)' ,'Hindi (hin)' ,'Hiri Motu (hmo)' ,'Croatian (hrv)' ,'Haitian (hat)' ,'Hungarian (hun)' ,'Armenian (hye, arm)' ,'Herero (her)' ,'Interlingua (ina)' ,'Indonesian (ind)' ,'Interlingue (ile)' ,'Igbo (ibo)' ,'Nuosu (iii)' ,'Inupiaq (ipk)' ,'Ido (ido)' ,'Icelandic (isl, ice)' ,'Italian (ita)' ,'Inuktitut (iku)' ,'Japanese (jpn)' ,'Javanese (jav)' ,'Georgian (kat, geo)' ,'Kongo (kon)' ,'Kikuyu (kik)' ,'Kwanyama (kua)' ,'Kazakh (kaz)' ,'Kalaallisut (kal)' ,'Khmer (khm)' ,'Kannada (kan)' ,'Korean (kor)' ,'Kanuri (kau)' ,'Kashmiri (kas)' ,'Kurdish (kur)' ,'Komi (kom)' ,'Cornish (cor)' ,'Kyrgyz (kir)' ,'Latin (lat)' ,'Luxembourgish (ltz)' ,'Ganda (lug)' ,'Limburgish (lim)' ,'Lingala (lin)' ,'Lao (lao)' ,'Lithuanian (lit)' ,'Luba-Katanga (lub)' ,'Latvian (lav)' ,'Malagasy (mlg)' ,'Marshallese (mah)' ,'Māori (mir, mao)' ,'Macedonian (mkd, mac)' ,'Malayalam (mal)' ,'Mongolian (mon)' ,'Marathi (mar)' ,'Malay (msa, may)' ,'Maltese (mlt)' ,'Burmese (may, bur)' ,'Nauru (nau)' ,'Norwegian Bokmål (nob)' ,'Northern Ndebele (nde)' ,'Nepali (nep)' ,'Ndonga (ndo)' ,'Dutch (nld, dut)' ,'Norwegian Nynorsk (nno)' ,'Southern Ndebele (nbl)' ,'Navajo (nav)' ,'Chichewa (nya)' ,'Occitan (oci)' ,'Ojibwe (oji)' ,'Oromo (orm)' ,'Oriya (ori)' ,'Ossetian (oss)' ,'Punjabi (pan)' ,'Pāli (pli)' ,'Polish (pol)' ,'Pashto (pus)' ,'Portuguese (por)' ,'Quechua (que)' ,'Romansh (roh)' ,'Kirundi (run)' ,'Romanian (ron, rum)' ,'Russian (run)' ,'Kinyarwanda (kin)' ,'Sanskrit (san)' ,'Sardinian (srd)' ,'Sindhi (snd)' ,'Northern Sami (sme)' ,'Sango (sag)' ,'Sinhala (sin)' ,'Slovak (slk, slo)' ,'Slovene (slv)' ,'Samoan (smo)' ,'Shona (sna)' ,'Somali (som)' ,'Albanian (sqi, alb)' ,'Serbian (srp)' ,'Swati (ssw)' ,'Southern Sotho (sot)' ,'Sundanese (sun)' ,'Swedish (swe)' ,'Swahili (swa)' ,'Tamil (tam)' ,'Telugu (tel)' ,'Tajik (tgk)' ,'Thai (tha)' ,'Tigrinya (tir)' ,'Turkmen (tuk)' ,'Tagalog (tgl)' ,'Tswana (tsn)' ,'Tongan (ton)' ,'Turkish (tur)' ,'Tsonga (tso)' ,'Tatar (tat)' ,'Twi (twi)' ,'Tahitian (tah)' ,'Uighur (uig)' ,'Ukrainian (ukr)' ,'Urdu (urd)' ,'Uzbek (uzb)' ,'Venda (ven)' ,'Vietnamese (vie)' ,'Volapük (vol)' ,'Walloon (wln)' ,'Wolof (wol)' ,'Xhosa (xho)' ,'Yiddish (yid)' ,'Yoruba (yor)' ,'Zhuang (zha)' ,'Chinese (zho, chi)' ,'Zulu (zul)');
 CREATE TYPE mapVendorPlatform AS ENUM ('OpenStreet Map','Google Maps','Microsoft Azure','ERSI');
-CREATE TYPE managementProtocol AS ENUM ('http','netconf','snmp','ssh','telnet','none');
+CREATE TYPE managementProtocol AS ENUM ('https','netconf','snmp','ssh','telnet','none');
 CREATE TYPE polePurpose AS ENUM ('service/drop','link','backhaul','unclassified');
 CREATE TYPE poleState AS ENUM ('free','used','reserved','faulty');
 CREATE TYPE portCoaxConfigurationRate AS ENUM ('MHz','GHz');
@@ -72,10 +72,10 @@ CREATE TYPE fetchResourceType AS ENUM ('external','lni','ne','pni');
 CREATE TYPE resourceType AS ENUM ('cable','duct','ne','pole','rack','service','site','trench');
 CREATE TYPE resourceStateType AS ENUM ('create','delete','update','undelete','read');
 CREATE TYPE serviceType AS ENUM ('broadband','circuit','ethernet','sogea','fttx','optical','unclassified','voice');
-CREATE TYPE siteType AS ENUM ('adu', 'colo', 'commercial', 'dc', 'exchange', 'mdu', 'pop', 'sdu', 'street', 'unclassified','utility');
+CREATE TYPE siteType AS ENUM ('adu', 'colo', 'commercial', 'dc', 'exchange', 'mdu', 'pop', 'sdu', 'street', 'unclassified');
 CREATE TYPE secretType AS ENUM ('identity','plain','snmp','ssh','ssl','token');
 CREATE TYPE snmpVersion AS ENUM ('v1','v2c','v3');
-CREATE TYPE snmpAuthorizationProtcol AS ENUM ('MD5','SHA');
+CREATE TYPE snmpAuthorizationProtocol AS ENUM ('MD5','SHA');
 CREATE TYPE snmpEncryptionProtocol AS ENUM ('DES','AES-128');
 CREATE TYPE sizeUnit AS ENUM ('cm','mm','m','km','Mm','inch','feet');
 CREATE TYPE temperatureUnit AS ENUM ('celsius','fahrenheit');
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS secret (
     snmpCommunityWrite VARCHAR,
     snmpCommunityTrap VARCHAR,
     snmpUsername VARCHAR,
-    snmpAuthorizationProtocol snmpAuthorizationProtcol,
+    snmpAuthorizationProtocol snmpAuthorizationProtocol,
     snmpAuthorizationPassword VARCHAR,
     snmpEncryptionProtocol snmpEncryptionProtocol,
     snmpEncryptionPassword VARCHAR,
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS costPole (
 );
 
 CREATE TABLE IF NOT EXISTS costRack (
-    slots INTEGER NOT NULL DEFAULT 42 CHECK (slots >= 1 AND slots <= 59),
+    slots INTEGER NOT NULL DEFAULT 42 CHECK (slots >= 1 AND slots <= 59) PRIMARY KEY,
     costPerUnit DECIMAL(18,2) NOT NULL DEFAULT 0 CHECK (costPerUnit >= 0 AND costPerUnit <= 999999.99)
 );
 
@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS cve (
     published TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     updated TIMESTAMP,
     vendor VARCHAR NOT NULL,
-    uri VARCHAR NOT NULL,
+    uri VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cvePlatforms (
@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS adminMap (
     vendor mapVendorPlatform NOT NULL,
     systemDefault BOOLEAN NOT NULL DEFAULT false,
     renderUrl VARCHAR NOT NULL,
-    typeSecret secretType,
+    typeSecret secretType
 );
 CREATE TABLE IF NOT EXISTS adminWorkflow (
     id VARCHAR NOT NULL DEFAULT uuid() PRIMARY KEY,
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS alert (
     description VARCHAR NOT NULL,
     cronTime VARCHAR NOT NULL DEFAULT '0 0 * * *' CHECK (regexp_full_match(cronTime,'^(((\d+,)+\d+|((\d+|[*])[/]\d+|((JAN|FEB|APR|MA[RY]|JU[LN]|AUG|SEP|OCT|NOV|DEC)(-(JAN|FEB|APR|MA[RY]|JU[LN]|AUG|SEP|OCT|NOV|DEC))?))|(\d+-\d+)|\d+(-\d+)?[/]\d+(-\d+)?|\d+|[*]|(MON|TUE|WED|THU|FRI|SAT|SUN)(-(MON|TUE|WED|THU|FRI|SAT|SUN))?) ?){5}$')),
     function VARCHAR NOT NULL DEFAULT 'noop();',
-    enabled BOOLEAN NOT NULL DEFAULT false,
+    enabled BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS alertCallback (
@@ -569,7 +569,7 @@ CREATE TABLE IF NOT EXISTS _document (
     point TIMESTAMP NOT NULL DEFAULT now()::timestamp,
     probability DECIMAL(3,2) NOT NULL DEFAULT 1 CHECK (probability >= 0 AND probability <= 1),
     documentId VARCHAR NOT NULL,
-    mimeType ianaMimeTYPE NOT NULL,
+    mimeType ianaMimeType NOT NULL,
     path VARCHAR NOT NULL, 
     name VARCHAR NOT NULL,
     sizeBytes INTEGER NOT NULL DEFAULT 0,
@@ -614,7 +614,7 @@ CREATE TABLE IF NOT EXISTS _trench (
     distanceTotal DECIMAL DEFAULT 0.0 CHECK (distanceTotal >= 0),
     distanceUnit sizeUnit DEFAULT 'm',
     FOREIGN KEY (trenchId) REFERENCES trench (id),
-    FOREIGN KEY (documentId) REFERENCES document (id),
+    FOREIGN KEY (documentId) REFERENCES document (id)
 );
 --- Error: Constraint Error: Duplicate key 'tsId: 25' violates primary key constraint. If this is an unexpected constraint violation please double check with the known index limitations section in our documentation (https://duckdb.org/docs/sql/indexes)
 ---    FOREIGN KEY (trenchId) REFERENCES trench (id),
@@ -993,10 +993,10 @@ CREATE TABLE IF NOT EXISTS _nePort (
 CREATE TABLE IF NOT EXISTS _nePortCoax (
     tsId INTEGER NOT NULL DEFAULT nextval('seq_nePortCoax') PRIMARY KEY,
     neTsId INTEGER NOT NULL,
-    frequencyLow DECIMAL(6,2) NOT NULL DEFAULT 0.1 CHECK (frequencyLow >= 0.1 AND frequencyLow <= 100000),
-    frequencyHigh DECIMAL(6,2) NOT NULL DEFAULT 100000 CHECK (frequencyHigh >= 0.1 AND frequencyHigh <= 100000),
+    frequencyLow DECIMAL(10,2) NOT NULL DEFAULT 0.1 CHECK (frequencyLow >= 0.1 AND frequencyLow <= 100000),
+    frequencyHigh DECIMAL(10,2) NOT NULL DEFAULT 100000 CHECK (frequencyHigh >= 0.1 AND frequencyHigh <= 100000),
     channels INTEGER DEFAULT 1 CHECK (channels >= 1 AND channels <= 512),
-    width DECIMAL(6,2) DEFAULT 1 CHECK (width >= 0.1 AND width <= 100000),
+    width DECIMAL(10,2) DEFAULT 1 CHECK (width >= 0.1 AND width <= 100000),
     unit portCoaxConfigurationRate DEFAULT 'GHz'
     --,
     --FOREIGN KEY (neTsId) REFERENCES _ne (tsId) 
@@ -1183,9 +1183,9 @@ COMMIT;
 
 BEGIN TRANSACTION;
 INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES ('cbb3b421-d6fc-4bfa-9661-b7854654138b','No Fetch Operation',true,'none','0 0 * * *','noop();');
-INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('86c954a9-efb6-4a8b-85bb-13de5504c97a','CVE Pull',true,'none','00 18 * * *','jobCveRepoPull({cveDirectory});');
-INSERT INTO fetchJob (id,description,enabled,protocol,crontime,function) VALUES ('24c449a6-f838-4e12-9427-bc484191f92e','CVE Build',true,'none','30 18 * * *','jobCveListBuild({cveDirectory});');
-INSERT INTO fetchJob (id,description,enabled,protocol,httpUrl,crontime,function) VALUES ('2bbe3d5b-6975-45f4-a6ed-f1b67f990240','FX Currency Update',true,'http','https://api.exchangeratesapi.io/v1/latest','0 9,19 * * 1-5','jobFxRateUpdate({url});');
+INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES ('86c954a9-efb6-4a8b-85bb-13de5504c97a','CVE Pull',true,'none','00 18 * * *','jobCveRepoPull({cveDirectory});');
+INSERT INTO fetchJob (id,description,enabled,protocol,cronTime,function) VALUES ('24c449a6-f838-4e12-9427-bc484191f92e','CVE Build',true,'none','30 18 * * *','jobCveListBuild({cveDirectory});');
+INSERT INTO fetchJob (id,description,enabled,protocol,httpUrl,cronTime,function) VALUES ('2bbe3d5b-6975-45f4-a6ed-f1b67f990240','FX Currency Update',true,'http','https://api.exchangeratesapi.io/v1/latest','0 9,19 * * 1-5','jobFxRateUpdate({url});');
 COMMIT;
 
 BEGIN TRANSACTION;
@@ -1211,21 +1211,6 @@ INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALU
 INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('18b4e171-c453-422f-8b5d-f7e824d59d0b','Turkish lira','₺','TRY',false,46.77);
 INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('300e2d59-e873-4ecc-a3ad-58e44e3f3c03','United States dollar','$','USD',false,1.17);
 INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c738c6cd-2614-42a2-965b-25fa7a3a8050','West African CFA franc','F.CFA','XOF',false,655.96);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('c5f1a531-d219-4e24-94ed-f19deb1e4be1','Malaysian ringgit','RM','MYR',false,4.96);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('aa170720-91eb-49a0-9739-9667b67feb20','Mexican peso','$','MXN',false,22.13);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('3d9a53ce-3243-45e0-b948-fbb48ec03956','Moroccan dirham','DH','MAD',false,10.60);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d21b542f-9e27-4b2f-a2b4-0071b74a5dc8','Indonesian rupiah','Rp','IDR',false,19006.00);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('e2a23cba-dcf2-4479-aaed-82259f6fcaef','Israeli new shekel','₪','ILS',false,3.97);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('9cb591c6-abe3-44ff-8058-c261a7730672','Japanese yen','¥','JPY',false,169.33);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('752c827d-16e0-40db-88fa-16f7d9eecf8f','Jordanian dinar','JD','JOD',false,0.83);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('23471b7e-da3b-4b71-b31b-33a139dada9f','Nigerian naira','₦','NGN',false,1811.20);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('873681db-6e23-4c63-baff-70cae4652e73','Qatari riyal','QR','QAR',false,4.28);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('a491e7a4-3b5a-44e9-abb2-7d3cb5810b8e','Swedish krona','kr','SEK',false,11.10);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('be8c6d3f-b44b-44c2-b2b7-9a368efcaa2c','Thai baht','฿','THB',false,38.22);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('d19d6d08-14e7-4bfc-92c9-cf0cd69ea4d8','Ukrainian hryvnia','₴','UAH',false,48.73);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('91e7d26b-4f51-4be5-9063-add3eb996922','Icelandic króna','kr','ISK',false,142.40);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('0cf0e7db-0561-446b-8950-0676153cb2ad','Hong Kong dollar','$','HKD',false,9.20);
-INSERT INTO currency (id,name,symbol,isoCode,systemDefault,rateFromDefault) VALUES ('135bf965-b0cc-40b9-9681-a4eb825aabc5','Polish złoty','zł','PLN',false,4.24);
 COMMIT;
 
 BEGIN TRANSACTION;

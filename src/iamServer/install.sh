@@ -152,8 +152,8 @@ fi
 doing "Copying certificates to keycloak target"
 cp -f ${CONFIG_DIRECTORY}/${SSL_KEY} ${WORKING_DIRECTORY}/keys/certificates && \
 cp -f ${CONFIG_DIRECTORY}/${SSL_CERT} ${WORKING_DIRECTORY}/keys/certificates && \
-chown ${USERNAME}:${PASSWORD} ${WORKING_DIRECTORY}/keys/certificates/${SSL_KEY} && \
-chown ${USERNAME}:${PASSWORD} ${WORKING_DIRECTORY}/keys/certificates/${SSL_CERT}
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/keys/certificates/${SSL_KEY} && \
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/keys/certificates/${SSL_CERT}
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
@@ -186,8 +186,8 @@ RETVAL=$?
 doing "- Copying NI base realm"
 cp -f NI-realm.json ${WORKING_DIRECTORY}/export/ && \
 cp -f NI-users-0.json ${WORKING_DIRECTORY}/export/ && \
-chown ${USERNAME}:${PASSWORD} ${WORKING_DIRECTORY}/export/NI-realm.json && \
-chown ${USERNAME}:${PASSWORD} ${WORKING_DIRECTORY}/export/NI-users-0.json
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/export/NI-realm.json && \
+chown ${USERNAME}:${GROUP} ${WORKING_DIRECTORY}/export/NI-users-0.json
 RETVAL=$?
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 

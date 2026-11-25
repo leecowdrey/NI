@@ -18,6 +18,7 @@ if [ -t 1 ] ; then
     LTBLUE='\033[1;34m'
     GRAY='\033[1;30m'
     LTGRAY='\033[0;37m'
+    WHITE='\033[1;37m'
     CYAN='\033[0;36m'
     NC='\033[0m' # No Color
     COLS=$(tput cols)
@@ -32,13 +33,14 @@ else
     LTBLUE=""
     GRAY=""
     LTGRAY=""
+    WHITE=""
     CYAN=""
     NC=""
     COLS=80
     USING_COLOURS=false
     IS_TERMINAL=false
 fi
-if [[ -v $COLUMNS ]] ; then
+if [[ -z "${COLUMNS:-}" ]] ; then
     COLUMNS="$COLS"
 fi
 COLOURS_SET="1"

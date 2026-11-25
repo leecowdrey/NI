@@ -129,7 +129,7 @@ function findMode(arr) {
 
 function findSMA(states, interval = states.length) {
   let index = interval - 1;
-  let length = states.length + 1;
+  let length = states.length;
   let results = [];
   while (index < length) {
     index = index + 1;
@@ -165,7 +165,7 @@ errorTypes.forEach((errType) => {
   process.on(errType, async (e) => {
     try {
       LOGGER.error(dayjs().format(OAS.dayjsFormat), "error", {
-        signal: sigType,
+        signal: errType,
         error: e,
       });
       quit();
@@ -222,9 +222,9 @@ signalTraps.forEach((sigType) => {
       break;
     default:
       if (DEBUG) {
-        LOGGER.debug(
-          (dayjs().format(OAS.dayjsFormat), "debug", { signal: sigType })
-        );
+        LOGGER.debug(dayjs().format(OAS.dayjsFormat), "debug", {
+          signal: sigType,
+        });
       }
   }
 });
@@ -361,6 +361,7 @@ async function getDateBoundary() {
         }
       })
       .then((data) => {
+        if (data == null) return;
         historicalDuration = toInteger(data.historical.duration);
         predictedDuration = toInteger(data.predicted.duration);
         // adjust units - ('second','minute','hour','day','week','month','quarter','year');
@@ -534,8 +535,10 @@ async function duplicate(bundle) {
           break;
         case "ne":
           // reset ne port error count back to 0
-          for (let p = 0; p < resource.ports.length; p++) {
-            resource.ports[p].errorCount = 0;
+          if (Array.isArray(resource.ports)) {
+            for (let p = 0; p < resource.ports.length; p++) {
+              resource.ports[p].errorCount = 0;
+            }
           }
           break;
         case "rack":
@@ -796,17 +799,24 @@ async function predictCable(bundle) {
         return false;
       });
   }
+  if (resource == null) {
+    return false;
+  }
   // move the predicted point back 1 second from the predicted boundary
-  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+  let predictedPoint = dayjs(
+    bundle.point || dayjs().format(OAS.dayjsFormat),
+    OAS.dayjsFormat
+  )
     .add(predictedDuration, predictedUnit)
     .subtract(1, "s");
   resource.point = predictedPoint.format(OAS.dayjsFormat);
   resource.source = OAS.sourcePredicted;
   switch (resource.technology) {
     case "coax":
-      let coaxLast = (timeline[timeline.length - 1] ||= OAS.cableState.indexOf(
-        OAS.cableStateFree
-      ));
+      let coaxLast =
+        timeline.length > 0
+          ? timeline[timeline.length - 1]
+          : OAS.cableState.indexOf(OAS.cableStateFree);
       let coaxMostFrequent = findMode(timeline);
       let coaxNext = coaxLast;
       let coaxOccFree = toDecimal(
@@ -839,11 +849,11 @@ async function predictCable(bundle) {
           ) {
             coaxNext = OAS.cableState.indexOf(OAS.cableStateReserved);
           } else if (
-            coaxOccUsed > coaxOccReserved &&
-            coaxOccUsed > coaxOccFaulty &&
-            coaxOccUsed > coaxOccFree
+            coaxOccFaulty > coaxOccReserved &&
+            coaxOccFaulty > coaxOccUsed &&
+            coaxOccFaulty > coaxOccFree
           ) {
-            coaxNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+            coaxNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
           } else {
             coaxNext = coaxMostFrequent;
           }
@@ -897,8 +907,8 @@ async function predictCable(bundle) {
           }
         );
       }
-      resource.configuration.state = OAS.cableState[coaxNext] ||=
-        OAS.cableStateFree;
+      resource.configuration.state =
+        OAS.cableState[coaxNext] || OAS.cableStateFree;
       /*
       let coaxSma = findSMA(timeline);
       let coaxPred = Math.trunc(coaxSma[coaxSma.length - 1]);
@@ -909,8 +919,10 @@ async function predictCable(bundle) {
           */
       break;
     case "copper":
-      let copperLast = (timeline[timeline.length - 1] ||=
-        OAS.cableState.indexOf(OAS.cableStateFree));
+      let copperLast =
+        timeline.length > 0
+          ? timeline[timeline.length - 1]
+          : OAS.cableState.indexOf(OAS.cableStateFree);
       let copperMostFrequent = findMode(timeline);
       let copperNext = copperLast;
       let copperOccFree = toDecimal(
@@ -943,11 +955,11 @@ async function predictCable(bundle) {
           ) {
             copperNext = OAS.cableState.indexOf(OAS.cableStateReserved);
           } else if (
-            copperOccUsed > copperOccReserved &&
-            copperOccUsed > copperOccFaulty &&
-            copperOccUsed > copperOccFree
+            copperOccFaulty > copperOccReserved &&
+            copperOccFaulty > copperOccUsed &&
+            copperOccFaulty > copperOccFree
           ) {
-            copperNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+            copperNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
           } else {
             copperNext = copperMostFrequent;
           }
@@ -1013,8 +1025,8 @@ async function predictCable(bundle) {
           }
         );
       }
-      resource.configuration.state = OAS.cableState[copperNext] ||=
-        OAS.cableStateFree;
+      resource.configuration.state =
+        OAS.cableState[copperNext] || OAS.cableStateFree;
       /*
       let copperSma = findSMA(timeline);
       let copperPred = Math.trunc(copperSma[copperSma.length - 1]);
@@ -1025,8 +1037,10 @@ async function predictCable(bundle) {
           */
       break;
     case "ethernet":
-      let ethernetLast = (timeline[timeline.length - 1] ||=
-        OAS.cableState.indexOf(OAS.cableStateFree));
+      let ethernetLast =
+        timeline.length > 0
+          ? timeline[timeline.length - 1]
+          : OAS.cableState.indexOf(OAS.cableStateFree);
       let ethernetMostFrequent = findMode(timeline);
       let ethernetNext = ethernetLast;
       let ethernetOccFree = toDecimal(
@@ -1059,11 +1073,11 @@ async function predictCable(bundle) {
           ) {
             ethernetNext = OAS.cableState.indexOf(OAS.cableStateReserved);
           } else if (
-            ethernetOccUsed > ethernetOccReserved &&
-            ethernetOccUsed > ethernetOccFaulty &&
-            ethernetOccUsed > ethernetOccFree
+            ethernetOccFaulty > ethernetOccReserved &&
+            ethernetOccFaulty > ethernetOccUsed &&
+            ethernetOccFaulty > ethernetOccFree
           ) {
-            ethernetNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+            ethernetNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
           } else {
             ethernetNext = ethernetMostFrequent;
           }
@@ -1129,8 +1143,8 @@ async function predictCable(bundle) {
           }
         );
       }
-      resource.configuration.state = OAS.cableState[ethernetNext] ||=
-        OAS.cableStateFree;
+      resource.configuration.state =
+        OAS.cableState[ethernetNext] || OAS.cableStateFree;
       /*
       let ethernetSma = findSMA(timeline);
       let ethernetPred = Math.trunc(ethernetSma[ethernetSma.length - 1]);
@@ -1193,12 +1207,12 @@ async function predictCable(bundle) {
                 singleFiberNext = OAS.cableState.indexOf(
                   OAS.cableStateReserved
                 );
-              } else if (
-                singleFiberOccUsed > singleFiberOccReserved &&
-                singleFiberOccUsed > singleFiberOccFaulty &&
-                singleFiberOccUsed > singleFiberOccFree
-              ) {
-                singleFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+          } else if (
+            singleFiberOccFaulty > singleFiberOccReserved &&
+            singleFiberOccFaulty > singleFiberOccUsed &&
+            singleFiberOccFaulty > singleFiberOccFree
+          ) {
+            singleFiberNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
               } else {
                 singleFiberNext = singleFiberMostFrequent;
               }
@@ -1267,9 +1281,8 @@ async function predictCable(bundle) {
           }
           for (let r = 0; r < resource.configuration.states.length; r++) {
             if (resource.configuration.states[r].strand == s) {
-              resource.configuration.states[r].state = OAS.cableState[
-                singleFiberNext
-              ] ||= OAS.cableStateFree;
+              resource.configuration.states[r].state =
+                OAS.cableState[singleFiberNext] || OAS.cableStateFree;
               break;
             }
           }
@@ -1331,11 +1344,11 @@ async function predictCable(bundle) {
                     OAS.cableStateReserved
                   );
                 } else if (
-                  multiFiberOccUsed > multiFiberOccReserved &&
-                  multiFiberOccUsed > multiFiberOccFaulty &&
-                  multiFiberOccUsed > multiFiberOccFree
+                  multiFiberOccFaulty > multiFiberOccReserved &&
+                  multiFiberOccFaulty > multiFiberOccUsed &&
+                  multiFiberOccFaulty > multiFiberOccFree
                 ) {
-                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateUsed);
+                  multiFiberNext = OAS.cableState.indexOf(OAS.cableStateFaulty);
                 } else {
                   multiFiberNext = multiFiberMostFrequent;
                 }
@@ -1408,9 +1421,8 @@ async function predictCable(bundle) {
                 resource.configuration.states[u].ribbon == r &&
                 resource.configuration.states[u].strand == s
               ) {
-                resource.configuration.states[u].state = OAS.cableState[
-                  multiFiberNext
-                ] ||= OAS.cableStateFree;
+                resource.configuration.states[u].state =
+                  OAS.cableState[multiFiberNext] || OAS.cableStateFree;
                 break;
               }
             }
@@ -1608,7 +1620,7 @@ async function predictDuct(bundle) {
       })
       .then((data) => {
         if (data != null) {
-          timeline.push(OAS.ductState.indexOf(data.configuration.state));
+          timeline.push(OAS.ductState.indexOf(data.state));
         }
       })
       .catch((err) => {
@@ -1622,15 +1634,22 @@ async function predictDuct(bundle) {
         return false;
       });
   }
+  if (resource == null) {
+    return false;
+  }
   // move the predicted point back 1 second from the predicted boundary
-  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+  let predictedPoint = dayjs(
+    bundle.point || dayjs().format(OAS.dayjsFormat),
+    OAS.dayjsFormat
+  )
     .add(predictedDuration, predictedUnit)
     .subtract(1, "s");
   resource.point = predictedPoint.format(OAS.dayjsFormat);
   resource.source = OAS.sourcePredicted;
-  let ductLast = (timeline[timeline.length - 1] ||= OAS.ductState.indexOf(
-    OAS.ductStateFree
-  ));
+  let ductLast =
+    timeline.length > 0
+      ? timeline[timeline.length - 1]
+      : OAS.ductState.indexOf(OAS.ductStateFree);
   let ductMostFrequent = findMode(timeline);
   let ductNext = ductLast;
   let ductOccFree = toDecimal(
@@ -1660,11 +1679,11 @@ async function predictDuct(bundle) {
       ) {
         ductNext = OAS.ductState.indexOf(OAS.ductStateReserved);
       } else if (
-        ductOccUsed > ductOccReserved &&
-        ductOccUsed > ductOccFaulty &&
-        ductOccUsed > ductOccFree
+        ductOccFaulty > ductOccReserved &&
+        ductOccFaulty > ductOccUsed &&
+        ductOccFaulty > ductOccFree
       ) {
-        ductNext = OAS.ductState.indexOf(OAS.ductStateUsed);
+        ductNext = OAS.ductState.indexOf(OAS.ductStateFaulty);
       } else {
         ductNext = ductMostFrequent;
       }
@@ -1707,7 +1726,7 @@ async function predictDuct(bundle) {
       next: OAS.ductState[ductNext],
     });
   }
-  resource.configuration.state = OAS.ductState[ductNext] ||= OAS.ductStateFree;
+  resource.state = OAS.ductState[ductNext] || OAS.ductStateFree;
   // replace (PUT) it back to keep a predicted variant
   while (!ENDPOINT_READY) {
     await sleep(endpointRetryMs);
@@ -1945,21 +1964,27 @@ async function predictNe(bundle) {
         return false;
       });
   }
+  if (resource == null) {
+    return false;
+  }
   // move the predicted point back 1 second from the predicted boundary
-  let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
+  let predictedPoint = dayjs(
+    bundle.point || dayjs().format(OAS.dayjsFormat),
+    OAS.dayjsFormat
+  )
     .add(predictedDuration, predictedUnit)
     .subtract(1, "s");
   resource.point = predictedPoint.format(OAS.dayjsFormat);
   resource.source = OAS.sourcePredicted;
   // should have [{port: "at-0/0/0", state: "free"},{port: "at-0/0/0", state: "used"},{port: "at-0/0/1", state:"free"},{port: "at-0/0/1", state:"free"}] etc.
-  if (resource.ports > 0) {
-    for (let s = 1; s <= resource.ports; s++) {
+  if (Array.isArray(resource.ports) && resource.ports.length > 0) {
+    for (let s = 0; s < resource.ports.length; s++) {
       // reset port error count
       resource.ports[s].errorCount = 0;
       //
       let portSpecific = [];
       for (let u = 0; u < timeline.length; u++) {
-        if (timeline[u].port == s) {
+        if (timeline[u].port == resource.ports[s].name) {
           portSpecific.push(timeline[u].state);
         }
       }
@@ -1969,17 +1994,8 @@ async function predictNe(bundle) {
         let sma = findSMA(portSpecific);
         let mode = Math.trunc(sma[sma.length - 1]);
         if (mode != null) {
-          let newState = (OAS.portState[mode] ||= OAS.portStateFree);
-          // update resource ports
-          for (let r = 0; r < resource.ports.length; r++) {
-            if (resource.ports[r].name == resource.ports[s].name) {
-              // if used then leave it as was
-              //if (resource.ports[r].state != OAS.portStateUsed) {
-              resource.ports[r].state = newState; // OAS.sourcePredicted ??
-              //}
-              break;
-            }
-          }
+          let newState = OAS.portState[mode] || OAS.portStateFree;
+          resource.ports[s].state = newState;
         }
       }
     }
@@ -2185,8 +2201,11 @@ async function predictRack(bundle) {
         return false;
       });
   }
+  if (resource == null) {
+    return false;
+  }
   // move the predicted point back 1 second from the predicted boundary
-  if (bundle.point === null || bundle.point === "undefined") {
+  if (bundle.point == null || bundle.point === "undefined") {
     bundle.point = dayjs().format(OAS.dayjsFormat);
   }
   let predictedPoint = dayjs(bundle.point, OAS.dayjsFormat)
@@ -2208,7 +2227,7 @@ async function predictRack(bundle) {
         let sma = findSMA(slotSpecific);
         let mode = Math.trunc(sma[sma.length - 1]);
         if (mode != null) {
-          let newUsage = (OAS.rackSlotUsage[mode] ||= OAS.rackSlotUsageFree);
+          let newUsage = OAS.rackSlotUsage[mode] || OAS.rackSlotUsageFree;
           // update resource slots
           for (let r = 0; r < resource.slotUsage.length; r++) {
             if (resource.slotUsage[r].slot == s) {
@@ -2433,7 +2452,7 @@ async function queueDrain() {
             }
           }
         })
-        .then((data) => {
+        .then(async (data) => {
           if (data != null) {
             if (data.qId != null) {
               let q = {
@@ -2446,7 +2465,7 @@ async function queueDrain() {
 
               try {
                 let url = ENDPOINT + "/" + q.resource + "/timeline/" + q.id;
-                fetch(url, {
+                await fetch(url, {
                   method: "GET",
                   headers: {
                     Accept: OAS.mimeJSON,
@@ -2551,76 +2570,86 @@ async function queueDrain() {
                                   method: "predict",
                                 }
                               );
-                              let predictOk = false;
-                              switch (q.resource) {
-                                case "cable":
-                                  predictOk = await predictCable({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "duct":
-                                  predictOk = await predictDuct({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "pole":
-                                  predictOk = await predictPole({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "ne":
-                                  predictOk = await predictNe({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "rack":
-                                  predictOk = await predictRack({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "service":
-                                  predictOk = await predictService({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "site":
-                                  predictOk = await predictSite({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                case "trench":
-                                  predictOk = await predictTrench({
-                                    qId: q.qId,
-                                    resource: q.resource,
-                                    id: q.id,
-                                  });
-                                  if (predictOk) await deleteQueueItem(q.qId);
-                                  break;
-                                default:
-                                  // unsupported resource, so just remove queue entry
-                                  await deleteQueueItem(q.qId);
-                              }
+                            }
+                            let latestPoint =
+                              historicalTimeline[historicalTimeline.length - 1];
+                            let predictOk = false;
+                            switch (q.resource) {
+                              case "cable":
+                                predictOk = await predictCable({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "duct":
+                                predictOk = await predictDuct({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "pole":
+                                predictOk = await predictPole({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "ne":
+                                predictOk = await predictNe({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "rack":
+                                predictOk = await predictRack({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "service":
+                                predictOk = await predictService({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "site":
+                                predictOk = await predictSite({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              case "trench":
+                                predictOk = await predictTrench({
+                                  qId: q.qId,
+                                  resource: q.resource,
+                                  id: q.id,
+                                  point: latestPoint,
+                                });
+                                if (predictOk) await deleteQueueItem(q.qId);
+                                break;
+                              default:
+                                // unsupported resource, so just remove queue entry
+                                await deleteQueueItem(q.qId);
                             }
                           } else if (plannedTimeline.length > 0) {
                             if (DEBUG) {
@@ -2663,7 +2692,8 @@ async function queueDrain() {
                   "error",
                   "resourcesDrain",
                   {
-                    target: resourcesFileTarget,
+                    resource: q.resource,
+                    id: q.id,
                     error: err,
                   }
                 );
@@ -2765,7 +2795,7 @@ async function checkEndpointReadiness() {
           }
         })
         .then((data) => {
-          if (data.point != null) {
+          if (data?.point != null) {
             let datePoint = new RegExp("^[0-9]{8}T[0-9]{6}$");
             if (datePoint.test(data.point)) {
               ENDPOINT_READY = true;

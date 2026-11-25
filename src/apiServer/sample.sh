@@ -57,7 +57,7 @@ function a2s() {
                RETVAL=$?
                [[ -f "${JSON_TMP}" ]] && rm -f ${JSON_TMP} &>/dev/null
                info "${REC}/${OBJS}: ${RESULT}"
-               if [[ ${RESULT} -eq 0 ]] ; then
+               if [[ ${RETVAL} -eq 0 ]] ; then
                     if [[ "${RESULT:0:1}" == "2" ]] ; then
                          RETVAL=0
                     else
@@ -76,6 +76,7 @@ doing "Checking for API Readiness"
 READY_ATTEMPTS=3
 READY_ATTEMPT=0
 while [[ ${READY_ATTEMPT} -lt ${READY_ATTEMPTS} ]] ; do
+     READY_ATTEMPT=$((READY_ATTEMPT + 1))
      READY=$(curl --silent --write-out "%{http_code}" --output /dev/null --insecure --connect-timeout 15 \
           -X GET "https://${ADDRESS}:${PORT}${APISERV_URL_PREFIX}${APISERV_URL_VERSION}/api/readiness" \
           -H "Accept: application/json" \
@@ -92,7 +93,7 @@ while [[ ${READY_ATTEMPT} -lt ${READY_ATTEMPTS} ]] ; do
 done
 [[ ${RETVAL} -eq 0 ]] && success "- ok" || error "- fail"
 
-if compgen -G "sample/scret-*.json" > /dev/null; then
+if compgen -G "sample/secret-*.json" > /dev/null; then
 for SECRET in sample/secret-*.json ; do
   SECRET=${SECRET#"sample/secret-"}
   SECRET=${SECRET%".json"}
