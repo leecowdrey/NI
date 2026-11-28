@@ -320,34 +320,22 @@ function drawNeChassis(container, data, source) {
     })
   );
 
-  // Vendor & Model labels on top-left of the device
-  const vendorLabel = (data.vendor || "GENERIC").toUpperCase();
+  // Model label on top-left of the device
   const modelLabel = data.model || "SWITCH";
-  const vendorText = createNeSvgElement("text", {
-    x: bodyX + 16,
-    y: 20,
-    fill: "#f8fafc",
-    "font-family": "'Lato', sans-serif",
-    "font-size": "12",
-    "font-weight": "bold",
-    "letter-spacing": "0.8",
-  });
-  vendorText.textContent = vendorLabel;
-  svg.appendChild(vendorText);
-
   const modelText = createNeSvgElement("text", {
     x: bodyX + 16,
-    y: 34,
+    y: 23,
     fill: "#38bdf8",
     "font-family": "'Courier New', Courier, monospace",
-    "font-size": "11",
+    "font-size": "12",
     "font-weight": "bold",
+    "dominant-baseline": "central",
   });
   modelText.textContent = modelLabel;
   svg.appendChild(modelText);
 
-  // Rack U height badge next to model/vendor
-  const uBadgeX = bodyX + bodyWidth - 196;
+  // Rack U height badge on top-right
+  const uBadgeX = bodyX + bodyWidth - 54;
   svg.appendChild(
     createNeSvgElement("rect", {
       x: uBadgeX,
@@ -372,43 +360,6 @@ function drawNeChassis(container, data, source) {
   });
   uBadgeText.textContent = rackUnits + "U";
   svg.appendChild(uBadgeText);
-
-  // MX240 Craft Interface LEDs (PWR / SYS / ALM) on top-right
-  const alarmColor =
-    counts.faulty > 0 || counts.errors >= 100
-      ? "#ef4444"
-      : counts.errors > 0
-        ? "#f59e0b"
-        : "#22c55e";
-  const leds = [
-    { label: "PWR", color: "#22c55e" },
-    { label: "SYS", color: isPredicted ? "#ffff00" : "#22c55e" },
-    { label: "ALM", color: alarmColor },
-  ];
-  const ledStartX = bodyX + bodyWidth - 138;
-  leds.forEach((led, idx) => {
-    const lx = ledStartX + idx * 44;
-    svg.appendChild(
-      createNeSvgElement("circle", {
-        cx: lx,
-        cy: 22.5,
-        r: 4,
-        fill: led.color,
-        stroke: "#020617",
-        "stroke-width": 1,
-      })
-    );
-    const lt = createNeSvgElement("text", {
-      x: lx + 7,
-      y: 23,
-      fill: "#94a3b8",
-      "font-family": "'Courier New', Courier, monospace",
-      "font-size": "9",
-      "dominant-baseline": "central",
-    });
-    lt.textContent = led.label;
-    svg.appendChild(lt);
-  });
 
   // Render modular line-card / switch port bay(s) underneath top header
   let portCursor = 0;
