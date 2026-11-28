@@ -421,98 +421,98 @@ function fetchDuct() {
         let ductReserved = counts.reserved;
         let ductFaulty = counts.faulty;
 
-        let metadata = "<b>Reference:</b>&emsp;";
-        if (data.reference != null) {
-          metadata = metadata + data.reference;
-        }
-        metadata =
-          metadata +
-          "&emsp;( " +
+        const rootUrl = localStorage.getItem("ni.rootUrl") || "";
+        let metadata =
+          '<div class="meta-section"><div class="meta-grid">' +
+          '<span class="meta-label">Reference:</span><span class="meta-value">' +
+          (data.reference != null ? data.reference + " " : "") +
+          "(" +
           ductId +
-          " )<br>&emsp;Source:&emsp;" +
-          data.source +
-          "<br><br>" +
-          "&emsp;Purpose:&emsp;" +
+          ")</span>" +
+          '<span class="meta-label">Source:</span><span class="meta-value">' +
+          source +
+          "</span>" +
+          '<span class="meta-label">Purpose:</span><span class="meta-value">' +
           data.purpose +
-          "<br>" +
-          "&emsp;Category:&emsp;" +
+          "</span>" +
+          '<span class="meta-label">Category:</span><span class="meta-value">' +
           data.category +
-          "<br>" +
-          "&emsp;Configuration:&emsp;" +
+          "</span>" +
+          '<span class="meta-label">Configuration:</span><span class="meta-value">' +
           data.configuration +
-          "-way<br>";
+          "-way</span>";
         if (data.within != null) {
           metadata +=
-            "&emsp;Within Duct:&emsp;" +
-            ' <a href="' +
-            localStorage.getItem("ni.rootUrl") +
+            '<span class="meta-label">Within Duct:</span><span class="meta-value"><a href="' +
+            rootUrl +
             "/duct/" +
             data.within +
             "?country=" +
             selectedCountry +
             '" target="_self">' +
             data.within +
-            "</a><br>";
+            "</a></span>";
         }
         if (data.placement != null) {
           metadata +=
-            "&emsp;Placement:&emsp;H=" +
+            '<span class="meta-label">Placement:</span><span class="meta-value">H=' +
             data.placement.horizontal +
             data.placement.unit +
-            "&emsp;V=" +
+            " &nbsp;V=" +
             data.placement.vertical +
             data.placement.unit +
-            "<br>";
+            "</span>";
         }
-        metadata = metadata + "<br><b>Location</b>:<br>";
         metadata +=
-          "&emsp;Trench:&emsp;" +
-          ' <a href="' +
-          localStorage.getItem("ni.rootUrl") +
+          "</div></div>" +
+          '<div class="meta-section"><div class="meta-heading">Location:</div><div class="meta-grid">' +
+          '<span class="meta-label">Trench:</span><span class="meta-value"><a href="' +
+          rootUrl +
           "/trench/" +
           data.trenchId +
           "?country=" +
           selectedCountry +
           '" target="_self">' +
           data.trenchId +
-          "</a><br>";
+          "</a></span>" +
+          "</div></div>";
 
         if (data.category == "duct") {
-          metadata = metadata + "<br><b>Sub-Ducts:</b><br>";
+          metadata += '<div class="meta-section"><div class="meta-heading">Sub-Ducts:</div><div class="meta-list">';
           if (Array.isArray(data.subduct) && data.subduct.length > 0) {
             for (let c = 0; c < data.subduct.length; c++) {
               metadata +=
-                '&emsp;<a href="' +
-                localStorage.getItem("ni.rootUrl") +
+                '<a href="' +
+                rootUrl +
                 "/duct/" +
                 data.subduct[c] +
                 "?country=" +
                 selectedCountry +
                 '" target="_self">' +
                 data.subduct[c] +
-                "</a><br>";
+                "</a>";
             }
           }
+          metadata += "</div></div>";
         }
-        metadata = metadata + "<br><b>Cables:</b><br>";
+        metadata += '<div class="meta-section"><div class="meta-heading">Cables:</div><div class="meta-list">';
         if (Array.isArray(data.cable)) {
           for (let c = 0; c < data.cable.length; c++) {
             metadata +=
-              "&emsp;" +
-              ' <a href="' +
-              localStorage.getItem("ni.rootUrl") +
+              '<a href="' +
+              rootUrl +
               "/cable/" +
               data.cable[c] +
               "?country=" +
               selectedCountry +
               '" target="_self">' +
               data.cable[c] +
-              "</a><br>";
+              "</a>";
           }
         }
         metadata +=
-          "<br>" +
-          "<br><b>Usage Summary:</b><br>" +
+          "</div></div>" +
+          '<div class="meta-section"><div class="meta-heading">Usage Summary:</div>' +
           '<div class="stateusage-key">' +
           '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
           ductFaulty +
@@ -525,13 +525,45 @@ function fetchDuct() {
           "</div>" +
           '<div id="stateusage-free" class="stateusage">Free: ' +
           ductFree +
-          "</div></div>";
-        document.getElementById("metadataPanel").innerHTML = metadata;
+          "</div></div></div>";
+        const metadataPanel = document.getElementById("metadataPanel");
+        metadataPanel.innerHTML = metadata;
+        requestAnimationFrame(() => fitDuctMetadataPanel(metadataPanel));
       }
     })
     .catch((e) => {
       console.error(e);
     });
+}
+let ductMetadataResizeObserver = null;
+function fitDuctMetadataPanel(panel) {
+  if (!panel || !panel.innerHTML) {
+    return;
+  }
+  const container =
+    document.getElementById("right-ne-metadata") || panel.parentElement;
+  if (
+    container &&
+    !ductMetadataResizeObserver &&
+    typeof ResizeObserver !== "undefined"
+  ) {
+    ductMetadataResizeObserver = new ResizeObserver(() => {
+      fitDuctMetadataPanel(document.getElementById("metadataPanel"));
+    });
+    ductMetadataResizeObserver.observe(container);
+  }
+  const maxFontPx = 15;
+  const minFontPx = 10;
+  let size = maxFontPx;
+  panel.style.fontSize = size + "px";
+  while (
+    size > minFontPx &&
+    (panel.scrollHeight > panel.clientHeight + 1 ||
+      panel.scrollWidth > panel.clientWidth + 1)
+  ) {
+    size -= 0.5;
+    panel.style.fontSize = size + "px";
+  }
 }
 try {
   countryListPopulate(fetchListDuct);

@@ -616,118 +616,114 @@ function fetchCable(cableId, point = null) {
         let cableReserved = counts.reserved;
         let cableFaulty = counts.faulty;
 
+        const rootUrl = localStorage.getItem("ni.rootUrl") || "";
         let metadata =
-          "<b>Reference:</b>&emsp;" +
-          (data.reference != null ? data.reference : "") +
-          "&emsp;( " +
+          '<div class="meta-section"><div class="meta-grid">' +
+          '<span class="meta-label">Reference:</span><span class="meta-value">' +
+          (data.reference != null ? data.reference + " " : "") +
+          "(" +
           cableId +
-          " )<br>&emsp;Source:&emsp;" +
-          data.source +
-          "<br>";
+          ")</span>" +
+          '<span class="meta-label">Source:</span><span class="meta-value">' +
+          source +
+          "</span>" +
+          "</div></div>" +
+          '<div class="meta-section"><div class="meta-heading">Technology:</div><div class="meta-grid">';
         switch (data.technology) {
           case "coax":
-            metadata =
-              metadata +
-              "<br><b>Technology</b>:<br>&emsp;Type:&emsp;Coax<br>" +
-              "&emsp;Frequency Range:&emsp;" +
+            metadata +=
+              '<span class="meta-label">Type:</span><span class="meta-value">Coax</span>' +
+              '<span class="meta-label">Frequency Range:</span><span class="meta-value">' +
               data.configuration.frequencyRange.low +
               data.configuration.unit +
               " to " +
               data.configuration.frequencyRange.high +
               data.configuration.unit +
-              "<br>" +
-              "&emsp;Channels:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Channels:</span><span class="meta-value">' +
               data.configuration.channels +
               " of " +
               data.configuration.width +
               data.configuration.unit +
-              "<br>";
+              "</span>";
             break;
           case "copper":
-            metadata =
-              metadata +
-              "<br><b>Technology</b>:<br>&emsp;Type:&emsp;Copper<br>" +
-              "&emsp;Twisted Pairs:&emsp;" +
+            metadata +=
+              '<span class="meta-label">Type:</span><span class="meta-value">Copper</span>' +
+              '<span class="meta-label">Twisted Pairs:</span><span class="meta-value">' +
               data.configuration.twistedPairs +
-              "<br>";
+              "</span>";
             break;
           case "ethernet":
-            metadata =
-              metadata +
-              "<br><b>Technology</b>:<br>&emsp;Type:&emsp;Ethernet<br>" +
-              "&emsp;Category:&emsp;" +
+            metadata +=
+              '<span class="meta-label">Type:</span><span class="meta-value">Ethernet</span>' +
+              '<span class="meta-label">Category:</span><span class="meta-value">' +
               data.configuration.category +
-              "<br>" +
-              "&emsp;Transmission:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Transmission:</span><span class="meta-value">' +
               data.configuration.rate +
               data.configuration.unit +
-              "<br>";
+              "</span>";
             break;
           case "singleFiber":
-            metadata =
-              metadata +
-              "<br><b>Technology</b>:<br>&emsp;Type:&emsp;Single-Fiber<br>" +
-              "&emsp;Strands:&emsp;" +
+            metadata +=
+              '<span class="meta-label">Type:</span><span class="meta-value">Single-Fiber</span>' +
+              '<span class="meta-label">Strands:</span><span class="meta-value">' +
               data.configuration.strands +
-              "<br>" +
-              "&emsp;Mode:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Mode:</span><span class="meta-value">' +
               data.configuration.mode +
-              "<br>" +
-              "&emsp;Transmission:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Transmission:</span><span class="meta-value">' +
               data.configuration.rate +
               data.configuration.unit +
-              " per strand<br>";
+              " per strand</span>";
             break;
           case "multiFiber":
-            metadata =
-              metadata +
-              "<br><b>Technology</b>:<br>&emsp;Type:&emsp;Multi-Fiber<br>" +
-              "&emsp;Ribbons.Strands:&emsp;" +
+            metadata +=
+              '<span class="meta-label">Type:</span><span class="meta-value">Multi-Fiber</span>' +
+              '<span class="meta-label">Ribbons.Strands:</span><span class="meta-value">' +
               data.configuration.ribbons +
               "." +
               data.configuration.strands +
-              "<br>" +
-              "&emsp;Mode:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Mode:</span><span class="meta-value">' +
               data.configuration.mode +
-              "<br>" +
-              "&emsp;Transmission:&emsp;" +
+              "</span>" +
+              '<span class="meta-label">Transmission:</span><span class="meta-value">' +
               data.configuration.rate +
               data.configuration.unit +
-              " per strand<br>";
+              " per strand</span>";
             break;
         }
-        metadata = metadata + "<br><b>Location</b>:<br>";
+        metadata +=
+          '</div></div><div class="meta-section"><div class="meta-heading">Location:</div><div class="meta-grid">';
         if (data.ductId != null) {
-          metadata =
-            metadata +
-            "&emsp;Duct:&emsp;" +
-            '<a href="' +
-            localStorage.getItem("ni.rootUrl") +
+          metadata +=
+            '<span class="meta-label">Duct:</span><span class="meta-value"><a href="' +
+            rootUrl +
             "/duct/" +
             data.ductId +
             "?country=" +
             selectedCountry +
             '" target="_self">' +
             data.ductId +
-            "</a><br>";
+            "</a></span>";
         }
         if (data.poleId != null) {
-          metadata =
-            metadata +
-            "&emsp;Pole:&emsp;" +
-            '<a href="' +
-            localStorage.getItem("ni.rootUrl") +
+          metadata +=
+            '<span class="meta-label">Pole:</span><span class="meta-value"><a href="' +
+            rootUrl +
             "/pole/" +
             data.poleId +
             "?country=" +
             selectedCountry +
             '" target="_self">' +
             data.poleId +
-            "</a><br>";
+            "</a></span>";
         }
-        metadata =
-          metadata +
-          "<br><b>Usage Summary:</b><br>" +
+        metadata +=
+          '</div></div><div class="meta-section"><div class="meta-heading">Usage Summary:</div>' +
           '<div class="stateusage-key">' +
           '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
           cableFaulty +
@@ -740,13 +736,45 @@ function fetchCable(cableId, point = null) {
           "</div>" +
           '<div id="stateusage-free" class="stateusage">Free: ' +
           cableFree +
-          "</div></div>";
-        document.getElementById("metadataPanel").innerHTML = metadata;
+          "</div></div></div>";
+        const metadataPanel = document.getElementById("metadataPanel");
+        metadataPanel.innerHTML = metadata;
+        requestAnimationFrame(() => fitCableMetadataPanel(metadataPanel));
       }
     })
     .catch((e) => {
       console.error(e);
     });
+}
+let cableMetadataResizeObserver = null;
+function fitCableMetadataPanel(panel) {
+  if (!panel || !panel.innerHTML) {
+    return;
+  }
+  const container =
+    document.getElementById("right-ne-metadata") || panel.parentElement;
+  if (
+    container &&
+    !cableMetadataResizeObserver &&
+    typeof ResizeObserver !== "undefined"
+  ) {
+    cableMetadataResizeObserver = new ResizeObserver(() => {
+      fitCableMetadataPanel(document.getElementById("metadataPanel"));
+    });
+    cableMetadataResizeObserver.observe(container);
+  }
+  const maxFontPx = 15;
+  const minFontPx = 10;
+  let size = maxFontPx;
+  panel.style.fontSize = size + "px";
+  while (
+    size > minFontPx &&
+    (panel.scrollHeight > panel.clientHeight + 1 ||
+      panel.scrollWidth > panel.clientWidth + 1)
+  ) {
+    size -= 0.5;
+    panel.style.fontSize = size + "px";
+  }
 }
 function fetchCablePoints() {
   let r = document.getElementById("cableId");

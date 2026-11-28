@@ -786,59 +786,62 @@ function fetchNe(neId, point = null) {
         if (data?.decommissioned == undefined) {
           data.decommissioned = "";
         }
+        const rootUrl = localStorage.getItem("ni.rootUrl") || "";
         let metadata =
-          "Commissioned:&emsp;&emsp;" +
+          '<div class="ne-meta-section"><div class="ne-meta-grid">' +
+          '<span class="ne-meta-label">Commissioned:</span><span class="ne-meta-value">' +
           data.commissioned +
-          "<br>" +
-          "Decommissioned:&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Decommissioned:</span><span class="ne-meta-value">' +
           data.decommissioned +
-          "<br>" +
-          "Source:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Source:</span><span class="ne-meta-value">' +
           source +
-          "<br>" +
-          "<br><b>Details</b>:<br>" +
-          "IP:&emsp;&emsp;" +
+          "</span>" +
+          "</div></div>" +
+          '<div class="ne-meta-section"><div class="ne-meta-heading">Details:</div><div class="ne-meta-grid">' +
+          '<span class="ne-meta-label">IP:</span><span class="ne-meta-value">' +
           data.mgmtIP +
-          "<br>" +
-          "Vendor:&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Vendor:</span><span class="ne-meta-value">' +
           data.vendor +
-          "<br>" +
-          "Model:&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Model:</span><span class="ne-meta-value">' +
           data.model +
-          "<br>" +
-          "Image:&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Image:</span><span class="ne-meta-value">' +
           data.image +
-          "<br>" +
-          "Version:&emsp;" +
+          "</span>" +
+          '<span class="ne-meta-label">Version:</span><span class="ne-meta-value">' +
           data.version +
-          "<br>" +
-          "<br><b>Location</b>:<br>" +
-          'Site:&emsp;<a href="' +
-          localStorage.getItem("ni.rootUrl") +
+          "</span>" +
+          "</div></div>" +
+          '<div class="ne-meta-section"><div class="ne-meta-heading">Location:</div><div class="ne-meta-grid">' +
+          '<span class="ne-meta-label">Site:</span><span class="ne-meta-value"><a href="' +
+          rootUrl +
           "/site/" +
           data.siteId +
           "?country=" +
           selectedCountry +
           '" target="_self">' +
           data.siteId +
-          "</a>" +
-          '<br>Rack:&emsp;<a href="' +
-          localStorage.getItem("ni.rootUrl") +
+          "</a></span>" +
+          '<span class="ne-meta-label">Rack:</span><span class="ne-meta-value"><a href="' +
+          rootUrl +
           "/rack/" +
           data.rackId +
           "?country=" +
           selectedCountry +
           '" target="_self">' +
           data.rackId +
-          "</a>" +
-          "<br>" +
-          "Slot(s):&emsp;" +
+          "</a></span>" +
+          '<span class="ne-meta-label">Slot(s):</span><span class="ne-meta-value">' +
           data.slotPosition +
           " (" +
           parseNeRackUnits(data.slotPosition) +
-          "U)" +
-          "<br>" +
-          "<br><b>Usage Summary:</b><br>" +
+          "U)</span>" +
+          "</div></div>" +
+          '<div class="ne-meta-section"><div class="ne-meta-heading">Usage Summary:</div>' +
           '<div class="stateusage-key">' +
           '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
           portFaulty +
@@ -855,8 +858,8 @@ function fetchNe(neId, point = null) {
           '<div id="stateusage-error" class="stateusage">Errors: ' +
           portErrorCount +
           "</div>" +
-          "</div><br>" +
-          "<br><b>Common vulnerabilities and Exposures (CVE):</b><br>" +
+          "</div></div>" +
+          '<div class="ne-meta-section"><div class="ne-meta-heading">Common vulnerabilities and Exposures (CVE):</div>' +
           '<div class="stateusage-key">' +
           '<div id="stateusage-faulty" class="stateusage">Impacting: ' +
           cveImpacting +
@@ -864,13 +867,40 @@ function fetchNe(neId, point = null) {
           '<div id="stateusage-reserved" class="stateusage">Known: ' +
           cveKnown +
           "</div>" +
-          "</div>";
-        document.getElementById("metadataPanel").innerHTML = metadata;
+          "</div></div>";
+        const metadataPanel = document.getElementById("metadataPanel");
+        metadataPanel.innerHTML = metadata;
+        requestAnimationFrame(() => fitNeMetadataPanel(metadataPanel));
       }
     })
     .catch((e) => {
       console.error(e);
     });
+}
+let neMetadataResizeObserver = null;
+function fitNeMetadataPanel(panel) {
+  if (!panel || !panel.innerHTML) {
+    return;
+  }
+  const container = document.getElementById("right-ne-metadata") || panel.parentElement;
+  if (container && !neMetadataResizeObserver && typeof ResizeObserver !== "undefined") {
+    neMetadataResizeObserver = new ResizeObserver(() => {
+      fitNeMetadataPanel(document.getElementById("metadataPanel"));
+    });
+    neMetadataResizeObserver.observe(container);
+  }
+  const maxFontPx = 15;
+  const minFontPx = 10;
+  let size = maxFontPx;
+  panel.style.fontSize = size + "px";
+  while (
+    size > minFontPx &&
+    (panel.scrollHeight > panel.clientHeight + 1 ||
+      panel.scrollWidth > panel.clientWidth + 1)
+  ) {
+    size -= 0.5;
+    panel.style.fontSize = size + "px";
+  }
 }
 function fetchNePoints() {
   let r = document.getElementById("neId");

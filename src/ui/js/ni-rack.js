@@ -946,24 +946,26 @@ function fetchRack() {
       if (data?.decommissioned == undefined) {
         data.decommissioned = "";
       }
+      const rootUrl = localStorage.getItem("ni.rootUrl") || "";
       let metadata =
-        "<b>Reference</b>:&emsp;" +
-        data.reference +
-        "<br>" +
-        "<center>( " +
+        '<div class="meta-section"><div class="meta-grid">' +
+        '<span class="meta-label">Reference:</span><span class="meta-value">' +
+        (data.reference != null ? data.reference : "") +
+        " (" +
         rackId +
-        " )</center><br>" +
-        "<br>Commissioned:&emsp;&emsp;" +
+        ")</span>" +
+        '<span class="meta-label">Commissioned:</span><span class="meta-value">' +
         data.commissioned +
-        "<br>" +
-        "Decommissioned:&emsp;" +
+        "</span>" +
+        '<span class="meta-label">Decommissioned:</span><span class="meta-value">' +
         data.decommissioned +
-        "<br>" +
-        "Source:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" +
+        "</span>" +
+        '<span class="meta-label">Source:</span><span class="meta-value">' +
         source +
-        "<br>" +
-        "<br><b>Dimensions</b>:<br>" +
-        "H/W/D:&emsp;" +
+        "</span>" +
+        "</div></div>" +
+        '<div class="meta-section"><div class="meta-heading">Dimensions:</div><div class="meta-grid">' +
+        '<span class="meta-label">H / W / D:</span><span class="meta-value">' +
         data.dimensions.height +
         " / " +
         data.dimensions.width +
@@ -971,36 +973,39 @@ function fetchRack() {
         data.dimensions.depth +
         " " +
         data.dimensions.unit +
-        "<br>" +
-        "Slots:&emsp;&emsp;" +
+        "</span>" +
+        '<span class="meta-label">Slots:</span><span class="meta-value">' +
         data.slots +
-        "<br>" +
-        "<br><b>Location</b>:<br>" +
-        'Site:&emsp;<a href="' +
-        localStorage.getItem("ni.rootUrl") +
+        "U</span>" +
+        "</div></div>" +
+        '<div class="meta-section"><div class="meta-heading">Location:</div><div class="meta-grid">' +
+        '<span class="meta-label">Site:</span><span class="meta-value"><a href="' +
+        rootUrl +
         "/site/" +
         data.siteId +
         "?country=" +
         selectedCountry +
         '" target="_self">' +
         data.siteId +
-        "</a>" +
-        "<br>X,Y,Z:&emsp;&emsp;" +
+        "</a></span>" +
+        '<span class="meta-label">X, Y, Z:</span><span class="meta-value">' +
         data.coordinate.x +
-        " , " +
+        ", " +
         data.coordinate.y +
-        " , " +
+        ", " +
         data.coordinate.z +
-        "<br>" +
-        "Area:&emsp;&emsp;" +
-        data.area +
-        "<br>" +
-        "Floor:&emsp;&emsp;" +
-        data.floor +
-        "<br>" +
-        "Row:&emsp;&emsp;" +
-        data.row +
-        "<br><br><b>Usage Summary:</b><br>" +
+        "</span>" +
+        '<span class="meta-label">Area:</span><span class="meta-value">' +
+        (data.area != null ? data.area : "") +
+        "</span>" +
+        '<span class="meta-label">Floor:</span><span class="meta-value">' +
+        (data.floor != null ? data.floor : "") +
+        "</span>" +
+        '<span class="meta-label">Row:</span><span class="meta-value">' +
+        (data.row != null ? data.row : "") +
+        "</span>" +
+        "</div></div>" +
+        '<div class="meta-section"><div class="meta-heading">Usage Summary:</div>' +
         '<div class="stateusage-key">' +
         '<div id="stateusage-faulty" class="stateusage">Faulty: ' +
         slotFaulty +
@@ -1013,12 +1018,44 @@ function fetchRack() {
         "</div>" +
         '<div id="stateusage-free" class="stateusage">Free: ' +
         slotFree +
-        "</div></div>";
-      document.getElementById("metadataPanel").innerHTML = metadata;
+        "</div></div></div>";
+      const metadataPanel = document.getElementById("metadataPanel");
+      metadataPanel.innerHTML = metadata;
+      requestAnimationFrame(() => fitRackMetadataPanel(metadataPanel));
     })
     .catch((e) => {
       console.error(e);
     });
+}
+let rackMetadataResizeObserver = null;
+function fitRackMetadataPanel(panel) {
+  if (!panel || !panel.innerHTML) {
+    return;
+  }
+  const container =
+    document.getElementById("right-rack-metadata") || panel.parentElement;
+  if (
+    container &&
+    !rackMetadataResizeObserver &&
+    typeof ResizeObserver !== "undefined"
+  ) {
+    rackMetadataResizeObserver = new ResizeObserver(() => {
+      fitRackMetadataPanel(document.getElementById("metadataPanel"));
+    });
+    rackMetadataResizeObserver.observe(container);
+  }
+  const maxFontPx = 15;
+  const minFontPx = 10;
+  let size = maxFontPx;
+  panel.style.fontSize = size + "px";
+  while (
+    size > minFontPx &&
+    (panel.scrollHeight > panel.clientHeight + 1 ||
+      panel.scrollWidth > panel.clientWidth + 1)
+  ) {
+    size -= 0.5;
+    panel.style.fontSize = size + "px";
+  }
 }
 function fetchRackPoints() {
   let r = document.getElementById("rackId");
