@@ -15,48 +15,711 @@
     <link rel="icon" href="<%=payload.icon%>" sizes="any" />
     <link rel="apple-touch-icon" href="NI/img/icon.png" />
     <style>
-      .panel {
-        width: 60%;
-        height: 40%;
-        border-radius: 10px;
-        background-color: #b3b3b3;
-        color: #000000;
-        text-align: center;
-        margin: 10px auto 0 auto;
-        font-size: 1em;
+      :root {
+        --ni-bg: #151e36;
+        --ni-surface: #1a2642;
+        --ni-surface-deep: #10192e;
+        --ni-border: rgba(148, 163, 184, 0.18);
+        --ni-border-hover: rgba(37, 176, 155, 0.65);
+        --ni-accent: #25b09b;
+        --ni-active: #10b981;
+        --ni-active-bright: #34d399;
+        --ni-inactive: #f97316;
+        --ni-inactive-bright: #fb923c;
+        --ni-empty: #334155;
+        --ni-text: #f8fafc;
+        --ni-text-secondary: #cbd5e1;
+        --ni-text-muted: #94a3b8;
       }
 
-      .metrics-panel {
+      body {
+        margin: 0;
+        background: radial-gradient(
+            1200px 520px at 50% -120px,
+            rgba(37, 176, 155, 0.14),
+            transparent 70%
+          ),
+          var(--ni-bg);
+        color: var(--ni-text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .dash-shell {
+        width: min(1480px, 100%);
+        margin: 0 auto;
+        height: calc(100vh - 54px);
+        height: calc(100dvh - 54px);
+        padding: 10px 18px 12px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* Top Command Bar */
+      .dash-header {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 8px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 38, 66, 0.94),
+          rgba(16, 25, 46, 0.94)
+        );
+        border: 1px solid var(--ni-border);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
+      }
+
+      .dash-title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .dash-status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--ni-active);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        flex-shrink: 0;
+        transition: background-color 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .dash-status-dot.is-loading {
+        background: #38bdf8;
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+      }
+
+      .dash-status-dot.is-error {
+        background: #ef4444;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25);
+      }
+
+      .dash-title {
+        margin: 0;
+        font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--ni-text);
+        white-space: nowrap;
+      }
+
+      .dash-updated {
+        font-size: 0.76rem;
+        color: var(--ni-text-muted);
+        white-space: nowrap;
+        padding-left: 8px;
+        border-left: 1px solid var(--ni-border);
+      }
+
+      .dash-header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .dash-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--ni-border);
+        font-size: 0.76rem;
+        color: var(--ni-text-secondary);
+      }
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+
+      .legend-swatch {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .legend-swatch.active {
+        background: var(--ni-active);
+      }
+
+      .legend-swatch.inactive {
+        background: var(--ni-inactive);
+      }
+
+      .legend-swatch.empty {
+        background: var(--ni-empty);
+      }
+
+      .dash-fleet-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 11px;
+        border-radius: 999px;
+        background: rgba(37, 176, 155, 0.14);
+        border: 1px solid rgba(37, 176, 155, 0.35);
+        font-size: 0.78rem;
+        color: #99f6e4;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .dash-refresh-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(37, 176, 155, 0.5);
+        background: rgba(37, 176, 155, 0.16);
+        color: var(--ni-text);
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease,
+          transform 0.15s ease;
+      }
+
+      .dash-refresh-btn:hover {
+        background: rgba(37, 176, 155, 0.3);
+        border-color: var(--ni-accent);
+      }
+
+      .dash-refresh-btn:active {
+        transform: translateY(1px);
+      }
+
+      .dash-refresh-btn:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 2px;
+      }
+
+      .dash-refresh-btn.is-spinning i {
+        animation: niSpin 0.8s linear infinite;
+      }
+
+      @keyframes niSpin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* KPI Summary Strip */
+      .dash-kpi-grid {
+        flex: 0 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(30, 44, 75, 0.92),
+          rgba(18, 28, 52, 0.94)
+        );
+        border: 1px solid var(--ni-border);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        min-width: 0;
+        transition: border-color 0.2s ease, transform 0.2s ease;
+      }
+
+      .kpi-card:hover {
+        border-color: rgba(148, 163, 184, 0.36);
+        transform: translateY(-1px);
+      }
+
+      .kpi-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .kpi-icon.premises {
+        background: rgba(37, 176, 155, 0.16);
+        color: #2dd4bf;
+        border: 1px solid rgba(37, 176, 155, 0.3);
+      }
+
+      .kpi-icon.trench {
+        background: rgba(56, 189, 248, 0.16);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+      }
+
+      .kpi-icon.cable {
+        background: rgba(129, 140, 248, 0.16);
+        color: #a5b4fc;
+        border: 1px solid rgba(129, 140, 248, 0.3);
+      }
+
+      .kpi-icon.cost {
+        background: rgba(245, 158, 11, 0.16);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      .kpi-body {
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+
+      .kpi-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ni-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .kpi-value {
+        font-size: clamp(1rem, 1.45vw, 1.32rem);
+        font-weight: 700;
+        color: var(--ni-text);
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .kpi-sub {
+        font-size: 0.7rem;
+        color: var(--ni-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Resource Donut Charts Section */
+      .dash-resources-section {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .section-bar {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 0 2px;
+      }
+
+      .section-heading {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ni-text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .section-heading i {
+        color: var(--ni-accent);
+      }
+
+      .platform-pills {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .platform-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 2px 9px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid var(--ni-border);
+        font-size: 0.72rem;
+        color: var(--ni-text-secondary);
+        font-variant-numeric: tabular-nums;
+        cursor: default;
+      }
+
+      .platform-pill i {
+        color: var(--ni-accent);
+        font-size: 0.72rem;
+      }
+
+      .resource-pie-grid {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .resource-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(28, 41, 71, 0.94),
+          rgba(16, 25, 46, 0.96)
+        );
+        border: 1px solid var(--ni-border);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+        min-width: 0;
+        min-height: 0;
+        cursor: pointer;
+        transition: border-color 0.2s ease, transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .resource-card:hover {
+        border-color: var(--ni-border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.34);
+      }
+
+      .resource-card:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 2px;
+      }
+
+      .resource-card-head {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .resource-name {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.86rem;
+        font-weight: 700;
+        color: var(--ni-text);
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .resource-name i {
+        color: var(--ni-accent);
+        width: 14px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .resource-total-badge {
+        flex-shrink: 0;
+        font-size: 0.73rem;
+        font-weight: 700;
+        color: var(--ni-text-secondary);
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid var(--ni-border);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .resource-chart-wrap {
+        flex: 1 1 auto;
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 0;
+      }
+
+      .resource-pie-svg {
         width: 100%;
-        height: 30%;
-        border-radius: 10px;
-        background-color: #b3b3b3;
-        color: #000000;
-        text-align: center;
-        margin: 10px auto 0 auto;
-        display: inline-block;
-        font-size: 1em;
+        height: 100%;
+        max-width: 152px;
+        max-height: 152px;
+        display: block;
+        overflow: visible;
       }
 
-      .costs-panel {
-        width: 100%;
-        height: 30%;
-        border-radius: 10px;
-        background-color: #b3b3b3;
-        color: #000000;
-        text-align: center;
-        margin: 10px auto 10px auto;
-        display: inline-block;
-        font-size: 0.8em;
+      .pie-arc {
+        transition: stroke-dashoffset 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+          stroke-dasharray 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+          stroke-width 0.18s ease, filter 0.18s ease;
+        cursor: pointer;
       }
 
-      .graph_container {
-        display: inline-block;
-        margin-left: 10px;
-        width: 90%;
+      .pie-arc.is-hovered {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.28));
+      }
+
+      .resource-card-foot {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(148, 163, 184, 0.12);
+        font-size: 0.75rem;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        min-width: 0;
+        white-space: nowrap;
+      }
+
+      .stat-chip-label {
+        color: var(--ni-text-muted);
+      }
+
+      .stat-chip-val {
+        font-weight: 700;
+        color: var(--ni-text);
+      }
+
+      .stat-chip.active .stat-chip-val {
+        color: var(--ni-active-bright);
+      }
+
+      .stat-chip.inactive .stat-chip-val {
+        color: var(--ni-inactive-bright);
+      }
+
+      /* Costs Breakdown Band */
+      .dash-costs-section {
+        flex: 0 0 auto;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 38, 66, 0.94),
+          rgba(16, 25, 46, 0.96)
+        );
+        border: 1px solid var(--ni-border);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .costs-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .costs-currency-badge {
+        font-size: 0.72rem;
+        color: #fde68a;
+        background: rgba(245, 158, 11, 0.14);
+        border: 1px solid rgba(245, 158, 11, 0.32);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+
+      .costs-total-readout {
+        font-size: 0.82rem;
+        color: var(--ni-text-secondary);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .costs-total-readout strong {
+        color: var(--ni-text);
+        font-weight: 700;
+      }
+
+      .costs-grid {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .cost-tile {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 7px 9px 9px;
+        border-radius: 8px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        min-width: 0;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+      }
+
+      .cost-tile:hover {
+        border-color: rgba(245, 158, 11, 0.55);
+        background: rgba(30, 41, 59, 0.82);
+      }
+
+      .cost-tile:focus-visible {
+        outline: 2px solid #38bdf8;
+        outline-offset: 2px;
+      }
+
+      .cost-tile-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.7rem;
+        color: var(--ni-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cost-tile-label i {
+        color: var(--ni-accent);
+        font-size: 0.68rem;
+        flex-shrink: 0;
+      }
+
+      .cost-tile-val {
+        font-size: clamp(0.76rem, 0.95vw, 0.92rem);
+        font-weight: 700;
+        color: var(--ni-text);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cost-tile-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: rgba(148, 163, 184, 0.12);
+      }
+
+      .cost-tile-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #25b09b, #f59e0b);
+        transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* Floating Hover Tooltip */
+      .dash-tooltip {
+        position: fixed;
+        z-index: 9999;
+        pointer-events: none;
+        display: none;
+        max-width: 280px;
+        padding: 8px 11px;
+        border-radius: 8px;
+        background: rgba(10, 16, 30, 0.96);
+        border: 1px solid rgba(56, 189, 248, 0.45);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+        color: var(--ni-text);
+        font-size: 0.76rem;
+        line-height: 1.45;
+        white-space: pre-line;
+      }
+
+      /* Responsive Breakpoints */
+      @media (max-width: 1180px) {
+        .costs-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 960px), (max-height: 640px) {
+        .dash-shell {
+          height: auto;
+          min-height: calc(100vh - 54px);
+          padding-bottom: 34px;
+        }
+
+        .dash-kpi-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .resource-pie-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-rows: auto;
+        }
+
+        .resource-card {
+          min-height: 190px;
+        }
+      }
+
+      @media (max-width: 580px) {
+        .dash-shell {
+          padding: 8px 10px 34px;
+        }
+
+        .dash-kpi-grid,
+        .resource-pie-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .costs-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .pie-arc,
+        .cost-tile-bar-fill,
+        .resource-card,
+        .kpi-card,
+        .dash-refresh-btn.is-spinning i {
+          transition: none !important;
+          animation: none !important;
+        }
       }
     </style>
-    <script src="js/chart.umd.min.js"></script>
     <script src="/ni/js/ni.js"></script>
   </head>
 
@@ -214,27 +877,135 @@
         ><i class="fa fa-window-close"></i
       ></a>
     </div>
-    <div class="panel" id="resourcePanel">
-      <a
-        accesskey="@"
-        nohref
-        onclick="fetchStats();"
-        onmouseover=""
-        title="refresh"
-        style="cursor: pointer"
-        ><i style="color: white" class="fa fa-refresh"></i
-      ></a>
-      <div class="graph_container" id="resourceGraph">
-        Resources
-        <font size="1"
-          >(% <font color="#0a630a">active</font> vs.
-          <font color="#ff6a00">inactive</font>)</font
-        >
-        <canvas id="resourceSummary"></canvas>
-      </div>
-      <div class="metrics-panel" id="businessMetricsPanel">...</div>
-      <div class="costs-panel" id="businessCostsPanel">...</div>
-    </div>
+
+    <main class="dash-shell" id="resourcePanel">
+      <header class="dash-header">
+        <div class="dash-title-group">
+          <span
+            class="dash-status-dot"
+            id="dashStatusDot"
+            aria-hidden="true"
+          ></span>
+          <h1 class="dash-title">Network Insight Dashboard</h1>
+          <span class="dash-updated" id="dashLastUpdated">Loading…</span>
+        </div>
+        <div class="dash-header-right">
+          <div class="dash-legend" aria-label="Chart status legend">
+            <span class="legend-item"
+              ><span class="legend-swatch active"></span>Active</span
+            >
+            <span class="legend-item"
+              ><span class="legend-swatch inactive"></span>Inactive</span
+            >
+            <span class="legend-item"
+              ><span class="legend-swatch empty"></span>No Data</span
+            >
+          </div>
+          <div class="dash-fleet-pill" id="dashFleetSummary">
+            Assets: 0 · 0% Active
+          </div>
+          <button
+            type="button"
+            class="dash-refresh-btn"
+            id="dashRefreshBtn"
+            accesskey="@"
+            onclick="fetchStats();"
+            title="Refresh statistics"
+          >
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+      </header>
+
+      <section
+        class="dash-kpi-grid"
+        id="businessMetricsPanel"
+        aria-label="Business metrics"
+      >
+        <div class="kpi-card">
+          <div class="kpi-icon premises">
+            <i class="fa fa-home" aria-hidden="true"></i>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Premises Passed</div>
+            <div class="kpi-value" id="kpiPremisesPassed">0</div>
+            <div class="kpi-sub">Active trench reach</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon trench">
+            <i class="fa fa-arrows-h" aria-hidden="true"></i>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Trench Coverage</div>
+            <div class="kpi-value" id="kpiTrenchCoverage">0 m</div>
+            <div class="kpi-sub">Total active distance</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon cable">
+            <i class="fa fa-plug" aria-hidden="true"></i>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Cable Coverage</div>
+            <div class="kpi-value" id="kpiCableCoverage">0 m</div>
+            <div class="kpi-sub">Total deployed distance</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon cost">
+            <i class="fa fa-money" aria-hidden="true"></i>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Asset Cost</div>
+            <div class="kpi-value" id="kpiTotalCost">0.00</div>
+            <div class="kpi-sub" id="kpiCurrencySubtitle">Configured currency</div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="dash-resources-section"
+        id="resourceGraph"
+        aria-label="Resource availability"
+      >
+        <div class="section-bar">
+          <div class="section-heading">
+            <i class="fa fa-pie-chart" aria-hidden="true"></i>
+            <span>Resources · Active vs. Inactive</span>
+          </div>
+          <div class="platform-pills" id="dashPlatformPills"></div>
+        </div>
+        <div class="resource-pie-grid" id="resourcePieGrid"></div>
+      </section>
+
+      <section
+        class="dash-costs-section"
+        id="businessCostsPanel"
+        aria-label="Asset cost breakdown"
+      >
+        <div class="costs-header">
+          <div class="section-heading">
+            <i class="fa fa-credit-card" aria-hidden="true"></i>
+            <span>Cost Breakdown</span>
+            <span class="costs-currency-badge" id="costsCurrencyBadge"
+              >Currency</span
+            >
+          </div>
+          <div class="costs-total-readout" id="costsTotalReadout">
+            Total: <strong>0.00</strong>
+          </div>
+        </div>
+        <div class="costs-grid" id="costsGrid"></div>
+      </section>
+    </main>
+
+    <div class="dash-tooltip" id="dashTooltip" role="tooltip"></div>
+
     <div class="footer">
       <p>© 2026 Cowdrey Consulting. All rights reserved.</p>
     </div>
