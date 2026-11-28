@@ -146,13 +146,98 @@ function packCirclesInCircle(count, containerRadius, gap = 2) {
   return { radius: bestR, positions };
 }
 
+function getCableTooltipElement() {
+  let tooltip = document.getElementById("cableHoverTooltip");
+  if (!tooltip) {
+    tooltip = document.createElement("div");
+    tooltip.id = "cableHoverTooltip";
+    tooltip.setAttribute("role", "tooltip");
+    Object.assign(tooltip.style, {
+      position: "fixed",
+      display: "none",
+      pointerEvents: "none",
+      zIndex: "9999",
+      backgroundColor: "#0f172a",
+      color: "#ffffff",
+      border: "1px solid #94a3b8",
+      borderRadius: "4px",
+      padding: "4px 8px",
+      fontFamily: "'Courier New', Courier, monospace",
+      fontSize: "12px",
+      whiteSpace: "nowrap",
+      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.45)",
+    });
+    document.body.appendChild(tooltip);
+  }
+  return tooltip;
+}
+
+function positionCableTooltip(tooltip, event) {
+  const offset = 12;
+  let left = event.clientX + offset;
+  let top = event.clientY + offset;
+  const rect = tooltip.getBoundingClientRect();
+  if (left + rect.width > window.innerWidth - 8) {
+    left = Math.max(8, event.clientX - rect.width - offset);
+  }
+  if (top + rect.height > window.innerHeight - 8) {
+    top = Math.max(8, event.clientY - rect.height - offset);
+  }
+  tooltip.style.left = left + "px";
+  tooltip.style.top = top + "px";
+}
+
+function hideCableTooltip() {
+  const tooltip = document.getElementById("cableHoverTooltip");
+  if (tooltip) {
+    tooltip.style.display = "none";
+  }
+}
+
+function attachCableHoverTip(el, text, highlightColor = "#38bdf8") {
+  const originalStroke = el.getAttribute("stroke");
+  const originalStrokeWidth = el.getAttribute("stroke-width");
+  el.style.cursor = "pointer";
+  el.style.pointerEvents = "all";
+  el.addEventListener("mouseenter", (event) => {
+    event.stopPropagation();
+    const tooltip = getCableTooltipElement();
+    tooltip.textContent = text;
+    tooltip.style.display = "block";
+    positionCableTooltip(tooltip, event);
+    el.setAttribute("stroke", highlightColor);
+    el.setAttribute(
+      "stroke-width",
+      String(Math.max(2, Number(originalStrokeWidth || 1) + 0.8))
+    );
+  });
+  el.addEventListener("mousemove", (event) => {
+    event.stopPropagation();
+    const tooltip = getCableTooltipElement();
+    if (tooltip.style.display === "block") {
+      positionCableTooltip(tooltip, event);
+    }
+  });
+  el.addEventListener("mouseleave", () => {
+    hideCableTooltip();
+    if (originalStroke != null) {
+      el.setAttribute("stroke", originalStroke);
+    }
+    if (originalStrokeWidth != null) {
+      el.setAttribute("stroke-width", originalStrokeWidth);
+    }
+  });
+}
+
 function drawCableCrossSection(container, data, source) {
+  hideCableTooltip();
   const size = 400;
   const cx = size / 2;
   const cy = size / 2;
   const outerRadius = 188;
   const jacketInnerRadius = 170;
   const isPredicted = source === "predicted";
+  const sourceSuffix = isPredicted ? " (predicted)" : "";
 
   const svg = createSvgElement("svg", {
     viewBox: "0 0 " + size + " " + size,
@@ -165,6 +250,7 @@ function drawCableCrossSection(container, data, source) {
   svg.style.height = "auto";
   svg.style.display = "block";
   svg.style.margin = "0 auto";
+  svg.addEventListener("mouseleave", hideCableTooltip);
 
   // Outer cable jacket / sheath
   svg.appendChild(
@@ -200,21 +286,22 @@ function drawCableCrossSection(container, data, source) {
 
   const drawCoreCircle = (parent, x, y, r, state, label, tooltip, strokeWidth = 1.5) => {
     const style = getCableStateStyle(state, source);
+    const fullTip = tooltip + sourceSuffix;
     const g = createSvgElement("g");
     const title = createSvgElement("title");
-    title.textContent = tooltip;
+    title.textContent = fullTip;
     g.appendChild(title);
 
-    g.appendChild(
-      createSvgElement("circle", {
-        cx: x.toFixed(2),
-        cy: y.toFixed(2),
-        r: Math.max(1, r).toFixed(2),
-        fill: style.fill,
-        stroke: style.stroke,
-        "stroke-width": strokeWidth,
-      })
-    );
+    const circle = createSvgElement("circle", {
+      cx: x.toFixed(2),
+      cy: y.toFixed(2),
+      r: Math.max(1, r).toFixed(2),
+      fill: style.fill,
+      stroke: style.stroke,
+      "stroke-width": strokeWidth,
+    });
+    attachCableHoverTip(circle, fullTip);
+    g.appendChild(circle);
 
     if (label != null) {
       const labelStr = String(label);
@@ -380,19 +467,20 @@ function drawCableCrossSection(container, data, source) {
 
         // Buffer tube / ribbon bundle jacket
         const tubeGroup = createSvgElement("g");
+        const tubeTip = "Ribbon " + (o + 1) + " (" + strands + " strands)" + sourceSuffix;
         const tubeTitle = createSvgElement("title");
-        tubeTitle.textContent = "Ribbon " + (o + 1) + " (" + strands + " strands)";
+        tubeTitle.textContent = tubeTip;
         tubeGroup.appendChild(tubeTitle);
-        tubeGroup.appendChild(
-          createSvgElement("circle", {
-            cx: tx.toFixed(2),
-            cy: ty.toFixed(2),
-            r: Math.max(2, tubeR).toFixed(2),
-            fill: "#1e293b",
-            stroke: isPredicted ? "#ffff00" : "#94a3b8",
-            "stroke-width": tubeR > 20 ? 1.8 : 1,
-          })
-        );
+        const tubeCircle = createSvgElement("circle", {
+          cx: tx.toFixed(2),
+          cy: ty.toFixed(2),
+          r: Math.max(2, tubeR).toFixed(2),
+          fill: "#1e293b",
+          stroke: isPredicted ? "#ffff00" : "#94a3b8",
+          "stroke-width": tubeR > 20 ? 1.8 : 1,
+        });
+        attachCableHoverTip(tubeCircle, tubeTip, "#e2e8f0");
+        tubeGroup.appendChild(tubeCircle);
 
         const innerCavity = Math.max(1.5, tubeR - Math.max(1.5, tubeR * 0.08));
         const strandGap = Math.max(0.6, innerCavity * 0.04);

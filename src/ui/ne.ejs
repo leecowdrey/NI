@@ -61,21 +61,20 @@
         }
 
         .ne-panel {
-            width: 45%;
-            height: calc(40vh - 10px);
+            width: 95%;
+            min-height: 200px;
             margin-top: 20px;
             margin-left: 20px;
-            display: grid;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
         }
 
         .grid {
-            --max-ne-rows=8;
-            --max-ne-columns=1;
-            display: grid;
-            grid-template-rows: 40px repeat(var(--max-ne-rows), 40px) 40px;
-            grid-template-columns: repeat(var(--max-ne-columns), 40fr);
-            width: 300px;
-            height: 120px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
         }
 
         .portFree {
