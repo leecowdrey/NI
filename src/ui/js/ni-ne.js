@@ -320,7 +320,7 @@ function drawNeChassis(container, data, source) {
     })
   );
 
-  // Model label on top-left of the device
+  // Model label on top-left and centered NE host label in the device header
   const modelLabel = data.model || "SWITCH";
   const modelText = createNeSvgElement("text", {
     x: bodyX + 16,
@@ -333,6 +333,21 @@ function drawNeChassis(container, data, source) {
   });
   modelText.textContent = modelLabel;
   svg.appendChild(modelText);
+
+  if (data.host != null && String(data.host).trim().length > 0) {
+    const hostText = createNeSvgElement("text", {
+      x: bodyX + bodyWidth / 2,
+      y: 23,
+      fill: "#f8fafc",
+      "font-family": "'Courier New', Courier, monospace",
+      "font-size": "12",
+      "font-weight": "bold",
+      "text-anchor": "middle",
+      "dominant-baseline": "central",
+    });
+    hostText.textContent = String(data.host);
+    svg.appendChild(hostText);
+  }
 
   // Rack U height badge on top-right
   const uBadgeX = bodyX + bodyWidth - 54;
