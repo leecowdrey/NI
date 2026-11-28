@@ -482,44 +482,92 @@ function drawNestedVlanBadge(svg, x, y, sVlanId, cVlanIds, opts = {}) {
     compact = false,
     tooltip = "",
   } = opts;
+  const innerList = Array.isArray(cVlanIds) ? cVlanIds : [];
+  if (sVlanId == null && innerList.length === 0) {
+    return { x, y, width: 0, height: 0 };
+  }
+
   const g = createServiceSvgElement("g");
   const titleEl = createServiceSvgElement("title");
   titleEl.textContent = tooltip;
   g.appendChild(titleEl);
 
-  const innerList = Array.isArray(cVlanIds) ? cVlanIds : [];
-  const cPillW = compact ? 36 : 56;
+  const cPillW = compact ? 36 : 62;
   const cPillH = compact ? 13 : 16;
   const cGap = 4;
+
+  // Standalone C-VLAN pill(s) when no sVlanId exists
+  if (sVlanId == null) {
+    let curX = x;
+    const pillY = y + (compact ? 8 : 13);
+    for (let i = 0; i < innerList.length; i++) {
+      const cv = innerList[i];
+      const cGroup = createServiceSvgElement("g");
+      const cTip = "C-VLAN " + cv + (rateStr ? "\nService Rate: " + rateStr : "");
+      const cTitle = createServiceSvgElement("title");
+      cTitle.textContent = cTip;
+      cGroup.appendChild(cTitle);
+      const cRect = createServiceSvgElement("rect", {
+        x: curX.toFixed(1),
+        y: pillY.toFixed(1),
+        width: cPillW,
+        height: cPillH,
+        rx: 3,
+        fill: "#0c4a6e",
+        stroke: "#38bdf8",
+        "stroke-width": 1.2,
+      });
+      cGroup.appendChild(cRect);
+      const cText = createServiceSvgElement("text", {
+        x: (curX + cPillW / 2).toFixed(1),
+        y: (pillY + cPillH / 2).toFixed(1),
+        fill: "#e0f2fe",
+        "font-family": "'Courier New', Courier, monospace",
+        "font-size": compact ? "7.5" : "8.5",
+        "font-weight": "bold",
+        "text-anchor": "middle",
+        "dominant-baseline": "central",
+        "pointer-events": "none",
+      });
+      cText.textContent = compact ? "C:" + cv : "C-VLAN " + cv;
+      cGroup.appendChild(cText);
+      attachServiceHoverTip(cGroup, cRect, cTip, "#7dd3fc");
+      g.appendChild(cGroup);
+      curX += cPillW + cGap;
+    }
+    svg.appendChild(g);
+    return { x, y, width: Math.max(0, curX - x - cGap), height: cPillH };
+  }
+
   const innerRowW =
     innerList.length > 0
       ? innerList.length * cPillW + (innerList.length - 1) * cGap
-      : 48;
-  const headerStr =
-    sVlanId != null
-      ? (compact ? "S:" + sVlanId : "S-VLAN " + sVlanId + (rateStr ? " · " + rateStr : ""))
-      : "C-VLAN";
-  const minHeaderW = headerStr.length * (compact ? 5.6 : 6.1) + 14;
+      : 0;
+  const headerStr = compact
+    ? "S:" + sVlanId
+    : "S-VLAN " + sVlanId + (rateStr ? " · " + rateStr : "");
+  const minHeaderW = headerStr.length * (compact ? 5.6 : 6.1) + 16;
   const boxW = Math.max(minHeaderW, innerRowW + 14);
-  const boxH = compact ? 32 : 42;
+  const boxH = innerList.length > 0 ? (compact ? 32 : 42) : (compact ? 20 : 26);
+  const boxY = innerList.length > 0 ? y : y + (42 - boxH) / 2;
 
   // Outer S-VLAN encapsulation box
   const outerRect = createServiceSvgElement("rect", {
     x: x.toFixed(1),
-    y: y.toFixed(1),
+    y: boxY.toFixed(1),
     width: boxW.toFixed(1),
     height: boxH.toFixed(1),
     rx: 5,
-    fill: sVlanId != null ? "rgba(245, 158, 11, 0.14)" : "rgba(56, 189, 248, 0.12)",
-    stroke: sVlanId != null ? "#f59e0b" : "#38bdf8",
+    fill: "rgba(245, 158, 11, 0.14)",
+    stroke: "#f59e0b",
     "stroke-width": 1.4,
   });
   g.appendChild(outerRect);
 
   const headerText = createServiceSvgElement("text", {
     x: (x + boxW / 2).toFixed(1),
-    y: (y + (compact ? 8.5 : 11)).toFixed(1),
-    fill: sVlanId != null ? "#fcd34d" : "#7dd3fc",
+    y: (innerList.length > 0 ? boxY + (compact ? 8.5 : 11) : boxY + boxH / 2).toFixed(1),
+    fill: "#fcd34d",
     "font-family": "'Courier New', Courier, monospace",
     "font-size": compact ? "8" : "9.5",
     "font-weight": "bold",
@@ -533,14 +581,15 @@ function drawNestedVlanBadge(svg, x, y, sVlanId, cVlanIds, opts = {}) {
   // Inner nested C-VLAN pill(s) drawn INSIDE the outer S-VLAN container
   if (innerList.length > 0) {
     const startX = x + (boxW - innerRowW) / 2;
-    const innerY = y + (compact ? 16 : 21);
+    const innerY = boxY + (compact ? 16 : 21);
     for (let i = 0; i < innerList.length; i++) {
       const cv = innerList[i];
       const cx = startX + i * (cPillW + cGap);
       const cGroup = createServiceSvgElement("g");
       const cTip =
-        (sVlanId != null ? "S-VLAN " + sVlanId + " ⊃ " : "") +
-        "C-VLAN " +
+        "S-VLAN " +
+        sVlanId +
+        " ⊃ C-VLAN " +
         cv +
         (rateStr ? "\nService Rate: " + rateStr : "");
       const cTitle = createServiceSvgElement("title");
@@ -576,24 +625,11 @@ function drawNestedVlanBadge(svg, x, y, sVlanId, cVlanIds, opts = {}) {
       attachServiceHoverTip(cGroup, cRect, cTip, "#7dd3fc");
       g.appendChild(cGroup);
     }
-  } else if (sVlanId != null) {
-    const emptyText = createServiceSvgElement("text", {
-      x: (x + boxW / 2).toFixed(1),
-      y: (y + (compact ? 22 : 28)).toFixed(1),
-      fill: "#94a3b8",
-      "font-family": "'Courier New', Courier, monospace",
-      "font-size": "8",
-      "text-anchor": "middle",
-      "dominant-baseline": "central",
-      "pointer-events": "none",
-    });
-    emptyText.textContent = "(untagged inner)";
-    g.appendChild(emptyText);
   }
 
   attachServiceHoverTip(outerRect, outerRect, tooltip || headerStr, "#fcd34d");
   svg.appendChild(g);
-  return { x, y, width: boxW, height: boxH };
+  return { x, y: boxY, width: boxW, height: boxH };
 }
 
 /**
@@ -756,58 +792,18 @@ function drawMiniNeChassis(svg, opts) {
     })
   );
 
-  const modelText = createServiceSvgElement("text", {
-    x: (bodyX + 10).toFixed(1),
-    y: (y + 4 + (headerH - 4) / 2).toFixed(1),
-    fill: "#38bdf8",
-    "font-family": "'Courier New', Courier, monospace",
-    "font-size": "8.5",
-    "font-weight": "bold",
-    "dominant-baseline": "central",
-  });
-  modelText.textContent = truncateSvgText(ne?.model || "NE", 10);
-  neGroup.appendChild(modelText);
-
   const hostText = createServiceSvgElement("text", {
-    x: (bodyX + bodyW / 2 + 8).toFixed(1),
+    x: (bodyX + bodyW / 2).toFixed(1),
     y: (y + 4 + (headerH - 4) / 2).toFixed(1),
     fill: "#f8fafc",
     "font-family": "'Courier New', Courier, monospace",
-    "font-size": "9",
+    "font-size": "9.5",
     "font-weight": "bold",
     "text-anchor": "middle",
     "dominant-baseline": "central",
   });
-  hostText.textContent = truncateSvgText(ne?.host || neId, 15);
+  hostText.textContent = truncateSvgText(ne?.host || neId, 26);
   neGroup.appendChild(hostText);
-
-  // NU badge top-right
-  const uBadgeW = 24;
-  const uBadgeX = bodyX + bodyW - uBadgeW - 6;
-  neGroup.appendChild(
-    createServiceSvgElement("rect", {
-      x: uBadgeX.toFixed(1),
-      y: (y + 8).toFixed(1),
-      width: uBadgeW,
-      height: 14,
-      rx: 2,
-      fill: "#1e293b",
-      stroke: "#475569",
-      "stroke-width": 0.8,
-    })
-  );
-  const uBadgeText = createServiceSvgElement("text", {
-    x: (uBadgeX + uBadgeW / 2).toFixed(1),
-    y: (y + 15).toFixed(1),
-    fill: "#cbd5e1",
-    "font-family": "'Courier New', Courier, monospace",
-    "font-size": "8",
-    "font-weight": "bold",
-    "text-anchor": "middle",
-    "dominant-baseline": "central",
-  });
-  uBadgeText.textContent = rackUnits + "U";
-  neGroup.appendChild(uBadgeText);
 
   // Recessed port bay faceplate
   neGroup.appendChild(
@@ -1250,9 +1246,9 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
   svg.appendChild(
     createServiceSvgElement("rect", {
       x: statusX,
-      y: 14,
+      y: 24,
       width: statusW,
-      height: 18,
+      height: 20,
       rx: 3,
       fill: statusFill,
       stroke: statusStroke,
@@ -1261,7 +1257,7 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
   );
   const statusText = createServiceSvgElement("text", {
     x: statusX + statusW / 2,
-    y: 23,
+    y: 34,
     fill: "#ffffff",
     "font-family": "'Courier New', Courier, monospace",
     "font-size": "9.5",
@@ -1272,23 +1268,6 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
   statusText.textContent = statusLabel;
   svg.appendChild(statusText);
 
-  const datesText = createServiceSvgElement("text", {
-    x: svgW - 18,
-    y: 44,
-    fill: "#cbd5e1",
-    "font-family": "'Courier New', Courier, monospace",
-    "font-size": "9.5",
-    "text-anchor": "end",
-    "dominant-baseline": "central",
-  });
-  datesText.textContent =
-    "Comm: " +
-    formatServiceDate(data.commissioned) +
-    (isDecommissioned
-      ? "  |  Decomm: " + formatServiceDate(data.decommissioned)
-      : "");
-  svg.appendChild(datesText);
-
   const bannerTip = [
     "Service Reference: " + fullRef,
     "Service ID: " + (data.serviceId || "—"),
@@ -1297,7 +1276,6 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
     lagInfo.hasLag
       ? "LAG: " + lagInfo.groupName + " (" + lagInfo.declaredMembers + " members)"
       : null,
-    "Country: " + (data.country || "—"),
     "Commissioned: " + formatServiceDate(data.commissioned),
     "Decommissioned: " + formatServiceDate(data.decommissioned),
     "Source: " + source,
@@ -1308,64 +1286,6 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
 
   const bodyTop = bannerH + 14;
   const bodyCenterY = bodyTop + contentH / 2;
-
-  // Dashed Country Boundary helper
-  const drawCountryBoundary = (bx, by, bw, bh, countryCode, sites, accentColor) => {
-    const g = createServiceSvgElement("g");
-    const tipLines = [
-      "Country Boundary: " + countryCode,
-      sites.length > 0 ? "Sites: " + sites.join(", ") : "Service Country Zone",
-    ];
-    const titleEl = createServiceSvgElement("title");
-    titleEl.textContent = tipLines.join("\n");
-    g.appendChild(titleEl);
-
-    const rect = createServiceSvgElement("rect", {
-      x: bx.toFixed(1),
-      y: by.toFixed(1),
-      width: bw.toFixed(1),
-      height: bh.toFixed(1),
-      rx: 8,
-      fill:
-        accentColor === "#f59e0b"
-          ? "rgba(245, 158, 11, 0.05)"
-          : "rgba(56, 189, 248, 0.05)",
-      stroke: accentColor,
-      "stroke-width": 1.6,
-      "stroke-dasharray": "8 5",
-    });
-    g.appendChild(rect);
-
-    const badgeLabel = "COUNTRY: " + countryCode;
-    const badgeW = badgeLabel.length * 6.4 + 14;
-    const badgeRect = createServiceSvgElement("rect", {
-      x: (bx + 10).toFixed(1),
-      y: (by - 9).toFixed(1),
-      width: badgeW.toFixed(1),
-      height: 18,
-      rx: 4,
-      fill: "#0f172a",
-      stroke: accentColor,
-      "stroke-width": 1.2,
-    });
-    g.appendChild(badgeRect);
-    const badgeText = createServiceSvgElement("text", {
-      x: (bx + 10 + badgeW / 2).toFixed(1),
-      y: by.toFixed(1),
-      fill: accentColor,
-      "font-family": "'Courier New', Courier, monospace",
-      "font-size": "9.5",
-      "font-weight": "bold",
-      "text-anchor": "middle",
-      "dominant-baseline": "central",
-      "pointer-events": "none",
-    });
-    badgeText.textContent = badgeLabel;
-    g.appendChild(badgeText);
-
-    attachServiceHoverTip(badgeRect, rect, tipLines.join("\n"), accentColor);
-    svg.appendChild(g);
-  };
 
   // Customer Card (Left)
   const custX = padX;
@@ -1644,29 +1564,7 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
     const boundaryX = custX + customerW + 24;
     const boundaryW = nextHopX - boundaryX - 24;
     const boundaryY = bodyTop + 12;
-    const boundaryH = contentH - 20;
     const neId0 = ingressNeIds[0];
-    const countryCode = getNeCountry(neId0);
-    const siteNames = [
-      ...new Set(
-        ingressNeIds
-          .map((id) => {
-            const ne = neMap.get(id);
-            const site = ne?.siteId ? siteMap.get(ne.siteId) : null;
-            return site?.reference || ne?.siteId || null;
-          })
-          .filter(Boolean)
-      ),
-    ];
-    drawCountryBoundary(
-      boundaryX,
-      boundaryY,
-      boundaryW,
-      boundaryH,
-      countryCode,
-      siteNames,
-      "#38bdf8"
-    );
 
     const ingressPillX = boundaryX + 16;
     const egressPillX = boundaryX + boundaryW - portNodeW - 16;
@@ -1947,94 +1845,12 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
       }
     }
   } else {
-    // Multi-NE / End-to-End topology (supports cross-country boundaries + per-LAG-member backbone links!)
-    const leftCountry =
-      ingressNeIds.length > 0 ? getNeCountry(ingressNeIds[0]) : data.country || "N/A";
-    const rightCountry =
-      egressNeIds.length > 0 ? getNeCountry(egressNeIds[0]) : data.country || "N/A";
-    const isCrossBorder = leftCountry !== rightCountry;
-
+    // Multi-NE / End-to-End topology (per-LAG-member backbone links)
     const zoneStartX = custX + customerW + 30;
     const zoneEndX = nextHopX - 30;
     const totalZoneW = zoneEndX - zoneStartX;
     const zoneY = bodyTop + 12;
-    const zoneH = contentH - 20;
-
-    const leftSites = [
-      ...new Set(
-        ingressNeIds
-          .map((id) => {
-            const ne = neMap.get(id);
-            return (ne?.siteId && siteMap.get(ne.siteId)?.reference) || ne?.siteId;
-          })
-          .filter(Boolean)
-      ),
-    ];
-    const rightSites = [
-      ...new Set(
-        egressNeIds
-          .map((id) => {
-            const ne = neMap.get(id);
-            return (ne?.siteId && siteMap.get(ne.siteId)?.reference) || ne?.siteId;
-          })
-          .filter(Boolean)
-      ),
-    ];
-
     const midX = zoneStartX + totalZoneW / 2;
-    if (isCrossBorder) {
-      const halfW = totalZoneW / 2 - 22;
-      drawCountryBoundary(zoneStartX, zoneY, halfW, zoneH, leftCountry, leftSites, "#38bdf8");
-      drawCountryBoundary(midX + 22, zoneY, halfW, zoneH, rightCountry, rightSites, "#f59e0b");
-
-      svg.appendChild(
-        createServiceSvgElement("line", {
-          x1: midX.toFixed(1),
-          y1: (zoneY + 6).toFixed(1),
-          x2: midX.toFixed(1),
-          y2: (zoneY + zoneH - 6).toFixed(1),
-          stroke: "#e2e8f0",
-          "stroke-width": 1.2,
-          "stroke-dasharray": "4 4",
-        })
-      );
-      const borderLabel = leftCountry + " ⇄ " + rightCountry;
-      const bW = borderLabel.length * 6.2 + 12;
-      svg.appendChild(
-        createServiceSvgElement("rect", {
-          x: (midX - bW / 2).toFixed(1),
-          y: (zoneY + zoneH - 12).toFixed(1),
-          width: bW.toFixed(1),
-          height: 16,
-          rx: 3,
-          fill: "#0f172a",
-          stroke: "#e2e8f0",
-          "stroke-width": 0.9,
-        })
-      );
-      const bText = createServiceSvgElement("text", {
-        x: midX.toFixed(1),
-        y: (zoneY + zoneH - 4).toFixed(1),
-        fill: "#f8fafc",
-        "font-family": "'Courier New', Courier, monospace",
-        "font-size": "8.5",
-        "font-weight": "bold",
-        "text-anchor": "middle",
-        "dominant-baseline": "central",
-      });
-      bText.textContent = borderLabel;
-      svg.appendChild(bText);
-    } else {
-      drawCountryBoundary(
-        zoneStartX,
-        zoneY,
-        totalZoneW,
-        zoneH,
-        leftCountry,
-        [...new Set(leftSites.concat(rightSites))],
-        "#38bdf8"
-      );
-    }
 
     const leftNeX = zoneStartX + 18;
     const rightNeX = zoneEndX - neWidth - 18;
@@ -2177,9 +1993,6 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
               pair.egress.port +
               (pair.egress.sVlanId ? " (S-VLAN " + pair.egress.sVlanId + ")" : ""),
             "Rate: " + serviceRateStr,
-            isCrossBorder
-              ? "Cross-Border: " + leftCountry + " → " + rightCountry
-              : "Country: " + leftCountry,
           ].join("\n"),
         });
       }
@@ -2211,7 +2024,7 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
             outItem.box.leftAnchor.x,
             outItem.box.leftAnchor.y,
             {
-              color: isCrossBorder ? "#a78bfa" : "#25b09b",
+              color: "#25b09b",
               strokeWidth: 2.6,
               dashed: isPredicted,
               label: serviceRateStr,
@@ -2220,9 +2033,6 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
                 "Service: " + fullRef,
                 "Type: " + serviceType,
                 "Rate: " + serviceRateStr,
-                isCrossBorder
-                  ? "Cross-Border: " + leftCountry + " → " + rightCountry
-                  : "Country: " + leftCountry,
               ].join("\n"),
             }
           );
@@ -2259,7 +2069,7 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
     }
   }
 
-  // Bottom QinQ VLAN Encapsulation Bar: Visually shows inner C-VLAN(s) nested INSIDE each outer S-VLAN!
+  // Bottom VLAN strip: only rendered when cVlanId or sVlanId values exist
   if (hasVlanPanel) {
     const stripY = bodyTop + contentH + 4;
     const stripH = vlanStripH - 6;
@@ -2275,19 +2085,8 @@ function drawServiceTopology(container, data, neMap, siteMap, source) {
         "stroke-width": 1,
       })
     );
-    const stripLbl = createServiceSvgElement("text", {
-      x: 24,
-      y: stripY + stripH / 2,
-      fill: "#94a3b8",
-      "font-family": "'Courier New', Courier, monospace",
-      "font-size": "9.5",
-      "font-weight": "bold",
-      "dominant-baseline": "central",
-    });
-    stripLbl.textContent = "VLAN ENCAPSULATION (QinQ):";
-    svg.appendChild(stripLbl);
 
-    let cursorX = 200;
+    let cursorX = 24;
     const badgeY = stripY + (stripH - 42) / 2;
 
     for (const sEntry of vlanHierarchy.sVlans) {
@@ -2728,9 +2527,6 @@ async function fetchService(overrideServiceId = null, overridePoint = null) {
     "</div>" +
     '<div id="stateusage-reserved" class="stateusage">Egress: ' +
     summary.egressCount +
-    "</div>" +
-    '<div id="stateusage-error" class="stateusage">Countries: ' +
-    summary.countries.join("/") +
     "</div>" +
     "</div></div>";
 
