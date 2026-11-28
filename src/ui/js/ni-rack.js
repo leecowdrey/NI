@@ -949,11 +949,6 @@ function fetchRack() {
       const rootUrl = localStorage.getItem("ni.rootUrl") || "";
       let metadata =
         '<div class="meta-section"><div class="meta-grid">' +
-        '<span class="meta-label">Reference:</span><span class="meta-value">' +
-        (data.reference != null ? data.reference : "") +
-        " (" +
-        rackId +
-        ")</span>" +
         '<span class="meta-label">Commissioned:</span><span class="meta-value">' +
         data.commissioned +
         "</span>" +

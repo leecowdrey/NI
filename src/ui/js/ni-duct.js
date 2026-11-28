@@ -424,11 +424,6 @@ function fetchDuct() {
         const rootUrl = localStorage.getItem("ni.rootUrl") || "";
         let metadata =
           '<div class="meta-section"><div class="meta-grid">' +
-          '<span class="meta-label">Reference:</span><span class="meta-value">' +
-          (data.reference != null ? data.reference + " " : "") +
-          "(" +
-          ductId +
-          ")</span>" +
           '<span class="meta-label">Source:</span><span class="meta-value">' +
           source +
           "</span>" +
