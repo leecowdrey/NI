@@ -787,13 +787,7 @@ function fetchNe(neId, point = null) {
           data.decommissioned = "";
         }
         let metadata =
-          "<b>Host</b>:&emsp;" +
-          data.host +
-          "<br>" +
-          "<center>( " +
-          neId +
-          " )</center><br>" +
-          "<br>Commissioned:&emsp;&emsp;" +
+          "Commissioned:&emsp;&emsp;" +
           data.commissioned +
           "<br>" +
           "Decommissioned:&emsp;" +

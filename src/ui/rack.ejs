@@ -50,11 +50,13 @@
         }
 
         .rack-panel {
-            width: 45%;
-            height: calc(70vh - 10px);
+            width: 95%;
+            min-height: 360px;
             margin-top: 20px;
             margin-left: 20px;
-            display: grid;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
         }
 
         .metadata-panel {
@@ -69,12 +71,10 @@
         }
 
         .grid {
-            --max-rack-slots=42;
-            display: grid;
-            grid-template-rows: 16px repeat(var(--max-rack-slots), 16px) 16px;
-            grid-template-columns: repeat(1, 1fr);
-            width: 300px;
-            height: calc(75vh - 20px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
         }
 
         .slotFree {
